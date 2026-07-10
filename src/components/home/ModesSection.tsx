@@ -1,0 +1,109 @@
+import { ArrowRight } from "lucide-react";
+import { useReveal } from "@/hooks/useReveal";
+import { useRouter } from "@/router/RouterContext";
+import { CustomScene, PersonalScene, WorldScene } from "@/components/common/ModeScenes";
+import type { View } from "@/types";
+
+type Scene = typeof WorldScene;
+
+interface ModeCardProps {
+  scene: Scene;
+  tint: string;
+  title: string;
+  tagline: string;
+  desc: string;
+  cta: string;
+  points: string[];
+  view: View;
+  featured?: boolean;
+}
+
+const modes: ModeCardProps[] = [
+  {
+    scene: WorldScene,
+    tint: "from-[#e9f2ff] to-[#f5f9ff]",
+    title: "IRCTC World",
+    tagline: "Everything IRCTC, drilled down",
+    desc: "Browse the full IRCTC catalog with a real drill-down — by region, budget & style — then compare side by side.",
+    cta: "Explore & compare",
+    points: ["Drill down by region, budget & style", "Side-by-side comparison", "Verified reviews & pricing"],
+    view: { name: "world" },
+  },
+  {
+    scene: CustomScene,
+    tint: "from-[#e3edff] to-[#eef5ff]",
+    title: "Customized",
+    tagline: "Built around your trip",
+    desc: "Tell us where you're starting, your budget, family size and travel dates. We'll AI-match the best tours and take you straight to booking.",
+    cta: "Plan my trip",
+    points: ["Start, end & travel dates", "AI-matched recommendations", "Book flights & hotels via IRCTC"],
+    view: { name: "customise" },
+    featured: true,
+  },
+  {
+    scene: PersonalScene,
+    tint: "from-[#edf3ff] to-[#f7faff]",
+    title: "Personalized",
+    tagline: "Your personal travel profile",
+    desc: "Sign in for a greeting, your travel photo diary, and picks based on where you've already been.",
+    cta: "See my picks",
+    points: ["Greeting & travel profile", "Past tours & photo diary", "Suggestions from your history"],
+    view: { name: "madeforyou" },
+  },
+];
+
+export function ModesSection() {
+  const ref = useReveal();
+  const { go } = useRouter();
+
+  return (
+    <section className="relative mx-auto max-w-7xl px-4 py-20 md:px-6 md:py-28" ref={ref}>
+      <div className="reveal mx-auto max-w-2xl text-center">
+        <h2 className="heading-xl text-ink">Three ways to find your journey</h2>
+        <p className="mt-3 text-[15px] text-muted-foreground">
+          Whether you know exactly what you want or you&apos;d like us to design it — pick your path.
+        </p>
+      </div>
+
+      <div className="mt-12 grid gap-5 md:grid-cols-3">
+        {modes.map((mode) => {
+          const Scene = mode.scene;
+          return (
+            <div
+              key={mode.title}
+              className={`reveal group relative flex flex-col rounded-3xl border bg-white p-6 shadow-sm ring-1 ring-brand/15 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl ${
+                mode.featured ? "shadow-xl md:-mt-4 md:mb-4" : ""
+              }`}
+            >
+              <div
+                className={`relative mb-5 flex h-40 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br ring-1 ring-inset ring-brand/10 ${mode.tint}`}
+              >
+                <span className="pointer-events-none absolute -left-7 -top-7 h-24 w-24 rounded-full bg-brand/5" />
+                <span className="pointer-events-none absolute -bottom-9 -right-5 h-28 w-28 rounded-full bg-azure/10" />
+                <Scene className="relative h-[132px] w-auto transition-transform duration-300 motion-safe:group-hover:scale-105" />
+              </div>
+              <div className="text-[12px] font-bold uppercase tracking-wide text-muted-foreground">{mode.tagline}</div>
+              <h3 className="font-display text-[24px] font-semibold text-ink">{mode.title}</h3>
+              <p className="mt-2 text-[14px] leading-relaxed text-muted-foreground">{mode.desc}</p>
+              <ul className="mt-4 space-y-2">
+                {mode.points.map((point) => (
+                  <li key={point} className="flex items-start gap-2 text-[13px] text-foreground/85">
+                    <span className="mt-1.5 h-1.5 w-1.5 flex-none rounded-full bg-brand" />
+                    {point}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => go(mode.view)}
+                type="button"
+                className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-5 py-3 text-[14px] font-bold text-white transition hover:brightness-95"
+              >
+                {mode.cta} <ArrowRight size={16} />
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
