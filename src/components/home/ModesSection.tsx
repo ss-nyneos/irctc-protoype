@@ -57,7 +57,7 @@ export function ModesSection() {
   const { go } = useRouter();
 
   return (
-    <section className="relative mx-auto max-w-7xl px-4 py-20 md:px-6 md:py-28" ref={ref}>
+    <section className="relative mx-auto max-w-7xl px-4 py-28 md:px-6 md:py-36" ref={ref}>
       <div className="reveal mx-auto max-w-2xl text-center">
         <h2 className="heading-xl text-ink">Three ways to find your journey</h2>
         <p className="mt-3 text-[15px] text-muted-foreground">

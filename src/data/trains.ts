@@ -11,6 +11,8 @@ export const luxuryTrains: LuxuryTrain[] = [
     tag: "World's Leading Luxury Train",
     route: "Delhi · Agra · Rajasthan",
     grad: ["#7f1d1d", "#dc2626"],
+    // maroon throughout — roof, frame and edging all one colour, no contrast trim
+    livery: { roof: ["#8a2a37", "#5f1c26"], side: "#6b1f2a", trim: "#7a2430" },
     img: maharajasExpressImg,
   },
   {
@@ -19,6 +21,7 @@ export const luxuryTrains: LuxuryTrain[] = [
     tag: "Pride of the South",
     route: "Karnataka · Goa",
     grad: ["#4c1d95", "#7c3aed"],
+    livery: { roof: ["#e0b75f", "#a97e2f"], side: "#b8862b", trim: "#e6c565" },
     img: goldenChariotImg,
   },
   {
@@ -27,6 +30,7 @@ export const luxuryTrains: LuxuryTrain[] = [
     tag: "Royal Rajasthan on Rails",
     route: "Delhi · Jaipur · Udaipur",
     grad: ["#78350f", "#d97706"],
+    livery: { roof: ["#e0b75f", "#a97e2f"], side: "#b8862b", trim: "#e6c565" },
     img: palaceOnWheelsImg,
   },
   {
@@ -35,6 +39,7 @@ export const luxuryTrains: LuxuryTrain[] = [
     tag: "Maharashtra's Blue Jewel",
     route: "Mumbai · Konkan · Goa",
     grad: ["#1e3a8a", "#2563eb"],
+    livery: { roof: ["#e3d5bb", "#c2ab89"], side: "#c8b391", trim: "#e8dcc6" },
     img: deccanOdysseyImg,
   },
 ];

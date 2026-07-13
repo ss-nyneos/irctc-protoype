@@ -30,6 +30,7 @@ export default {
         azure: "hsl(var(--azure))",
         brand: "#2475EE",
         ink: "#323232",
+        saffron: "#F2662A",
       },
       borderRadius: {
         lg: "var(--radius)",

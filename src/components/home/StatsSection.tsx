@@ -79,7 +79,7 @@ export function StatsSection() {
   const ref = useReveal();
 
   return (
-    <section className="py-20 md:py-28" ref={ref}>
+    <section className="py-28 md:py-36" ref={ref}>
       <div className="reveal mx-auto grid max-w-7xl gap-6 px-4 md:px-6 lg:grid-cols-12 lg:gap-8">
         {/* ── Anchor stat ─────────────────────────────────────────── */}
         <div className="relative flex min-h-[220px] flex-col justify-center overflow-hidden rounded-[28px] p-7 shadow-[0_24px_60px_-28px_hsl(var(--navy)/0.55)] ring-1 ring-white/15 lg:col-span-3 lg:min-h-[300px]">

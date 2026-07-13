@@ -1,10 +1,11 @@
 import { useEffect, useRef } from "react";
-import { ChevronLeft, ChevronRight, Plane } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
 import { useRouter } from "@/router/RouterContext";
 import { packages } from "@/data/packages";
 import { formatINR } from "@/utils/format";
 import { ImageWithFallback } from "@/components/common/ImageWithFallback";
+import planePath from "@/assets/trending/plane-path.svg";
 
 const NUDGE = 320;
 
@@ -96,22 +97,24 @@ export function TrendingPackagesSection() {
   };
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-20 md:px-6 md:py-28" ref={ref}>
+    <section className="mx-auto max-w-7xl overflow-hidden px-4 py-28 md:px-6 md:py-36" ref={ref}>
       <h2 className="reveal heading-xl text-center text-ink">
         Trending <span className="accent">Packages</span>
       </h2>
 
-      <div className="reveal relative mt-8 flex items-end justify-between">
-        <div>
-          <div className="relative text-[12px] font-bold uppercase tracking-wide text-muted-foreground">
-            Handpicked across India &amp; beyond
-            <svg className="pointer-events-none absolute -top-6 left-0 h-7 w-40 overflow-visible text-royal/50" viewBox="0 0 160 28" fill="none">
-              <path d="M2 24c30-24 100-24 140-6" stroke="currentColor" strokeWidth="1.6" strokeDasharray="1 6" strokeLinecap="round" />
-            </svg>
-            <Plane size={16} className="absolute -top-8 left-[126px] rotate-[35deg] text-royal" />
-          </div>
-        </div>
-        <div className="flex gap-2">
+      {/* z-0 vs the carousel's z-10: keeps the flight path behind the cards, so the
+          descending tail is hidden by them and only shows in the gaps above */}
+      <div className="reveal relative z-0 mt-8 flex items-end justify-end">
+        {/* flight path — trails down over the top-right of the carousel below */}
+        {/* natural 800px width, starting just above the arrows and bleeding ~190px
+            past them, so the trail runs off the right edge (clipped by the section) */}
+        <img
+          src={planePath}
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-4 right-[-190px] z-10 hidden w-[800px] max-w-none select-none lg:block"
+        />
+        <div className="relative z-20 flex gap-2">
           <button
             onClick={() => nudge(-1)}
             type="button"
@@ -135,7 +138,7 @@ export function TrendingPackagesSection() {
         ref={stageRef}
         onMouseEnter={() => (paused.current = true)}
         onMouseLeave={() => (paused.current = false)}
-        className="reveal relative mt-6 overflow-hidden"
+        className="reveal relative z-10 mt-6 overflow-hidden"
       >
         <div ref={trackRef} className="flex w-max gap-4" style={{ willChange: "transform" }}>
           {[0, 1].map((copy) => (

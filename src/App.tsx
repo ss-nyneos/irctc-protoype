@@ -30,13 +30,16 @@ function CurrentPage() {
 }
 
 function Shell() {
+  const { view } = useRouter();
+  const hideFooter = view.name === "customise";
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1">
         <CurrentPage />
       </main>
-      <Footer />
+      {!hideFooter && <Footer />}
       <DishaChatbot />
     </div>
   );

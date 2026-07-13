@@ -40,7 +40,7 @@ export function BookingPage({ id }: { id: string }) {
   const canContinue = step !== 0 || (form.name && form.phone.length >= 10);
 
   return (
-    <div ref={ref} className="min-h-screen bg-secondary/40 pb-24">
+    <div ref={ref} className="min-h-screen pb-24">
       <div className="bg-navy text-white">
         <div className="mx-auto max-w-5xl px-4 py-6 md:px-6">
           <button onClick={back} type="button" className="mb-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-white/80 hover:text-white">

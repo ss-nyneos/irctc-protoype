@@ -1,6 +1,7 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   ArrowLeft,
+  ArrowRight,
   Bus,
   CalendarRange,
   Camera,
@@ -20,7 +21,16 @@ import { packages } from "@/data/packages";
 import type { BudgetBand, Experience, TourPackage, TravelMode } from "@/types";
 import { formatINR } from "@/utils/format";
 import { PackageCard } from "@/components/package/PackageCard";
-import { DestinationMarquee } from "@/components/common/DestinationMarquee";
+import bgVideo from "@/assets/customise/india-cinematic.mp4";
+import imgFrom from "@/assets/customise/from.jpg";
+import imgTo from "@/assets/customise/destination.jpeg";
+import imgBudget from "@/assets/customise/budget.webp";
+import imgTravellers from "@/assets/customise/travellers.webp";
+import imgDate from "@/assets/customise/date.jpg";
+import imgStay from "@/assets/customise/stay.jpg";
+import imgTransport from "@/assets/customise/transport.webp";
+import imgSightseeing from "@/assets/customise/experience.jpg";
+import imgFood from "@/assets/customise/food.avif";
 
 const ANY = "Anywhere";
 const fromCities = [ANY, ...new Set(packages.map((p) => p.from))];
@@ -115,12 +125,44 @@ function scorePackage(pkg: TourPackage, t: TripInputs): number {
   return score;
 }
 
+interface Question {
+  key: string;
+  icon: ReactNode;
+  title: string;
+  hint?: string;
+  image: string;
+  control: ReactNode;
+}
+
+/** Card exit duration — must stay in sync with `q-card-exit` in index.css. */
+const CARD_EXIT_MS = 200;
+
 export function CustomisePage() {
   const { back } = useRouter();
   const ref = useReveal();
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [inputs, setInputs] = useState<TripInputs>(defaultInputs);
   const [stage, setStage] = useState<Stage>("form");
   const [results, setResults] = useState<TourPackage[]>([]);
+  const [step, setStep] = useState(0);
+  const [exiting, setExiting] = useState(false);
+
+  // honour prefers-reduced-motion: a looping cinematic pan is exactly the kind of
+  // background motion that setting exists to suppress
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) videoRef.current?.pause();
+  }, []);
+
+  /** Sends the current card off-screen, then swaps in the next one — the old card is
+      unmounted, never parked on screen as an editable summary. */
+  const goToStep = (next: number) => {
+    if (exiting || next < 0 || next > questions.length - 1) return;
+    setExiting(true);
+    window.setTimeout(() => {
+      setStep(next);
+      setExiting(false);
+    }, CARD_EXIT_MS);
+  };
 
   const set = <K extends keyof TripInputs>(key: K, value: TripInputs[K]) =>
     setInputs((prev) => ({ ...prev, [key]: value }));
@@ -154,164 +196,297 @@ export function CustomisePage() {
   const startOver = () => {
     setStage("form");
     setInputs(defaultInputs);
+    setStep(0);
   };
 
+  const selectClass =
+    "w-full rounded-xl border bg-white px-3.5 py-3 text-[14px] font-semibold text-ink outline-none focus:border-brand";
+
+  // One card per question — only the current one is ever mounted.
+  const questions: Question[] = [
+    {
+      key: "from",
+      icon: <MapPin size={18} />,
+      title: "Where are you starting from?",
+      image: imgFrom,
+      control: (
+        <select value={inputs.from} onChange={(e) => set("from", e.target.value)} className={selectClass}>
+          {fromCities.map((c) => (
+            <option key={c}>{c}</option>
+          ))}
+        </select>
+      ),
+    },
+    {
+      key: "to",
+      icon: <MapPin size={18} />,
+      title: "Where do you want to go?",
+      image: imgTo,
+      control: (
+        <select value={inputs.to} onChange={(e) => set("to", e.target.value)} className={selectClass}>
+          {toRegions.map((r) => (
+            <option key={r}>{r}</option>
+          ))}
+        </select>
+      ),
+    },
+    {
+      key: "budget",
+      icon: <Wallet size={18} />,
+      title: "What's your budget per person?",
+      image: imgBudget,
+      control: (
+        <div>
+          <div className="flex items-center justify-between">
+            <span className="text-[13px] text-muted-foreground">Up to</span>
+            <span className="font-display text-[26px] font-bold text-ink">
+              {formatINR(inputs.budget)}
+              {inputs.budget >= 100000 ? "+" : ""}
+            </span>
+          </div>
+          <input
+            type="range"
+            min={10000}
+            max={100000}
+            step={5000}
+            value={inputs.budget}
+            onChange={(e) => set("budget", Number(e.target.value))}
+            className="mt-3 w-full accent-brand"
+          />
+          <div className="mt-1 flex justify-between text-[11px] text-muted-foreground">
+            <span>₹10k</span>
+            <span>₹1L+</span>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: "travellers",
+      icon: <Users size={18} />,
+      title: "How many are travelling?",
+      image: imgTravellers,
+      control: (
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => set("travellers", Math.max(1, inputs.travellers - 1))}
+            type="button"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border text-[18px] font-bold text-ink hover:bg-secondary"
+          >
+            −
+          </button>
+          <span className="font-display text-[22px] font-bold text-ink">
+            {inputs.travellers} {inputs.travellers === 1 ? "traveller" : "travellers"}
+          </span>
+          <button
+            onClick={() => set("travellers", Math.min(10, inputs.travellers + 1))}
+            type="button"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border text-[18px] font-bold text-ink hover:bg-secondary"
+          >
+            +
+          </button>
+        </div>
+      ),
+    },
+    {
+      key: "date",
+      icon: <CalendarRange size={18} />,
+      title: "When do you want to travel?",
+      hint: "Optional — leave blank if you're flexible",
+      image: imgDate,
+      control: (
+        <input
+          type="date"
+          value={inputs.travelDate}
+          onChange={(e) => set("travelDate", e.target.value)}
+          min={new Date().toISOString().slice(0, 10)}
+          className={selectClass}
+        />
+      ),
+    },
+    {
+      key: "accommodation",
+      icon: <Hotel size={18} />,
+      title: "What kind of stay do you prefer?",
+      image: imgStay,
+      control: (
+        <Segmented options={ACCOMMODATIONS} value={inputs.accommodation} onChange={(v) => set("accommodation", v)} />
+      ),
+    },
+    {
+      key: "transport",
+      icon: <Bus size={18} />,
+      title: "How do you like to travel?",
+      hint: "Select all you're open to",
+      image: imgTransport,
+      control: <Chips options={TRANSPORTS} value={inputs.transports} onToggle={(v) => toggleArr("transports", v)} />,
+    },
+    {
+      key: "sightseeing",
+      icon: <Camera size={18} />,
+      title: "What do you want to experience?",
+      hint: "Pick any that appeal to you",
+      image: imgSightseeing,
+      control: <Chips options={SIGHTSEEING} value={inputs.sightseeing} onToggle={(v) => toggleArr("sightseeing", v)} />,
+    },
+    {
+      key: "food",
+      icon: <Utensils size={18} />,
+      title: "And what about food?",
+      image: imgFood,
+      control: (
+        <div className="space-y-5">
+          <div>
+            <div className="mb-2 text-[12px] font-semibold text-muted-foreground">Budget</div>
+            <Segmented
+              options={CATERING_COSTS}
+              value={inputs.cateringCost}
+              onChange={(v) => set("cateringCost", v)}
+              renderLabel={(c) => `${c} cost`}
+            />
+          </div>
+          <div>
+            <div className="mb-2 text-[12px] font-semibold text-muted-foreground">Cuisine style</div>
+            <Chips
+              options={CATERING_TYPES}
+              value={inputs.cateringTypes}
+              onToggle={(v) => toggleArr("cateringTypes", v)}
+            />
+          </div>
+        </div>
+      ),
+    },
+  ];
+
+  const total = questions.length;
+  const isLast = step === total - 1;
+  const current = questions[step];
+
   return (
-    <div ref={ref} className="min-h-screen pb-20">
-      <div className="relative overflow-hidden bg-white">
-        {stage !== "results" && <DestinationMarquee className="pt-8" />}
-        <div className={`relative mx-auto px-4 pb-8 pt-8 md:px-6 ${stage === "results" ? "max-w-7xl" : "max-w-5xl"}`}>
-          <button onClick={back} type="button" className="mb-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-muted-foreground hover:text-ink">
+    <div ref={ref} className="relative min-h-screen pb-20">
+      {/* cinematic video backdrop — kept sharp (no filter/blur); a plain dark scrim,
+          not a blur, carries the text contrast so the footage stays legible */}
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0">
+        <video
+          ref={videoRef}
+          src={bgVideo}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-black/60" />
+      </div>
+
+      <div className="relative z-10">
+        <div className={`relative mx-auto px-4 pb-8 pt-10 md:px-6 ${stage === "results" ? "max-w-7xl" : "max-w-5xl"}`}>
+          <button onClick={back} type="button" className="mb-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-white/80 transition hover:text-white">
             <ArrowLeft size={15} /> Back
           </button>
-          <h1 className="heading-xl text-ink">Built around your trip</h1>
+          <h1 className="heading-xl text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]">Built around your trip</h1>
           {stage !== "results" && (
-            <p className="mt-2 max-w-xl text-[15px] text-muted-foreground">
-              Tell us where you&apos;re starting from, your budget, who&apos;s travelling and when — our AI will match
-              the best tours, and you can book flights &amp; hotels straight through IRCTC.
+            <p className="mt-2 max-w-xl text-[15px] text-white/85">
+              Answer a few quick questions — one at a time — and our AI will match the best tours. You can book flights
+              &amp; hotels straight through IRCTC.
             </p>
           )}
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 md:px-6">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6">
         {stage !== "results" && (
-          <div className="reveal mx-auto -mt-6 max-w-5xl rounded-3xl border bg-white p-6 shadow-xl md:p-8">
-            <div className="grid gap-6 sm:grid-cols-2">
-              <FormRow icon={<MapPin size={16} />} title="Starting from">
-                <select
-                  value={inputs.from}
-                  onChange={(e) => set("from", e.target.value)}
-                  className="w-full rounded-xl border bg-white px-3.5 py-3 text-[14px] font-semibold text-ink outline-none focus:border-brand"
+          <div className="reveal mx-auto mt-4 max-w-3xl">
+            {/* progress — read-only; answered questions are gone, so there is nothing to jump back to */}
+            <div className="mb-5 flex justify-center">
+              <div className="inline-flex items-center gap-3 rounded-full border border-white/25 bg-black/35 px-4 py-2 shadow-sm">
+                <div
+                  className="flex items-center gap-1.5"
+                  role="progressbar"
+                  aria-valuenow={step + 1}
+                  aria-valuemin={1}
+                  aria-valuemax={total}
+                  aria-label={`Question ${step + 1} of ${total}`}
                 >
-                  {fromCities.map((c) => (
-                    <option key={c}>{c}</option>
+                  {questions.map((q, i) => (
+                    <span
+                      key={q.key}
+                      className={`h-2 rounded-full transition-all ${
+                        i === step ? "w-6 bg-white" : i < step ? "w-2 bg-white/60" : "w-2 bg-white/25"
+                      }`}
+                    />
                   ))}
-                </select>
-              </FormRow>
-              <FormRow icon={<MapPin size={16} />} title="Travelling to">
-                <select
-                  value={inputs.to}
-                  onChange={(e) => set("to", e.target.value)}
-                  className="w-full rounded-xl border bg-white px-3.5 py-3 text-[14px] font-semibold text-ink outline-none focus:border-brand"
-                >
-                  {toRegions.map((r) => (
-                    <option key={r}>{r}</option>
-                  ))}
-                </select>
-              </FormRow>
-            </div>
-
-            <FormRow icon={<Wallet size={16} />} title="Your budget (per person)">
-              <div className="flex items-center justify-between">
-                <span className="text-[13px] text-muted-foreground">Up to</span>
-                <span className="font-display text-[24px] font-bold text-ink">
-                  {formatINR(inputs.budget)}
-                  {inputs.budget >= 100000 ? "+" : ""}
+                </div>
+                <span className="text-[11px] font-bold uppercase tracking-wide text-white/80">
+                  Step {step + 1} / {total}
                 </span>
               </div>
-              <input
-                type="range"
-                min={10000}
-                max={100000}
-                step={5000}
-                value={inputs.budget}
-                onChange={(e) => set("budget", Number(e.target.value))}
-                className="mt-2 w-full accent-brand"
-              />
-              <div className="mt-1 flex justify-between text-[11px] text-muted-foreground">
-                <span>₹10k</span>
-                <span>₹1L+</span>
-              </div>
-            </FormRow>
-
-            <div className="grid gap-6 sm:grid-cols-2">
-              <FormRow icon={<Users size={16} />} title="Family size">
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => set("travellers", Math.max(1, inputs.travellers - 1))}
-                    type="button"
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border text-[18px] font-bold text-ink hover:bg-secondary"
-                  >
-                    −
-                  </button>
-                  <span className="font-display text-[20px] font-bold text-ink">
-                    {inputs.travellers} {inputs.travellers === 1 ? "traveller" : "travellers"}
-                  </span>
-                  <button
-                    onClick={() => set("travellers", Math.min(10, inputs.travellers + 1))}
-                    type="button"
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border text-[18px] font-bold text-ink hover:bg-secondary"
-                  >
-                    +
-                  </button>
-                </div>
-              </FormRow>
-              <FormRow icon={<CalendarRange size={16} />} title="Time of travel">
-                <input
-                  type="date"
-                  value={inputs.travelDate}
-                  onChange={(e) => set("travelDate", e.target.value)}
-                  min={new Date().toISOString().slice(0, 10)}
-                  className="w-full rounded-xl border bg-white px-3.5 py-3 text-[14px] font-semibold text-ink outline-none focus:border-brand"
-                />
-              </FormRow>
             </div>
 
-            <FormRow icon={<Hotel size={16} />} title="Accommodation">
-              <Segmented
-                options={ACCOMMODATIONS}
-                value={inputs.accommodation}
-                onChange={(v) => set("accommodation", v)}
-              />
-            </FormRow>
-
-            <FormRow icon={<Bus size={16} />} title="Travel & transport" hint="Select all you're open to">
-              <Chips options={TRANSPORTS} value={inputs.transports} onToggle={(v) => toggleArr("transports", v)} />
-            </FormRow>
-
-            <FormRow icon={<Camera size={16} />} title="Sightseeing" hint="What do you want to experience?">
-              <Chips options={SIGHTSEEING} value={inputs.sightseeing} onToggle={(v) => toggleArr("sightseeing", v)} />
-            </FormRow>
-
-            <FormRow icon={<Utensils size={16} />} title="Catering">
-              <div className="space-y-4">
-                <div>
-                  <div className="mb-2 text-[12px] font-semibold text-muted-foreground">Budget</div>
-                  <Segmented
-                    options={CATERING_COSTS}
-                    value={inputs.cateringCost}
-                    onChange={(v) => set("cateringCost", v)}
-                    renderLabel={(c) => `${c} cost`}
-                  />
+            {/* active question card — the question's own photo, under a translucent white
+                glass scrim (no blur) so the ink text and controls keep their contrast */}
+            <div
+              key={step}
+              className={`${exiting ? "q-card-exit" : "q-card-enter"} relative flex min-h-[380px] flex-col overflow-hidden rounded-3xl border border-white/50 shadow-[0_30px_70px_-24px_rgba(0,0,0,0.55)] md:min-h-[440px]`}
+            >
+              <img src={current.image} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-white/70 to-white/80" />
+              <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/60" />
+              <div className="relative z-10 flex flex-1 flex-col p-8 md:p-12">
+                <div className="mb-6 flex items-center gap-4">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/70 text-brand shadow-sm ring-1 ring-black/5">
+                    {current.icon}
+                  </span>
+                  <div>
+                    <h2 className="font-display text-[24px] font-bold leading-tight text-ink md:text-[28px]">
+                      {current.title}
+                    </h2>
+                    {current.hint && <p className="mt-1 text-[13px] font-semibold text-ink/60">{current.hint}</p>}
+                  </div>
                 </div>
-                <div>
-                  <div className="mb-2 text-[12px] font-semibold text-muted-foreground">Cuisine style</div>
-                  <Chips
-                    options={CATERING_TYPES}
-                    value={inputs.cateringTypes}
-                    onToggle={(v) => toggleArr("cateringTypes", v)}
-                  />
+
+                <div className="flex flex-1 flex-col justify-center py-2">{current.control}</div>
+
+                <div className="mt-8 flex items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={() => goToStep(step - 1)}
+                  disabled={step === 0 || exiting}
+                  className="inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-[14px] font-bold text-muted-foreground transition hover:text-ink disabled:pointer-events-none disabled:opacity-0"
+                >
+                  <ArrowLeft size={16} /> Back
+                </button>
+
+                {isLast ? (
+                  <button
+                    onClick={findTours}
+                    disabled={stage === "loading"}
+                    type="button"
+                    className="inline-flex items-center gap-2 rounded-2xl bg-brand px-6 py-3.5 text-[15px] font-bold text-white shadow-lg transition hover:brightness-95 disabled:opacity-70"
+                  >
+                    {stage === "loading" ? (
+                      <>
+                        <LoaderCircle size={18} className="animate-spin" /> Matching your trip…
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles size={18} /> Get AI suggestions
+                      </>
+                    )}
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => goToStep(step + 1)}
+                    disabled={exiting}
+                    type="button"
+                    className="inline-flex items-center gap-2 rounded-2xl bg-brand px-6 py-3.5 text-[15px] font-bold text-white shadow-lg transition hover:brightness-95 disabled:opacity-70"
+                  >
+                    Continue <ArrowRight size={18} />
+                  </button>
+                )}
                 </div>
               </div>
-            </FormRow>
-
-            <button
-              onClick={findTours}
-              disabled={stage === "loading"}
-              type="button"
-              className="mt-8 flex w-full items-center justify-center gap-2 rounded-2xl bg-brand px-6 py-4 text-[16px] font-bold text-white shadow-lg transition hover:brightness-95 disabled:opacity-70"
-            >
-              {stage === "loading" ? (
-                <>
-                  <LoaderCircle size={18} className="animate-spin" /> Matching your trip…
-                </>
-              ) : (
-                <>
-                  <Sparkles size={18} /> Get AI suggestions
-                </>
-              )}
-            </button>
+            </div>
           </div>
         )}
 
@@ -364,29 +539,6 @@ export function CustomisePage() {
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-function FormRow({
-  icon,
-  title,
-  hint,
-  children,
-}: {
-  icon: ReactNode;
-  title: string;
-  hint?: string;
-  children: ReactNode;
-}) {
-  return (
-    <div className="border-b py-5 first:pt-0 last:border-0">
-      <div className="mb-3 flex items-center gap-2">
-        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand/5 text-brand">{icon}</span>
-        <span className="text-[15px] font-bold text-ink">{title}</span>
-        {hint && <span className="text-[12px] font-medium text-muted-foreground">· {hint}</span>}
-      </div>
-      {children}
     </div>
   );
 }

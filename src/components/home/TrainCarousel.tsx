@@ -8,22 +8,25 @@ function TrainCarriage({ train, onClick }: { train: LuxuryTrain; onClick: () => 
   const [broken, setBroken] = useState(false);
   return (
     <button onClick={onClick} type="button" className="group relative shrink-0" style={{ width: 360 }} aria-label={train.name}>
-      {/* roof */}
-      <div className="mx-2 h-4 rounded-t-2xl bg-gradient-to-b from-[#8a2a37] to-[#5f1c26]" />
+      {/* roof — painted in this train's own livery */}
+      <div
+        className="mx-2 h-4 rounded-t-2xl"
+        style={{ background: `linear-gradient(180deg, ${train.livery.roof[0]}, ${train.livery.roof[1]})` }}
+      />
       {/* roof vents / AC units */}
       <div className="mx-1 -mt-[3px] flex justify-center gap-14">
         <span className="h-1.5 w-14 rounded-b-md bg-[#2b2f36]" />
         <span className="h-1.5 w-14 rounded-b-md bg-[#2b2f36]" />
       </div>
-      {/* body — heritage maroon frame with gold trim */}
+      {/* body — frame and edging in this train's livery */}
       <div
         className="relative h-[280px] overflow-hidden border-x-[7px] border-y-[3px] shadow-2xl"
         style={{
           background: `linear-gradient(135deg, ${train.grad[0]}, ${train.grad[1]})`,
-          borderLeftColor: "#6b1f2a",
-          borderRightColor: "#6b1f2a",
-          borderTopColor: "#cba14b",
-          borderBottomColor: "#cba14b",
+          borderLeftColor: train.livery.side,
+          borderRightColor: train.livery.side,
+          borderTopColor: train.livery.trim,
+          borderBottomColor: train.livery.trim,
         }}
       >
         {!broken && (

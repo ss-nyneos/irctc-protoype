@@ -141,7 +141,7 @@ export function ServicesSection() {
   const ref = useReveal();
 
   return (
-    <section className="relative overflow-hidden pb-20 md:pb-28" ref={ref}>
+    <section className="relative overflow-hidden pb-28 md:pb-36" ref={ref}>
       <SkyDecor />
       <div className="reveal relative">
         <h2 className="sr-only">Our Services</h2>

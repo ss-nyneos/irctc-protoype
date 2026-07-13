@@ -70,7 +70,7 @@ export function SpecialOffersSection() {
   const [errored, setErrored] = useState<Record<string, boolean>>({});
 
   return (
-    <section className="mx-auto max-w-7xl px-4 py-20 md:px-6 md:py-28" ref={ref}>
+    <section className="mx-auto max-w-7xl px-4 py-28 md:px-6 md:py-36" ref={ref}>
       <h2 className="reveal heading-xl text-center text-ink">
         Special <span className="accent">Offers</span>
       </h2>

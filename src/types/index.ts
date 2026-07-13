@@ -45,12 +45,23 @@ export interface TourPackage {
   flightAddon: number;
 }
 
+/** Carriage livery — each train's real-world colours, painted on its roof and frame. */
+export interface TrainLivery {
+  /** Roof gradient, light → dark. */
+  roof: [string, string];
+  /** Left/right frame (the thick side pillars). */
+  side: string;
+  /** Top/bottom edging. */
+  trim: string;
+}
+
 export interface LuxuryTrain {
   id: string;
   name: string;
   tag: string;
   route: string;
   grad: [string, string];
+  livery: TrainLivery;
   /** Local image module path (imported asset URL) */
   img: string;
 }

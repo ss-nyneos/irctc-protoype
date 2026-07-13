@@ -95,18 +95,18 @@ export function ExploreWorldSection() {
     <section
       ref={ref}
       id="explore-world"
-      className="relative overflow-hidden bg-white"
+      className="relative overflow-hidden bg-white pb-24"
       aria-label="Ready to explore the world"
     >
       {/* ───────────────── Desktop: floating composition ───────────────── */}
       <div className="relative hidden h-[1140px] w-full lg:block">
         {/* skyline + mirrored reflection, full-bleed edge-to-edge behind everything */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 select-none">
-          <img src={skyline} alt="" className="w-full" />
-          <img src={skylineReflection} alt="" className="-mt-px w-full" />
+          <img src={skyline} alt="" className="block w-full" />
+          <img src={skylineReflection} alt="" className="block w-full" />
         </div>
 
-        {/* boat sitting flush in the exact bottom-left corner of the pane */}
+        {/* boat sits on the skyline's waterline; the section's pb-24 supplies the gap to the footer */}
         <Boat className="pointer-events-none absolute bottom-0 left-0 z-20 h-[200px] w-[260px] select-none" />
 
         {/* readable-width content layer, same footprint as before so every
@@ -190,8 +190,8 @@ export function ExploreWorldSection() {
         </div>
 
         <div className="pointer-events-none relative -mx-5 mt-8 select-none">
-          <img src={skyline} alt="" className="w-full" />
-          <img src={skylineReflection} alt="" className="-mt-px w-full" />
+          <img src={skyline} alt="" className="block w-full" />
+          <img src={skylineReflection} alt="" className="block w-full" />
           <Boat className="absolute bottom-0 left-0 h-[130px] w-[170px]" />
         </div>
       </div>
