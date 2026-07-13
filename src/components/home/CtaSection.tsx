@@ -9,7 +9,7 @@ export function CtaSection() {
   const { go } = useRouter();
 
   return (
-    <section className="mx-auto max-w-7xl px-4 pb-20 pt-4 md:px-6 md:pb-28 md:pt-8" ref={ref}>
+    <section className="mx-auto max-w-7xl px-4 pb-20 pt-16 md:px-6 md:pb-28 md:pt-24" ref={ref}>
       <div
         className="reveal relative overflow-hidden rounded-3xl bg-navy bg-cover bg-center p-8 text-white md:p-14"
         style={{ backgroundImage: `url(${vandeBharat})` }}

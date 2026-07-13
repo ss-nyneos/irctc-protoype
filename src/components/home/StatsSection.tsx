@@ -1,7 +1,9 @@
 import { Star } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
 import { useCountUp } from "@/hooks/useCountUp";
-import photoImg from "@/assets/hero/rajasthan-desert-camp.jpg";
+import cardImg1 from "@/assets/cta/stat_section1.jpeg";
+import cardImg2 from "@/assets/cta/stats_section_placard.jpg";
+import cardImg3 from "@/assets/cta/stat_section_placard.jpg";
 import avatar1 from "@/assets/hero/jaipur-amber-fort.jpg";
 import avatar2 from "@/assets/hero/ladakh-mountains.jpg";
 import avatar3 from "@/assets/hero/kerala-tea-gardens.jpg";
@@ -68,7 +70,7 @@ function BigStat({
         </span>
         {unit && <span className="text-[15px] font-semibold text-white">{unit}</span>}
       </div>
-      <div className="mt-2 text-[13px] font-medium text-white/60">{label}</div>
+      <div className="mt-2 text-[13px] font-medium text-white/80">{label}</div>
     </div>
   );
 }
@@ -77,43 +79,56 @@ export function StatsSection() {
   const ref = useReveal();
 
   return (
-    <section className="bg-navy py-20 text-white md:py-28" ref={ref}>
-      <div className="reveal mx-auto grid max-w-7xl gap-4 px-4 md:px-6 lg:grid-cols-12">
+    <section className="py-20 md:py-28" ref={ref}>
+      <div className="reveal mx-auto grid max-w-7xl gap-6 px-4 md:px-6 lg:grid-cols-12 lg:gap-8">
         {/* ── Anchor stat ─────────────────────────────────────────── */}
-        <div className="relative flex min-h-[220px] flex-col justify-center overflow-hidden rounded-[28px] bg-white/[0.055] p-7 ring-1 ring-white/10 lg:col-span-3 lg:min-h-[300px]">
-          <CornerArcs className="pointer-events-none absolute -right-4 -top-4 h-44 w-44 text-white/[0.1]" />
-          <div className="relative">
+        <div className="relative flex min-h-[220px] flex-col justify-center overflow-hidden rounded-[28px] p-7 shadow-[0_24px_60px_-28px_hsl(var(--navy)/0.55)] ring-1 ring-white/15 lg:col-span-3 lg:min-h-[300px]">
+          <img
+            src={cardImg1}
+            alt="Two travellers trekking a coastal ridge at golden hour"
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/45 to-black/20 backdrop-blur-[1px]" />
+          <CornerArcs className="pointer-events-none absolute -right-4 -top-4 h-44 w-44 text-white/[0.14]" />
+          <div className="relative [text-shadow:0_1px_3px_rgba(0,0,0,0.35)]">
             <BigStat to={240000} suffix="+" label="Happy travellers a year" />
-            <p className="mt-4 max-w-[16ch] text-[13px] leading-relaxed text-white/50">
+            <p className="mt-4 max-w-[16ch] text-[13px] leading-relaxed text-white/75">
               Journeys booked with the trust of Indian Railways.
             </p>
           </div>
         </div>
 
         {/* ── Photo card ──────────────────────────────────────────── */}
-        <div className="relative min-h-[220px] overflow-hidden rounded-[28px] ring-1 ring-white/10 lg:col-span-4 lg:min-h-[300px]">
+        <div className="relative min-h-[220px] overflow-hidden rounded-[28px] shadow-[0_24px_60px_-28px_hsl(var(--navy)/0.55)] ring-1 ring-white/15 lg:col-span-4 lg:min-h-[300px]">
           <img
-            src={photoImg}
-            alt="Desert camp under a full moon in Rajasthan"
+            src={cardImg2}
+            alt="A family walking towards their flight with luggage"
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/40 to-navy/5" />
-          <div className="relative flex h-full flex-col justify-end p-7">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/78 via-black/35 to-black/5 backdrop-blur-[0.5px]" />
+          <div className="relative flex h-full flex-col justify-end p-7 [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]">
             <div className="font-display text-[clamp(1.7rem,3vw,2.2rem)] font-bold leading-none text-white">
               1,200+
             </div>
             <div className="mt-2 text-[14px] font-semibold text-white">Curated packages</div>
-            <div className="text-[13px] text-white/70">Handpicked across Bharat &amp; beyond</div>
+            <div className="text-[13px] text-white/85">Handpicked across Bharat &amp; beyond</div>
           </div>
         </div>
 
         {/* ── Combined stats card ─────────────────────────────────── */}
-        <div className="relative flex min-h-[220px] flex-col overflow-hidden rounded-[28px] bg-white/[0.055] p-7 ring-1 ring-white/10 lg:col-span-5 lg:min-h-[300px]">
-          <div className="pointer-events-none absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-white/[0.04] blur-3xl" />
+        <div className="relative flex min-h-[220px] flex-col overflow-hidden rounded-[28px] p-7 shadow-[0_24px_60px_-28px_hsl(var(--navy)/0.55)] ring-1 ring-white/15 lg:col-span-5 lg:min-h-[300px]">
+          <img
+            src={cardImg3}
+            alt="A traveller watching hot-air balloons rise at sunrise"
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-black/72 via-black/55 to-black/72 backdrop-blur-[1px]" />
 
-          <div className="relative grid flex-1 grid-cols-2 items-start">
-            <div className="border-white/10 pr-6 sm:border-r">
+          <div className="relative grid flex-1 grid-cols-2 items-start [text-shadow:0_1px_3px_rgba(0,0,0,0.35)]">
+            <div className="border-white/20 pr-6 sm:border-r">
               <BigStat to={4} unit="Luxury Trains" label="Maharajas', Golden Chariot &amp; more" size="md" />
             </div>
             <div className="pl-6">
@@ -121,18 +136,18 @@ export function StatsSection() {
             </div>
           </div>
 
-          <div className="relative my-5 border-t border-dashed border-white/15" />
+          <div className="relative my-5 border-t border-dashed border-white/20" />
 
-          <div className="relative grid flex-1 grid-cols-2 items-center">
+          <div className="relative grid flex-1 grid-cols-2 items-center [text-shadow:0_1px_3px_rgba(0,0,0,0.35)]">
             <div>
               <AvatarStack />
-              <div className="mt-2.5 text-[13px] font-medium text-white/60">60,000+ reviews</div>
+              <div className="mt-2.5 text-[13px] font-medium text-white/80">60,000+ reviews</div>
             </div>
             <div className="text-right">
               <div className="flex items-center justify-end gap-1.5 font-display text-[clamp(1.7rem,3vw,2.2rem)] font-bold leading-none text-white">
                 4.8 <Star size={22} className="fill-white text-white" />
               </div>
-              <div className="mt-2 text-[13px] font-medium text-white/60">Average traveller rating</div>
+              <div className="mt-2 text-[13px] font-medium text-white/80">Average traveller rating</div>
             </div>
           </div>
         </div>

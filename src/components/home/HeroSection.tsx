@@ -2,27 +2,16 @@ import type { ReactNode } from "react";
 import { Calendar, MapPin, Search, Users } from "lucide-react";
 import { useRouter } from "@/router/RouterContext";
 import { destinations } from "@/data/destinations";
-import { HeroSlideshow } from "./HeroSlideshow";
-import jaipurImg from "@/assets/hero/jaipur-amber-fort.jpg";
-import ladakhImg from "@/assets/hero/ladakh-mountains.jpg";
-import keralaImg from "@/assets/hero/kerala-tea-gardens.jpg";
-import rajasthanImg from "@/assets/hero/rajasthan-desert-camp.jpg";
-
-const slides = [
-  { src: jaipurImg, alt: "Amber Fort, Jaipur, at sunset" },
-  { src: ladakhImg, alt: "Snow-capped mountains of Ladakh" },
-  { src: keralaImg, alt: "Tea gardens and temple in Kerala" },
-  { src: rajasthanImg, alt: "Desert camp under a full moon in Rajasthan" },
-];
+import { HeroVideo } from "./HeroVideo";
 
 export function HeroSection() {
   const { go } = useRouter();
 
   return (
     <section className="relative flex min-h-[92dvh] flex-col overflow-hidden md:min-h-[94vh]">
-      <HeroSlideshow slides={slides} />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
-      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/35 to-transparent" />
+      <HeroVideo />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/35 to-transparent" />
 
       <div className="relative mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center px-4 py-24 text-center md:px-6">
         <h1
