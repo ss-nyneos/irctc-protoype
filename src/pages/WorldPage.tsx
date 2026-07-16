@@ -3,13 +3,13 @@ import { ArrowLeft, Check, ChevronDown, Scale, SlidersHorizontal, X } from "luci
 import { useReveal } from "@/hooks/useReveal";
 import { useRouter } from "@/router/RouterContext";
 import { packages, getPackageById } from "@/data/packages";
-import type { BudgetBand, Climate, Experience } from "@/types";
+import type { BudgetBand, Climate, Experience, TourPackage } from "@/types";
 import { DestinationMarquee } from "@/components/common/DestinationMarquee";
 import { AiPickBanner } from "@/components/home/AiPickBanner";
 import { PackageCard } from "@/components/package/PackageCard";
 import { CompareModal } from "@/components/package/CompareModal";
 
-const categories = ["All", "Pilgrimage", "Heritage", "Hills", "Beach", "Wildlife", "International", "Luxury Train", "Bharat Gaurav"];
+const categories = ["All", "Domestic", "Pilgrimage", "Heritage", "Hills", "Beach", "Wildlife", "International", "Luxury Train", "Bharat Gaurav"];
 const sortOptions = ["Recommended", "Price: Low to High", "Price: High to Low", "Top rated"] as const;
 type SortOption = (typeof sortOptions)[number];
 
@@ -28,10 +28,13 @@ const experienceOptions: { k: Experience; label: string }[] = [
 const durationOptions = ["Any", "3–5 days", "6–8 days", "9+ days"] as const;
 type Duration = (typeof durationOptions)[number];
 
-export function WorldPage() {
+/** Fractional saving vs. the struck-through price — used to rank "best value". */
+const discountPct = (p: TourPackage) => (p.oldPrice ? (p.oldPrice - p.price) / p.oldPrice : 0);
+
+export function WorldPage({ initialCategory }: { initialCategory?: string }) {
   const { back } = useRouter();
   const ref = useReveal();
-  const [category, setCategory] = useState("All");
+  const [category, setCategory] = useState(initialCategory ?? "All");
   const [sort, setSort] = useState<SortOption>("Recommended");
   const [showFilters, setShowFilters] = useState(false);
   const [selRegions, setSelRegions] = useState<string[]>([]);
@@ -41,8 +44,6 @@ export function WorldPage() {
   const [duration, setDuration] = useState<Duration>("Any");
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [showCompare, setShowCompare] = useState(false);
-
-  const aiPick = getPackageById("dakshinbharat")!;
 
   const toggle = <T,>(list: T[], setList: (v: T[]) => void, value: T) =>
     setList(list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
@@ -60,7 +61,12 @@ export function WorldPage() {
 
   const filtered = useMemo(() => {
     let list = packages.filter((p) => {
-      if (category !== "All" && p.category !== category) return false;
+      // "Domestic" is a scope (everything not abroad), the rest match the package category directly
+      if (category === "Domestic") {
+        if (p.category === "International") return false;
+      } else if (category !== "All" && p.category !== category) {
+        return false;
+      }
       if (selRegions.length && !selRegions.includes(p.region)) return false;
       if (selBands.length && !selBands.includes(p.budgetBand)) return false;
       if (selClimates.length && !selClimates.includes(p.climate)) return false;
@@ -76,6 +82,17 @@ export function WorldPage() {
     return list;
   }, [category, sort, selRegions, selBands, selClimates, selExperiences, duration]);
 
+  // The AI pick must come from what's actually on screen. Keep the curated default
+  // when it matches the active filters; otherwise surface the best-value package in
+  // the results (top rating, then biggest saving). Null → no matches, hide the banner.
+  const aiPick = useMemo(() => {
+    if (filtered.length === 0) return null;
+    return (
+      filtered.find((p) => p.id === "dakshinbharat") ??
+      [...filtered].sort((a, b) => b.rating - a.rating || discountPct(b) - discountPct(a))[0]
+    );
+  }, [filtered]);
+
   const toggleCompare = (id: string) =>
     setCompareIds((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : prev.length < 3 ? [...prev, id] : prev));
 
@@ -90,17 +107,15 @@ export function WorldPage() {
             <ArrowLeft size={15} /> Back
           </button>
           <h1 className="heading-xl text-ink">Explore &amp; compare packages</h1>
-          <p className="mt-2 max-w-xl text-[15px] text-muted-foreground">
-            Ready-to-book holidays with verified pricing. Drill down by region, budget, climate & style, or let AI
-            shortlist the best value — then compare any three side by side.
-          </p>
         </div>
       </div>
 
       <div className="mx-auto max-w-7xl px-4 md:px-6">
-        <div className="-mt-6">
-          <AiPickBanner pkg={aiPick} />
-        </div>
+        {aiPick && (
+          <div className="mt-6">
+            <AiPickBanner pkg={aiPick} />
+          </div>
+        )}
 
         <div className="reveal sticky top-[68px] z-30 mt-8 rounded-2xl border bg-white/90 shadow-sm backdrop-blur">
           <div className="flex items-center gap-3 p-3">
@@ -213,10 +228,10 @@ export function WorldPage() {
           {filtered.length} {filtered.length === 1 ? "package" : "packages"} match your filters
         </div>
 
-        <div className="mt-3 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {filtered.map((pkg) => (
             <div key={pkg.id} className="reveal relative">
-              <PackageCard pkg={pkg} />
+              <PackageCard pkg={pkg} compact />
               <button
                 onClick={() => toggleCompare(pkg.id)}
                 type="button"

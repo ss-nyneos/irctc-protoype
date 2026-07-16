@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { ArrowLeft, CalendarDays, CircleUserRound, Sparkles, Star } from "lucide-react";
+import { ArrowLeft, CalendarDays, CircleUserRound, Star } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
 import { useRouter } from "@/router/RouterContext";
 import { getPackageById } from "@/data/packages";
@@ -21,18 +21,28 @@ export function MadeForYouPage() {
           <button onClick={back} type="button" className="mb-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-muted-foreground hover:text-ink">
             <ArrowLeft size={15} /> Back
           </button>
-          <div className="mt-3 flex items-center gap-4">
-            <div className="flex h-14 w-14 flex-none items-center justify-center rounded-2xl bg-brand/10 text-brand">
-              <CircleUserRound size={32} />
-            </div>
-            <div className="min-w-0">
-              <div className="text-[13px] font-medium text-muted-foreground">Welcome back,</div>
-              <h1 className="font-display text-[26px] font-bold leading-tight tracking-tight text-ink sm:text-[30px]">
-                {demoUser.name}
-              </h1>
-              <p className="mt-2 text-[12.5px] text-muted-foreground">
-                Member since {demoUser.memberSince} · {pastTours.length} tours completed · {demoUser.tags.join(" · ")}
-              </p>
+          {/* profile — a frosted panel floating over a soft brand wash. The blurred
+              colour blobs sit *behind* the glass so it has something to refract;
+              on a flat white background the frost would read as nothing at all. */}
+          <div className="relative mt-3 overflow-hidden rounded-3xl">
+            <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-br from-[#dbe8fd] via-[#eef4ff] to-[#e4eefe]" />
+            <span aria-hidden="true" className="pointer-events-none absolute -left-12 -top-14 h-48 w-48 rounded-full bg-brand/30 blur-3xl" />
+            <span aria-hidden="true" className="pointer-events-none absolute -bottom-16 right-10 h-52 w-52 rounded-full bg-azure/30 blur-3xl" />
+            <span aria-hidden="true" className="pointer-events-none absolute right-1/3 -top-10 h-36 w-36 rounded-full bg-saffron/20 blur-3xl" />
+
+            <div className="glass relative flex items-center gap-4 rounded-3xl border border-white/60 p-6 shadow-[0_18px_50px_-20px_rgba(15,32,74,0.35)] ring-1 ring-inset ring-white/40 md:gap-6 md:p-8">
+              <div className="flex h-16 w-16 flex-none items-center justify-center rounded-2xl bg-white/70 text-brand shadow-sm ring-1 ring-white/60 md:h-20 md:w-20">
+                <CircleUserRound size={40} />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[13px] font-medium text-muted-foreground">Welcome back,</div>
+                <h1 className="font-display text-[38px] font-bold leading-none tracking-tight text-ink sm:text-[52px]">
+                  {demoUser.name}
+                </h1>
+                <p className="mt-2.5 text-[12.5px] text-muted-foreground">
+                  Member since {demoUser.memberSince} · {pastTours.length} tours completed · {demoUser.tags.join(" · ")}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -40,30 +50,26 @@ export function MadeForYouPage() {
 
       <div className="mx-auto max-w-6xl px-4 md:px-6">
         <div className="reveal mt-4">
-          <div className="mb-4 flex items-center gap-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand/15 text-brand">
-              <CalendarDays size={18} />
-            </span>
-            <div>
-              <div className="font-display text-[18px] font-semibold text-ink">Your travel photo diary</div>
-              <div className="text-[12px] text-muted-foreground">Every trip you&apos;ve booked with IRCTC, in pictures</div>
-            </div>
-          </div>
+          <h2 className="font-display text-[42px] font-bold leading-none text-ink">Your travel photo diary</h2>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {/* same columns, gap and row height as "Picked for your travel style" below, so
+              every card on the page is exactly the same size */}
+          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:auto-rows-[380px] lg:grid-cols-4">
             {pastTours.map((trip) => {
               const pkg = getPackageById(trip.packageId);
               if (!pkg) return null;
               return (
-                <div key={trip.packageId} className="overflow-hidden rounded-2xl border bg-white shadow-sm">
-                  <div className="grid grid-cols-3 gap-0.5">
+                <div key={trip.packageId} className="flex h-full flex-col overflow-hidden rounded-2xl border bg-white shadow-sm">
+                  {/* collage grows to fill whatever height the row gives it (min-h keeps it
+                      from collapsing when the row height is auto, e.g. below lg) */}
+                  <div className="grid min-h-[160px] flex-1 grid-cols-3 grid-rows-2 gap-0.5">
                     {trip.photos.map((photo, i) => (
                       <ImageWithFallback
                         key={i}
                         img={photo}
                         grad={pkg.grad}
                         alt={`${pkg.name} photo ${i + 1}`}
-                        className={i === 0 ? "col-span-2 row-span-2 h-full min-h-[120px]" : "h-[59px]"}
+                        className={i === 0 ? "col-span-2 row-span-2 h-full" : "h-full"}
                         overlay={false}
                       />
                     ))}
@@ -81,7 +87,7 @@ export function MadeForYouPage() {
                       <CalendarDays size={11} />
                       {new Date(trip.travelDate).toLocaleDateString("en-IN", { month: "long", year: "numeric" })}
                     </div>
-                    <p className="mt-2 text-[12px] leading-relaxed text-foreground/80">{trip.note}</p>
+                    <p className="mt-2 line-clamp-2 text-[12px] leading-relaxed text-foreground/80">{trip.note}</p>
                   </div>
                 </div>
               );
@@ -89,21 +95,13 @@ export function MadeForYouPage() {
           </div>
         </div>
 
-        <div className="reveal mt-12 rounded-3xl border bg-white p-5 shadow-xl">
-          <div className="flex items-center gap-2">
-            <Sparkles size={18} className="text-brand" />
-            <div>
-              <div className="font-display text-[18px] font-semibold text-ink">Picked for your travel style</div>
-              <div className="text-[12px] text-muted-foreground">
-                Based on the trips you&apos;ve already taken with us
-              </div>
-            </div>
-          </div>
-        </div>
+        <h2 className="reveal mt-12 font-display text-[42px] font-bold leading-none text-ink">
+          Picked for your travel style
+        </h2>
 
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:auto-rows-[380px] lg:grid-cols-4">
           {recommended.map((pkg) => (
-            <div key={pkg.id} className="reveal relative">
+            <div key={pkg.id} className="reveal relative h-full">
               <PackageCard pkg={pkg} compact />
             </div>
           ))}

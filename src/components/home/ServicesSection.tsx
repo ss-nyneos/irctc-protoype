@@ -1,139 +1,115 @@
+import { ChevronRight } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
-import { serviceGroups } from "@/data/services";
-import servicesHeadingBanner from "@/assets/services/placement-reference.png";
-import airplaneIcon from "@/assets/irctc_services_assets/airplane.png";
-import hikingIcon from "@/assets/irctc_services_assets/hiking.png";
 import {
-  FlightsIcon,
-  HotelsIcon,
-  BusIcon,
-  RetiringRoomIcon,
-  LoungeIcon,
-  TourPackagesIcon,
-  BharatGauravIcon,
-  BuddhistTrainIcon,
-  MaharajasIcon,
-  GoldenChariotIcon,
-  FerryIcon,
-  HeliYatraIcon,
-  TAGIcon,
-  TrekIcon,
-} from "./ServiceIcons";
+  IRCTC_FLIGHTS,
+  IRCTC_HOTELS,
+  IRCTC_BUS,
+  IRCTC_RETIRING_ROOM,
+  IRCTC_LOUNGE,
+  IRCTC_BHARAT_GAURAV,
+  IRCTC_BUDDHIST_TRAIN,
+  IRCTC_HELI_YATRA,
+  IRCTC_FERRY,
+  IRCTC_TREK,
+  IRCTC_MAHARAJAS,
+  IRCTC_GOLDEN_CHARIOT,
+} from "@/data/services";
 
-const iconMap: Record<string, (props: { size?: number; className?: string }) => JSX.Element> = {
-  Flights: FlightsIcon,
-  Hotels: HotelsIcon,
-  "Bus Tickets": BusIcon,
-  "Retiring Room": RetiringRoomIcon,
-  Lounge: LoungeIcon,
-  "Tour Packages": TourPackagesIcon,
-  "Bharat Gaurav": BharatGauravIcon,
-  "Buddhist Train": BuddhistTrainIcon,
-  "Maharajas' Express": MaharajasIcon,
-  "Golden Chariot": GoldenChariotIcon,
-  Ferry: FerryIcon,
-  "Heli Yatra": HeliYatraIcon,
-  TAG: TAGIcon,
-  Trek: TrekIcon,
-};
+import imgFlights from "@/assets/irctc_services_assets/svc-flights.png";
+import imgHotels from "@/assets/irctc_services_assets/svc-hotels.jpg";
+import imgBus from "@/assets/irctc_services_assets/svc-bus.png";
+import imgRetiring from "@/assets/irctc_services_assets/svc-retiring-room.jpeg";
+import imgLounge from "@/assets/irctc_services_assets/svc-lounge.webp";
+import imgBharat from "@/assets/irctc_services_assets/svc-bharat-gaurav.webp";
+import imgBuddhist from "@/assets/irctc_services_assets/svc-buddhist-train.jpg";
+import imgHeli from "@/assets/irctc_services_assets/svc-heli-yatra.webp";
+import imgFerry from "@/assets/irctc_services_assets/svc-ferry.png";
+import imgTrek from "@/assets/irctc_services_assets/svc-trek.webp";
+import imgMaharajas from "@/assets/irctc_services_assets/svc-maharajas.jpg";
+import imgGolden from "@/assets/irctc_services_assets/svc-golden-chariot.jpeg";
 
-/**
- * Per-service very-light pastel blob tint behind each icon, matching the
- * reference board. Tints stay intentionally pale — the same family as the
- * SVG assets in `assets/irctc_services_assets/blob-*.svg`.
- */
-const blobTint: Record<string, string> = {
-  Flights: "#e7f0ff",
-  Hotels: "#e0f1ff",
-  "Bus Tickets": "#e8fff0",
-  "Retiring Room": "#efe8ff",
-  Lounge: "#fff5dd",
-  "Tour Packages": "#ddf7f2",
-  "Bharat Gaurav": "#ffe7f2",
-  "Buddhist Train": "#fff5dd",
-  "Maharajas' Express": "#ffe6ea",
-  "Golden Chariot": "#f2e9ff",
-  Ferry: "#ddf7f2",
-  "Heli Yatra": "#e7f0ff",
-  TAG: "#ffe7f2",
-  Trek: "#e8fff0",
-};
-
-const defaultTint = "#e7f0ff";
-
-/** Organic blob shape, taken verbatim from the provided blob-*.svg assets. */
-const BLOB_PATH =
-  "M34,82C20,42,63,5,114,18C162,30,194,74,172,117C150,158,82,154,49,129C29,114,42,103,34,82Z";
-
-/** Soft pastel blob that sits behind an icon. */
-function Blob({ fill, className = "" }: { fill: string; className?: string }) {
-  return (
-    <svg viewBox="0 0 200 160" className={className} aria-hidden="true">
-      <path d={BLOB_PATH} fill={fill} />
-    </svg>
-  );
+interface ServiceCardData {
+  label: string;
+  sub: string;
+  tag: string;
+  url: string;
+  image: string;
+  /** Frame colour — a gradient sampled from the photo's own dominant colour (lit
+      tone at top → deepened tone at the bottom) so the frame matches the picture
+      while the white label still reads at strong contrast. */
+  frame: string;
+  /** Optional object-position for the photo (defaults to centre). Used when the
+      subject sits off-centre — e.g. the plane's nose — so it stays inside the frame. */
+  pos?: string;
 }
 
-/** PNG line-icons that override the built-in SVG set for specific services. */
-const pngIcon: Record<string, string> = {
-  Flights: airplaneIcon,
-  Trek: hikingIcon,
-};
-
-/**
- * Renders a black line-art PNG as a navy icon by using it as an alpha mask over
- * a `bg-navy` fill — keeps PNG icons colour-matched to the SVG (`text-navy`) set.
- */
-function IconImage({ src, size, className = "" }: { src: string; size: number; className?: string }) {
-  const mask = {
-    maskImage: `url(${src})`,
-    WebkitMaskImage: `url(${src})`,
-    maskRepeat: "no-repeat",
-    WebkitMaskRepeat: "no-repeat",
-    maskPosition: "center",
-    WebkitMaskPosition: "center",
-    maskSize: "contain",
-    WebkitMaskSize: "contain",
-  } as const;
-  return (
-    <span
-      aria-hidden="true"
-      className={`block bg-ink ${className}`}
-      style={{ width: size, height: size, ...mask }}
-    />
-  );
-}
-
-const shortLabel: Record<string, string> = {
-  "Maharajas' Express": "Maharajas'",
-};
-
-const displayOrder = [
-  "Flights",
-  "Hotels",
-  "Bus Tickets",
-  "Retiring Room",
-  "Lounge",
-  "Tour Packages",
-  "Bharat Gaurav",
-  "Buddhist Train",
-  "Maharajas' Express",
-  "Golden Chariot",
-  "Ferry",
-  "Heli Yatra",
-  "TAG",
-  "Trek",
+/** Oval-masked photo card. The image sits in an ellipse that bleeds off the top
+    and right of the frame; thin arc lines sweep the coloured frame; the label +
+    chevron rest below — matching the reference wellness cards.
+    (Tour Packages and TAG are covered elsewhere on the site and have no artwork.) */
+const SERVICES: ServiceCardData[] = [
+  { label: "Flights", sub: "Domestic & international", tag: "Book & Travel", url: IRCTC_FLIGHTS, image: imgFlights, pos: "20% 45%", frame: "linear-gradient(165deg, #3e79b8 0%, #15314f 100%)" },
+  { label: "Hotels", sub: "Stays across India", tag: "Book & Travel", url: IRCTC_HOTELS, image: imgHotels, frame: "linear-gradient(165deg, #b86b3e 0%, #4f2a15 100%)" },
+  { label: "Bus Tickets", sub: "Intercity & sleeper coaches", tag: "Book & Travel", url: IRCTC_BUS, image: imgBus, frame: "linear-gradient(165deg, #83abb8 0%, #36494f 100%)" },
+  { label: "Retiring Rooms", sub: "Rest right at the station", tag: "Book & Travel", url: IRCTC_RETIRING_ROOM, image: imgRetiring, frame: "linear-gradient(165deg, #b8a082 0%, #4f4435 100%)" },
+  { label: "Executive Lounge", sub: "Unwind before you board", tag: "Book & Travel", url: IRCTC_LOUNGE, image: imgLounge, frame: "linear-gradient(165deg, #b86d3e 0%, #4f2b15 100%)" },
+  { label: "Bharat Gaurav", sub: "Themed circuit trains", tag: "Tourism", url: IRCTC_BHARAT_GAURAV, image: imgBharat, frame: "linear-gradient(165deg, #b8846a 0%, #4f362a 100%)" },
+  { label: "Buddhist Circuit", sub: "The sacred trail by rail", tag: "Tourism", url: IRCTC_BUDDHIST_TRAIN, image: imgBuddhist, frame: "linear-gradient(165deg, #3eb8ae 0%, #154f4a 100%)" },
+  { label: "Heli Yatra", sub: "Char Dham by helicopter", tag: "Tourism", url: IRCTC_HELI_YATRA, image: imgHeli, frame: "linear-gradient(165deg, #7390b8 0%, #2e3c4f 100%)" },
+  { label: "Ferry & Cruises", sub: "Coastal & island escapes", tag: "Tourism", url: IRCTC_FERRY, image: imgFerry, frame: "linear-gradient(165deg, #3eb8b8 0%, #154f4f 100%)" },
+  { label: "Himalayan Treks", sub: "Guided high-altitude trails", tag: "Tourism", url: IRCTC_TREK, image: imgTrek, frame: "linear-gradient(165deg, #3e81b8 0%, #15354f 100%)" },
+  { label: "Maharajas' Express", sub: "World's leading luxury train", tag: "Luxury Trains", url: IRCTC_MAHARAJAS, image: imgMaharajas, frame: "linear-gradient(165deg, #b8793e 0%, #4f3115 100%)" },
+  { label: "Golden Chariot", sub: "Pride of the South", tag: "Luxury Trains", url: IRCTC_GOLDEN_CHARIOT, image: imgGolden, frame: "linear-gradient(165deg, #b83e76 0%, #4f1530 100%)" },
 ];
 
-const allServices = serviceGroups.flatMap((g) => g.items);
-const services = displayOrder.map((label) => allServices.find((s) => s.label === label)!).filter(Boolean);
-
-/** Soft sky gradient backdrop for the section. */
-function SkyDecor() {
+function ServiceCard({ s }: { s: ServiceCardData }) {
   return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#eaf1fc] via-[#f2f6fd] to-white" />
-    </div>
+    <a
+      href={s.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${s.label} — ${s.sub}`}
+      style={{ backgroundImage: s.frame }}
+      className="group relative block aspect-[7/10] w-full overflow-hidden rounded-[18px] shadow-[0_14px_32px_-16px_rgba(15,32,74,0.55)] ring-1 ring-white/10 transition-transform duration-300 ease-out hover:-translate-y-1"
+    >
+      {/* thin concentric arc lines sweeping the frame */}
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 248 360"
+        preserveAspectRatio="xMidYMid slice"
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        fill="none"
+      >
+        <g stroke="#ffffff" strokeWidth="1">
+          <circle cx="196" cy="58" r="150" strokeOpacity="0.09" />
+          <circle cx="196" cy="58" r="190" strokeOpacity="0.07" />
+          <circle cx="196" cy="58" r="232" strokeOpacity="0.05" />
+        </g>
+      </svg>
+
+      {/* ellipse-masked photo — bleeds off the top and right edges */}
+      <div className="absolute left-[11%] right-[-16%] top-[-13%] h-[88%] overflow-hidden rounded-[50%] ring-1 ring-white/15">
+        <img
+          src={s.image}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          style={{ objectPosition: s.pos ?? "center" }}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[600ms] ease-out group-hover:scale-[1.07]"
+        />
+        <div className="absolute inset-0 rounded-[50%] shadow-[inset_0_0_36px_-6px_rgba(0,0,0,0.5)]" />
+      </div>
+
+      {/* label + chevron rest on the coloured frame */}
+      <div className="absolute inset-x-3.5 bottom-3.5 flex items-end justify-between gap-2">
+        <div className="min-w-0 font-display text-[13.5px] font-bold leading-[1.15] text-white">
+          {s.label}
+        </div>
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/45 text-white transition-colors duration-200 ease-out group-hover:border-white group-hover:bg-white/10">
+          <ChevronRight size={13} />
+        </span>
+      </div>
+    </a>
   );
 }
 
@@ -141,40 +117,28 @@ export function ServicesSection() {
   const ref = useReveal();
 
   return (
-    <section className="relative overflow-hidden pb-28 md:pb-36" ref={ref}>
-      <SkyDecor />
-      <div className="reveal relative">
-        <h2 className="sr-only">Our Services</h2>
-        <p className="sr-only">Comprehensive travel solutions for every explorer.</p>
-        <img src={servicesHeadingBanner} alt="" aria-hidden="true" className="block h-auto w-full select-none" />
-      </div>
+    <section className="relative overflow-hidden py-20 md:py-28" ref={ref}>
+      {/* soft backdrop so the frames pop */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#eef3fb] via-[#f4f7fd] to-white"
+      />
+
       <div className="relative mx-auto max-w-7xl px-4 md:px-6">
-        <div className="reveal mt-10 grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 md:gap-6 lg:grid-cols-7">
-          {services.map((item) => {
-            const Icon = iconMap[item.label] ?? FlightsIcon;
-            const png = pngIcon[item.label];
-            const tint = blobTint[item.label] ?? defaultTint;
-            return (
-              <a
-                key={item.label}
-                href={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex min-h-[210px] flex-col items-center justify-center rounded-[28px] bg-white px-4 py-8 text-center shadow-[0_14px_34px_-16px_rgba(15,32,74,0.18)] transition-all duration-[250ms] ease-out hover:-translate-y-1.5 hover:shadow-[0_22px_46px_-16px_rgba(15,32,74,0.28)]"
-              >
-                <span className="relative mb-4 flex h-[104px] w-[124px] items-center justify-center transition-transform duration-[250ms] group-hover:scale-105 sm:h-[112px] sm:w-[136px]">
-                  <Blob fill={tint} className="absolute inset-0 h-full w-full" />
-                  {png ? (
-                    <IconImage src={png} size={54} className="relative" />
-                  ) : (
-                    <Icon size={54} className="relative text-ink" />
-                  )}
-                </span>
-                <span className="text-[15px] font-bold leading-snug text-ink">{shortLabel[item.label] ?? item.label}</span>
-              </a>
-            );
-          })}
+        <div className="reveal mx-auto max-w-2xl text-center">
+          <h2 className="heading-xl text-ink">
+            Everything your <span className="accent">journey</span> needs
+          </h2>
         </div>
+
+        {/* every service laid out in a grid — 6 per row on desktop, scaling down on smaller screens */}
+        <ul className="reveal mt-12 grid list-none grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 md:grid-cols-4 lg:grid-cols-6 lg:gap-6">
+          {SERVICES.map((s) => (
+            <li key={s.label}>
+              <ServiceCard s={s} />
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

@@ -109,11 +109,12 @@ export function ExploreWorldSection() {
         {/* boat sits on the skyline's waterline; the section's pb-24 supplies the gap to the footer */}
         <Boat className="pointer-events-none absolute bottom-0 left-0 z-20 h-[200px] w-[260px] select-none" />
 
-        {/* readable-width content layer, same footprint as before so every
-            top/left offset below still lines up pixel-for-pixel */}
+        {/* readable-width content layer. the floating cluster is pushed down so
+            it settles just above / in front of the skyline, tying the copy,
+            cards and cityscape into a single scene rather than two bands. */}
         <div className="relative mx-auto h-full max-w-7xl px-6">
           {/* Gujarat — top-left, pill overlapping bottom + bleeding left */}
-          <div className="reveal absolute left-[3%] top-[116px] z-10">
+          <div className="reveal absolute left-[3%] top-[246px] z-10">
             <div className="motion-safe:animate-floaty">
               <DestinationCard
                 img={gujaratImg}
@@ -127,7 +128,7 @@ export function ExploreWorldSection() {
           </div>
 
           {/* Madhya Pradesh — top-right, taller, pill overlapping bottom */}
-          <div className="reveal absolute right-[3%] top-[12px] z-10">
+          <div className="reveal absolute right-[3%] top-[142px] z-10">
             <div className="motion-safe:animate-floaty" style={{ animationDelay: "1.4s" }}>
               <DestinationCard
                 img={madhyaPradeshImg}
@@ -141,7 +142,7 @@ export function ExploreWorldSection() {
           </div>
 
           {/* Tamil Nadu — mid-right, smaller, pill overlapping top + bleeding right */}
-          <div className="reveal absolute right-[8%] top-[404px] z-10">
+          <div className="reveal absolute right-[8%] top-[534px] z-10">
             <div className="motion-safe:animate-floaty" style={{ animationDelay: "0.7s" }}>
               <DestinationCard
                 img={tamilNaduImg}
@@ -156,7 +157,7 @@ export function ExploreWorldSection() {
 
           {/* centred CTA — inset-x-0 + mx-auto keeps it centred without a
               transform (the .reveal class owns `transform` for its entrance) */}
-          <div className="reveal absolute inset-x-0 top-[268px] z-10">
+          <div className="reveal absolute inset-x-0 top-[398px] z-10">
             <CenterContent onBook={book} />
           </div>
         </div>

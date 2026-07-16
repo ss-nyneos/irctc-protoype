@@ -80,12 +80,67 @@ export interface Offer {
   grad: [string, string];
 }
 
+/** A halt where travellers may join or leave a tourist-train package. IRCTC
+ *  publishes these as "boarding/de-boarding points" with tentative timings. */
+export interface BoardingPoint {
+  station: string;
+  /** Indian Railways station code, e.g. "SC" for Secunderabad. */
+  code: string;
+  /** 24h "HH:MM". null at the originating halt, which has no arrival. */
+  arr: string | null;
+  /** 24h "HH:MM". null at the final halt, which has no departure. */
+  dep: string | null;
+}
+
+/** A comfort tier the same package sells at — coach class on rail, hotel
+ *  category on air. Each carries its own per-person fare. */
+export interface CoachClass {
+  /** Booking-chart code, e.g. "3AC". */
+  code: string;
+  /** IRCTC's category name — "Economy", "Standard", "Comfort". */
+  label: string;
+  detail: string;
+  /** Adult fare, per person. */
+  price: number;
+  /** Fare for a child aged 5–11, per person. */
+  childPrice: number;
+  /** Classes sell out independently; an unavailable one can't be booked. */
+  available: boolean;
+  seatsLeft: number;
+}
+
+export interface PolicySection {
+  title: string;
+  points: string[];
+}
+
+/** The booking-desk detail IRCTC publishes per package. Kept apart from the
+ *  catalogue fields in `TourPackage`, which are what cards and filters read. */
+export interface PackageDetail {
+  /** IRCTC package code, e.g. "SCZBG63". */
+  code: string;
+  classes: CoachClass[];
+  /** Empty for air packages, which have no rail boarding chain. */
+  boarding: BoardingPoint[];
+  departures: string[];
+  policy: PolicySection[];
+}
+
 /** Custom in-app "router" view state — this app is a single page with
  *  view-switching handled entirely on the client (no URL routing). */
 export type View =
   | { name: "home" }
-  | { name: "world" }
+  | { name: "world"; category?: string }
   | { name: "customise" }
   | { name: "madeforyou" }
   | { name: "detail"; id: string }
-  | { name: "booking"; id: string };
+  /** Choices made on the detail page ride along so the booking form opens
+   *  prefilled rather than asking twice. */
+  | {
+      name: "booking";
+      id: string;
+      classCode?: string;
+      departure?: string;
+      boarding?: string;
+      travellers?: number;
+    };

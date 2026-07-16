@@ -11,7 +11,6 @@ interface ModeCardProps {
   tint: string;
   title: string;
   tagline: string;
-  desc: string;
   cta: string;
   points: string[];
   view: View;
@@ -24,7 +23,6 @@ const modes: ModeCardProps[] = [
     tint: "from-[#e9f2ff] to-[#f5f9ff]",
     title: "IRCTC World",
     tagline: "Everything IRCTC, drilled down",
-    desc: "Browse the full IRCTC catalog with a real drill-down — by region, budget & style — then compare side by side.",
     cta: "Explore & compare",
     points: ["Drill down by region, budget & style", "Side-by-side comparison", "Verified reviews & pricing"],
     view: { name: "world" },
@@ -34,7 +32,6 @@ const modes: ModeCardProps[] = [
     tint: "from-[#e3edff] to-[#eef5ff]",
     title: "Customized",
     tagline: "Built around your trip",
-    desc: "Tell us where you're starting, your budget, family size and travel dates. We'll AI-match the best tours and take you straight to booking.",
     cta: "Plan my trip",
     points: ["Start, end & travel dates", "AI-matched recommendations", "Book flights & hotels via IRCTC"],
     view: { name: "customise" },
@@ -45,7 +42,6 @@ const modes: ModeCardProps[] = [
     tint: "from-[#edf3ff] to-[#f7faff]",
     title: "Personalized",
     tagline: "Your personal travel profile",
-    desc: "Sign in for a greeting, your travel photo diary, and picks based on where you've already been.",
     cta: "See my picks",
     points: ["Greeting & travel profile", "Past tours & photo diary", "Suggestions from your history"],
     view: { name: "madeforyou" },
@@ -60,9 +56,6 @@ export function ModesSection() {
     <section className="relative mx-auto max-w-7xl px-4 py-28 md:px-6 md:py-36" ref={ref}>
       <div className="reveal mx-auto max-w-2xl text-center">
         <h2 className="heading-xl text-ink">Three ways to find your journey</h2>
-        <p className="mt-3 text-[15px] text-muted-foreground">
-          Whether you know exactly what you want or you&apos;d like us to design it — pick your path.
-        </p>
       </div>
 
       <div className="mt-12 grid gap-5 md:grid-cols-3">
@@ -84,8 +77,7 @@ export function ModesSection() {
               </div>
               <div className="text-[12px] font-bold uppercase tracking-wide text-muted-foreground">{mode.tagline}</div>
               <h3 className="font-display text-[24px] font-semibold text-ink">{mode.title}</h3>
-              <p className="mt-2 text-[14px] leading-relaxed text-muted-foreground">{mode.desc}</p>
-              <ul className="mt-4 space-y-2">
+              <ul className="mt-2 space-y-2">
                 {mode.points.map((point) => (
                   <li key={point} className="flex items-start gap-2 text-[13px] text-foreground/85">
                     <span className="mt-1.5 h-1.5 w-1.5 flex-none rounded-full bg-brand" />

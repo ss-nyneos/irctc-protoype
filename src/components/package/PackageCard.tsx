@@ -18,7 +18,7 @@ export function PackageCard({ pkg, compact = false }: PackageCardProps) {
     <button
       onClick={() => go({ name: "detail", id: pkg.id })}
       type="button"
-      className="group flex w-full flex-col overflow-hidden rounded-3xl border bg-white text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+      className="group flex h-full w-full flex-col overflow-hidden rounded-3xl border bg-white text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
     >
       <div className="relative">
         <ImageWithFallback img={pkg.img} grad={pkg.grad} alt={pkg.name} className={compact ? "h-40" : "h-52"} />

@@ -1,60 +1,118 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ArrowLeft,
-  Calendar,
+  Bus,
   Check,
-  ChevronDown,
   Heart,
+  Hotel,
   MapPin,
   Moon,
-  Plane,
   Share2,
   ShieldCheck,
-  Sparkles,
   Star,
-  Users,
+  TrainFront,
+  UserCheck,
+  Utensils,
   X,
 } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
 import { useRouter } from "@/router/RouterContext";
 import { packages, getPackageById } from "@/data/packages";
+import { getPackageDetail } from "@/data/packageDetail";
 import { formatINR } from "@/utils/format";
 import { ImageWithFallback } from "@/components/common/ImageWithFallback";
 import { AccentBar } from "@/components/common/AccentBar";
+import { SectionNav, type Section } from "@/components/detail/SectionNav";
+import { BoardingPanel } from "@/components/detail/BoardingPanel";
+import { ItineraryRail } from "@/components/detail/ItineraryRail";
+import { BookingRail } from "@/components/detail/BookingRail";
+import { PolicyPanel } from "@/components/detail/PolicyPanel";
+import { CallbackForm } from "@/components/detail/CallbackForm";
+
+/** IRCTC prints these as a bare icon row with no detail behind them. */
+const inclusionIcons = [
+  { key: "Train", icon: TrainFront, note: "Reserved berths, both ways" },
+  { key: "Bus", icon: Bus, note: "AC coach for sightseeing" },
+  { key: "Hotel", icon: Hotel, note: "Twin sharing, en-suite" },
+  { key: "Meal", icon: Utensils, note: "Breakfast & dinner daily" },
+  { key: "Guide", icon: UserCheck, note: "Tour escort throughout" },
+  { key: "Insurance", icon: ShieldCheck, note: "Cover for every traveller" },
+];
 
 export function DetailPage({ id }: { id: string }) {
   const { back, go } = useRouter();
   const ref = useReveal();
   const pkg = getPackageById(id) ?? packages[0];
+  const detail = useMemo(() => getPackageDetail(pkg), [pkg]);
 
+  // Never open on a sold-out class.
+  const [classCode, setClassCode] = useState(
+    () => (detail.classes.find((c) => c.available) ?? detail.classes[0]).code,
+  );
   const [travellers, setTravellers] = useState(2);
+  const [departure, setDeparture] = useState(detail.departures[0]);
   const [addFlight, setAddFlight] = useState(false);
-  const [openDay, setOpenDay] = useState<number | null>(0);
+  // Always a day open — the itinerary train is always parked at some station.
+  const [openDay, setOpenDay] = useState(0);
+  const [boardingCode, setBoardingCode] = useState(detail.boarding[0]?.code ?? "");
 
-  const hasFlightAddon = pkg.flightAddon > 0;
-  const total = (pkg.price + (addFlight && hasFlightAddon ? pkg.flightAddon : 0)) * travellers;
+  const selectedClass =
+    detail.classes.find((c) => c.code === classCode) ?? detail.classes.find((c) => c.available) ?? detail.classes[0];
+  const boardingPoint = detail.boarding.find((b) => b.code === boardingCode) ?? null;
+  const hasBoarding = detail.boarding.length > 0;
+
+  const sections = useMemo<Section[]>(
+    () =>
+      [
+        { id: "overview", label: "Overview" },
+        { id: "itinerary", label: "Itinerary" },
+        hasBoarding ? { id: "boarding", label: "Boarding" } : null,
+        { id: "inclusions", label: "Inclusions" },
+        { id: "policy", label: "Terms" },
+        { id: "help", label: "Help" },
+      ].filter((s): s is Section => s !== null),
+    [hasBoarding],
+  );
 
   const related = packages
     .filter((p) => p.id !== pkg.id && p.category === pkg.category)
     .concat(packages.filter((p) => p.id !== pkg.id))
     .slice(0, 4);
 
+  const gst = Math.round(
+    (selectedClass.price * travellers + (addFlight ? pkg.flightAddon * travellers : 0)) * 0.05,
+  );
+  const total = selectedClass.price * travellers + (addFlight ? pkg.flightAddon * travellers : 0) + gst;
+
   return (
-    <div ref={ref} className="min-h-screen pb-24">
+    <div ref={ref} className="min-h-screen pb-28 lg:pb-24">
+      {/* ── Hero ─────────────────────────────────────────────────── */}
       <div className="relative h-[46vh] min-h-[340px] w-full overflow-hidden">
         <ImageWithFallback img={pkg.img} grad={pkg.grad} alt={pkg.name} className="h-full w-full" overlay={false} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-black/40" />
 
         <div className="absolute inset-x-0 top-0">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-6">
-            <button onClick={back} type="button" className="inline-flex items-center gap-1.5 rounded-full glass-dark px-4 py-2 text-[13px] font-semibold text-white">
+            <button
+              onClick={back}
+              type="button"
+              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full glass-dark px-4 text-[13px] font-semibold text-white"
+            >
               <ArrowLeft size={15} /> Back
             </button>
             <div className="flex gap-2">
-              <button type="button" className="flex h-9 w-9 items-center justify-center rounded-full glass-dark text-white">
+              <button
+                type="button"
+                aria-label="Save to wishlist"
+                className="flex h-11 w-11 items-center justify-center rounded-full glass-dark text-white"
+              >
                 <Heart size={16} />
               </button>
-              <button type="button" className="flex h-9 w-9 items-center justify-center rounded-full glass-dark text-white">
+              <button
+                type="button"
+                aria-label="Share this package"
+                className="flex h-11 w-11 items-center justify-center rounded-full glass-dark text-white"
+              >
                 <Share2 size={16} />
               </button>
             </div>
@@ -63,21 +121,30 @@ export function DetailPage({ id }: { id: string }) {
 
         <div className="absolute inset-x-0 bottom-0">
           <div className="mx-auto max-w-7xl px-4 pb-6 md:px-6">
-            <div className="flex flex-wrap items-center gap-1 text-[12px] font-semibold text-white/90">
-              <MapPin size={12} /> {pkg.category} · {pkg.region}
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-white/90">
+                <MapPin size={12} /> {pkg.category} · {pkg.region}
+              </span>
+              {/* Package code as a chip — IRCTC bolts it into the title itself. */}
+              <span className="rounded-full glass-dark px-2 py-0.5 text-[11px] font-bold tracking-wide text-white/90">
+                {detail.code}
+              </span>
             </div>
+            {/* Sentence case, not the ALL CAPS of the original. */}
             <h1 className="heading-xl mt-3 max-w-3xl text-balance text-white">{pkg.name}</h1>
             <div className="mt-2 flex flex-wrap items-center gap-4 text-white/90">
               <span className="inline-flex items-center gap-1 text-[13px] font-semibold">
-                <Star size={13} fill="#F26B21" stroke="none" /> {pkg.rating.toFixed(1)} · {pkg.reviews.toLocaleString("en-IN")} reviews
+                <Star size={13} fill="#F26B21" stroke="none" /> {pkg.rating.toFixed(1)} ·{" "}
+                {pkg.reviews.toLocaleString("en-IN")} reviews
               </span>
               <span className="inline-flex items-center gap-1 text-[13px] font-semibold">
-                <Moon size={14} />
-                {pkg.nights}N / {pkg.days}D
+                <Moon size={14} /> {pkg.nights}N / {pkg.days}D
               </span>
               <span className="inline-flex items-center gap-1 text-[13px] font-semibold">
-                <MapPin size={14} />
-                From {pkg.from}
+                <MapPin size={14} /> From {pkg.from}
+              </span>
+              <span className="inline-flex items-center gap-1 text-[13px] font-semibold">
+                <TrainFront size={14} /> {pkg.travelMode}
               </span>
             </div>
           </div>
@@ -85,201 +152,165 @@ export function DetailPage({ id }: { id: string }) {
       </div>
 
       <AccentBar />
+      <SectionNav sections={sections} />
 
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 md:px-6 lg:grid-cols-[1.7fr_1fr]">
         <div className="min-w-0">
-          <p className="reveal text-[16px] leading-relaxed text-foreground/85">{pkg.blurb}</p>
+          {/* ── Overview ───────────────────────────────────────── */}
+          <section id="overview" className="scroll-mt-[132px]">
+            {/* Printed once — the original repeats it verbatim in the tab below.
+                Held to ~65 characters a line, which is where prose stays readable. */}
+            <p className="reveal max-w-[65ch] text-[17px] leading-relaxed text-foreground/85">{pkg.blurb}</p>
 
-          <div className="reveal mt-6 grid gap-3 sm:grid-cols-2">
-            {pkg.highlights.map((h) => (
-              <div key={h} className="flex items-start gap-2.5 rounded-2xl border bg-white p-3.5 shadow-sm">
-                <span className="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                  <Check size={13} />
-                </span>
-                <span className="text-[14px] font-semibold text-foreground/85">{h}</span>
-              </div>
-            ))}
-          </div>
+            {/* No stat row here: duration, travel mode and departure city are
+                already in the hero two hundred pixels up, and the classes are
+                priced in the fare rail alongside. Repeating them was most of
+                what made this column read as noise. */}
 
-          <div className="reveal mt-10">
-            <h2 className="heading-xl text-ink">Day-by-day itinerary</h2>
-            <div className="mt-4 space-y-2">
-              {pkg.itinerary.map((day, idx) => {
-                const open = openDay === idx;
-                return (
-                  <div key={day.day} className="overflow-hidden rounded-2xl border bg-white">
-                    <button
-                      onClick={() => setOpenDay(open ? null : idx)}
-                      type="button"
-                      className="flex w-full items-center gap-3 p-4 text-left"
-                    >
-                      <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-brand font-display text-[15px] font-bold text-white">
-                        {day.day}
-                      </span>
-                      <span className="flex-1 font-semibold text-ink">{day.title}</span>
-                      <ChevronDown size={18} className={`text-muted-foreground transition ${open ? "rotate-180" : ""}`} />
-                    </button>
-                    {open && (
-                      <div className="border-t bg-secondary/40 px-4 py-3 pl-[68px] text-[14px] text-foreground/75">
-                        {day.detail}
-                      </div>
-                    )}
+            <ul className="reveal mt-6 grid gap-x-6 gap-y-3 sm:grid-cols-2">
+              {pkg.highlights.map((h) => (
+                <li key={h} className="flex items-start gap-2.5">
+                  <span className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                    <Check size={12} />
+                  </span>
+                  <span className="text-[14px] font-medium leading-relaxed text-foreground/80">{h}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {/* ── Itinerary ──────────────────────────────────────── */}
+          <section id="itinerary" className="reveal mt-14 scroll-mt-[132px]">
+            <ItineraryRail days={pkg.itinerary} active={openDay} onActive={setOpenDay} />
+          </section>
+
+          {/* ── Boarding ───────────────────────────────────────── */}
+          {hasBoarding && (
+            <section id="boarding" className="reveal mt-14 scroll-mt-[132px]">
+              <BoardingPanel points={detail.boarding} selected={boardingCode} onSelect={setBoardingCode} />
+            </section>
+          )}
+
+          {/* ── Inclusions ─────────────────────────────────────── */}
+          <section id="inclusions" className="reveal mt-14 scroll-mt-[132px]">
+            <h2 className="font-display text-[22px] font-bold text-ink">What the fare covers</h2>
+
+            <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
+              {inclusionIcons.map((item) => (
+                <div key={item.key} className="flex items-start gap-3">
+                  <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-brand/10 text-brand">
+                    <item.icon size={18} />
+                  </span>
+                  <div className="min-w-0">
+                    <div className="text-[14px] font-bold text-ink">{item.key}</div>
+                    {/* The original stops at the icon; the detail is the useful half. */}
+                    <div className="text-[12px] leading-snug text-muted-foreground">{item.note}</div>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
-          </div>
 
-          <div className="reveal mt-10 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border bg-white p-5">
-              <div className="mb-3 flex items-center gap-2 font-display text-[17px] font-semibold text-emerald-700">
-                <Check size={18} /> What&apos;s included
+            <div className="mt-7 grid gap-x-8 gap-y-6 border-t pt-6 sm:grid-cols-2">
+              <div>
+                <div className="mb-3 flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-emerald-700">
+                  <Check size={14} /> Included
+                </div>
+                <ul className="space-y-2">
+                  {pkg.inclusions.map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-[13px] leading-relaxed text-foreground/80">
+                      <Check size={14} className="mt-0.5 flex-none text-emerald-600" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul className="space-y-2">
-                {pkg.inclusions.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-[13px] text-foreground/80">
-                    <Check size={14} className="mt-0.5 flex-none text-emerald-600" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="rounded-2xl border bg-white p-5">
-              <div className="mb-3 flex items-center gap-2 font-display text-[17px] font-semibold text-muted-foreground">
-                <X size={18} /> Not included
+              <div>
+                <div className="mb-3 flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-muted-foreground">
+                  <X size={14} /> Not included
+                </div>
+                <ul className="space-y-2">
+                  {pkg.exclusions.map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-[13px] leading-relaxed text-foreground/70">
+                      <X size={14} className="mt-0.5 flex-none text-muted-foreground" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul className="space-y-2">
-                {pkg.exclusions.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-[13px] text-foreground/70">
-                    <X size={14} className="mt-0.5 flex-none text-muted-foreground" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
             </div>
-          </div>
+          </section>
+
+          {/* ── Terms ──────────────────────────────────────────── */}
+          <section id="policy" className="reveal mt-14 scroll-mt-[132px]">
+            <PolicyPanel sections={detail.policy} code={detail.code} />
+          </section>
+
+          {/* ── Help ───────────────────────────────────────────── */}
+          <section id="help" className="reveal mt-14 scroll-mt-[132px]">
+            <CallbackForm packageName={pkg.name} code={detail.code} />
+          </section>
         </div>
 
-        <div className="lg:sticky lg:top-24 lg:self-start">
-          <div className="overflow-hidden rounded-3xl border-2 border-brand/10 bg-white shadow-xl">
-            <div className="p-5">
-              <div className="flex items-end justify-between">
-                <div>
-                  <div className="text-[11px] text-muted-foreground">from · per person</div>
-                  <div className="flex items-baseline gap-2">
-                    <span className="font-display text-[30px] font-bold text-ink">{formatINR(pkg.price)}</span>
-                    {pkg.oldPrice && <span className="text-[14px] text-muted-foreground line-through">{formatINR(pkg.oldPrice)}</span>}
-                  </div>
-                </div>
-                <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-[11px] font-bold text-emerald-700">
-                  Free cancellation*
-                </span>
-              </div>
+        {/* ── Fare rail ────────────────────────────────────────── */}
+        <div className="hidden lg:sticky lg:top-[128px] lg:block lg:self-start">
+          <BookingRail
+            pkg={pkg}
+            classes={detail.classes}
+            departures={detail.departures}
+            boardingPoint={boardingPoint}
+            selectedClass={selectedClass}
+            onSelectClass={setClassCode}
+            travellers={travellers}
+            onTravellers={setTravellers}
+            departure={departure}
+            onDeparture={setDeparture}
+            addFlight={addFlight}
+            onAddFlight={setAddFlight}
+            onBook={() =>
+              go({
+                name: "booking",
+                id: pkg.id,
+                classCode: selectedClass.code,
+                departure,
+                boarding: boardingCode || undefined,
+                travellers,
+              })
+            }
+          />
+        </div>
 
-              <div className="mt-5 flex items-center justify-between rounded-xl border p-3">
-                <span className="inline-flex items-center gap-2 text-[14px] font-semibold text-ink">
-                  <Users size={16} /> Travellers
-                </span>
-                <div className="flex items-center gap-3">
-                  <button onClick={() => setTravellers((t) => Math.max(1, t - 1))} type="button" className="flex h-8 w-8 items-center justify-center rounded-lg border text-ink hover:bg-secondary">
-                    −
-                  </button>
-                  <span className="w-5 text-center font-bold text-ink">{travellers}</span>
-                  <button onClick={() => setTravellers((t) => Math.min(12, t + 1))} type="button" className="flex h-8 w-8 items-center justify-center rounded-lg border text-ink hover:bg-secondary">
-                    +
-                  </button>
-                </div>
-              </div>
-
-              <div className="mt-2 flex items-center justify-between rounded-xl border p-3">
-                <span className="inline-flex items-center gap-2 text-[14px] font-semibold text-ink">
-                  <Calendar size={16} /> Departure
-                </span>
-                <select className="bg-transparent text-right text-[13px] font-semibold text-ink outline-none">
-                  <option>Select date</option>
-                  <option>15 Aug 2026</option>
-                  <option>02 Sep 2026</option>
-                  <option>19 Oct 2026</option>
-                </select>
-              </div>
-
-              {hasFlightAddon ? (
-                <button
-                  onClick={() => setAddFlight((v) => !v)}
-                  type="button"
-                  className={`mt-3 flex w-full items-center gap-3 rounded-2xl border-2 p-3.5 text-left transition ${
-                    addFlight ? "border-brand bg-brand/5" : "border-dashed border-brand/25 hover:border-brand/50"
-                  }`}
-                >
-                  <span className={`flex h-10 w-10 flex-none items-center justify-center rounded-xl ${addFlight ? "bg-brand text-white" : "bg-brand/5 text-brand"}`}>
-                    <Plane size={18} />
-                  </span>
-                  <span className="flex-1">
-                    <span className="flex items-center gap-1.5 text-[14px] font-bold text-ink">
-                      Add IRCTC flights{" "}
-                      <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700">SAVE {formatINR(1500)}</span>
-                    </span>
-                    <span className="text-[12px] text-muted-foreground">
-                      Return airfare to {pkg.from} · from {formatINR(pkg.flightAddon)}/person
-                    </span>
-                  </span>
-                  <span className={`flex h-6 w-6 items-center justify-center rounded-full border-2 ${addFlight ? "border-brand bg-brand text-white" : "border-muted"}`}>
-                    {addFlight && <Check size={13} />}
-                  </span>
-                </button>
-              ) : (
-                <div className="mt-3 flex items-center gap-2 rounded-2xl bg-brand/5 p-3.5 text-[12px] text-muted-foreground">
-                  <Plane size={16} className="text-brand" /> Onboard rail travel already included in this journey.
-                </div>
-              )}
-
-              <div className="mt-4 space-y-1.5 rounded-xl bg-secondary/50 p-3 text-[13px]">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">
-                    {formatINR(pkg.price)} × {travellers}
-                  </span>
-                  <span className="font-semibold">{formatINR(pkg.price * travellers)}</span>
-                </div>
-                {addFlight && hasFlightAddon && (
-                  <div className="flex justify-between text-brand">
-                    <span>Flights × {travellers}</span>
-                    <span className="font-semibold">{formatINR(pkg.flightAddon * travellers)}</span>
-                  </div>
-                )}
-                <div className="mt-1.5 flex items-center justify-between border-t pt-2">
-                  <span className="font-bold text-ink">Total</span>
-                  <span className="font-display text-[22px] font-bold text-ink">{formatINR(total)}</span>
-                </div>
-              </div>
-
-              <button
-                onClick={() => go({ name: "booking", id: pkg.id })}
-                type="button"
-                className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-brand px-5 py-4 text-[16px] font-bold text-white shadow-lg transition hover:brightness-95"
-              >
-                Book this tour
-              </button>
-              <div className="mt-3 flex items-center justify-center gap-1.5 text-[12px] text-muted-foreground">
-                <ShieldCheck size={14} className="text-emerald-600" /> Secure government payment · Part-pay 25% today
-              </div>
-            </div>
-
-            {pkg.aiReason && (
-              <div className="border-t bg-brand/[0.03] p-4">
-                <div className="flex items-start gap-2 text-[12px] text-foreground/75">
-                  <Sparkles size={14} className="mt-0.5 flex-none text-brand" />
-                  <span>
-                    <b className="text-ink">AI note:</b> {pkg.aiReason}
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
+        {/* On narrow screens the rail can't stick, so it runs inline instead. */}
+        <div className="lg:hidden">
+          <BookingRail
+            pkg={pkg}
+            classes={detail.classes}
+            departures={detail.departures}
+            boardingPoint={boardingPoint}
+            selectedClass={selectedClass}
+            onSelectClass={setClassCode}
+            travellers={travellers}
+            onTravellers={setTravellers}
+            departure={departure}
+            onDeparture={setDeparture}
+            addFlight={addFlight}
+            onAddFlight={setAddFlight}
+            onBook={() =>
+              go({
+                name: "booking",
+                id: pkg.id,
+                classCode: selectedClass.code,
+                departure,
+                boarding: boardingCode || undefined,
+                travellers,
+              })
+            }
+          />
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 md:px-6" ref={ref}>
-        <h2 className="reveal heading-xl text-ink">You might also like</h2>
+      {/* ── Related ──────────────────────────────────────────── */}
+      <div className="mx-auto max-w-7xl px-4 md:px-6">
+        <h2 className="reveal font-display text-[22px] font-bold text-ink">You might also like</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {related.map((p) => (
             <button
@@ -295,11 +326,34 @@ export function DetailPage({ id }: { id: string }) {
                   <span className="inline-flex items-center gap-1 text-[12px]">
                     <Star size={11} fill="#F26B21" stroke="none" /> {p.rating.toFixed(1)}
                   </span>
-                  <span className="font-bold text-ink">{formatINR(p.price)}</span>
+                  <span className="font-bold tabular-nums text-ink">{formatINR(p.price)}</span>
                 </div>
               </div>
             </button>
           ))}
+        </div>
+      </div>
+
+      {/* ── Mobile book bar ──────────────────────────────────── */}
+      {/* z-45 clears the Disha launcher's z-40: on this page the fare and the
+          book button are the primary action and must not sit under a chat bubble. */}
+      <div className="fixed inset-x-0 bottom-0 z-[45] border-t bg-white/95 px-4 py-3 shadow-[0_-8px_24px_-12px_rgba(0,0,0,0.25)] backdrop-blur-md lg:hidden">
+        <div className="mx-auto flex max-w-7xl items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <div className="truncate text-[11px] text-muted-foreground">
+              {selectedClass.code} · {travellers} {travellers === 1 ? "traveller" : "travellers"} · incl. GST
+            </div>
+            <div className="font-display text-[19px] font-bold tabular-nums leading-tight text-ink">
+              {formatINR(total)}
+            </div>
+          </div>
+          <button
+            onClick={() => go({ name: "booking", id: pkg.id })}
+            type="button"
+            className="flex min-h-[48px] flex-none items-center justify-center rounded-2xl bg-brand px-6 text-[15px] font-bold text-white shadow-lg transition hover:brightness-95"
+          >
+            Book this tour
+          </button>
         </div>
       </div>
     </div>

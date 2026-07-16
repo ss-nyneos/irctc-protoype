@@ -28,7 +28,7 @@ export function MobileNavGroup({
 }: {
   label: string;
   items: string[];
-  onPick: () => void;
+  onPick: (item: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   return (
@@ -45,7 +45,7 @@ export function MobileNavGroup({
           {items.map((item) => (
             <button
               key={item}
-              onClick={onPick}
+              onClick={() => onPick(item)}
               type="button"
               className="block w-full rounded-lg px-4 py-2 text-left text-[14px] text-foreground/80 hover:bg-secondary"
             >

@@ -8,6 +8,7 @@ import avatar1 from "@/assets/hero/jaipur-amber-fort.jpg";
 import avatar2 from "@/assets/hero/ladakh-mountains.jpg";
 import avatar3 from "@/assets/hero/kerala-tea-gardens.jpg";
 import avatar4 from "@/assets/trains/maharajas-express.jpg";
+import planePath from "@/assets/stats/plane-path.svg";
 
 const avatars = [avatar1, avatar2, avatar3, avatar4];
 
@@ -79,8 +80,22 @@ export function StatsSection() {
   const ref = useReveal();
 
   return (
-    <section className="py-28 md:py-36" ref={ref}>
-      <div className="reveal mx-auto grid max-w-7xl gap-6 px-4 md:px-6 lg:grid-cols-12 lg:gap-8">
+    <section className="relative overflow-hidden py-28 md:py-36" ref={ref}>
+      {/* Flight path — flies through the empty band above the bento and dips
+          behind the rightmost card, so the tail reads as passing under it.
+          z-0 here vs z-10 on the grid is what puts the cards on top.
+          lg-only: below that the cards stack and the band disappears. */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 mx-auto hidden max-w-7xl px-4 md:px-6 lg:block">
+        {/* bleeds 150px past the container so the tail runs off the right edge */}
+        <img
+          src={planePath}
+          alt=""
+          aria-hidden="true"
+          className="reveal absolute right-[-150px] top-3 w-[820px] max-w-none select-none"
+        />
+      </div>
+
+      <div className="reveal relative z-10 mx-auto grid max-w-7xl gap-6 px-4 md:px-6 lg:grid-cols-12 lg:gap-8">
         {/* ── Anchor stat ─────────────────────────────────────────── */}
         <div className="relative flex min-h-[220px] flex-col justify-center overflow-hidden rounded-[28px] p-7 shadow-[0_24px_60px_-28px_hsl(var(--navy)/0.55)] ring-1 ring-white/15 lg:col-span-3 lg:min-h-[300px]">
           <img

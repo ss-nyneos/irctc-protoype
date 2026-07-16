@@ -14,7 +14,7 @@ function CurrentPage() {
 
   switch (view.name) {
     case "world":
-      return <WorldPage />;
+      return <WorldPage key={view.category ?? "all"} initialCategory={view.category} />;
     case "customise":
       return <CustomisePage />;
     case "madeforyou":
@@ -22,7 +22,15 @@ function CurrentPage() {
     case "detail":
       return <DetailPage id={view.id} />;
     case "booking":
-      return <BookingPage id={view.id} />;
+      return (
+        <BookingPage
+          id={view.id}
+          classCode={view.classCode}
+          departure={view.departure}
+          boarding={view.boarding}
+          travellers={view.travellers}
+        />
+      );
     case "home":
     default:
       return <HomePage />;

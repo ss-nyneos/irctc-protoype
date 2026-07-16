@@ -2,6 +2,8 @@ import type { TourPackage } from "@/types";
 import charDhamImg from "@/assets/cta/char-dham.png";
 import dakshinBharatImg from "@/assets/cta/south-yatra.webp";
 import kashmirImg from "@/assets/cta/kashmir.jpg";
+import maharajasExpressImg from "@/assets/trains/maharajas-express.jpg";
+import goldenChariotImg from "@/assets/trains/golden-chariot.jpg";
 
 export const packages: TourPackage[] = [
   {
@@ -208,7 +210,7 @@ export const packages: TourPackage[] = [
     experience: ["luxury", "culture", "honeymoon"],
     tags: ["World's Leading Luxury Train", "Fine Dining", "Butler Service"],
     grad: ["#4c1d95", "#a78bfa"],
-    img: "photo-1544620347-c4fd4a3d5957",
+    img: maharajasExpressImg,
     blurb:
       "Seven times 'World's Leading Luxury Train'. Two restaurants, a lounge bar and a reading car across Rajasthan's royal cities.",
     highlights: [
@@ -255,7 +257,7 @@ export const packages: TourPackage[] = [
     experience: ["luxury", "culture", "nature"],
     tags: ["Wine & Dine", "Spa Onboard", "Heritage"],
     grad: ["#78350f", "#fbbf24"],
-    img: "photo-1548013146-72479768bada",
+    img: goldenChariotImg,
     blurb:
       "The pride of Karnataka Tourism — palatial cabins gliding from Hampi's ruins to Goa's beaches with an onboard spa.",
     highlights: ["Hampi & Pattadakal UNESCO sites", "Bandipur wildlife", "Goa's beaches & churches", "Onboard Ayurvedic spa"],

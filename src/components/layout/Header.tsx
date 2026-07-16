@@ -5,13 +5,13 @@ import { useScrolled } from "@/hooks/useScrolled";
 import { Logo } from "@/components/common/Logo";
 import { AccentBar } from "@/components/common/AccentBar";
 import { MobileMenuPanel, MobileNavGroup, MobileNavRow } from "./MobileMenu";
-import { IRCTC_ECATERING, IRCTC_MAIN, IRCTC_TOURISM } from "@/data/services";
+import { IRCTC_ECATERING, IRCTC_HOTELS, IRCTC_MAIN } from "@/data/services";
 
 const holidayLinks = [
-  { label: "Domestic Packages", note: "Hills, heritage, beaches" },
-  { label: "International Packages", note: "Air-inclusive escapes" },
-  { label: "Pilgrimage Circuits", note: "Char Dham, Jyotirlinga" },
-  { label: "Luxury Trains", note: "Maharajas', Golden Chariot" },
+  { label: "Domestic Packages", note: "Hills, heritage, beaches", category: "Domestic" },
+  { label: "International Packages", note: "Air-inclusive escapes", category: "International" },
+  { label: "Pilgrimage Circuits", note: "Char Dham, Jyotirlinga", category: "Pilgrimage" },
+  { label: "Luxury Trains", note: "Maharajas', Golden Chariot", category: "Luxury Train" },
 ];
 
 const dishaEvent = "open-disha";
@@ -28,21 +28,25 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50">
-        <div className="hidden bg-navy text-white/90 md:block">
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-1.5 text-[12px]">
-            <div className="flex items-center gap-4">
-              <span className="inline-flex items-center gap-1.5">
-                <Phone size={12} /> 24×7 Helpline 14646
-              </span>
-              <span className="text-white/40">|</span>
-              <span>An enterprise of the Ministry of Railways, Govt. of India</span>
-            </div>
-            <button type="button" className="inline-flex items-center gap-1.5 hover:text-azure">
-              <Globe size={12} /> English / हिन्दी
-            </button>
+      {/* Utility strip — deliberately OUTSIDE the sticky header so it simply scrolls
+          away with the page. Collapsing it inside the header meant fading it out,
+          which turned the navy translucent mid-transition and jumped the layout. */}
+      <div className="hidden bg-navy text-white/90 md:block">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-1.5 text-[12px]">
+          <div className="flex items-center gap-4">
+            <span className="inline-flex items-center gap-1.5">
+              <Phone size={12} /> 24×7 Helpline 14646
+            </span>
+            <span className="text-white/40">|</span>
+            <span>An enterprise of the Ministry of Railways, Govt. of India</span>
           </div>
+          <button type="button" className="inline-flex items-center gap-1.5 hover:text-azure">
+            <Globe size={12} /> English / हिन्दी
+          </button>
         </div>
+      </div>
+
+      <header className="sticky top-0 z-50">
         <AccentBar />
 
         <div className={`transition-all duration-300 ${scrolled ? "glass shadow-lg" : "bg-white"}`}>
@@ -63,7 +67,7 @@ export function Header() {
                       {holidayLinks.map((item) => (
                         <button
                           key={item.label}
-                          onClick={() => go({ name: "world" })}
+                          onClick={() => go({ name: "world", category: item.category })}
                           type="button"
                           className="flex w-full flex-col items-start rounded-xl px-3 py-2.5 text-left transition hover:bg-secondary"
                         >
@@ -78,7 +82,7 @@ export function Header() {
 
               <NavLink label="Train" href={IRCTC_MAIN} />
               <NavLink label="Food" href={IRCTC_ECATERING} />
-              <NavLink label="Rooms" href={IRCTC_TOURISM} />
+              <NavLink label="Rooms" href={IRCTC_HOTELS} />
 
               <button
                 onClick={openDishaChatbot}
@@ -173,14 +177,15 @@ export function Header() {
               <MobileNavGroup
                 label="Holidays"
                 items={holidayLinks.map((h) => h.label)}
-                onPick={() => {
-                  go({ name: "world" });
+                onPick={(label) => {
+                  const picked = holidayLinks.find((h) => h.label === label);
+                  go({ name: "world", category: picked?.category });
                   setMobileOpen(false);
                 }}
               />
               <MobileNavRow label="Train" external onClick={() => window.open(IRCTC_MAIN, "_blank")} />
               <MobileNavRow label="Food" external onClick={() => window.open(IRCTC_ECATERING, "_blank")} />
-              <MobileNavRow label="Rooms" external onClick={() => window.open(IRCTC_TOURISM, "_blank")} />
+              <MobileNavRow label="Rooms" external onClick={() => window.open(IRCTC_HOTELS, "_blank")} />
               <MobileNavRow label="Ask Disha 2.0" onClick={openDishaChatbot} />
               <MobileNavRow
                 label="Contact us"
