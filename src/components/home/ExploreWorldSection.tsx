@@ -39,7 +39,7 @@ function DestinationCard({ img, name, tours, frameClassName, pillClassName, alt 
         <img src={img} alt={alt} loading="lazy" className="h-full w-full object-cover" />
       </div>
       <div
-        className={`absolute flex items-center justify-center gap-2 rounded-full bg-white px-4 py-2.5 shadow-[0_16px_34px_-12px_rgba(15,32,74,0.45)] ${pillClassName}`}
+        className={`absolute flex items-center justify-start gap-2 rounded-full bg-white px-4 py-2.5 shadow-[0_16px_34px_-12px_rgba(15,32,74,0.45)] ${pillClassName}`}
       >
         <Pin />
         <div className="leading-tight">
@@ -113,8 +113,8 @@ export function ExploreWorldSection() {
             it settles just above / in front of the skyline, tying the copy,
             cards and cityscape into a single scene rather than two bands. */}
         <div className="relative mx-auto h-full max-w-7xl px-6">
-          {/* Gujarat — top-left, pill overlapping bottom + bleeding left */}
-          <div className="reveal absolute left-[3%] top-[246px] z-10">
+          {/* Gujarat — top-left, pill centred on the frame and overlapping its bottom */}
+          <div className="reveal reveal-left absolute left-[3%] top-[246px] z-10">
             <div className="motion-safe:animate-floaty">
               <DestinationCard
                 img={gujaratImg}
@@ -122,13 +122,13 @@ export function ExploreWorldSection() {
                 name="Gujarat"
                 tours="125 Tours"
                 frameClassName="h-[224px] w-[206px]"
-                pillClassName="-bottom-6 -left-6 w-[214px]"
+                pillClassName="-bottom-6 left-1/2 w-[214px] -translate-x-1/2"
               />
             </div>
           </div>
 
-          {/* Madhya Pradesh — top-right, taller, pill overlapping bottom */}
-          <div className="reveal absolute right-[3%] top-[142px] z-10">
+          {/* Madhya Pradesh — top-right, taller, pill centred and overlapping its bottom */}
+          <div className="reveal reveal-right reveal-d1 absolute right-[3%] top-[142px] z-10">
             <div className="motion-safe:animate-floaty" style={{ animationDelay: "1.4s" }}>
               <DestinationCard
                 img={madhyaPradeshImg}
@@ -141,8 +141,8 @@ export function ExploreWorldSection() {
             </div>
           </div>
 
-          {/* Tamil Nadu — mid-right, smaller, pill overlapping top + bleeding right */}
-          <div className="reveal absolute right-[8%] top-[534px] z-10">
+          {/* Tamil Nadu — mid-right, smaller, pill centred and overlapping its top */}
+          <div className="reveal reveal-right reveal-d2 absolute right-[8%] top-[534px] z-10">
             <div className="motion-safe:animate-floaty" style={{ animationDelay: "0.7s" }}>
               <DestinationCard
                 img={tamilNaduImg}
@@ -150,14 +150,14 @@ export function ExploreWorldSection() {
                 name="Tamil Nadu"
                 tours="125 Tours"
                 frameClassName="h-[164px] w-[152px]"
-                pillClassName="-top-5 -right-24 w-[188px]"
+                pillClassName="-top-5 left-1/2 w-[188px] -translate-x-1/2"
               />
             </div>
           </div>
 
-          {/* centred CTA — inset-x-0 + mx-auto keeps it centred without a
-              transform (the .reveal class owns `transform` for its entrance) */}
-          <div className="reveal absolute inset-x-0 top-[398px] z-10">
+          {/* centred CTA — inset-x-0 + mx-auto keeps it centred. (.reveal now
+              animates `translate`/`scale`, so `transform` is free here.) */}
+          <div className="reveal reveal-scale reveal-d3 absolute inset-x-0 top-[398px] z-10">
             <CenterContent onBook={book} />
           </div>
         </div>

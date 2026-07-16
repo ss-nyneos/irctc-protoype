@@ -7,7 +7,7 @@ export function LuxuryTrainsSection() {
   return (
     <section className="relative overflow-hidden py-28 md:py-36">
       <div className="relative mx-auto max-w-7xl px-4 md:px-6" ref={ref}>
-        <div className="reveal flex flex-wrap items-end justify-between gap-4">
+        <div className="reveal reveal-rise flex flex-wrap items-end justify-between gap-4">
           <div>
             <div className="mb-2 flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-azure">
               <TrainFront size={15} /> Palaces on rails

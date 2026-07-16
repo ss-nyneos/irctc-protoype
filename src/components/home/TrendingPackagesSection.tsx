@@ -97,7 +97,7 @@ export function TrendingPackagesSection() {
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-28 md:px-6 md:py-36" ref={ref}>
-      <h2 className="reveal heading-xl text-center text-ink">
+      <h2 className="reveal reveal-rise heading-xl text-center text-ink">
         Trending <span className="accent">Packages</span>
       </h2>
 

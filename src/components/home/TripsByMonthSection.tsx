@@ -13,7 +13,7 @@ export function TripsByMonthSection() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-28 md:px-6 md:py-36" ref={ref}>
       {/* heading row — title on the left, locomotive on the right */}
-      <div className="reveal mb-8 flex items-center justify-between gap-4">
+      <div className="reveal reveal-rise mb-8 flex items-center justify-between gap-4">
         <h2 className="heading-xl text-ink">
           Find Your Perfect Trip <span className="accent">by Month</span>
         </h2>
@@ -26,11 +26,13 @@ export function TripsByMonthSection() {
         />
       </div>
 
-      <div className="reveal grid min-w-0 gap-x-8 gap-y-6 md:grid-cols-[1fr_170px]">
+      {/* No `reveal` on this wrapper: the cards inside pop one by one, and
+          fading the whole block in on top of that reads as two animations. */}
+      <div className="grid min-w-0 gap-x-8 gap-y-6 md:grid-cols-[1fr_170px]">
         {/* staircase bento — top-right cell intentionally empty; the four inner
             corners are heavily rounded so their negative space forms the big
             "star" gap at the centre where the cards meet */}
-        <div className="grid min-w-0 grid-cols-1 gap-2 sm:grid-cols-3">
+        <div className="stagger grid min-w-0 grid-cols-1 gap-2 sm:grid-cols-3">
           <TripCard card={cards[0]} align="left" className="h-60 sm:h-64 sm:rounded-br-[6rem]" />
           <TripCard card={cards[1]} align="right" className="h-60 sm:h-64 sm:rounded-bl-[6rem]" />
           <div className="hidden sm:block" aria-hidden="true" />
@@ -39,8 +41,8 @@ export function TripsByMonthSection() {
           <TripCard card={cards[4]} align="left" className="h-56 sm:h-60 sm:rounded-tr-[6rem]" />
         </div>
 
-        {/* month picker */}
-        <div className="no-scrollbar flex min-w-0 flex-row gap-3 overflow-x-auto md:flex-col md:items-end md:gap-4 md:overflow-visible md:text-right">
+        {/* month picker — a control, not a card, so it fades rather than pops */}
+        <div className="reveal no-scrollbar flex min-w-0 flex-row gap-3 overflow-x-auto md:flex-col md:items-end md:gap-4 md:overflow-visible md:text-right">
           {months.map((month, i) => {
             const active = i === selected;
             return (

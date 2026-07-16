@@ -87,16 +87,101 @@ h4,
   scrollbar-width: none;
 }
 
+/* ── Scroll motion ─────────────────────────────────────────────────────────
+   One curve and one duration for the whole site, so the variants below read as
+   the same hand moving in different directions rather than as different
+   animations bolted together. Only opacity and transform are animated — both
+   are compositor-only, so a page full of these still scrolls at 60fps. */
+:root {
+  --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Overshoots ~1.03 before settling — that tiny bounce past the target is the
+     difference between a card sliding in and a card popping in. */
+  --ease-pop: cubic-bezier(0.34, 1.45, 0.64, 1);
+  --dur-reveal: 0.7s;
+  /* Shorter than a reveal: a pop is per-card and they queue up behind each
+     other, so a twelve-tile grid would otherwise take an age to finish. */
+  --dur-pop: 0.55s;
+  /* The stagger gap itself lives in useReveal.ts — it's handed out per card at
+     intersection time, so there's nothing for CSS to hold. */
+}
+
+/* These animate the independent `translate`/`scale` properties rather than
+   `transform`, which matters: this stylesheet loads after Tailwind's utilities
+   and matches at the same specificity, so a `transform`-based reveal silently
+   beat every `hover:-translate-y-*` on the page and killed the card lifts. The
+   independent properties compose with `transform` instead of fighting it, so a
+   card can be revealed and hover-lifted at once. */
 .reveal {
   opacity: 0;
+  translate: 0 28px;
   transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-  transform: translateY(28px);
+    opacity var(--dur-reveal) var(--ease-reveal),
+    translate var(--dur-reveal) var(--ease-reveal),
+    scale var(--dur-reveal) var(--ease-reveal);
 }
+
+/* Directional variants. Compose with .reveal: `class="reveal reveal-left"`.
+   Pick by meaning — something entering from the left should sit on the left. */
+.reveal-left {
+  translate: -40px 0;
+}
+.reveal-right {
+  translate: 40px 0;
+}
+/* For photos and panels: settling into place rather than sliding. */
+.reveal-scale {
+  translate: none;
+  scale: 0.94;
+}
+/* For headings: rises less far, so it reads as a lift rather than a jump. */
+.reveal-rise {
+  translate: 0 14px;
+}
+
 .reveal.in {
   opacity: 1;
-  transform: translateY(0);
+  /* Resets every variant above — each one lands at its natural position. */
+  translate: none;
+  scale: none;
+}
+
+/* Hand-ordered delays, for cards that sit next to each other but can't share a
+   .stagger parent (absolutely positioned ones, mostly). Must live here rather
+   than using Tailwind's `delay-*`: the `transition` shorthand on .reveal above
+   resets delay to 0 and, matching at equal specificity from a later
+   stylesheet, would win. */
+.reveal-d1 {
+  transition-delay: 90ms;
+}
+.reveal-d2 {
+  transition-delay: 180ms;
+}
+.reveal-d3 {
+  transition-delay: 270ms;
+}
+
+/* ── Stagger ────────────────────────────────────────────────────────────────
+   Put on a grid/list container instead of .reveal: the container stays put and
+   its children pop in one after another, which is what stops a row of cards
+   reading as a single slab.
+   The `.in` lands on each *child*, not the container — useReveal watches cards
+   individually so each arrives as you scroll to it, and hands out the 55ms
+   cascade to whichever cards cross together. */
+.stagger > * {
+  opacity: 0;
+  translate: 0 20px;
+  scale: 0.93;
+  transition:
+    /* Opacity is deliberately left on the plain curve — overshooting it just
+       clamps at 1 and wastes the last of the fade. */
+    opacity var(--dur-pop) var(--ease-reveal),
+    translate var(--dur-pop) var(--ease-pop),
+    scale var(--dur-pop) var(--ease-pop);
+}
+.stagger > *.in {
+  opacity: 1;
+  translate: none;
+  scale: none;
 }
 
 /* The itinerary train sliding between stops, and the track filling in behind
@@ -105,6 +190,37 @@ h4,
    covered. Shares the app's easing curve so it feels of a piece. */
 .train-glide {
   transition: transform 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Breeze plane ──────────────────────────────────────────────────────────
+   The orbit itself is driven in JS (it responds to scroll); these are the two
+   slower drifts layered over it. Their periods don't divide into the ~24s lap,
+   so the combined motion takes minutes to visibly repeat — that's what keeps a
+   circling plane reading as wind rather than as a mechanism. They animate
+   `translate`, leaving `transform` free for the JS orbit on the plane itself. */
+@keyframes breeze-bob {
+  0%,
+  100% {
+    translate: 0 -7px;
+  }
+  50% {
+    translate: 0 7px;
+  }
+}
+@keyframes breeze-sway {
+  0%,
+  100% {
+    translate: -16px 0;
+  }
+  50% {
+    translate: 16px 0;
+  }
+}
+.breeze-bob {
+  animation: breeze-bob 5.5s ease-in-out infinite;
+}
+.breeze-sway {
+  animation: breeze-sway 13s ease-in-out infinite;
 }
 
 .pulse-ring {
@@ -348,16 +464,26 @@ h4,
   .num-out,
   .vb-bob,
   .vb-streak,
-  .vb-dots::after {
+  .vb-dots::after,
+  .breeze-bob,
+  .breeze-sway {
     animation: none !important;
   }
   /* no auto-drift → let people scroll the services strip themselves */
   .svc-stage {
     overflow-x: auto;
   }
-  .reveal {
+  /* Everything arrives already in place — including the stagger children, which
+     would otherwise sit at opacity 0 forever with their transitions disabled. */
+  .reveal,
+  .stagger > * {
     opacity: 1;
-    transform: none;
+    translate: none;
+    scale: none;
+    transition: none !important;
+  }
+  .stagger > *.in {
+    transition-delay: 0ms !important;
   }
   .hero-slide {
     transition: none !important;

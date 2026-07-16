@@ -71,17 +71,17 @@ export function SpecialOffersSection() {
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-28 md:px-6 md:py-36" ref={ref}>
-      <h2 className="reveal heading-xl text-center text-ink">
+      <h2 className="reveal reveal-rise heading-xl text-center text-ink">
         Special <span className="accent">Offers</span>
       </h2>
 
-      <div className="mt-10 grid gap-5 md:grid-cols-3">
+      <div className="stagger mt-10 grid gap-5 md:grid-cols-3">
         {offerCards.map((offer) => {
           const Decor = decorMap[offer.decor];
           return (
             <div
               key={offer.id}
-              className="reveal relative h-56 overflow-hidden rounded-2xl shadow-md md:h-52"
+              className="relative h-56 overflow-hidden rounded-2xl shadow-md md:h-52"
               style={{ background: offer.background }}
             >
               <RingAccent className={`left-3 top-3 h-8 w-8 ${offer.textClass === "text-navy" ? "border-navy/25" : "border-white/35"}`} />

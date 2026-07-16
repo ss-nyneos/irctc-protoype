@@ -8,7 +8,8 @@ import avatar1 from "@/assets/hero/jaipur-amber-fort.jpg";
 import avatar2 from "@/assets/hero/ladakh-mountains.jpg";
 import avatar3 from "@/assets/hero/kerala-tea-gardens.jpg";
 import avatar4 from "@/assets/trains/maharajas-express.jpg";
-import planePath from "@/assets/stats/plane-path.svg";
+import { BreezePlane } from "@/components/home/BreezePlane";
+import { ParallaxImage } from "@/components/common/ParallaxImage";
 
 const avatars = [avatar1, avatar2, avatar3, avatar4];
 
@@ -81,29 +82,15 @@ export function StatsSection() {
 
   return (
     <section className="relative overflow-hidden py-28 md:py-36" ref={ref}>
-      {/* Flight path — flies through the empty band above the bento and dips
-          behind the rightmost card, so the tail reads as passing under it.
-          z-0 here vs z-10 on the grid is what puts the cards on top.
+      {/* A paper plane circling on the breeze in the empty band above the bento.
+          z-0 here vs z-10 on the grid keeps it behind the cards.
           lg-only: below that the cards stack and the band disappears. */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 mx-auto hidden max-w-7xl px-4 md:px-6 lg:block">
-        {/* bleeds 150px past the container so the tail runs off the right edge */}
-        <img
-          src={planePath}
-          alt=""
-          aria-hidden="true"
-          className="reveal absolute right-[-150px] top-3 w-[820px] max-w-none select-none"
-        />
-      </div>
+      <BreezePlane />
 
-      <div className="reveal relative z-10 mx-auto grid max-w-7xl gap-6 px-4 md:px-6 lg:grid-cols-12 lg:gap-8">
+      <div className="stagger relative z-10 mx-auto grid max-w-7xl gap-6 px-4 md:px-6 lg:grid-cols-12 lg:gap-8">
         {/* ── Anchor stat ─────────────────────────────────────────── */}
         <div className="relative flex min-h-[220px] flex-col justify-center overflow-hidden rounded-[28px] p-7 shadow-[0_24px_60px_-28px_hsl(var(--navy)/0.55)] ring-1 ring-white/15 lg:col-span-3 lg:min-h-[300px]">
-          <img
-            src={cardImg1}
-            alt="Two travellers trekking a coastal ridge at golden hour"
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
+          <ParallaxImage src={cardImg1} alt="Two travellers trekking a coastal ridge at golden hour" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/45 to-black/20 backdrop-blur-[1px]" />
           <CornerArcs className="pointer-events-none absolute -right-4 -top-4 h-44 w-44 text-white/[0.14]" />
           <div className="relative [text-shadow:0_1px_3px_rgba(0,0,0,0.35)]">
@@ -116,12 +103,9 @@ export function StatsSection() {
 
         {/* ── Photo card ──────────────────────────────────────────── */}
         <div className="relative min-h-[220px] overflow-hidden rounded-[28px] shadow-[0_24px_60px_-28px_hsl(var(--navy)/0.55)] ring-1 ring-white/15 lg:col-span-4 lg:min-h-[300px]">
-          <img
-            src={cardImg2}
-            alt="A family walking towards their flight with luggage"
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
+          {/* Each card drifts at a slightly different rate — identical parallax
+              across a row just reads as the row itself moving. */}
+          <ParallaxImage src={cardImg2} alt="A family walking towards their flight with luggage" strength={0.17} />
           <div className="absolute inset-0 bg-gradient-to-t from-black/78 via-black/35 to-black/5 backdrop-blur-[0.5px]" />
           <div className="relative flex h-full flex-col justify-end p-7 [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]">
             <div className="font-display text-[clamp(1.7rem,3vw,2.2rem)] font-bold leading-none text-white">
@@ -134,12 +118,7 @@ export function StatsSection() {
 
         {/* ── Combined stats card ─────────────────────────────────── */}
         <div className="relative flex min-h-[220px] flex-col overflow-hidden rounded-[28px] p-7 shadow-[0_24px_60px_-28px_hsl(var(--navy)/0.55)] ring-1 ring-white/15 lg:col-span-5 lg:min-h-[300px]">
-          <img
-            src={cardImg3}
-            alt="A traveller watching hot-air balloons rise at sunrise"
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
+          <ParallaxImage src={cardImg3} alt="A traveller watching hot-air balloons rise at sunrise" strength={0.09} />
           <div className="absolute inset-0 bg-gradient-to-br from-black/72 via-black/55 to-black/72 backdrop-blur-[1px]" />
 
           <div className="relative grid flex-1 grid-cols-2 items-start [text-shadow:0_1px_3px_rgba(0,0,0,0.35)]">

@@ -54,17 +54,17 @@ export function ModesSection() {
 
   return (
     <section className="relative mx-auto max-w-7xl px-4 py-28 md:px-6 md:py-36" ref={ref}>
-      <div className="reveal mx-auto max-w-2xl text-center">
+      <div className="reveal reveal-rise mx-auto max-w-2xl text-center">
         <h2 className="heading-xl text-ink">Three ways to find your journey</h2>
       </div>
 
-      <div className="mt-12 grid gap-5 md:grid-cols-3">
+      <div className="stagger mt-12 grid gap-5 md:grid-cols-3">
         {modes.map((mode) => {
           const Scene = mode.scene;
           return (
             <div
               key={mode.title}
-              className={`reveal group relative flex flex-col rounded-3xl border bg-white p-6 shadow-sm ring-1 ring-brand/15 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl ${
+              className={`group relative flex flex-col rounded-3xl border bg-white p-6 shadow-sm ring-1 ring-brand/15 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl ${
                 mode.featured ? "shadow-xl md:-mt-4 md:mb-4" : ""
               }`}
             >

@@ -125,14 +125,14 @@ export function ServicesSection() {
       />
 
       <div className="relative mx-auto max-w-7xl px-4 md:px-6">
-        <div className="reveal mx-auto max-w-2xl text-center">
+        <div className="reveal reveal-rise mx-auto max-w-2xl text-center">
           <h2 className="heading-xl text-ink">
             Everything your <span className="accent">journey</span> needs
           </h2>
         </div>
 
         {/* every service laid out in a grid — 6 per row on desktop, scaling down on smaller screens */}
-        <ul className="reveal mt-12 grid list-none grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 md:grid-cols-4 lg:grid-cols-6 lg:gap-6">
+        <ul className="stagger mt-12 grid list-none grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 md:grid-cols-4 lg:grid-cols-6 lg:gap-6">
           {SERVICES.map((s) => (
             <li key={s.label}>
               <ServiceCard s={s} />

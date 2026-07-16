@@ -10,7 +10,7 @@ export function CtaSection() {
   return (
     <section className="px-4 pb-28 pt-28 md:px-6 md:pb-36 md:pt-36" ref={ref}>
       <div
-        className="reveal relative mx-auto flex min-h-[380px] max-w-7xl items-center justify-center overflow-hidden rounded-3xl bg-navy bg-cover bg-center px-6 py-16 text-center text-white md:min-h-[520px] md:px-14 md:py-24"
+        className="reveal reveal-scale relative mx-auto flex min-h-[380px] max-w-7xl items-center justify-center overflow-hidden rounded-3xl bg-navy bg-cover bg-center px-6 py-16 text-center text-white md:min-h-[520px] md:px-14 md:py-24"
         style={{ backgroundImage: `url("${heroBanner}")` }}
       >
         {/* scrim keeps the copy legible over the bright coach livery behind it */}
