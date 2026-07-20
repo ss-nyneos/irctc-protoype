@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check, ChevronDown, SlidersHorizontal } from "lucide-react";
+import { Check, Minus, Plus, Search, SlidersHorizontal, type LucideIcon } from "lucide-react";
 import { formatINR } from "@/utils/format";
 
 export interface FilterOption {
@@ -11,6 +11,7 @@ export interface FilterOption {
 export interface FilterSection {
   key: string;
   title: string;
+  icon: LucideIcon;
   /** Single-choice sections read as radios, multi-choice as checkboxes. */
   single?: boolean;
   options: FilterOption[];
@@ -28,6 +29,8 @@ interface FilterPanelProps {
 
 /** How many options a section shows before "See more". */
 const COLLAPSED_COUNT = 6;
+/** Longer lists than this get a search box, as Origin does on IRCTC. */
+const SEARCH_FROM = 8;
 
 export function FilterPanel({
   sections,
@@ -38,12 +41,14 @@ export function FilterPanel({
   activeFilterCount,
   onClear,
 }: FilterPanelProps) {
-  // Everything starts open — a filter you can't see is a filter nobody uses.
-  const [closed, setClosed] = useState<string[]>([]);
+  // Only the first section starts open. Everything expanded at once made the
+  // panel taller than the results it filters.
+  const [open, setOpen] = useState<string[]>(() => sections.slice(0, 1).map((s) => s.key));
   const [expanded, setExpanded] = useState<string[]>([]);
+  const [queries, setQueries] = useState<Record<string, string>>({});
   const pct = ((price - priceMin) / (priceMax - priceMin)) * 100;
 
-  const toggleSection = (k: string) => setClosed((c) => (c.includes(k) ? c.filter((x) => x !== k) : [...c, k]));
+  const toggleSection = (k: string) => setOpen((o) => (o.includes(k) ? o.filter((x) => x !== k) : [...o, k]));
 
   return (
     <div className="flex flex-col gap-4">
@@ -96,24 +101,43 @@ export function FilterPanel({
           )}
         </header>
 
-        <div className="divide-y divide-white/70">
+        <div className="divide-y divide-white/60">
           {sections.map((s) => {
-            const isOpen = !closed.includes(s.key);
+            const isOpen = open.includes(s.key);
             const showAll = expanded.includes(s.key);
-            const visible = showAll ? s.options : s.options.slice(0, COLLAPSED_COUNT);
+            const q = (queries[s.key] ?? "").trim().toLowerCase();
+            const searchable = s.options.length > SEARCH_FROM;
+            const matched = q ? s.options.filter((o) => o.label.toLowerCase().includes(q)) : s.options;
+            const visible = showAll || q ? matched : matched.slice(0, COLLAPSED_COUNT);
+            const chosen = s.options.filter((o) => o.active).length;
 
             return (
-              <div key={s.key} className="px-5">
+              <div key={s.key}>
                 <button
                   onClick={() => toggleSection(s.key)}
                   type="button"
-                  className="flex w-full items-center justify-between py-4 text-left"
+                  aria-expanded={isOpen}
+                  className={`flex w-full items-center justify-between gap-2 px-5 py-3.5 text-left transition ${
+                    isOpen ? "bg-white/50" : "hover:bg-white/40"
+                  }`}
                 >
-                  <span className="text-[13.5px] font-bold text-ink">{s.title}</span>
-                  <ChevronDown
-                    size={16}
-                    className={`text-muted-foreground transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
-                  />
+                  <span className="inline-flex min-w-0 items-center gap-2.5">
+                    <s.icon size={16} className="shrink-0 text-brand" />
+                    <span className="truncate text-[13.5px] font-bold text-ink">{s.title}</span>
+                    {chosen > 0 && !isOpen && (
+                      <span className="shrink-0 rounded-full bg-brand/10 px-1.5 py-0.5 text-[11px] font-bold text-brand">
+                        {chosen}
+                      </span>
+                    )}
+                  </span>
+                  {/* Plus turning into minus, as on the IRCTC panel. */}
+                  <span className="relative inline-flex h-4 w-4 shrink-0 items-center justify-center text-ink">
+                    <Minus size={16} className="absolute" />
+                    <Plus
+                      size={16}
+                      className={`absolute transition-all duration-300 ease-out ${isOpen ? "rotate-90 opacity-0" : "opacity-100"}`}
+                    />
+                  </span>
                 </button>
 
                 <div
@@ -122,7 +146,19 @@ export function FilterPanel({
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <div className="grid grid-cols-2 gap-x-3 gap-y-1 pb-4">
+                    {searchable && (
+                      <div className="relative px-5 pt-3">
+                        <Search size={14} className="absolute left-8 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                        <input
+                          value={queries[s.key] ?? ""}
+                          onChange={(e) => setQueries((p) => ({ ...p, [s.key]: e.target.value }))}
+                          placeholder={`Search ${s.title}...`}
+                          className="w-full rounded-lg border bg-white/80 py-2 pl-8 pr-3 text-[13px] font-medium text-ink outline-none transition placeholder:text-muted-foreground focus:border-brand/50"
+                        />
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-2 gap-x-3 gap-y-1 px-5 pb-4 pt-3">
                       {visible.map((o) => (
                         <button
                           key={o.label}
@@ -151,13 +187,17 @@ export function FilterPanel({
                         </button>
                       ))}
 
-                      {s.options.length > COLLAPSED_COUNT && (
+                      {matched.length === 0 && (
+                        <p className="col-span-2 py-1 text-[12.5px] font-medium text-muted-foreground">No matches.</p>
+                      )}
+
+                      {!q && matched.length > COLLAPSED_COUNT && (
                         <button
                           onClick={() => setExpanded((e) => (showAll ? e.filter((x) => x !== s.key) : [...e, s.key]))}
                           type="button"
                           className="col-span-2 mt-1 text-left text-[12px] font-bold text-brand transition hover:underline"
                         >
-                          {showAll ? "See less" : `See more (${s.options.length - COLLAPSED_COUNT})`}
+                          {showAll ? "See less" : `See more (${matched.length - COLLAPSED_COUNT})`}
                         </button>
                       )}
                     </div>

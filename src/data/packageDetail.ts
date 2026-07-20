@@ -57,6 +57,37 @@ const codes: Record<string, string> = {
   dubai: "INDX05",
 };
 
+const departurePattern: Record<string, string> = {
+  chardham: "All Days (Except Friday)",
+  keralabackwaters: "Everyday",
+  dakshinbharat: "Weekday",
+  northeastsafari: "All Days (Except Thursday & Friday)",
+  maharajas: "Wednesday",
+  goldenchariot: "Monday",
+  andaman: "Everyday",
+  kashmir: "Daily",
+  srilanka: "All Days (Except Sunday)",
+  jyotirlinga: "Daily",
+  rajasthan: "All Days (Except Friday)",
+  dubai: "Everyday",
+};
+
+/** IRCTC's "Upcoming Date Of Journey", in its DD-MMM-YY print format. */
+const nextDeparture: Record<string, string> = {
+  chardham: "24-JUL-26",
+  keralabackwaters: "26-JUL-26",
+  dakshinbharat: "27-JUL-26",
+  northeastsafari: "02-AUG-26",
+  maharajas: "05-AUG-26",
+  goldenchariot: "10-AUG-26",
+  andaman: "26-JUL-26",
+  kashmir: "25-JUL-26",
+  srilanka: "29-JUL-26",
+  jyotirlinga: "26-JUL-26",
+  rajasthan: "31-JUL-26",
+  dubai: "28-JUL-26",
+};
+
 /**
  * Boarding chains, in running order. Air packages are absent by design — there
  * is no train to join, so the detail page shows airport info instead.
@@ -218,6 +249,8 @@ function buildPolicy(pkg: TourPackage): PolicySection[] {
 export function getPackageDetail(pkg: TourPackage): PackageDetail {
   return {
     code: codes[pkg.id] ?? `IR${pkg.id.slice(0, 4).toUpperCase()}`,
+    departure: departurePattern[pkg.id] ?? "Everyday",
+    nextDeparture: nextDeparture[pkg.id] ?? "26-JUL-26",
     classes: buildClasses(pkg),
     boarding: boardingChains[pkg.id] ?? [],
     departures: baseDepartures,

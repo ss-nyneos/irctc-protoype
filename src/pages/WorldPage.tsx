@@ -1,5 +1,21 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
-import { ArrowLeft, Check, Scale, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowUpDown,
+  CalendarDays,
+  HandHelping,
+  Headset,
+  LayoutGrid,
+  MapPin,
+  Rows3,
+  ShieldCheck,
+  Sparkles,
+  Sun,
+  Ticket,
+  TrainFront,
+  Wallet,
+  X,
+} from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
 import { useRouter } from "@/router/RouterContext";
 import { packages, getPackageById } from "@/data/packages";
@@ -7,6 +23,8 @@ import type { BudgetBand, Climate, Experience, TourPackage } from "@/types";
 // import { DestinationMarquee } from "@/components/common/DestinationMarquee";
 // import { AiPickBanner } from "@/components/home/AiPickBanner";
 import { EditorialPackageCard } from "@/components/package/EditorialPackageCard";
+import { PackageListRow } from "@/components/package/PackageListRow";
+import { RecentPackagesDrawer } from "@/components/package/RecentPackagesDrawer";
 import { FilterPanel, type FilterSection } from "@/components/package/FilterPanel";
 import heroScene from "@/hero_scene.jpg";
 import { CompareModal } from "@/components/package/CompareModal";
@@ -29,6 +47,9 @@ const experienceOptions: { k: Experience; label: string }[] = [
 ];
 const durationOptions = ["Any", "3–5 days", "6–8 days", "9+ days"] as const;
 type Duration = (typeof durationOptions)[number];
+
+/** Stands in for a visit history until one is stored. */
+const recentPackages = packages.slice(0, 3);
 
 /** Two-up once there's room — the filter panel takes 30% of the row. */
 const columnsFor = (w: number) => (w >= 640 ? 2 : 1);
@@ -53,6 +74,7 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
   const [selExperiences, setSelExperiences] = useState<Experience[]>([]);
   const [duration, setDuration] = useState<Duration>("Any");
   const [maxPrice, setMaxPrice] = useState(PRICE_MAX);
+  const [view, setView] = useState<"gallery" | "list">("gallery");
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [showCompare, setShowCompare] = useState(false);
 
@@ -117,28 +139,33 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
     {
       key: "category",
       title: "Holiday type",
+      icon: LayoutGrid,
       single: true,
       options: categories.map((c) => ({ label: c, active: category === c, onClick: () => setCategory(c) })),
     },
     {
       key: "duration",
       title: "Trip length",
+      icon: CalendarDays,
       single: true,
       options: durationOptions.map((d) => ({ label: d, active: duration === d, onClick: () => setDuration(d) })),
     },
     {
       key: "region",
       title: "Where to",
+      icon: MapPin,
       options: regions.map((r) => ({ label: r, active: selRegions.includes(r), onClick: () => toggle(selRegions, setSelRegions, r) })),
     },
     {
       key: "budget",
       title: "Comfort level",
+      icon: Wallet,
       options: budgetBands.map((b) => ({ label: b, active: selBands.includes(b), onClick: () => toggle(selBands, setSelBands, b) })),
     },
     {
       key: "experience",
       title: "Good for",
+      icon: Sparkles,
       options: experienceOptions.map((e) => ({
         label: e.label,
         active: selExperiences.includes(e.k),
@@ -148,11 +175,13 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
     {
       key: "climate",
       title: "Weather",
+      icon: Sun,
       options: climates.map((c) => ({ label: c, active: selClimates.includes(c), onClick: () => toggle(selClimates, setSelClimates, c) })),
     },
     {
       key: "sort",
       title: "Sort by",
+      icon: ArrowUpDown,
       single: true,
       options: sortOptions.map((o) => ({ label: o, active: sort === o, onClick: () => setSort(o) })),
     },
@@ -207,39 +236,81 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
           <ArrowLeft size={15} /> Back
         </button>
 
-        <div className="relative z-10 flex h-full flex-col items-center justify-start px-4 pt-[50vh] text-center">
+        <div className="relative z-10 flex h-full flex-col items-center justify-start px-4 pt-[44vh] text-center">
+          <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[11.5px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-md">
+            <TrainFront size={13} /> Indian Railways · Official tour packages
+          </span>
+
           <h1 className="heading-xl max-w-3xl text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]">
             Explore &amp; compare packages
           </h1>
           <p className="mt-3 max-w-xl text-[15px] font-medium text-white/85 drop-shadow-[0_1px_12px_rgba(0,0,0,0.5)]">
             Hand-picked journeys across India and beyond — filter, shortlist and compare side by side.
           </p>
+
+          {/* Gives the headline a base to sit on, so it reads as a composed
+              block rather than type dropped onto a photograph. */}
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-x-7 gap-y-2 text-[13px] font-semibold text-white/80 drop-shadow-[0_1px_10px_rgba(0,0,0,0.5)]">
+            <span className="inline-flex items-center gap-2"><ShieldCheck size={15} className="text-white/60" /> Fares inclusive of stay &amp; meals</span>
+            <span className="hidden h-4 w-px bg-white/25 sm:block" />
+            <span className="inline-flex items-center gap-2"><Ticket size={15} className="text-white/60" /> Rail, road &amp; air itineraries</span>
+            <span className="hidden h-4 w-px bg-white/25 sm:block" />
+            <span className="inline-flex items-center gap-2"><HandHelping size={15} className="text-white/60" /> Easy Service</span>
+          </div>
         </div>
       </section>
 
       <div className="bg-[linear-gradient(180deg,#f4eff1_0%,#ffffff_460px)]">
-      <div className="relative mx-auto max-w-[1600px] px-4 pt-8 md:px-8 xl:px-12">
+      <div className="relative mx-auto max-w-[1600px] px-4 pt-2 md:px-8 xl:px-12">
         {/* {aiPick && (
           <div className="mt-6">
             <AiPickBanner pkg={aiPick} />
           </div>
         )} */}
 
+        {/* Pulled up into the hero's fade so it reads as a banner on the photo
+            rather than the first row of the results. */}
+        <div className="reveal -mt-16 md:-mt-20">
+          <RecentPackagesDrawer packages={recentPackages} />
+        </div>
+
         <div className="flex flex-wrap items-center justify-between gap-3 pt-5">
           <div className="text-[13px] font-semibold text-muted-foreground">
             {filtered.length} {filtered.length === 1 ? "package" : "packages"} match your filters
           </div>
-          <div className="no-scrollbar flex max-w-full gap-2 overflow-x-auto">
-            {appliedChips.map((c) => (
-              <button
-                key={c.label}
-                onClick={c.onRemove}
-                type="button"
-                className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand/10 px-3 py-1 text-[12px] font-semibold text-brand transition hover:bg-brand/20"
-              >
-                {c.label} <X size={11} />
-              </button>
-            ))}
+          <div className="flex items-center gap-3">
+            <div className="no-scrollbar flex max-w-full gap-2 overflow-x-auto">
+              {appliedChips.map((c) => (
+                <button
+                  key={c.label}
+                  onClick={c.onRemove}
+                  type="button"
+                  className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand/10 px-3 py-1 text-[12px] font-semibold text-brand transition hover:bg-brand/20"
+                >
+                  {c.label} <X size={11} />
+                </button>
+              ))}
+            </div>
+
+            {/* Same data, two densities: photos to browse, rows to compare. */}
+            <div className="flex shrink-0 items-center gap-1 rounded-full border border-white/70 bg-white/70 p-1 shadow-sm backdrop-blur-xl">
+              {([
+                { k: "gallery", icon: LayoutGrid, label: "Gallery" },
+                { k: "list", icon: Rows3, label: "List" },
+              ] as const).map((v) => (
+                <button
+                  key={v.k}
+                  onClick={() => setView(v.k)}
+                  type="button"
+                  aria-pressed={view === v.k}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12.5px] font-bold transition ${
+                    view === v.k ? "bg-brand text-white shadow" : "text-ink hover:bg-brand/10"
+                  }`}
+                >
+                  <v.icon size={14} /> {v.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -259,7 +330,19 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
           </aside>
 
           <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6">
-            {rows.map((row, i) => (
+            {view === "list" &&
+              filtered.map((pkg) => (
+                <div key={pkg.id} className="reveal">
+                  <PackageListRow
+                    pkg={pkg}
+                    comparing={compareIds.includes(pkg.id)}
+                    onCompare={() => toggleCompare(pkg.id)}
+                  />
+                </div>
+              ))}
+
+            {view === "gallery" &&
+              rows.map((row, i) => (
               <div
                 key={i}
                 className="card-row flex flex-col gap-5 sm:flex-row lg:gap-6"
@@ -272,17 +355,12 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
               >
                 {row.map((pkg) => (
                   <div key={pkg.id} className="card-cell min-w-0">
-                    <div className="reveal relative">
-                      <EditorialPackageCard pkg={pkg} />
-                      <button
-                        onClick={() => toggleCompare(pkg.id)}
-                        type="button"
-                        className={`absolute left-5 top-[58px] z-10 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold shadow transition ${
-                          compareIds.includes(pkg.id) ? "bg-brand text-white" : "bg-black/30 text-white backdrop-blur-md hover:bg-brand"
-                        }`}
-                      >
-                        {compareIds.includes(pkg.id) ? <Check size={12} /> : <Scale size={12} />} Compare
-                      </button>
+                    <div className="reveal">
+                      <EditorialPackageCard
+                        pkg={pkg}
+                        comparing={compareIds.includes(pkg.id)}
+                        onCompare={() => toggleCompare(pkg.id)}
+                      />
                     </div>
                   </div>
                 ))}
@@ -290,8 +368,8 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
                 {Array.from({ length: cols - row.length }).map((_, k) => (
                   <div key={`spacer-${k}`} className="hidden basis-0 grow sm:block" />
                 ))}
-              </div>
-            ))}
+                </div>
+              ))}
             {filtered.length === 0 && (
               <div className="rounded-2xl border border-dashed p-10 text-center text-[14px] text-muted-foreground">
                 No packages match these filters yet. Try clearing a few.

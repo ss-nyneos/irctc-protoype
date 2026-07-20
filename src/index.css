@@ -188,6 +188,15 @@ h4,
 .card-row > .card-cell {
   flex: 1 1 0%;
   transition: flex-grow var(--dur-pop, 0.5s) cubic-bezier(0.22, 1, 0.36, 1);
+  /* Width is a layout property, so each frame re-lays-out and repaints the
+     cell. `contain` walls that work off at the cell boundary — without it the
+     browser re-evaluates the whole row, which is what made this judder. */
+  contain: layout paint;
+}
+/* Hinted only while a row is actually in play; leaving it on permanently keeps
+   a layer alive per card for nothing. */
+.card-row:hover > .card-cell {
+  will-change: flex-grow;
 }
 @media (min-width: 640px) and (hover: hover) {
   .card-row:hover > .card-cell {
