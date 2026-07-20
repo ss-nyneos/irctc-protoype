@@ -184,6 +184,25 @@ h4,
   scale: none;
 }
 
+
+.card-row > .card-cell {
+  flex: 1 1 0%;
+  transition: flex-grow var(--dur-pop, 0.5s) cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (min-width: 640px) and (hover: hover) {
+  .card-row:hover > .card-cell {
+    flex-grow: var(--cell-shrink, 1);
+  }
+  .card-row > .card-cell:hover {
+    flex-grow: var(--cell-grow, 1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-row > .card-cell {
+    transition: none;
+  }
+}
+
 /* The itinerary train sliding between stops, and the track filling in behind
    it. 520ms reads as travel rather than as a UI state flip — longer than the
    150-300ms micro-interaction band on purpose, since the point is the distance

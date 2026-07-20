@@ -1,12 +1,14 @@
-import { useMemo, useState, type ReactNode } from "react";
-import { ArrowLeft, Check, ChevronDown, Scale, SlidersHorizontal, X } from "lucide-react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { ArrowLeft, Check, Scale, X } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
 import { useRouter } from "@/router/RouterContext";
 import { packages, getPackageById } from "@/data/packages";
 import type { BudgetBand, Climate, Experience, TourPackage } from "@/types";
-import { DestinationMarquee } from "@/components/common/DestinationMarquee";
-import { AiPickBanner } from "@/components/home/AiPickBanner";
-import { PackageCard } from "@/components/package/PackageCard";
+// import { DestinationMarquee } from "@/components/common/DestinationMarquee";
+// import { AiPickBanner } from "@/components/home/AiPickBanner";
+import { EditorialPackageCard } from "@/components/package/EditorialPackageCard";
+import { FilterPanel, type FilterSection } from "@/components/package/FilterPanel";
+import heroScene from "@/hero_scene.jpg";
 import { CompareModal } from "@/components/package/CompareModal";
 
 const categories = ["All", "Domestic", "Pilgrimage", "Heritage", "Hills", "Beach", "Wildlife", "International", "Luxury Train", "Bharat Gaurav"];
@@ -28,20 +30,29 @@ const experienceOptions: { k: Experience; label: string }[] = [
 const durationOptions = ["Any", "3–5 days", "6–8 days", "9+ days"] as const;
 type Duration = (typeof durationOptions)[number];
 
+/** Two-up once there's room — the filter panel takes 30% of the row. */
+const columnsFor = (w: number) => (w >= 640 ? 2 : 1);
+/** How much extra width a hovered card claims from its row-mates. */
+const HOVER_GROW = 0.28;
+
+/** Slider bounds, rounded out to the nearest ₹500 either side of the catalogue. */
+const PRICE_MIN = Math.floor(Math.min(...packages.map((p) => p.price)) / 500) * 500;
+const PRICE_MAX = Math.ceil(Math.max(...packages.map((p) => p.price)) / 500) * 500;
+
 /** Fractional saving vs. the struck-through price — used to rank "best value". */
-const discountPct = (p: TourPackage) => (p.oldPrice ? (p.oldPrice - p.price) / p.oldPrice : 0);
+// const discountPct = (p: TourPackage) => (p.oldPrice ? (p.oldPrice - p.price) / p.oldPrice : 0);
 
 export function WorldPage({ initialCategory }: { initialCategory?: string }) {
   const { back } = useRouter();
   const ref = useReveal();
   const [category, setCategory] = useState(initialCategory ?? "All");
   const [sort, setSort] = useState<SortOption>("Recommended");
-  const [showFilters, setShowFilters] = useState(false);
   const [selRegions, setSelRegions] = useState<string[]>([]);
   const [selBands, setSelBands] = useState<BudgetBand[]>([]);
   const [selClimates, setSelClimates] = useState<Climate[]>([]);
   const [selExperiences, setSelExperiences] = useState<Experience[]>([]);
   const [duration, setDuration] = useState<Duration>("Any");
+  const [maxPrice, setMaxPrice] = useState(PRICE_MAX);
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [showCompare, setShowCompare] = useState(false);
 
@@ -49,14 +60,22 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
     setList(list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
 
   const activeFilterCount =
-    selRegions.length + selBands.length + selClimates.length + selExperiences.length + (duration !== "Any" ? 1 : 0);
+    selRegions.length +
+    selBands.length +
+    selClimates.length +
+    selExperiences.length +
+    (duration !== "Any" ? 1 : 0) +
+    (category !== "All" ? 1 : 0) +
+    (maxPrice < PRICE_MAX ? 1 : 0);
 
   const clearFilters = () => {
+    setCategory("All");
     setSelRegions([]);
     setSelBands([]);
     setSelClimates([]);
     setSelExperiences([]);
     setDuration("Any");
+    setMaxPrice(PRICE_MAX);
   };
 
   const filtered = useMemo(() => {
@@ -67,6 +86,7 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
       } else if (category !== "All" && p.category !== category) {
         return false;
       }
+      if (p.price > maxPrice) return false;
       if (selRegions.length && !selRegions.includes(p.region)) return false;
       if (selBands.length && !selBands.includes(p.budgetBand)) return false;
       if (selClimates.length && !selClimates.includes(p.climate)) return false;
@@ -80,18 +100,89 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
     if (sort === "Price: High to Low") list = [...list].sort((a, b) => b.price - a.price);
     if (sort === "Top rated") list = [...list].sort((a, b) => b.rating - a.rating);
     return list;
-  }, [category, sort, selRegions, selBands, selClimates, selExperiences, duration]);
+  }, [category, sort, selRegions, selBands, selClimates, selExperiences, duration, maxPrice]);
 
   // The AI pick must come from what's actually on screen. Keep the curated default
   // when it matches the active filters; otherwise surface the best-value package in
   // the results (top rating, then biggest saving). Null → no matches, hide the banner.
-  const aiPick = useMemo(() => {
-    if (filtered.length === 0) return null;
-    return (
-      filtered.find((p) => p.id === "dakshinbharat") ??
-      [...filtered].sort((a, b) => b.rating - a.rating || discountPct(b) - discountPct(a))[0]
-    );
-  }, [filtered]);
+  // const aiPick = useMemo(() => {
+  //   if (filtered.length === 0) return null;
+  //   return (
+  //     filtered.find((p) => p.id === "dakshinbharat") ??
+  //     [...filtered].sort((a, b) => b.rating - a.rating || discountPct(b) - discountPct(a))[0]
+  //   );
+  // }, [filtered]);
+
+  const filterSections: FilterSection[] = [
+    {
+      key: "category",
+      title: "Holiday type",
+      single: true,
+      options: categories.map((c) => ({ label: c, active: category === c, onClick: () => setCategory(c) })),
+    },
+    {
+      key: "duration",
+      title: "Trip length",
+      single: true,
+      options: durationOptions.map((d) => ({ label: d, active: duration === d, onClick: () => setDuration(d) })),
+    },
+    {
+      key: "region",
+      title: "Where to",
+      options: regions.map((r) => ({ label: r, active: selRegions.includes(r), onClick: () => toggle(selRegions, setSelRegions, r) })),
+    },
+    {
+      key: "budget",
+      title: "Comfort level",
+      options: budgetBands.map((b) => ({ label: b, active: selBands.includes(b), onClick: () => toggle(selBands, setSelBands, b) })),
+    },
+    {
+      key: "experience",
+      title: "Good for",
+      options: experienceOptions.map((e) => ({
+        label: e.label,
+        active: selExperiences.includes(e.k),
+        onClick: () => toggle(selExperiences, setSelExperiences, e.k),
+      })),
+    },
+    {
+      key: "climate",
+      title: "Weather",
+      options: climates.map((c) => ({ label: c, active: selClimates.includes(c), onClick: () => toggle(selClimates, setSelClimates, c) })),
+    },
+    {
+      key: "sort",
+      title: "Sort by",
+      single: true,
+      options: sortOptions.map((o) => ({ label: o, active: sort === o, onClick: () => setSort(o) })),
+    },
+  ];
+
+  const appliedChips = [
+    ...selRegions.map((r) => ({ label: r, onRemove: () => toggle(selRegions, setSelRegions, r) })),
+    ...selBands.map((b) => ({ label: b, onRemove: () => toggle(selBands, setSelBands, b) })),
+    ...selClimates.map((c) => ({ label: c, onRemove: () => toggle(selClimates, setSelClimates, c) })),
+    ...selExperiences.map((e) => ({
+      label: experienceOptions.find((o) => o.k === e)!.label,
+      onRemove: () => toggle(selExperiences, setSelExperiences, e),
+    })),
+    ...(duration !== "Any" ? [{ label: duration, onRemove: () => setDuration("Any") }] : []),
+  ];
+
+  // Cards are laid out row by row so a hovered card can steal width from the
+  // ones beside it — that needs an explicit column count, not a wrapping grid.
+  const [cols, setCols] = useState(() => (typeof window === "undefined" ? 3 : columnsFor(window.innerWidth)));
+  useEffect(() => {
+    const onResize = () => setCols(columnsFor(window.innerWidth));
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const rows = useMemo(() => {
+    const out: TourPackage[][] = [];
+    for (let i = 0; i < filtered.length; i += cols) out.push(filtered.slice(i, i + cols));
+    return out;
+  }, [filtered, cols]);
 
   const toggleCompare = (id: string) =>
     setCompareIds((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : prev.length < 3 ? [...prev, id] : prev));
@@ -100,155 +191,115 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
 
   return (
     <div ref={ref} className="min-h-screen pb-24">
-      <div className="relative overflow-hidden bg-white">
-        <DestinationMarquee className="pt-8" />
-        <div className="relative mx-auto max-w-7xl px-4 pb-8 pt-8 md:px-6">
-          <button onClick={back} type="button" className="mb-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-muted-foreground hover:text-ink">
-            <ArrowLeft size={15} /> Back
-          </button>
-          <h1 className="heading-xl text-ink">Explore &amp; compare packages</h1>
-        </div>
-      </div>
+      {/* <DestinationMarquee className="pt-8" /> */}
+      <section className="relative isolate h-[80vh] min-h-[560px] w-full overflow-hidden bg-ink md:h-[88vh]">
+        <img src={heroScene} alt="" className="absolute inset-0 h-full w-full scale-105 object-cover object-[center_35%]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/55" />
+        {/* Fades into the tint the results section starts on, not into pure
+            white — a hard white edge under a photo reads as a seam. */}
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[#f4eff1]" />
 
-      <div className="mx-auto max-w-7xl px-4 md:px-6">
-        {aiPick && (
+        <button
+          onClick={back}
+          type="button"
+          className="absolute left-4 top-6 z-10 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3.5 py-1.5 text-[13px] font-semibold text-white backdrop-blur transition hover:bg-white/25 md:left-8"
+        >
+          <ArrowLeft size={15} /> Back
+        </button>
+
+        <div className="relative z-10 flex h-full flex-col items-center justify-start px-4 pt-[50vh] text-center">
+          <h1 className="heading-xl max-w-3xl text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]">
+            Explore &amp; compare packages
+          </h1>
+          <p className="mt-3 max-w-xl text-[15px] font-medium text-white/85 drop-shadow-[0_1px_12px_rgba(0,0,0,0.5)]">
+            Hand-picked journeys across India and beyond — filter, shortlist and compare side by side.
+          </p>
+        </div>
+      </section>
+
+      <div className="bg-[linear-gradient(180deg,#f4eff1_0%,#ffffff_460px)]">
+      <div className="relative mx-auto max-w-[1600px] px-4 pt-8 md:px-8 xl:px-12">
+        {/* {aiPick && (
           <div className="mt-6">
             <AiPickBanner pkg={aiPick} />
           </div>
-        )}
+        )} */}
 
-        <div className="reveal sticky top-[68px] z-30 mt-8 rounded-2xl border bg-white/90 shadow-sm backdrop-blur">
-          <div className="flex items-center gap-3 p-3">
-            <button
-              onClick={() => setShowFilters((v) => !v)}
-              type="button"
-              className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] font-bold transition ${
-                showFilters || activeFilterCount ? "bg-brand text-white" : "text-ink hover:bg-secondary"
-              }`}
-            >
-              <SlidersHorizontal size={15} /> Filters
-              {activeFilterCount > 0 && (
-                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-bold text-brand">
-                  {activeFilterCount}
-                </span>
-              )}
-              <ChevronDown size={14} className={`transition ${showFilters ? "rotate-180" : ""}`} />
-            </button>
-            <div className="no-scrollbar flex flex-1 gap-2 overflow-x-auto">
-              {categories.map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setCategory(c)}
-                  type="button"
-                  className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition ${
-                    category === c ? "bg-brand text-white" : "bg-secondary text-foreground/70 hover:bg-brand/10"
-                  }`}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value as SortOption)}
-              className="hidden shrink-0 rounded-full border bg-white px-3 py-1.5 text-[13px] font-semibold text-ink outline-none md:block"
-            >
-              {sortOptions.map((o) => (
-                <option key={o}>{o}</option>
-              ))}
-            </select>
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-5">
+          <div className="text-[13px] font-semibold text-muted-foreground">
+            {filtered.length} {filtered.length === 1 ? "package" : "packages"} match your filters
           </div>
-
-          {showFilters && (
-            <div className="border-t px-4 py-4">
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                <FacetGroup title="Region">
-                  <div className="flex flex-wrap gap-1.5">
-                    {regions.map((r) => (
-                      <FacetChip key={r} active={selRegions.includes(r)} onClick={() => toggle(selRegions, setSelRegions, r)}>
-                        {r}
-                      </FacetChip>
-                    ))}
-                  </div>
-                </FacetGroup>
-
-                <FacetGroup title="Budget">
-                  <div className="flex flex-wrap gap-1.5">
-                    {budgetBands.map((b) => (
-                      <FacetChip key={b} active={selBands.includes(b)} onClick={() => toggle(selBands, setSelBands, b)}>
-                        {b}
-                      </FacetChip>
-                    ))}
-                  </div>
-                </FacetGroup>
-
-                <FacetGroup title="Climate">
-                  <div className="flex flex-wrap gap-1.5">
-                    {climates.map((c) => (
-                      <FacetChip key={c} active={selClimates.includes(c)} onClick={() => toggle(selClimates, setSelClimates, c)}>
-                        {c}
-                      </FacetChip>
-                    ))}
-                  </div>
-                </FacetGroup>
-
-                <FacetGroup title="Trip length">
-                  <div className="flex flex-wrap gap-1.5">
-                    {durationOptions.map((d) => (
-                      <FacetChip key={d} active={duration === d} onClick={() => setDuration(d)}>
-                        {d}
-                      </FacetChip>
-                    ))}
-                  </div>
-                </FacetGroup>
-              </div>
-
-              <div className="mt-4 border-t pt-4">
-                <FacetGroup title="Style & experience">
-                  <div className="flex flex-wrap gap-1.5">
-                    {experienceOptions.map((e) => (
-                      <FacetChip key={e.k} active={selExperiences.includes(e.k)} onClick={() => toggle(selExperiences, setSelExperiences, e.k)}>
-                        {e.label}
-                      </FacetChip>
-                    ))}
-                  </div>
-                </FacetGroup>
-              </div>
-
-              {activeFilterCount > 0 && (
-                <button onClick={clearFilters} type="button" className="mt-4 text-[12px] font-bold text-brand hover:underline">
-                  Clear all filters
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-
-        <div className="mt-5 text-[13px] font-semibold text-muted-foreground">
-          {filtered.length} {filtered.length === 1 ? "package" : "packages"} match your filters
-        </div>
-
-        <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-          {filtered.map((pkg) => (
-            <div key={pkg.id} className="reveal relative">
-              <PackageCard pkg={pkg} compact />
+          <div className="no-scrollbar flex max-w-full gap-2 overflow-x-auto">
+            {appliedChips.map((c) => (
               <button
-                onClick={() => toggleCompare(pkg.id)}
+                key={c.label}
+                onClick={c.onRemove}
                 type="button"
-                className={`absolute right-3 top-3 z-10 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold shadow transition ${
-                  compareIds.includes(pkg.id) ? "bg-brand text-white" : "bg-white/95 text-ink hover:bg-brand hover:text-white"
-                }`}
+                className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand/10 px-3 py-1 text-[12px] font-semibold text-brand transition hover:bg-brand/20"
               >
-                {compareIds.includes(pkg.id) ? <Check size={12} /> : <Scale size={12} />} Compare
+                {c.label} <X size={11} />
               </button>
-            </div>
-          ))}
-          {filtered.length === 0 && (
-            <div className="col-span-full rounded-2xl border border-dashed p-10 text-center text-[14px] text-muted-foreground">
-              No packages match these filters yet. Try clearing a few.
-            </div>
-          )}
+            ))}
+          </div>
         </div>
+
+        {/* Panel and results start on the same line; the panel then sticks so
+            the filters stay reachable all the way down the list. */}
+        <div className="mt-5 flex flex-col items-start gap-6 lg:flex-row lg:gap-8">
+          <aside className="no-scrollbar w-full shrink-0 lg:sticky lg:top-[92px] lg:max-h-[calc(100vh-110px)] lg:w-[30%] lg:overflow-y-auto lg:pb-4">
+            <FilterPanel
+              sections={filterSections}
+              priceMin={PRICE_MIN}
+              priceMax={PRICE_MAX}
+              price={maxPrice}
+              onPriceChange={setMaxPrice}
+              activeFilterCount={activeFilterCount}
+              onClear={clearFilters}
+            />
+          </aside>
+
+          <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6">
+            {rows.map((row, i) => (
+              <div
+                key={i}
+                className="card-row flex flex-col gap-5 sm:flex-row lg:gap-6"
+                style={
+                  {
+                    "--cell-grow": 1 + HOVER_GROW,
+                    "--cell-shrink": row.length > 1 ? 1 - HOVER_GROW / (row.length - 1) : 1,
+                  } as CSSProperties
+                }
+              >
+                {row.map((pkg) => (
+                  <div key={pkg.id} className="card-cell min-w-0">
+                    <div className="reveal relative">
+                      <EditorialPackageCard pkg={pkg} />
+                      <button
+                        onClick={() => toggleCompare(pkg.id)}
+                        type="button"
+                        className={`absolute left-5 top-[58px] z-10 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold shadow transition ${
+                          compareIds.includes(pkg.id) ? "bg-brand text-white" : "bg-black/30 text-white backdrop-blur-md hover:bg-brand"
+                        }`}
+                      >
+                        {compareIds.includes(pkg.id) ? <Check size={12} /> : <Scale size={12} />} Compare
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                {/* Keep a short final row aligned with the columns above it. */}
+                {Array.from({ length: cols - row.length }).map((_, k) => (
+                  <div key={`spacer-${k}`} className="hidden basis-0 grow sm:block" />
+                ))}
+              </div>
+            ))}
+            {filtered.length === 0 && (
+              <div className="rounded-2xl border border-dashed p-10 text-center text-[14px] text-muted-foreground">
+                No packages match these filters yet. Try clearing a few.
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
       </div>
 
       {compareIds.length > 0 && !showCompare && (
@@ -279,25 +330,3 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
   );
 }
 
-function FacetGroup({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div>
-      <div className="mb-2 text-[11px] font-bold uppercase tracking-wide text-muted-foreground">{title}</div>
-      {children}
-    </div>
-  );
-}
-
-function FacetChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
-  return (
-    <button
-      onClick={onClick}
-      type="button"
-      className={`rounded-full border px-3 py-1.5 text-[12px] font-semibold transition ${
-        active ? "border-brand bg-brand text-white" : "border-border bg-white text-foreground/75 hover:border-brand/40"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
