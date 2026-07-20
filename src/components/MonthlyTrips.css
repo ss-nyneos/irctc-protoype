@@ -1,0 +1,187 @@
+.monthly {
+  background: var(--paper);
+}
+.monthly__head {
+  align-items: center;
+  margin-bottom: clamp(2rem, 4vw, 3.2rem);
+}
+.monthly__accent {
+  color: var(--blue);
+}
+.monthly__train {
+  width: clamp(160px, 22vw, 300px);
+  height: auto;
+  object-fit: contain;
+  flex: none;
+}
+
+/* ---- Layout: card wall on the left, month rail on the right ---- */
+.monthly__layout {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+/* ---- Bento ----------------------------------------------------------
+   Row 1: two wide cards (a, b). Row 2: three cards (c, d, e).
+------------------------------------------------------------------- */
+.monthly__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, minmax(240px, 32vh));
+  grid-template-areas:
+    'a b .'
+    'c d e';
+  gap: clamp(8px, 0.9vw, 13px);
+  /* big radius on the corners that face a junction; small elsewhere.
+     Four big corners meeting at the centre carve a 4-pointed star
+     out of the (now thin) white gutter between the cards. */
+  --r-big: clamp(54px, 6.2vw, 92px);
+  --r-sm: 20px;
+}
+
+/* border-radius order: top-left | top-right | bottom-right | bottom-left */
+.mt-card--a { grid-area: a; border-radius: var(--r-sm) var(--r-sm) var(--r-big) var(--r-sm); }
+.mt-card--b { grid-area: b; border-radius: var(--r-sm) var(--r-sm) var(--r-big) var(--r-big); }
+.mt-card--c { grid-area: c; border-radius: var(--r-sm) var(--r-big) var(--r-sm) var(--r-sm); }
+.mt-card--d { grid-area: d; border-radius: var(--r-big) var(--r-big) var(--r-sm) var(--r-sm); }
+.mt-card--e { grid-area: e; border-radius: var(--r-big) var(--r-sm) var(--r-sm) var(--r-sm); }
+
+.mt-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  min-height: 210px;
+  transition:
+    transform 0.5s var(--ease),
+    box-shadow 0.5s var(--ease);
+}
+.mt-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+.mt-card__img {
+  transition: transform 0.9s var(--ease);
+}
+.mt-card:hover .mt-card__img {
+  transform: scale(1.05);
+}
+
+/* top-weighted scrim so the heading reads at the top of each tile */
+.mt-card__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(6, 12, 28, 0.62) 0%,
+    rgba(6, 12, 28, 0.24) 34%,
+    rgba(6, 12, 28, 0) 66%
+  );
+}
+.mt-card__title {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 1;
+  padding: clamp(1.1rem, 1.6vw, 1.65rem) clamp(1.15rem, 1.7vw, 1.7rem) 0;
+  max-width: 24ch;
+  color: #fff;
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(1.02rem, 0.9rem + 0.5vw, 1.35rem);
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 18px rgba(6, 12, 28, 0.55);
+}
+
+/* ---- Month rail ---------------------------------------------------- */
+.monthly__months {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: clamp(0.7rem, 1.3vw, 1.15rem);
+  padding-top: 0.35rem;
+  white-space: nowrap;
+}
+.month {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--sans);
+  font-size: clamp(1.2rem, 1rem + 0.6vw, 1.65rem);
+  font-weight: 500;
+  color: var(--blue-ink);
+  opacity: 0.7;
+  transition:
+    opacity 0.3s var(--ease),
+    color 0.3s var(--ease),
+    font-size 0.3s var(--ease);
+}
+.month:hover {
+  opacity: 1;
+}
+.month::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--blue);
+  transform: scale(0);
+  transition: transform 0.3s var(--ease);
+}
+.month.is-active {
+  color: var(--black);
+  font-weight: 700;
+  opacity: 1;
+  font-size: clamp(1.5rem, 1.2rem + 0.9vw, 2.1rem);
+}
+.month.is-active::before {
+  transform: scale(1);
+}
+
+/* ---- Responsive ---------------------------------------------------- */
+@media (max-width: 900px) {
+  .monthly__layout {
+    grid-template-columns: 1fr;
+    gap: clamp(1.6rem, 4vw, 2.4rem);
+  }
+  .monthly__grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: none;
+    grid-auto-rows: minmax(180px, 34vw);
+    grid-template-areas:
+      'a b'
+      'c d'
+      'e e';
+    /* a-b-c-d still meet in the middle, so the star survives */
+    --r-big: clamp(40px, 8vw, 64px);
+  }
+  .monthly__months {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem 1.1rem;
+  }
+  .month::before {
+    display: none;
+  }
+  .month.is-active {
+    color: var(--blue);
+  }
+}
+@media (max-width: 540px) {
+  .monthly__grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: minmax(200px, 58vw);
+    grid-template-areas:
+      'a'
+      'b'
+      'c'
+      'd'
+      'e';
+    /* single column: no junctions, so keep corners uniform */
+    --r-big: 26px;
+    --r-sm: 26px;
+  }
+}

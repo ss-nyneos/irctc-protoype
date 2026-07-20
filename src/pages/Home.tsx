@@ -7,6 +7,7 @@ import Interstitial from '../components/Interstitial.tsx'
 import Destinations from '../components/Destinations.tsx'
 import Trains from '../components/Trains.tsx'
 import Pilgrimage from '../components/Pilgrimage.tsx'
+import MonthlyTrips from '../components/MonthlyTrips.tsx'
 import Faq from '../components/Faq.tsx'
 import AppPromo from '../components/AppPromo.tsx'
 import ExploreCta from '../components/ExploreCta.tsx'
@@ -23,6 +24,7 @@ export default function Home() {
       <Destinations />
       <Trains />
       <Pilgrimage />
+      <MonthlyTrips />
       <Faq />
       <AppPromo />
       <ExploreCta />
