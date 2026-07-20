@@ -1,0 +1,39 @@
+.interstitial {
+  position: relative;
+  height: clamp(420px, 62vh, 640px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  isolation: isolate;
+}
+.interstitial__media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+.interstitial__img {
+  /* extends beyond frame so parallax translate never reveals an edge */
+  object-fit: cover;
+}
+.interstitial__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(0, 0, 0, 0.62) 0%,
+    rgba(0, 0, 0, 0.32) 46%,
+    rgba(0, 0, 0, 0.12) 100%
+  );
+}
+.interstitial__inner {
+  width: 100%;
+}
+.interstitial__title {
+  color: #fff;
+  font-size: clamp(2.2rem, 1.2rem + 4.6vw, 5rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.4);
+  max-width: 18ch;
+}

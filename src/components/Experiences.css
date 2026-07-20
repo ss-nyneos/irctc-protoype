@@ -1,0 +1,170 @@
+.experiences {
+  background: var(--paper-2);
+}
+.experiences__head {
+  margin-bottom: clamp(2.2rem, 4vw, 3.4rem);
+}
+
+/* ---- Reference bento -------------------------------------------------
+   feature : left column, spans both top rows  (cols 1-7)
+   topA    : top-right                          (cols 8-12, row 1)
+   topB    : mid-right                          (cols 8-12, row 2)
+   botA    : base-left                          (cols 1-6, row 3)
+   botB    : base-right                         (cols 7-12, row 3)
+--------------------------------------------------------------------- */
+.exp-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(2, minmax(230px, 29vh)) minmax(210px, 26vh);
+  grid-template-areas:
+    'feature feature feature feature feature feature feature topA topA topA topA topA'
+    'feature feature feature feature feature feature feature topB topB topB topB topB'
+    'botA botA botA botA botA botA botB botB botB botB botB botB';
+  gap: 0;
+  /* tiles sit flush; round + clip the whole wall instead of each tile */
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.exp-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+  min-height: 190px;
+  isolation: isolate;
+}
+
+/* Glossy glass sheen over each photo (no blur); softens on hover. */
+.exp-card__glass {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.05) 40%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  transition: background 0.55s var(--ease);
+}
+.exp-card:hover .exp-card__glass,
+.exp-card:focus-within .exp-card__glass {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0) 60%
+  );
+}
+
+/* Cinematic bottom-weighted scrim so captions read on any photo, with a
+   whisper of shade up top to keep the index number legible on bright shots. */
+.exp-card__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(6, 12, 28, 0.16) 0%,
+    rgba(6, 12, 28, 0) 30%,
+    rgba(6, 12, 28, 0.4) 64%,
+    rgba(6, 12, 28, 0.86) 100%
+  );
+  transition: background 0.5s var(--ease);
+}
+.exp-card:hover .exp-card__scrim {
+  background: linear-gradient(
+    180deg,
+    rgba(6, 12, 28, 0.24) 0%,
+    rgba(6, 12, 28, 0.08) 26%,
+    rgba(6, 12, 28, 0.52) 60%,
+    rgba(6, 12, 28, 0.92) 100%
+  );
+}
+
+/* Faint editorial index, top-left of each tile. */
+.exp-card__num {
+  position: absolute;
+  top: clamp(0.85rem, 1.3vw, 1.4rem);
+  left: clamp(1rem, 1.5vw, 1.6rem);
+  z-index: 2;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.exp-card__body {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: clamp(1.2rem, 1.8vw, 2rem);
+  z-index: 1;
+}
+.exp-card__title {
+  font-family: Georgia, 'Times New Roman', 'Times', serif;
+  font-weight: 400;
+  font-size: clamp(1.3rem, 1rem + 1vw, 2rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: var(--on-dark);
+  text-shadow: 0 2px 26px rgba(4, 10, 25, 0.55);
+}
+.exp-card--feature .exp-card__title {
+  font-size: clamp(1.9rem, 1.2rem + 2vw, 3rem);
+}
+.exp-card__blurb {
+  max-width: 34ch;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: clamp(0.9rem, 0.85rem + 0.2vw, 1.02rem);
+  line-height: 1.5;
+  /* hidden until the tile is hovered / focused */
+  max-height: 0;
+  margin-top: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    max-height 0.5s var(--ease),
+    opacity 0.4s var(--ease),
+    margin-top 0.5s var(--ease);
+}
+.exp-card:hover .exp-card__blurb,
+.exp-card:focus-within .exp-card__blurb {
+  max-height: 6em;
+  opacity: 1;
+  margin-top: 0.5rem;
+}
+
+/* ---- Responsive ---------------------------------------------------- */
+@media (max-width: 900px) {
+  .exp-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: none;
+    grid-template-areas: none;
+    grid-auto-rows: minmax(190px, 38vw);
+    gap: 8px;
+  }
+  .exp-card {
+    grid-area: auto !important;
+  }
+  .exp-card--feature {
+    grid-column: 1 / -1 !important;
+    grid-row: span 1 !important;
+    min-height: clamp(280px, 52vw, 420px);
+  }
+  /* no hover on touch: soften the sheen and keep the caption visible */
+  .exp-card__glass {
+    background: none;
+  }
+  .exp-card__blurb {
+    max-height: 6em;
+    opacity: 1;
+    margin-top: 0.5rem;
+  }
+}
+@media (max-width: 540px) {
+  .exp-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: minmax(220px, 62vw);
+  }
+  .exp-card--feature {
+    grid-column: auto !important;
+  }
+}

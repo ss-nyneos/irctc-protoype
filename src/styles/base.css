@@ -1,0 +1,361 @@
+/* ============================================================
+   Base — reset, typography, primitives, cultural motifs
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--sans);
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.075rem);
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+img,
+picture,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+}
+
+::selection {
+  background: var(--saffron);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2.5px solid var(--royal);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- Headings ---------- */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--sans);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--black);
+}
+
+.display {
+  font-size: clamp(2.6rem, 1.6rem + 5vw, 5.5rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  color: var(--black);
+}
+
+/* Section headings: 42px, bold, black */
+.h2 {
+  font-size: clamp(28px, 5.2vw, 42px);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  color: var(--black);
+}
+
+.h3 {
+  font-size: clamp(1.3rem, 1.05rem + 1vw, 1.7rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--black);
+}
+
+em,
+.ital {
+  font-style: italic;
+}
+
+.serif {
+  font-family: var(--sans);
+}
+
+/* ---------- Layout primitives ---------- */
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.wrap-wide {
+  width: 100%;
+  max-width: var(--wrap-wide);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.section-head .h2 {
+  max-width: 20ch;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.95em 1.6em;
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.98rem;
+  letter-spacing: 0.005em;
+  line-height: 1;
+  transition:
+    transform 0.4s var(--ease),
+    background-color 0.3s var(--ease),
+    color 0.3s var(--ease),
+    box-shadow 0.3s var(--ease);
+  white-space: nowrap;
+}
+.btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.btn--primary {
+  background: var(--saffron);
+  color: #fff;
+  box-shadow: 0 10px 22px -8px rgba(242, 107, 33, 0.7);
+}
+.btn--primary:hover {
+  background: #e35d16;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px -10px rgba(242, 107, 33, 0.75);
+}
+
+.btn--ink {
+  background: var(--ink);
+  color: var(--paper);
+}
+.btn--ink:hover {
+  background: #0c1830;
+  transform: translateY(-2px);
+}
+
+.btn--light {
+  background: var(--on-dark);
+  color: var(--ink);
+}
+.btn--light:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--line-strong);
+}
+.btn--ghost:hover {
+  border-color: var(--ink);
+  transform: translateY(-2px);
+}
+.btn--ghost-light {
+  background: transparent;
+  color: var(--on-dark);
+  border: 1.5px solid var(--line-dark-strong);
+}
+.btn--ghost-light:hover {
+  border-color: var(--on-dark);
+  background: rgba(243, 236, 221, 0.06);
+}
+
+/* ---------- Text link with saffron underline sweep ---------- */
+.tlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-weight: 600;
+  color: var(--ink);
+  position: relative;
+}
+.tlink::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 2px;
+  width: 100%;
+  background: var(--saffron);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s var(--ease);
+}
+.tlink:hover::after {
+  transform: scaleX(1);
+}
+.tlink svg {
+  transition: transform 0.4s var(--ease);
+}
+.tlink:hover svg {
+  transform: translateX(4px);
+}
+
+/* ---------- Cultural motif: Mughal arch top ---------- */
+.arch {
+  border-radius: 46% 46% var(--r-md) var(--r-md) / 26% 26% 4% 4%;
+  overflow: hidden;
+}
+
+/* ---------- Cultural motif: railway-track hairline divider ---------- */
+.track-rule {
+  height: 14px;
+  width: 100%;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--line-strong) 0,
+    var(--line-strong) 2px,
+    transparent 2px,
+    transparent 13px
+  );
+  border-top: 1.5px solid var(--line-strong);
+  border-bottom: 1.5px solid var(--line-strong);
+  opacity: 0.55;
+}
+.track-rule--dark {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--line-dark-strong) 0,
+    var(--line-dark-strong) 2px,
+    transparent 2px,
+    transparent 13px
+  );
+  border-color: var(--line-dark-strong);
+}
+
+/* ---------- Image treatment ---------- */
+.img-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---------- Reveal (GSAP hooks; safe default visible) ---------- */
+.reveal {
+  will-change: transform, opacity;
+}
+
+/* ---------- Parallax primitives ---------- */
+.parallax-media {
+  position: absolute;
+  inset: -12% 0;
+  width: 100%;
+  height: 124%;
+  will-change: transform;
+}
+
+/* Oversized media so a parallax translate never exposes an edge. */
+.px-media {
+  position: absolute;
+  inset: -18% 0;
+  width: 100%;
+  height: 136%;
+  object-fit: cover;
+  will-change: transform;
+}
+
+/* The hero pins while the rest of the page scrolls up over it. */
+main > .hero {
+  position: sticky;
+  top: 0;
+  z-index: 0;
+}
+main > section:not(.hero) {
+  position: relative;
+  z-index: 1;
+}
+/* the first band after the hero gets a lifted edge as it slides over */
+.services {
+  box-shadow: 0 -24px 50px -24px rgba(10, 15, 30, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  main > .hero {
+    position: relative;
+  }
+}
+
+/* ---------- Accessibility ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

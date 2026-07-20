@@ -1,0 +1,266 @@
+/* ============================================================
+   India's luxury tourist trains — a moving line of carriages
+   ============================================================ */
+.luxe {
+  background: var(--paper);
+  padding-block: var(--section-y);
+  overflow: hidden;
+}
+.luxe__title {
+  margin-bottom: clamp(2rem, 4vw, 3.2rem);
+}
+.luxe__title span {
+  color: var(--blue);
+}
+.luxe__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.luxe__rail-area {
+  position: relative;
+}
+
+/* ---- consist ---- */
+.luxe__consist {
+  display: flex;
+  align-items: flex-end;
+  width: max-content;
+  animation: consist 54s linear infinite;
+  will-change: transform;
+}
+@keyframes consist {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.luxe__rail-area:hover .luxe__consist {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .luxe__consist {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   Carriage
+   ============================================================ */
+.carriage {
+  position: relative;
+  flex: none;
+  width: clamp(300px, 31vw, 440px);
+  margin-right: clamp(20px, 2.4vw, 34px);
+}
+
+.carriage__box {
+  position: relative;
+  border-radius: 34px;
+  background: var(--frame, #7d1f22);
+  padding: 9px;
+  box-shadow:
+    0 20px 38px -20px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* dark curtain-rod knobs at the top corners */
+.knob {
+  position: absolute;
+  top: 3px;
+  width: 30px;
+  height: 17px;
+  background: linear-gradient(180deg, #3a3d43 0%, #1d1f23 100%);
+  border-radius: 7px;
+  z-index: 6;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.knob--l {
+  left: 10px;
+}
+.knob--r {
+  right: 10px;
+}
+
+.carriage__window {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3.5;
+  border-radius: 26px;
+  overflow: hidden;
+  background: #14161a;
+  transition: transform 0.5s var(--ease);
+}
+.carriage__box:hover .carriage__window {
+  transform: translateY(-3px);
+}
+.carriage__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* gold pinstripe traced inside the frame */
+.carriage__pin {
+  position: absolute;
+  inset: 7px;
+  border: 1.5px solid rgba(217, 180, 94, 0.9);
+  border-radius: 20px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* ============================================================
+   Drapes — swept fabric, curled edge, gold tie-back and tassel
+   ============================================================ */
+.curtain {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 21%;
+  z-index: 3;
+}
+.curtain--l {
+  left: 0;
+  filter: drop-shadow(7px 0 16px rgba(0, 0, 0, 0.55));
+}
+.curtain--r {
+  right: 0;
+  filter: drop-shadow(-7px 0 16px rgba(0, 0, 0, 0.55));
+}
+.curtain__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* tie-back sits at the cinch of the drape */
+.tieback {
+  position: absolute;
+  top: 48%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+.curtain--r .tieback {
+  left: 40%;
+}
+.curtain--l .tieback {
+  right: 40%;
+}
+/* braided gold cord */
+.tieback__cord {
+  width: 28px;
+  height: 17px;
+  border-radius: 6px;
+  background: repeating-linear-gradient(
+    177deg,
+    #f7e3a0 0 2px,
+    #c9a227 2px 4px,
+    #86690f 4px 5px
+  );
+  box-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.28);
+}
+.curtain--r .tieback__cord {
+  transform: rotate(-10deg);
+}
+.curtain--l .tieback__cord {
+  transform: rotate(10deg);
+}
+/* tassel hanging beneath the cord */
+.tassel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1px;
+}
+.tassel__head {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f9ecc0 0 30%, #c9a227 70%, #86690f 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+}
+.tassel__body {
+  width: 15px;
+  height: 34px;
+  margin-top: -1px;
+  border-radius: 46% 46% 42% 42% / 24% 24% 60% 60%;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.34) 0 1px,
+      transparent 1px 3px
+    ),
+    linear-gradient(180deg, #f4dc95 0%, #d0a72c 42%, #86690f 100%);
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.6);
+}
+
+/* ---- caption ---- */
+.carriage__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 46%,
+    rgba(0, 0, 0, 0.62) 72%,
+    rgba(0, 0, 0, 0.92) 100%
+  );
+}
+.carriage__text {
+  position: absolute;
+  left: 8%;
+  right: 17%;
+  bottom: 7%;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+.carriage__tag {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #e8c874;
+  line-height: 1.2;
+}
+.carriage__name {
+  font-size: clamp(1.3rem, 1rem + 1.05vw, 1.8rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+  line-height: 1.05;
+}
+.carriage__route {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+.carriage__arrow {
+  position: absolute;
+  right: 9%;
+  bottom: 8%;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 1.45rem;
+  transition: transform 0.35s var(--ease);
+}
+.carriage__box:hover .carriage__arrow {
+  transform: translateX(5px);
+}
+
+@media (max-width: 620px) {
+  .carriage {
+    width: 80vw;
+  }
+  .knob {
+    width: 24px;
+    height: 14px;
+  }
+}
