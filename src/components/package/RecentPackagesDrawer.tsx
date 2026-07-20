@@ -15,7 +15,7 @@ export function RecentPackagesDrawer({ packages }: RecentPackagesDrawerProps) {
   const [open, setOpen] = useState(true);
 
   return (
-    <section className="mx-auto w-full max-w-[62rem] overflow-hidden rounded-2xl border-[6px] border-white bg-gradient-to-r from-[#0b2a5e] via-brand to-[#1a7fc9] shadow-[0_20px_50px_-20px_rgba(15,23,42,0.55)] ring-1 ring-black/5 lg:w-[62%]">
+    <section className="mx-auto w-full overflow-hidden rounded-2xl lg:w-3/5 border-[6px] border-white bg-gradient-to-r from-[#0b2a5e] via-brand to-[#1a7fc9] shadow-[0_20px_50px_-20px_rgba(15,23,42,0.55)] ring-1 ring-black/5">
       <button
         onClick={() => setOpen((v) => !v)}
         type="button"

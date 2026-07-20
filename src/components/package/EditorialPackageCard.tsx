@@ -93,15 +93,27 @@ export function EditorialPackageCard({
         </div>
       </div>
 
-      <div className="absolute inset-x-[7px] bottom-[7px] overflow-hidden rounded-[11px] border border-white/30 bg-white/12 px-5 py-4 backdrop-blur-md transition-all duration-500 group-hover:bg-white/[0.18]">
-        <h3 className={`font-display font-semibold leading-snug text-white ${featured ? "text-[26px]" : "text-[20px]"}`}>
+      <div
+        className={`absolute inset-x-[7px] bottom-[7px] overflow-hidden rounded-[11px] border border-white/30 bg-white/12 backdrop-blur-md transition-all duration-500 group-hover:bg-white/[0.18] ${
+          compact ? "px-4 py-3" : "px-5 py-4"
+        }`}
+      >
+        <h3
+          className={`line-clamp-2 font-display font-semibold leading-snug text-white ${
+            featured ? "text-[26px]" : compact ? "text-[16px]" : "text-[20px]"
+          }`}
+        >
           {pkg.name}
         </h3>
 
         {/* Scan-level facts stay put — duration, origin, destination and the
             journey date are what you compare on, so they are never behind an
             interaction. */}
-        <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[13px] font-semibold text-white/85">
+        <div
+          className={`mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-semibold text-white/85 ${
+            compact ? "text-[11.5px]" : "text-[13px]"
+          }`}
+        >
           <span className="inline-flex items-center gap-1.5">
             <Moon size={13} className="text-white/60" /> {pkg.nights} Nights/{pkg.days} Days
           </span>
@@ -117,25 +129,36 @@ export function EditorialPackageCard({
 
         <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out group-hover:grid-rows-[1fr]">
           <div className="overflow-hidden">
-            <div className="mt-3 border-t border-white/20 pt-3">
-              <dl className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-[12.5px]">
-                <div className="flex gap-1.5">
-                  <dt className="font-semibold text-white/60">Package Code:</dt>
-                  <dd className="font-semibold text-white">{detail.code}</dd>
-                </div>
-                <div className="flex gap-1.5">
-                  <dt className="font-semibold text-white/60">Departure:</dt>
-                  <dd className="truncate font-semibold text-white">{detail.departure}</dd>
-                </div>
-              </dl>
+            <div className={`border-t border-white/20 ${compact ? "mt-2 pt-2" : "mt-3 pt-3"}`}>
+              {/* The shelf's cards are half height — the label/value grid won't
+                  fit there without swallowing the photo, so it stays on the
+                  full-size cards and the shelf keeps the inclusions row. */}
+              {!compact && (
+                <dl className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-[12.5px]">
+                  <div className="flex gap-1.5">
+                    <dt className="font-semibold text-white/60">Package Code:</dt>
+                    <dd className="font-semibold text-white">{detail.code}</dd>
+                  </div>
+                  <div className="flex gap-1.5">
+                    <dt className="font-semibold text-white/60">Departure:</dt>
+                    <dd className="truncate font-semibold text-white">{detail.departure}</dd>
+                  </div>
+                </dl>
+              )}
 
-              <div className="mt-2.5 flex items-end justify-between gap-4">
+              <div className={`flex items-end justify-between gap-4 ${compact ? "" : "mt-2.5"}`}>
                 <div className="min-w-0">
-                  <div className="mb-1.5 text-[12.5px] font-semibold text-white/60">Inclusions:</div>
-                  <InclusionIcons pkg={pkg} tone="light" size={13} />
+                  <div className={`font-semibold text-white/60 ${compact ? "mb-1 text-[11.5px]" : "mb-1.5 text-[12.5px]"}`}>
+                    Inclusions:
+                  </div>
+                  <InclusionIcons pkg={pkg} tone="light" size={compact ? 12 : 13} />
                 </div>
-                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-ink shadow-lg transition group-hover:bg-brand group-hover:text-white">
-                  <ArrowRight size={17} />
+                <span
+                  className={`inline-flex shrink-0 items-center justify-center rounded-full bg-white text-ink shadow-lg transition group-hover:bg-brand group-hover:text-white ${
+                    compact ? "h-8 w-8" : "h-10 w-10"
+                  }`}
+                >
+                  <ArrowRight size={compact ? 15 : 17} />
                 </span>
               </div>
             </div>

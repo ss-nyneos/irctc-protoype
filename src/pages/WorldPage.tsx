@@ -221,7 +221,9 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
   return (
     <div ref={ref} className="min-h-screen pb-24">
       {/* <DestinationMarquee className="pt-8" /> */}
-      <section className="relative isolate h-[80vh] min-h-[560px] w-full overflow-hidden bg-ink md:h-[88vh]">
+      {/* min-h rather than a fixed height: the recent-packages shelf lives inside
+          the hero now, so the section has to be able to grow when it unfolds. */}
+      <section className="relative isolate flex min-h-[80vh] w-full flex-col overflow-hidden bg-ink md:min-h-[88vh]">
         <img src={heroScene} alt="" className="absolute inset-0 h-full w-full scale-105 object-cover object-[center_35%]" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/55" />
         {/* Fades into the tint the results section starts on, not into pure
@@ -231,12 +233,24 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
         <button
           onClick={back}
           type="button"
-          className="absolute left-4 top-6 z-10 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3.5 py-1.5 text-[13px] font-semibold text-white backdrop-blur transition hover:bg-white/25 md:left-8"
+          className="absolute left-4 top-6 z-20 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3.5 py-1.5 text-[13px] font-semibold text-white backdrop-blur transition hover:bg-white/25 md:left-8"
         >
           <ArrowLeft size={15} /> Back
         </button>
 
-        <div className="relative z-10 flex h-full flex-col items-center justify-start px-4 pt-[44vh] text-center">
+        {/* The shelf opens the page: last-viewed packages before the pitch, so a
+            returning traveller can pick up where they left off without scrolling
+            past the headline. Padding clears the Back button above it. */}
+        <div className="relative z-20 mx-auto w-full max-w-[1600px] px-4 pt-[72px] md:px-8 md:pt-[84px]">
+          <div className="reveal">
+            <RecentPackagesDrawer packages={recentPackages} />
+          </div>
+        </div>
+
+        {/* Nothing here is clickable, and it covers the whole hero — without
+            this it sits over the Back button and eats the click. Centred in
+            whatever room the shelf leaves. */}
+        <div className="pointer-events-none relative z-10 flex flex-1 flex-col items-center justify-center px-4 py-16 text-center">
           <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[11.5px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-md">
             <TrainFront size={13} /> Indian Railways · Official tour packages
           </span>
@@ -261,18 +275,12 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
       </section>
 
       <div className="bg-[linear-gradient(180deg,#f4eff1_0%,#ffffff_460px)]">
-      <div className="relative mx-auto max-w-[1600px] px-4 pt-2 md:px-8 xl:px-12">
+      <div className="relative mx-auto max-w-[1600px] px-4 pt-6 md:px-8 xl:px-12">
         {/* {aiPick && (
           <div className="mt-6">
             <AiPickBanner pkg={aiPick} />
           </div>
         )} */}
-
-        {/* Pulled up into the hero's fade so it reads as a banner on the photo
-            rather than the first row of the results. */}
-        <div className="reveal -mt-16 md:-mt-20">
-          <RecentPackagesDrawer packages={recentPackages} />
-        </div>
 
         <div className="flex flex-wrap items-center justify-between gap-3 pt-5">
           <div className="text-[13px] font-semibold text-muted-foreground">
