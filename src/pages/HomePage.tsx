@@ -7,8 +7,9 @@ import { ModesSection } from "@/components/home/ModesSection";
 import { StatsSection } from "@/components/home/StatsSection";
 import { LuxuryTrainsSection } from "@/components/home/LuxuryTrainsSection";
 import { TripsByMonthSection } from "@/components/home/TripsByMonthSection";
-import { CtaSection } from "@/components/home/CtaSection";
 import { ExploreWorldSection } from "@/components/home/ExploreWorldSection";
+import { VandeBharatScrollMorph } from "@/components/home/VandeBharatScrollMorph";
+import vandeBharatPhoto from "@/assets/cta/vande-bharat.png";
 
 export function HomePage() {
   const ref = useReveal();
@@ -24,9 +25,9 @@ export function HomePage() {
 
       <LuxuryTrainsSection />
 
-      <TripsByMonthSection />
+      <VandeBharatScrollMorph imageSrc={vandeBharatPhoto} headline="INDIAN RAIL" />
 
-      <CtaSection />
+      <TripsByMonthSection />
 
       <ExploreWorldSection />
     </div>
