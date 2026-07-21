@@ -1,4 +1,5 @@
 import type { BoardingPoint, CoachClass, PackageDetail, PolicySection, TourPackage, TravelMode } from "@/types";
+import { cancellationBands, conductTopics, importantNotes } from "@/data/policyContent";
 
 /**
  * Booking-desk detail for a package: code, class-wise fares, boarding chain,
@@ -157,12 +158,7 @@ const commonPolicy: PolicySection[] = [
   },
   {
     title: "Cancellation & refund",
-    points: [
-      "More than 30 days before departure: 90% refund.",
-      "30 to 15 days before departure: 50% refund.",
-      "Under 15 days before departure: no refund.",
-      "Refunds reach the original payment method within 7 to 10 working days.",
-    ],
+    bands: cancellationBands,
   },
   {
     title: "Identity & documents",
@@ -243,7 +239,14 @@ function buildClasses(pkg: TourPackage): CoachClass[] {
 function buildPolicy(pkg: TourPackage): PolicySection[] {
   const modePolicy = pkg.travelMode === "Air" ? airPolicy : railPolicy;
   const extra = extraPolicy[pkg.id];
-  return [...commonPolicy.slice(0, 2), modePolicy, ...(extra ? [extra] : []), commonPolicy[2]];
+  return [
+    ...commonPolicy.slice(0, 2),
+    { title: "Important notes", points: importantNotes },
+    modePolicy,
+    ...(extra ? [extra] : []),
+    commonPolicy[2],
+    { title: "On-tour conduct", topics: conductTopics },
+  ];
 }
 
 export function getPackageDetail(pkg: TourPackage): PackageDetail {

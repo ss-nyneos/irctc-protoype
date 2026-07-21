@@ -109,9 +109,33 @@ export interface CoachClass {
   seatsLeft: number;
 }
 
-export interface PolicySection {
+/** One rung of the cancellation ladder: what is withheld when you cancel this
+ *  many days before the tour starts. */
+export interface CancellationBand {
+  label: string;
+  /** `null` at the last-minute rung, which has no lower bound. */
+  minDays: number | null;
+  /** `null` at the earliest rung, which has no upper bound. */
+  maxDays: number | null;
+  /** Flat per-passenger deduction in rupees. Mutually exclusive with `percent`. */
+  flat?: number;
+  /** Share of the package cost withheld, 0–100. */
+  percent?: number;
+}
+
+/** A named cluster of conduct rules — "Attire", "Safety and security". */
+export interface PolicyTopic {
   title: string;
   points: string[];
+}
+
+/** A block of the terms. Exactly one of `points`, `bands` or `topics` is set;
+ *  `PolicyPanel` picks its renderer from whichever is present. */
+export interface PolicySection {
+  title: string;
+  points?: string[];
+  bands?: CancellationBand[];
+  topics?: PolicyTopic[];
 }
 
 /** The booking-desk detail IRCTC publishes per package. Kept apart from the

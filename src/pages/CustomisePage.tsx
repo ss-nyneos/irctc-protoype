@@ -43,7 +43,7 @@ import { useReveal } from "@/hooks/useReveal";
 import { useRouter } from "@/router/RouterContext";
 import { packages } from "@/data/packages";
 import type { BudgetBand, Experience, TourPackage, TravelMode } from "@/types";
-import { PackageCard } from "@/components/package/PackageCard";
+import { EditorialPackageCard } from "@/components/package/EditorialPackageCard";
 import bgVideo from "@/assets/customise/25d82214-bbf9-4ec0-bfdd-deed85a779f5.mov";
 import imgFrom from "@/assets/customise/from.jpg";
 import imgVibes from "@/assets/customise/destination.jpeg";
@@ -841,7 +841,7 @@ export function CustomisePage() {
             >
               {results.map((pkg) => (
                 <div key={pkg.id} className="reveal in relative flex flex-col">
-                  <PackageCard pkg={pkg} />
+                  <EditorialPackageCard pkg={pkg} />
                 </div>
               ))}
             </div>
