@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import {
     ArrowLeft,
     ArrowRight,
@@ -46,7 +46,7 @@ import { useReveal } from "@/hooks/useReveal";
 import { useRouter } from "@/router/RouterContext";
 import { packages } from "@/data/packages";
 import type { BudgetBand, Experience, TourPackage, TravelMode } from "@/types";
-import { EditorialPackageCard } from "@/components/package/EditorialPackageCard";
+import { EditorialPackageCard, HOVER_GROW } from "@/components/package/EditorialPackageCard";
 import PriceRangeSlider from "@/components/customise/PriceRangeSlider";
 import TripPass from "@/components/customise/TripPass";
 import bgVideo from "@/assets/customise/25d82214-bbf9-4ec0-bfdd-deed85a779f5.mov";
@@ -554,6 +554,11 @@ const DURATION_NIGHTS: Record<Duration, number> = {
     "10+ Days": 10,
 };
 
+/** Results grid column count by viewport, mirroring `sm:grid-cols-2 lg:grid-cols-3`.
+ *  Cards are laid out row by row so a hovered card can steal width from the ones
+ *  beside it — that needs an explicit column count, not a wrapping grid. */
+const columnsFor = (w: number) => (w >= 1024 ? 3 : w >= 640 ? 2 : 1);
+
 export function CustomisePage() {
     const { back } = useRouter();
     const ref = useReveal();
@@ -567,12 +572,27 @@ export function CustomisePage() {
     const [step, setStep] = useState(0);
     const [exiting, setExiting] = useState(false);
     const [dir, setDir] = useState<1 | -1>(1); // 1 = forward, -1 = back — drives slide direction
+    // Results are laid out row by row so a hovered card can steal width from its
+    // neighbours — that needs an explicit column count, not a wrapping grid.
+    const [cols, setCols] = useState(() => (typeof window === "undefined" ? 3 : columnsFor(window.innerWidth)));
 
     // honour prefers-reduced-motion: a looping cinematic pan is exactly the kind of
     // background motion that setting exists to suppress
     useEffect(() => {
         if (prefersReducedMotion()) videoRef.current?.pause();
     }, []);
+
+    useEffect(() => {
+        const onResize = () => setCols(columnsFor(window.innerWidth));
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
+    }, []);
+
+    const resultRows = useMemo(() => {
+        const out: TourPackage[][] = [];
+        for (let i = 0; i < results.length; i += cols) out.push(results.slice(i, i + cols));
+        return out;
+    }, [results, cols]);
 
     // The intro: let the backdrop video breathe, then bring in the first card.
     useEffect(() => {
@@ -1279,13 +1299,32 @@ export function CustomisePage() {
                             onAdjust={startOver}
                         />
 
-                        <div
-                            ref={gridRef}
-                            className="mt-10 grid scroll-mt-6 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-12 lg:gap-y-14"
-                        >
-                            {results.map((pkg) => (
-                                <div key={pkg.id} className="reveal in relative flex flex-col">
-                                    <EditorialPackageCard pkg={pkg} />
+                        {/* Hover-to-grow rows, as on the listing grid — the hovered card
+                            takes the width its neighbours give back, so each row's width
+                            never moves. */}
+                        <div ref={gridRef} className="mt-10 flex scroll-mt-6 flex-col gap-y-10 lg:gap-y-14">
+                            {resultRows.map((row, i) => (
+                                <div
+                                    key={i}
+                                    className="card-row flex flex-col gap-8 sm:flex-row lg:gap-12"
+                                    style={
+                                        {
+                                            "--cell-grow": 1 + HOVER_GROW,
+                                            "--cell-shrink": row.length > 1 ? 1 - HOVER_GROW / (row.length - 1) : 1,
+                                        } as CSSProperties
+                                    }
+                                >
+                                    {row.map((pkg) => (
+                                        <div key={pkg.id} className="card-cell min-w-0">
+                                            <div className="reveal in relative flex flex-col">
+                                                <EditorialPackageCard pkg={pkg} />
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {/* Keep a short final row aligned with the columns above it. */}
+                                    {Array.from({ length: cols - row.length }).map((_, k) => (
+                                        <div key={`spacer-${k}`} className="hidden basis-0 grow sm:block" />
+                                    ))}
                                 </div>
                             ))}
                         </div>
