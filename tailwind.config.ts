@@ -26,6 +26,14 @@ export default {
         "card-title": ["26px", { letterSpacing: "-0.04em" }],
         "card-sub": ["22px", { letterSpacing: "0em" }],
       },
+      /* Tailwind v3 only ships a coarse opacity scale (0,5,10,20,25,…), so
+         modifiers like `text-white/88` or `bg-white/14` — written against v4,
+         which accepts any integer — silently generated NOTHING and the element
+         fell back to inherited colour. Full 0-100 range restores v4 behaviour;
+         JIT still only emits the values actually used. */
+      opacity: Object.fromEntries(
+        Array.from({ length: 101 }, (_, i) => [i, String(i / 100)])
+      ),
       transitionTimingFunction: {
         brand: "cubic-bezier(0.22, 1, 0.36, 1)",
       },

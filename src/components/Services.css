@@ -99,9 +99,13 @@
   z-index: 1;
   transition: filter 0.4s var(--ease), transform 0.4s var(--ease);
 }
+/* No drop-shadow here on purpose: arch-frame.png is a fully OPAQUE rectangle
+   (alpha 255 throughout, #fefefe ground) with the arch painted on it, so a
+   CSS drop-shadow traces the image's bounding box rather than the dome —
+   producing a white square behind the arch on hover. Only the colour lift
+   remains; the info box is the hover affordance. */
 .svc:hover .svc__frame {
-  filter: saturate(1.35) brightness(1.03)
-    drop-shadow(0 8px 16px rgba(201, 140, 44, 0.4));
+  filter: saturate(1.35);
 }
 
 .svc__content {

@@ -42,10 +42,10 @@ export const strings = {
     'hero.explore': 'Explore',
 
     'sec.trending': 'Trending journeys this season',
-    'sec.experiences': 'Come for the sights, stay for the rituals',
+    'sec.experiences': 'Find Your Perfect Escape',
     'sec.destinations': 'The best-kept secrets of India',
     'sec.trains': 'Some journeys are the destination.',
-    'sec.pilgrimage': 'Faith, on rails.',
+    'sec.pilgrimage': 'Faith, on rails',
     'sec.faq': 'Frequently Asked',
     'sec.faqAccent': 'Questions',
     'sec.faqSub': 'Everything worth knowing before you board.',
