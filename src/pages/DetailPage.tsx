@@ -24,7 +24,7 @@ import { ImageWithFallback } from "@/components/common/ImageWithFallback";
 import { AccentBar } from "@/components/common/AccentBar";
 import { SectionNav, type Section } from "@/components/detail/SectionNav";
 import { BoardingPanel } from "@/components/detail/BoardingPanel";
-import { ItineraryRail } from "@/components/detail/ItineraryRail";
+import { ItineraryMap } from "@/components/detail/ItineraryMap";
 import { BookingRail } from "@/components/detail/BookingRail";
 import { PolicyPanel } from "@/components/detail/PolicyPanel";
 import { CallbackForm } from "@/components/detail/CallbackForm";
@@ -181,7 +181,7 @@ export function DetailPage({ id }: { id: string }) {
 
           {/* ── Itinerary ──────────────────────────────────────── */}
           <section id="itinerary" className="reveal mt-14 scroll-mt-[132px]">
-            <ItineraryRail days={pkg.itinerary} active={openDay} onActive={setOpenDay} />
+            <ItineraryMap days={pkg.itinerary} active={openDay} onActive={setOpenDay} />
           </section>
 
           {/* ── Boarding ───────────────────────────────────────── */}

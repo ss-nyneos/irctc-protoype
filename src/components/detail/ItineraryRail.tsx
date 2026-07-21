@@ -1,22 +1,17 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Pause, Play, TrainFront } from "lucide-react";
+import { useLayoutEffect, useRef, useState } from "react";
+import { TrainFront } from "lucide-react";
 import type { ItineraryDay } from "@/types";
-
-/** How long the train rests at each stop in play mode. Long enough to read the
- *  day's detail, short enough that a 10-day tour doesn't outstay its welcome. */
-const STOP_MS = 2600;
 
 /** Node diameter — the train chip matches it so it parks exactly over a stop. */
 const NODE = 40;
 
 /**
  * The itinerary as a railway line: each day is a station on a vertical track,
- * and a train glides between them as you move through the trip. Play sends it
- * down the whole line on its own, which is the fastest way to *see* the shape
- * of a journey without reading ten accordion rows.
+ * and a train glides between them as you move through the trip.
  *
- * Exactly one day is open at a time — the train is always somewhere, so there
- * is no "all collapsed" state to design for.
+ * This is the fallback for trips the India map can't place — an overseas
+ * package has nothing to pin. Exactly one day is open at a time, so there is no
+ * "all collapsed" state to design for.
  */
 export function ItineraryRail({
   days,
@@ -31,7 +26,6 @@ export function ItineraryRail({
   const nodeRefs = useRef<Array<HTMLSpanElement | null>>([]);
   const [trainY, setTrainY] = useState(0);
   const [trackH, setTrackH] = useState(0);
-  const [playing, setPlaying] = useState(false);
 
   /**
    * Park the train on the active stop. Measured rather than computed: rows are
@@ -58,57 +52,17 @@ export function ItineraryRail({
     };
   }, [active]);
 
-  // Play mode. Any manual pick cancels it — motion must never trap the reader.
-  useEffect(() => {
-    if (!playing) return;
-    const timer = setTimeout(() => {
-      if (active >= days.length - 1) setPlaying(false);
-      else onActive(active + 1);
-    }, STOP_MS);
-    return () => clearTimeout(timer);
-  }, [playing, active, days.length, onActive]);
-
-  const select = useCallback(
-    (index: number) => {
-      setPlaying(false);
-      onActive(index);
-    },
-    [onActive],
-  );
-
-  const togglePlay = () => {
-    if (playing) {
-      setPlaying(false);
-      return;
-    }
-    // Replaying from the end would sit there doing nothing, so rewind first.
-    if (active >= days.length - 1) onActive(0);
-    setPlaying(true);
-  };
+  const select = onActive;
 
   const fill = trackH ? (trainY + NODE / 2) / trackH : 0;
 
   return (
     <div>
-      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h2 className="font-display text-[22px] font-bold text-ink">Day-by-day itinerary</h2>
-          <p className="mt-1 text-[14px] text-muted-foreground">
-            {days.length} days, {days.length} stops. Ride the line or pick a day.
-          </p>
-        </div>
-
-        <button
-          type="button"
-          onClick={togglePlay}
-          aria-pressed={playing}
-          className={`inline-flex min-h-[44px] flex-none items-center gap-2 rounded-full px-4 text-[13px] font-bold transition ${
-            playing ? "bg-navy text-white" : "bg-brand text-white hover:brightness-95"
-          }`}
-        >
-          {playing ? <Pause size={14} /> : <Play size={14} />}
-          {playing ? "Pause journey" : "Play journey"}
-        </button>
+      <div className="mb-4">
+        <h2 className="font-display text-[22px] font-bold text-ink">Day-by-day itinerary</h2>
+        <p className="mt-1 text-[14px] text-muted-foreground">
+          {days.length} days, {days.length} stops. Pick a day to open it.
+        </p>
       </div>
 
       <ol ref={listRef} className="relative">
@@ -130,11 +84,7 @@ export function ItineraryRail({
           className="train-glide pointer-events-none absolute left-0 top-0 z-10"
           style={{ transform: `translateY(${trainY}px)` }}
         >
-          <span
-            className={`flex h-10 w-10 items-center justify-center rounded-full bg-brand text-white shadow-lg shadow-brand/30 ring-4 ring-white ${
-              playing ? "animate-pulse-ring" : ""
-            }`}
-          >
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand text-white shadow-lg shadow-brand/30 ring-4 ring-white">
             <TrainFront size={19} />
           </span>
         </span>
