@@ -12,7 +12,6 @@ const floats = [
     state: 'Gujarat',
     tours: 125,
     img: '/img/jaipur-hd.jpg',
-    pillFirst: false,
     place: 'left-[2%] top-[2%] min-[1101px]:left-[5%] min-[1101px]:top-[4%] [animation-duration:6.2s]',
   },
   {
@@ -20,7 +19,6 @@ const floats = [
     state: 'Madhya Pradesh',
     tours: 125,
     img: '/img/temple-gopuram.jpg',
-    pillFirst: false,
     place: 'right-[2%] top-0 min-[1101px]:right-[6%] min-[1101px]:top-[1%] [animation-duration:7.6s] [animation-delay:0.9s]',
   },
   {
@@ -28,7 +26,6 @@ const floats = [
     state: 'Tamil Nadu',
     tours: 125,
     img: '/img/kerala-waterfall.jpg',
-    pillFirst: true,
     place: 'right-[4%] top-[34%] min-[1101px]:right-[9%] min-[1101px]:top-[32%] [animation-duration:6.8s] [animation-delay:1.7s]',
   },
 ]
@@ -41,7 +38,7 @@ const pill =
 export default function ExploreCta() {
   return (
     /* margin-bottom gives breathing room before the footer */
-    <section className="relative isolate mb-[clamp(2.5rem,5vw,4.5rem)] overflow-hidden bg-paper pt-[clamp(5rem,9vw,8.5rem)]">
+    <section className="relative isolate mb-[clamp(2.5rem,5vw,4.5rem)] overflow-hidden bg-paper pt-[clamp(6.5rem,11vw,10.5rem)]">
       <div className="wrap relative z-[3] text-center">
         <h2 className="h2 [&_span]:text-blue">
           Ready To Explore The <span>World?</span>
@@ -68,7 +65,7 @@ export default function ExploreCta() {
           key={f.id}
           className={`absolute z-[2] m-0 hidden w-[clamp(120px,15vw,160px)] animate-floaty
                       motion-reduce:animate-none min-[821px]:flex min-[1101px]:w-[clamp(148px,14.5vw,205px)]
-                      ${f.pillFirst ? 'flex-col-reverse items-end' : 'flex-col items-start'} ${f.place}`}
+                      flex-col items-center ${f.place}`}
         >
           <img
             className="aspect-square w-full rounded-[22px] object-cover shadow-[0_22px_44px_-20px_rgba(20,30,60,0.5)]"
@@ -76,12 +73,8 @@ export default function ExploreCta() {
             alt={f.state}
             loading="lazy"
           />
-          {/* pill tucks over the image edge */}
-          <figcaption
-            className={`${pill} ${
-              f.pillFirst ? 'relative z-[1] mr-[1.1rem] -mb-[1.4rem]' : 'ml-[1.1rem] -mt-[1.4rem]'
-            }`}
-          >
+          {/* pill sits at the bottom, centred on the photo, tucked over its edge */}
+          <figcaption className={`${pill} -mt-[1.4rem]`}>
             <Pin />
             <span className="flex flex-col leading-tight">
               <strong className="text-[0.95rem] font-bold text-[#1b3a6b]">{f.state}</strong>
@@ -92,7 +85,7 @@ export default function ExploreCta() {
       ))}
 
       {/* skyline + its reflection in the water */}
-      <div className="relative z-[1] mt-[clamp(1.5rem,5vw,4rem)]" aria-hidden="true">
+      <div className="relative z-[1] mt-[clamp(0.5rem,1.8vw,1.5rem)]" aria-hidden="true">
         <img src={skyline} alt="" className="block h-auto w-full" />
         <img
           src={skylineReflection}

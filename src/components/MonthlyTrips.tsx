@@ -127,8 +127,8 @@ export default function MonthlyTrips() {
                   loading="lazy"
                   className="px-media transition-transform duration-[900ms] ease-brand group-hover:scale-105"
                 />
-                {/* gentle top-weighted wash just behind the title */}
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(6,12,28,0.34)_0%,rgba(6,12,28,0)_42%)]" />
+                {/* flat 40% black over the whole photo */}
+                <div className="absolute inset-0 bg-black/40" />
                 {/* extra top + left padding so the text clears the big curved corners */}
                 <h3
                   className="absolute inset-x-0 top-0 z-[1] ml-auto max-w-[21ch] pt-[clamp(1.7rem,2.3vw,2.4rem)]

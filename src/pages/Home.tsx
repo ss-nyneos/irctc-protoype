@@ -29,8 +29,9 @@ export default function Home() {
       <Pilgrimage />
       <MonthlyTrips />
       <Faq />
-      <AppPromo />
+      {/* AppPromo is the last section before the footer */}
       <ExploreCta />
+      <AppPromo />
       <DishaFab />
     </main>
   )
