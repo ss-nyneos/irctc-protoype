@@ -119,6 +119,10 @@ export interface PolicySection {
 export interface PackageDetail {
   /** IRCTC package code, e.g. "SCZBG63". */
   code: string;
+  /** IRCTC's "Departure" — which days the package runs, e.g. "All Days (Except Friday)". */
+  departure: string;
+  /** IRCTC's "Upcoming Date Of Journey", printed as DD-MMM-YY. */
+  nextDeparture: string;
   classes: CoachClass[];
   /** Empty for air packages, which have no rail boarding chain. */
   boarding: BoardingPoint[];

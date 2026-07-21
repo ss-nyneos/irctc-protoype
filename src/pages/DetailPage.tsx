@@ -24,7 +24,7 @@ import { ImageWithFallback } from "@/components/common/ImageWithFallback";
 import { AccentBar } from "@/components/common/AccentBar";
 import { SectionNav, type Section } from "@/components/detail/SectionNav";
 import { BoardingPanel } from "@/components/detail/BoardingPanel";
-import { ItineraryRail } from "@/components/detail/ItineraryRail";
+import { ItineraryMap } from "@/components/detail/ItineraryMap";
 import { BookingRail } from "@/components/detail/BookingRail";
 import { PolicyPanel } from "@/components/detail/PolicyPanel";
 import { CallbackForm } from "@/components/detail/CallbackForm";
@@ -87,69 +87,82 @@ export function DetailPage({ id }: { id: string }) {
   return (
     <div ref={ref} className="min-h-screen pb-28 lg:pb-24">
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <div className="relative h-[46vh] min-h-[340px] w-full overflow-hidden">
-        <ImageWithFallback img={pkg.img} grad={pkg.grad} alt={pkg.name} className="h-full w-full" overlay={false} />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-black/40" />
+      <section className="relative isolate flex min-h-[80vh] w-full flex-col overflow-hidden bg-ink md:min-h-[88vh]">
+        {/* Wrapped rather than positioned directly: the component's own root is
+            `relative`, which outranks an `absolute` passed in via className. */}
+        <div className="absolute inset-0">
+          <ImageWithFallback
+            img={pkg.img}
+            grad={pkg.grad}
+            alt={pkg.name}
+            overlay={false}
+            width={1800}
+            className="h-full w-full scale-105"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60" />
+        <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-b from-transparent via-black/45 to-black/75" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent to-[#0B2E6B]" />
 
-        <div className="absolute inset-x-0 top-0">
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-6">
+        <div className="relative z-20 mx-auto flex w-full max-w-[1600px] items-center justify-between px-4 pt-6 md:px-8">
+          <button
+            onClick={back}
+            type="button"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white/15 px-3.5 py-1.5 text-[13px] font-semibold text-white backdrop-blur transition hover:bg-white/25"
+          >
+            <ArrowLeft size={15} /> Back
+          </button>
+          <div className="flex gap-2">
             <button
-              onClick={back}
               type="button"
-              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full glass-dark px-4 text-[13px] font-semibold text-white"
+              aria-label="Save to wishlist"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition hover:bg-white/25"
             >
-              <ArrowLeft size={15} /> Back
+              <Heart size={16} />
             </button>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                aria-label="Save to wishlist"
-                className="flex h-11 w-11 items-center justify-center rounded-full glass-dark text-white"
-              >
-                <Heart size={16} />
-              </button>
-              <button
-                type="button"
-                aria-label="Share this package"
-                className="flex h-11 w-11 items-center justify-center rounded-full glass-dark text-white"
-              >
-                <Share2 size={16} />
-              </button>
-            </div>
+            <button
+              type="button"
+              aria-label="Share this package"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition hover:bg-white/25"
+            >
+              <Share2 size={16} />
+            </button>
           </div>
         </div>
 
-        <div className="absolute inset-x-0 bottom-0">
-          <div className="mx-auto max-w-7xl px-4 pb-6 md:px-6">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-white/90">
-                <MapPin size={12} /> {pkg.category} · {pkg.region}
-              </span>
-              {/* Package code as a chip — IRCTC bolts it into the title itself. */}
-              <span className="rounded-full glass-dark px-2 py-0.5 text-[11px] font-bold tracking-wide text-white/90">
-                {detail.code}
-              </span>
-            </div>
-            {/* Sentence case, not the ALL CAPS of the original. */}
-            <h1 className="heading-xl mt-3 max-w-3xl text-balance text-white">{pkg.name}</h1>
-            <div className="mt-2 flex flex-wrap items-center gap-4 text-white/90">
-              <span className="inline-flex items-center gap-1 text-[13px] font-semibold">
-                <Star size={13} fill="#F26B21" stroke="none" /> {pkg.rating.toFixed(1)} ·{" "}
-                {pkg.reviews.toLocaleString("en-IN")} reviews
-              </span>
-              <span className="inline-flex items-center gap-1 text-[13px] font-semibold">
-                <Moon size={14} /> {pkg.nights}N / {pkg.days}D
-              </span>
-              <span className="inline-flex items-center gap-1 text-[13px] font-semibold">
-                <MapPin size={14} /> From {pkg.from}
-              </span>
-              <span className="inline-flex items-center gap-1 text-[13px] font-semibold">
-                <TrainFront size={14} /> {pkg.travelMode}
-              </span>
-            </div>
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-end px-4 pb-[8vh] pt-12 text-center">
+          <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/20 px-3.5 py-1.5 text-[11.5px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-md">
+              <MapPin size={13} /> {pkg.category} · {pkg.region}
+            </span>
+            {/* Package code as a chip — IRCTC bolts it into the title itself. */}
+            <span className="rounded-full border border-white/25 bg-white/20 px-3 py-1.5 text-[11.5px] font-bold tracking-wide text-white backdrop-blur-md">
+              {detail.code}
+            </span>
+          </div>
+
+          {/* Sentence case, not the ALL CAPS of the original. */}
+          <h1 className="heading-xl max-w-3xl text-balance leading-[1.06] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] md:text-[54px]">
+            {pkg.name}
+          </h1>
+
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-white/90 drop-shadow-[0_1px_12px_rgba(0,0,0,0.5)]">
+            <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold">
+              <Star size={13} fill="#F26B21" stroke="none" /> {pkg.rating.toFixed(1)} ·{" "}
+              {pkg.reviews.toLocaleString("en-IN")} reviews
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold">
+              <Moon size={14} /> {pkg.nights}N / {pkg.days}D
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold">
+              <MapPin size={14} /> From {pkg.from}
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold">
+              <TrainFront size={14} /> {pkg.travelMode}
+            </span>
           </div>
         </div>
-      </div>
+      </section>
 
       <AccentBar />
       <SectionNav sections={sections} />
@@ -181,7 +194,7 @@ export function DetailPage({ id }: { id: string }) {
 
           {/* ── Itinerary ──────────────────────────────────────── */}
           <section id="itinerary" className="reveal mt-14 scroll-mt-[132px]">
-            <ItineraryRail days={pkg.itinerary} active={openDay} onActive={setOpenDay} />
+            <ItineraryMap days={pkg.itinerary} active={openDay} onActive={setOpenDay} />
           </section>
 
           {/* ── Boarding ───────────────────────────────────────── */}
@@ -252,7 +265,10 @@ export function DetailPage({ id }: { id: string }) {
         </div>
 
         {/* ── Fare rail ────────────────────────────────────────── */}
-        <div className="hidden lg:sticky lg:top-[128px] lg:block lg:self-start">
+        {/* Capped to the space below the sticky header and scrolled internally:
+            pinned at top-[128px] with no height limit, anything past the fold —
+            the flight add-on, the book button — simply could not be reached. */}
+        <div className="slim-scrollbar hidden lg:sticky lg:top-[128px] lg:block lg:max-h-[calc(100vh-152px)] lg:self-start lg:overflow-y-auto lg:overscroll-contain lg:pr-2">
           <BookingRail
             pkg={pkg}
             classes={detail.classes}

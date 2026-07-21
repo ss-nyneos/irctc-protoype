@@ -21,7 +21,7 @@ const modes: ModeCardProps[] = [
   {
     scene: WorldScene,
     tint: "from-[#e9f2ff] to-[#f5f9ff]",
-    title: "IRCTC World",
+    title: "Everything IRCTC",
     tagline: "Everything IRCTC, drilled down",
     cta: "Explore & compare",
     points: ["Drill down by region, budget & style", "Side-by-side comparison", "Verified reviews & pricing"],
@@ -55,7 +55,7 @@ export function ModesSection() {
   return (
     <section className="relative mx-auto max-w-7xl px-4 py-28 md:px-6 md:py-36" ref={ref}>
       <div className="reveal reveal-rise mx-auto max-w-2xl text-center">
-        <h2 className="heading-xl text-ink">Three ways to find your journey</h2>
+        <h2 className="heading-xl text-ink">IRCTC World</h2>
       </div>
 
       <div className="stagger mt-12 grid gap-5 md:grid-cols-3">
