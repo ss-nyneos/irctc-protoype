@@ -4,7 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { DishaChatbot } from "@/components/chatbot/DishaChatbot";
 import { HomePage } from "@/pages/HomePage";
 import { WorldPage } from "@/pages/WorldPage";
-import { CustomisePage } from "@/pages/CustomisePage";
+import { CustomisePage } from "@/pages/CustomisePage2";
 import { MadeForYouPage } from "@/pages/MadeForYouPage";
 import { DetailPage } from "@/pages/DetailPage";
 import { BookingPage } from "@/pages/BookingPage";

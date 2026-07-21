@@ -31,6 +31,10 @@
 
 html {
   scroll-behavior: smooth;
+  /* reserve the scrollbar gutter permanently so pages whose height crosses the
+     viewport threshold (e.g. the customiser stepping between questions) don't
+     shift content sideways when the scrollbar appears/disappears. */
+  scrollbar-gutter: stable;
 }
 
 body {
