@@ -30,6 +30,7 @@ import { FilterPanel, type FilterSection } from "@/components/package/FilterPane
 import { PackageSearchBar, type SearchField } from "@/components/package/PackageSearchBar";
 import heroScene from "@/hero_scene.jpg";
 import { CompareModal } from "@/components/package/CompareModal";
+import { CompareTray, COMPARE_MAX } from "@/components/package/CompareTray";
 
 const categories = ["All", "Domestic", "Pilgrimage", "Heritage", "Hills", "Beach", "Wildlife", "International", "Luxury Train", "Bharat Gaurav"];
 const sortOptions = ["Recommended", "Price: Low to High", "Price: High to Low", "Top rated"] as const;
@@ -272,12 +273,15 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
   }, [filtered, cols]);
 
   const toggleCompare = (id: string) =>
-    setCompareIds((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : prev.length < 3 ? [...prev, id] : prev));
+    setCompareIds((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : prev.length < COMPARE_MAX ? [...prev, id] : prev,
+    );
 
   const compareItems = compareIds.map((id) => getPackageById(id)!).filter(Boolean);
 
   return (
-    <div ref={ref} className="min-h-screen pb-24">
+    // The dock overlays the page, so the tail of the results needs to clear it.
+    <div ref={ref} className="min-h-screen" style={{ paddingBottom: "calc(6rem + var(--dock-offset, 0px))" }}>
       {/* <DestinationMarquee className="pt-8" /> */}
       {/* min-h rather than a fixed height: the recent-packages shelf lives inside
           the hero now, so the section has to be able to grow when it unfolds. */}
@@ -347,7 +351,6 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
       <PackageSearchBar
         fields={searchFields}
         quick={quickToggles}
-        count={filtered.length}
         onSearch={() => document.getElementById("results")?.scrollIntoView({ block: "start" })}
       />
 
@@ -466,26 +469,12 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
       </div>
 
       {compareIds.length > 0 && !showCompare && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 p-3 shadow-2xl backdrop-blur">
-          <div className="mx-auto flex max-w-7xl items-center gap-3 px-2">
-            <div className="no-scrollbar flex flex-1 items-center gap-2 overflow-x-auto">
-              <span className="whitespace-nowrap text-[13px] font-bold text-ink">Comparing {compareIds.length}/3:</span>
-              {compareItems.map((p) => (
-                <span key={p.id} className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-secondary px-2.5 py-1 text-[12px] font-semibold text-ink">
-                  {p.name.split(" ")[0]} <button onClick={() => toggleCompare(p.id)} type="button"><X size={12} /></button>
-                </span>
-              ))}
-            </div>
-            <button
-              onClick={() => setShowCompare(true)}
-              disabled={compareIds.length < 2}
-              type="button"
-              className="shrink-0 rounded-full bg-brand px-5 py-2.5 text-[14px] font-bold text-white shadow disabled:opacity-40"
-            >
-              Compare now
-            </button>
-          </div>
-        </div>
+        <CompareTray
+          items={compareItems}
+          onRemove={toggleCompare}
+          onClearAll={() => setCompareIds([])}
+          onCompare={() => setShowCompare(true)}
+        />
       )}
 
       {showCompare && <CompareModal items={compareItems} onClose={() => setShowCompare(false)} />}
