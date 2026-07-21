@@ -59,6 +59,9 @@ const HOVER_GROW = 0.28;
 /** Slider bounds, rounded out to the nearest ₹500 either side of the catalogue. */
 const PRICE_MIN = Math.floor(Math.min(...packages.map((p) => p.price)) / 500) * 500;
 const PRICE_MAX = Math.ceil(Math.max(...packages.map((p) => p.price)) / 500) * 500;
+/** Opens mid-track rather than pinned to either end, so the control reads as
+ *  adjustable at a glance. */
+const PRICE_DEFAULT = Math.round((PRICE_MIN + PRICE_MAX) / 2 / 500) * 500;
 
 /** Fractional saving vs. the struck-through price — used to rank "best value". */
 // const discountPct = (p: TourPackage) => (p.oldPrice ? (p.oldPrice - p.price) / p.oldPrice : 0);
@@ -73,7 +76,7 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
   const [selClimates, setSelClimates] = useState<Climate[]>([]);
   const [selExperiences, setSelExperiences] = useState<Experience[]>([]);
   const [duration, setDuration] = useState<Duration>("Any");
-  const [maxPrice, setMaxPrice] = useState(PRICE_MAX);
+  const [maxPrice, setMaxPrice] = useState(PRICE_DEFAULT);
   const [view, setView] = useState<"gallery" | "list">("gallery");
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [showCompare, setShowCompare] = useState(false);
@@ -88,7 +91,7 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
     selExperiences.length +
     (duration !== "Any" ? 1 : 0) +
     (category !== "All" ? 1 : 0) +
-    (maxPrice < PRICE_MAX ? 1 : 0);
+    (maxPrice !== PRICE_DEFAULT ? 1 : 0);
 
   const clearFilters = () => {
     setCategory("All");
@@ -97,7 +100,7 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
     setSelClimates([]);
     setSelExperiences([]);
     setDuration("Any");
-    setMaxPrice(PRICE_MAX);
+    setMaxPrice(PRICE_DEFAULT);
   };
 
   const filtered = useMemo(() => {
@@ -230,19 +233,19 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
             white — a hard white edge under a photo reads as a seam. */}
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[#f4eff1]" />
 
-        <button
-          onClick={back}
-          type="button"
-          className="absolute left-4 top-6 z-20 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3.5 py-1.5 text-[13px] font-semibold text-white backdrop-blur transition hover:bg-white/25 md:left-8"
-        >
-          <ArrowLeft size={15} /> Back
-        </button>
+        {/* Back and the shelf share one line: last-viewed packages sit at the
+            top of the page, so a returning traveller can pick up where they
+            left off without scrolling past the headline. */}
+        <div className="relative z-20 mx-auto flex w-full max-w-[1600px] items-start gap-4 px-4 pt-6 md:px-8">
+          <button
+            onClick={back}
+            type="button"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white/15 px-3.5 py-1.5 text-[13px] font-semibold text-white backdrop-blur transition hover:bg-white/25"
+          >
+            <ArrowLeft size={15} /> Back
+          </button>
 
-        {/* The shelf opens the page: last-viewed packages before the pitch, so a
-            returning traveller can pick up where they left off without scrolling
-            past the headline. Padding clears the Back button above it. */}
-        <div className="relative z-20 mx-auto w-full max-w-[1600px] px-4 pt-[72px] md:px-8 md:pt-[84px]">
-          <div className="reveal">
+          <div className="reveal min-w-0 flex-1">
             <RecentPackagesDrawer packages={recentPackages} />
           </div>
         </div>
@@ -325,7 +328,7 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
         {/* Panel and results start on the same line; the panel then sticks so
             the filters stay reachable all the way down the list. */}
         <div className="mt-5 flex flex-col items-start gap-6 lg:flex-row lg:gap-8">
-          <aside className="no-scrollbar w-full shrink-0 lg:sticky lg:top-[92px] lg:max-h-[calc(100vh-110px)] lg:w-[30%] lg:overflow-y-auto lg:pb-4">
+          <aside className="no-scrollbar w-full shrink-0 lg:sticky lg:top-[92px] lg:max-h-[calc(100vh-110px)] lg:w-[22%] lg:min-w-[248px] lg:overflow-y-auto lg:pb-4">
             <FilterPanel
               sections={filterSections}
               priceMin={PRICE_MIN}
