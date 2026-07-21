@@ -219,6 +219,57 @@ export const Wheel = (p: IconProps) =>
     p,
   )
 
+/* ---- Accessibility control glyphs ---- */
+export const Translate = (p: IconProps) =>
+  wrap(
+    <>
+      <path d="M2.6 16.4 6.4 6.6l3.8 9.8" />
+      <path d="M3.9 13.4h5" />
+      <path d="M12.8 9.4h8.4" />
+      <path d="M17 9.4v1.7c0 3.2-1.7 6-4.2 7.5" />
+      <path d="M14.4 13c.9 2.6 2.9 4.7 5.4 5.6" />
+    </>,
+    p,
+  )
+export const TextPlus = (p: IconProps) =>
+  wrap(
+    <>
+      <path d="M2.2 18 7.4 6l5.2 12" />
+      <path d="M3.9 14.1h7" />
+      <path d="M18 11.4v5.4" />
+      <path d="M15.3 14.1h5.4" />
+    </>,
+    p,
+  )
+export const TextMinus = (p: IconProps) =>
+  wrap(
+    <>
+      <path d="M2.2 18 7.4 6l5.2 12" />
+      <path d="M3.9 14.1h7" />
+      <path d="M15.3 14.1h5.4" />
+    </>,
+    p,
+  )
+export const Highlight = (p: IconProps) =>
+  wrap(
+    <>
+      <path d="M18.6 9.8c-1.1-2.8-4.2-4.5-7.2-3.8-3.2.7-5.3 3.7-4.8 6.9.5 3 3.4 5.2 6.5 4.8 2.5-.3 4.6-2.3 4.9-4.8" />
+      <path d="M15.9 12.6c-.2-1.7-1.9-3-3.6-2.6-1.6.3-2.7 2-2.2 3.6.4 1.4 1.9 2.3 3.3 2" />
+    </>,
+    p,
+  )
+export const Senior = (p: IconProps) =>
+  wrap(
+    <>
+      <circle cx="10.4" cy="4.5" r="1.9" />
+      <path d="M10.4 7.6v6.2" />
+      <path d="m7.8 10 2.6-1.4 2.6 1.4" />
+      <path d="m10.4 13.8-1.9 6.4M10.4 13.8l1.9 6.4" />
+      <path d="M16.4 9.2v11" />
+    </>,
+    p,
+  )
+
 export const iconMap: Record<string, (p: IconProps) => ReactNode> = {
   plane: Plane,
   bed: Bed,

@@ -1,6 +1,6 @@
 import './Services.css'
 import type { SVGProps, ReactNode } from 'react'
-import { Hotel, Stupa, Mountain, Ferry, Trekker, ChevronR } from './Icons.tsx'
+import { Hotel, Stupa, Mountain, Ferry, ChevronR } from './Icons.tsx'
 import archFrame from '../assets/graphic/arch-frame.png'
 import icAirplane from '../assets/graphic/airplane.png'
 import icBus from '../assets/graphic/bus.png'
@@ -9,6 +9,7 @@ import icLounge from '../assets/graphic/lounge.png'
 import icTrain from '../assets/graphic/train.png'
 import icTrain2 from '../assets/graphic/train-2.png'
 import icCrown from '../assets/graphic/crown.png'
+import icHiking from '../assets/graphic/hiking.png'
 
 type Svc = {
   label: string
@@ -27,28 +28,17 @@ const SERVICES: Svc[] = [
   { label: 'Buddhist Circuit', Icon: Stupa, blurb: 'Trace the footsteps of the Buddha across sacred sites.' },
   { label: 'Heli Yatra', Icon: Mountain, blurb: 'Reach high Himalayan shrines by helicopter, fast and easy.' },
   { label: 'Ferry & Cruises', Icon: Ferry, blurb: 'Sail the backwaters, islands and rivers of coastal India.' },
-  { label: 'Himalayan Treks', Icon: Trekker, blurb: 'Guided treks through the valleys and passes of the north.' },
+  { label: 'Himalayan Treks', img: icHiking, blurb: 'Guided treks through the valleys and passes of the north.' },
   { label: "Maharajas' Express", img: icCrown, blurb: 'Travel like royalty aboard India’s finest luxury train.' },
   { label: 'Golden Chariot', img: icTrain2, blurb: 'A regal rail journey through the south’s temples and coasts.' },
 ]
-
-const Flourish = (p: SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 64 16" fill="none" stroke="currentColor" strokeWidth="1.4"
-    strokeLinecap="round" aria-hidden="true" {...p}>
-    <path d="M2 8h38" />
-    <path d="m40 8 5-4 5 4-5 4z" fill="currentColor" stroke="none" />
-    <path d="M54 8h8" strokeWidth="1" />
-  </svg>
-)
 
 export default function Services() {
   return (
     <section className="section palace" id="services">
       <div className="palace__head wrap-wide">
         <h2 className="h2 palace__title">
-          <Flourish className="palace__orn palace__orn--l" />
-          <span className="palace__titletext">OUR <span>SERVICES</span></span>
-          <Flourish className="palace__orn palace__orn--r" />
+          <span className="palace__titletext">Our <span>Services</span></span>
         </h2>
       </div>
 

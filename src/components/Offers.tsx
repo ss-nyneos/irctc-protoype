@@ -34,7 +34,6 @@ export default function Offers() {
       <div className="wrap-wide">
         <div className="offers__head">
           <h2 className="offers__title">Special <span>Offers</span></h2>
-          <span className="offers__rule" aria-hidden="true" />
           <div className="offers__nav">
             <button className="offers__arrow" aria-label="Previous offers">
               <ChevronL />

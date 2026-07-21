@@ -32,18 +32,13 @@
   letter-spacing: 0;
   line-height: 1;
 }
-.palace__orn {
-  width: clamp(38px, 6vw, 74px);
-  height: auto;
-  color: var(--p-gold);
-  flex: none;
-}
-/* keep "OUR SERVICES" together as one flex item (only the last word is blue) */
+/* keep "Our Services" together as one flex item (only the last word is accented) */
 .palace__title > .palace__titletext {
   color: var(--black);
 }
-.palace__orn--r {
-  transform: scaleX(-1);
+/* the accent word reads orange here, overriding the global blue on .h2 span */
+.palace__title .palace__titletext span {
+  color: #f58220; /* IRCTC orange */
 }
 .palace__sub {
   margin-top: 0.85rem;
@@ -127,9 +122,9 @@
   object-fit: contain;
 }
 .arch__label {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: var(--sans);
   font-weight: 500;
-  font-size: clamp(0.9rem, 0.7rem + 0.6vw, 1.25rem);
+  font-size: clamp(0.75rem, 0.6rem + 0.42vw, 0.98rem);
   color: var(--p-ink);
   line-height: 1.15;
   transition: opacity 0.25s var(--ease);
@@ -218,7 +213,6 @@
 }
 @media (max-width: 560px) {
   .palace__title { font-size: 30px; }
-  .palace__orn { display: none; }
 }
 @media (max-width: 480px) {
   .palace__grid { grid-template-columns: repeat(2, 1fr); }

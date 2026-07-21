@@ -27,24 +27,6 @@
 .offers__title span {
   color: var(--blue);
 }
-.offers__rule {
-  position: relative;
-  height: 2px;
-  width: clamp(40px, 8vw, 110px);
-  background: linear-gradient(90deg, #b9c4d8, #dfe5ef);
-  border-radius: 2px;
-}
-.offers__rule::after {
-  content: '';
-  position: absolute;
-  right: -5px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #b9c4d8;
-}
 .offers__nav {
   display: flex;
   gap: 0.6rem;

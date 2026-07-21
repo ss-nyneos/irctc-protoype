@@ -1,5 +1,6 @@
 import './NavBar.css'
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { usePrefs } from '../context/Prefs.tsx'
 import { useUI } from '../context/UI.tsx'
 import logo from '../assets/irctc-logo-full.png'
@@ -9,8 +10,6 @@ import {
   Menu,
   ArrowUpRight,
   Arrow,
-  Plus,
-  Minus,
   Moon,
   Globe,
   Users,
@@ -18,12 +17,23 @@ import {
   Star,
   Train,
   Pin,
+  Translate,
+  TextPlus,
+  TextMinus,
+  Highlight,
+  Senior,
 } from './Icons.tsx'
 
 type MenuKind = 'packages' | 'access' | 'space' | null
 
-const packageLinks = [
-  { label: 'All Tour Packages', href: '#packages', Icon: Compass },
+/* `to` routes to a page; `href` jumps to a section on the current page */
+const packageLinks: {
+  label: string
+  to?: string
+  href?: string
+  Icon: typeof Compass
+}[] = [
+  { label: 'All Tour Packages', to: '/packages', Icon: Compass },
   { label: 'Destinations', href: '#destinations', Icon: Pin },
   { label: 'Experiences', href: '#experiences', Icon: Star },
   { label: 'Heritage Trains', href: '#trains', Icon: Train },
@@ -31,8 +41,21 @@ const packageLinks = [
 ]
 
 export default function NavBar() {
-  const { t, theme, setTheme, lang, setLang, incScale, decScale, resetScale, scale, canGrow, canShrink } =
-    usePrefs()
+  const {
+    t,
+    theme,
+    toggleTheme,
+    lang,
+    toggleLang,
+    incScale,
+    decScale,
+    canGrow,
+    canShrink,
+    highlightLinks,
+    seniorMode,
+    toggleHighlightLinks,
+    toggleSeniorMode,
+  } = usePrefs()
   const { user, openLogin, openDiksha, openPartPayment, signOut } = useUI()
   const [menu, setMenu] = useState<MenuKind>(null)
   const [mobile, setMobile] = useState(false)
@@ -90,6 +113,14 @@ export default function NavBar() {
   }, [menu, mobile])
 
   const toggle = (k: Exclude<MenuKind, null>) => setMenu((m) => (m === k ? null : k))
+
+  /* leaving for another page: close the menu and start at the top,
+     same as the hero's Explore button */
+  const goToPage = () => {
+    setMenu(null)
+    setMobile(false)
+    window.scrollTo({ top: 0 })
+  }
 
   return (
     <header className={`nav${hidden ? ' nav--hidden' : ''}`} ref={rootRef}>
@@ -163,18 +194,26 @@ export default function NavBar() {
         {/* ---------- Packages mega panel ---------- */}
         {menu === 'packages' && (
           <div className="panel panel--mega">
-            <a href="#packages" className="panel__lead" onClick={() => setMenu(null)}>
+            <Link to="/packages" className="panel__lead" onClick={goToPage}>
               <span>Explore the Packages</span>
               <span className="panel__lead-arrow"><Arrow /></span>
-            </a>
+            </Link>
             <ul className="panel__rows">
               {packageLinks.map((l) => (
                 <li key={l.label}>
-                  <a href={l.href} onClick={() => setMenu(null)}>
-                    <l.Icon />
-                    <span>{l.label}</span>
-                    <ArrowUpRight className="panel__row-arrow" />
-                  </a>
+                  {l.to ? (
+                    <Link to={l.to} onClick={goToPage}>
+                      <l.Icon />
+                      <span>{l.label}</span>
+                      <ArrowUpRight className="panel__row-arrow" />
+                    </Link>
+                  ) : (
+                    <a href={l.href} onClick={() => setMenu(null)}>
+                      <l.Icon />
+                      <span>{l.label}</span>
+                      <ArrowUpRight className="panel__row-arrow" />
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
@@ -184,49 +223,63 @@ export default function NavBar() {
         {/* ---------- Accessibility panel ---------- */}
         {menu === 'access' && (
           <div className="panel panel--access">
-            <div className="a11y__group">
-              <span className="a11y__label"><Moon /> {t('a11y.theme')}</span>
-              <div className="a11y__seg">
-                <button
-                  className={theme === 'light' ? 'is-on' : ''}
-                  onClick={() => setTheme('light')}
-                >
-                  {t('a11y.light')}
-                </button>
-                <button
-                  className={theme === 'dark' ? 'is-on' : ''}
-                  onClick={() => setTheme('dark')}
-                >
-                  {t('a11y.dark')}
-                </button>
-              </div>
+            <div className="a11y__head">
+              <h3 className="a11y__title">Accessibility Controls</h3>
+              <button
+                className="a11y__close"
+                onClick={() => setMenu(null)}
+                aria-label="Close accessibility controls"
+              >
+                <Close />
+              </button>
             </div>
 
-            <div className="a11y__group">
-              <span className="a11y__label"><Globe /> {t('a11y.language')}</span>
-              <div className="a11y__seg">
-                <button className={lang === 'en' ? 'is-on' : ''} onClick={() => setLang('en')}>
-                  English
-                </button>
-                <button className={lang === 'hi' ? 'is-on' : ''} onClick={() => setLang('hi')}>
-                  हिंदी
-                </button>
-              </div>
-            </div>
+            <div className="a11y__grid">
+              <button
+                className={`a11y__tile${theme === 'dark' ? ' is-on' : ''}`}
+                onClick={toggleTheme}
+                aria-pressed={theme === 'dark'}
+              >
+                <Moon />
+                <span>Dark Theme</span>
+              </button>
 
-            <div className="a11y__group">
-              <span className="a11y__label">Aa {t('a11y.textsize')}</span>
-              <div className="a11y__size">
-                <button onClick={decScale} disabled={!canShrink} aria-label={t('a11y.smaller')}>
-                  <Minus />
-                </button>
-                <button className="a11y__size-val" onClick={resetScale} title={t('a11y.reset')}>
-                  {Math.round(scale * 100)}%
-                </button>
-                <button onClick={incScale} disabled={!canGrow} aria-label={t('a11y.larger')}>
-                  <Plus />
-                </button>
-              </div>
+              <button
+                className={`a11y__tile${lang === 'hi' ? ' is-on' : ''}`}
+                onClick={toggleLang}
+                aria-pressed={lang === 'hi'}
+              >
+                <Translate />
+                <span>{lang === 'en' ? 'English' : 'हिंदी'}</span>
+              </button>
+
+              <button className="a11y__tile" onClick={incScale} disabled={!canGrow}>
+                <TextPlus />
+                <span>Text Size Increase</span>
+              </button>
+
+              <button className="a11y__tile" onClick={decScale} disabled={!canShrink}>
+                <TextMinus />
+                <span>Text Size Decrease</span>
+              </button>
+
+              <button
+                className={`a11y__tile${highlightLinks ? ' is-on' : ''}`}
+                onClick={toggleHighlightLinks}
+                aria-pressed={highlightLinks}
+              >
+                <Highlight />
+                <span>Highlight Links</span>
+              </button>
+
+              <button
+                className={`a11y__tile${seniorMode ? ' is-on' : ''}`}
+                onClick={toggleSeniorMode}
+                aria-pressed={seniorMode}
+              >
+                <Senior />
+                <span>Senior Citizen Mode</span>
+              </button>
             </div>
           </div>
         )}

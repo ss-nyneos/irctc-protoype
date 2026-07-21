@@ -361,3 +361,36 @@ main > section:not(.hero) {
   white-space: nowrap;
   border: 0;
 }
+
+/* ============================================================
+   Accessibility modes (toggled from the Accessibility Controls)
+   ============================================================ */
+
+/* Highlight Links — make every link unmistakable */
+:root[data-highlight-links] a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+  outline-offset: 2px;
+}
+:root[data-highlight-links] a:hover,
+:root[data-highlight-links] a:focus-visible {
+  background: #fff3a3;
+  color: #10131a;
+  border-radius: 3px;
+}
+
+/* Senior Citizen Mode — larger, looser, higher-contrast text */
+:root[data-senior] body {
+  font-size: 1.12em;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+}
+:root[data-senior] {
+  --ink-soft: var(--ink);
+  --ink-faint: var(--ink-soft);
+}
+:root[data-senior] a,
+:root[data-senior] button {
+  text-underline-offset: 3px;
+}
