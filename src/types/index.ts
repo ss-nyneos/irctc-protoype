@@ -157,6 +157,7 @@ export interface PackageDetail {
 /** Custom in-app "router" view state — this app is a single page with
  *  view-switching handled entirely on the client (no URL routing). */
 export type View =
+  | { name: "preload" }
   | { name: "home" }
   | { name: "world"; category?: string }
   | { name: "customise" }

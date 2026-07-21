@@ -1,0 +1,7 @@
+@import './tokens.css';
+@import './base.css';
+@import '../components/Hero.css';
+@import '../components/NavBar.css';
+@import '../components/Offers.css';
+@import '../components/Services.css';
+@import '../components/Trains.css';

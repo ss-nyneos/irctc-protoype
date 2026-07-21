@@ -1,0 +1,233 @@
+.palace {
+  position: relative;
+  background: var(--paper);
+  text-align: center;
+  /* lifted top edge as it slides up over the pinned hero */
+  box-shadow: 0 -24px 50px -24px rgba(10, 15, 30, 0.28);
+  --p-ink: #4a3418;
+  --p-icon: #1a1a1a;
+  --p-gold: #c1852c;
+  --p-sub: #86663c;
+}
+
+/* ---- Header --------------------------------------------------------- */
+.palace__head {
+  margin-bottom: clamp(2.4rem, 5vw, 4.2rem);
+}
+.palace__crest {
+  width: clamp(52px, 6vw, 78px);
+  height: auto;
+  color: var(--p-gold);
+  margin: 0 auto 0.5rem;
+}
+.palace__title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.9rem, 2vw, 1.8rem);
+  font-family: var(--sans);
+  font-weight: 700;
+  color: var(--black);
+  font-size: 42px;
+  letter-spacing: 0;
+  line-height: 1;
+}
+/* keep "Our Services" together as one flex item (only the last word is accented) */
+.palace__title > .palace__titletext {
+  color: var(--black);
+}
+/* the accent word reads orange here, overriding the global blue on .h2 span */
+.palace__title .palace__titletext span {
+  color: #2475EE; /* IRCTC orange */
+}
+.palace__sub {
+  margin-top: 0.85rem;
+  font-family: var(--sans);
+  color: var(--p-sub);
+  font-size: clamp(1rem, 0.9rem + 0.45vw, 1.32rem);
+}
+
+/* ---- Grid of arches ------------------------------------------------- */
+.palace__grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: clamp(0.4rem, 1vw, 1rem) clamp(0.2rem, 0.7vw, 0.7rem);
+  align-items: start;
+  width: 100%;
+  max-width: var(--wrap-wide);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Named `svc`, not `arch`: base.css owns a global `.arch` motif that sets
+   `overflow: hidden`, which clipped the hover popup at the tile edge. */
+.svc {
+  position: relative;
+  aspect-ratio: 714 / 932;
+  cursor: pointer;
+}
+.svc:hover {
+  z-index: 12;
+}
+/* golden glow that blooms inside the arch on hover */
+.svc::before {
+  content: '';
+  position: absolute;
+  inset: 7% 10% 12%;
+  border-radius: 48% 48% 14% 14%;
+  background: radial-gradient(58% 54% at 50% 42%, rgba(201, 140, 44, 0.32), rgba(201, 140, 44, 0) 72%);
+  opacity: 0;
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease);
+}
+.svc:hover::before {
+  opacity: 1;
+}
+
+.svc__frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 1;
+  transition: filter 0.4s var(--ease), transform 0.4s var(--ease);
+}
+.svc:hover .svc__frame {
+  filter: saturate(1.35) brightness(1.03)
+    drop-shadow(0 8px 16px rgba(201, 140, 44, 0.4));
+}
+
+.svc__content {
+  position: absolute;
+  left: 13%;
+  right: 13%;
+  top: 28%;
+  bottom: 13%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 1.1vw, 0.9rem);
+}
+/* full-width box that wraps the icon: it gives the popup something to hang
+   off (its bottom edge is the icon's bottom edge) and keeps the popup's
+   width relative to the tile rather than to the glyph */
+.svc__glyph {
+  position: relative;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+.svc__icon {
+  font-size: clamp(2.5rem, 4.4vw, 4.2rem);
+  color: var(--p-icon);
+}
+/* uploaded PNG glyphs — sized to sit like the line icons */
+.svc__icon--img {
+  width: clamp(2.7rem, 4.7vw, 4.6rem);
+  height: clamp(2.7rem, 4.7vw, 4.6rem);
+  object-fit: contain;
+}
+.svc__label {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: clamp(0.75rem, 0.6rem + 0.42vw, 0.98rem);
+  color: #000;
+  line-height: 1.15;
+  transition: opacity 0.25s var(--ease);
+}
+/* the popup takes the label's place on hover */
+.svc:hover .svc__label {
+  opacity: 0;
+}
+
+/* ---- Hover popup ---------------------------------------------------- */
+.svc__pop {
+  position: absolute;
+  left: 50%;
+  top: 100%; /* the glyph's bottom edge — the icon stays fully visible */
+  margin-top: clamp(0.5rem, 1vw, 0.85rem);
+  width: min(130%, 244px); /* 130% of the 74%-wide content box ≈ 96% of the tile */
+  transform: translate(-50%, 12px);
+  z-index: 6;
+  padding: clamp(0.95rem, 1.4vw, 1.25rem);
+  text-align: left;
+  font-family: var(--sans);
+  background: #fff;
+  border-radius: 18px;
+  box-shadow:
+    0 26px 54px -18px rgba(60, 40, 15, 0.42),
+    0 4px 16px rgba(60, 40, 15, 0.12);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.35s var(--ease),
+    transform 0.35s var(--ease),
+    visibility 0s 0.35s;
+}
+.svc:hover .svc__pop {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+  transition:
+    opacity 0.35s var(--ease),
+    transform 0.35s var(--ease);
+}
+.svc__pop-title {
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 1.02rem;
+  letter-spacing: -0.01em;
+  color: var(--p-ink);
+}
+.svc__pop-desc {
+  margin-top: 0.4rem;
+  font-size: 0.87rem;
+  line-height: 1.5;
+  color: #6b5740;
+}
+.svc__pop-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.85rem;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--p-gold);
+}
+.svc__pop-circ {
+  display: inline-grid;
+  place-items: center;
+  width: 27px;
+  height: 27px;
+  font-size: 0.95rem;
+  border-radius: 50%;
+  border: 1.4px solid var(--p-gold);
+  transition: transform 0.3s var(--ease), background 0.3s var(--ease), color 0.3s var(--ease);
+}
+.svc__pop-link:hover .svc__pop-circ {
+  transform: translateX(2px);
+  background: var(--p-gold);
+  color: #fff;
+}
+
+/* ---- Responsive ----------------------------------------------------- */
+@media (max-width: 1024px) {
+  .palace__grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 720px) {
+  .palace__grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 560px) {
+  .palace__title { font-size: 30px; }
+}
+@media (max-width: 480px) {
+  .palace__grid { grid-template-columns: repeat(2, 1fr); }
+}

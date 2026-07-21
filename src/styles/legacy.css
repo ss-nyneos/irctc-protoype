@@ -1,0 +1,20 @@
+/* ============================================================
+   Every stylesheet still waiting to be converted to Tailwind.
+
+   These are imported from tailwind.css into `@layer legacy`, which sits
+   BELOW `utilities` in the layer order. That ordering is load-bearing:
+   unlayered CSS beats layered CSS outright in the cascade, so while these
+   files were plain imports they silently overrode every Tailwind utility
+   written against the same element — `button { background: none }` killing
+   `bg-blue`, the `h1..h4` block killing every heading utility, and so on.
+
+   Delete each line here as its component is converted; when the list is
+   empty, drop this file and switch tailwind.css back to a plain
+   `@import 'tailwindcss'` so preflight comes back on.
+   ============================================================ */
+@import '../components/Hero.css';
+@import '../components/NavBar.css';
+@import '../components/Offers.css';
+@import '../components/Services.css';
+@import '../components/Trains.css';
+@import './base.css';
