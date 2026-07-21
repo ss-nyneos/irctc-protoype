@@ -1,0 +1,83 @@
+import './Services.css'
+import type { SVGProps, ReactNode } from 'react'
+import { Hotel, Stupa, Mountain, Ferry, Trekker, ChevronR } from './Icons.tsx'
+import archFrame from '../assets/graphic/arch-frame.png'
+import icAirplane from '../assets/graphic/airplane.png'
+import icBus from '../assets/graphic/bus.png'
+import icBed from '../assets/graphic/single-bed.png'
+import icLounge from '../assets/graphic/lounge.png'
+import icTrain from '../assets/graphic/train.png'
+import icTrain2 from '../assets/graphic/train-2.png'
+import icCrown from '../assets/graphic/crown.png'
+
+type Svc = {
+  label: string
+  blurb: string
+  img?: string
+  Icon?: (p: SVGProps<SVGSVGElement>) => ReactNode
+}
+
+const SERVICES: Svc[] = [
+  { label: 'Flights', img: icAirplane, blurb: 'Book domestic and international flights at the best available fares.' },
+  { label: 'Hotels', Icon: Hotel, blurb: 'Stay at handpicked hotels near every station and sight.' },
+  { label: 'Bus Tickets', img: icBus, blurb: 'Book comfortable and reliable bus journeys across India.' },
+  { label: 'Retiring Rooms', img: icBed, blurb: 'Rest between trains in clean, affordable station rooms.' },
+  { label: 'Executive Lounge', img: icLounge, blurb: 'Unwind in premium lounges with refreshments and Wi-Fi.' },
+  { label: 'Bharat Gaurav', img: icTrain, blurb: 'Themed circuit trains celebrating India’s heritage.' },
+  { label: 'Buddhist Circuit', Icon: Stupa, blurb: 'Trace the footsteps of the Buddha across sacred sites.' },
+  { label: 'Heli Yatra', Icon: Mountain, blurb: 'Reach high Himalayan shrines by helicopter, fast and easy.' },
+  { label: 'Ferry & Cruises', Icon: Ferry, blurb: 'Sail the backwaters, islands and rivers of coastal India.' },
+  { label: 'Himalayan Treks', Icon: Trekker, blurb: 'Guided treks through the valleys and passes of the north.' },
+  { label: "Maharajas' Express", img: icCrown, blurb: 'Travel like royalty aboard India’s finest luxury train.' },
+  { label: 'Golden Chariot', img: icTrain2, blurb: 'A regal rail journey through the south’s temples and coasts.' },
+]
+
+const Flourish = (p: SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 64 16" fill="none" stroke="currentColor" strokeWidth="1.4"
+    strokeLinecap="round" aria-hidden="true" {...p}>
+    <path d="M2 8h38" />
+    <path d="m40 8 5-4 5 4-5 4z" fill="currentColor" stroke="none" />
+    <path d="M54 8h8" strokeWidth="1" />
+  </svg>
+)
+
+export default function Services() {
+  return (
+    <section className="section palace" id="services">
+      <div className="palace__head wrap-wide">
+        <h2 className="h2 palace__title">
+          <Flourish className="palace__orn palace__orn--l" />
+          <span className="palace__titletext">OUR <span>SERVICES</span></span>
+          <Flourish className="palace__orn palace__orn--r" />
+        </h2>
+      </div>
+
+      <div className="palace__grid">
+        {SERVICES.map((s) => {
+            return (
+              <div className="arch reveal" key={s.label}>
+                <img className="arch__frame" src={archFrame} alt="" aria-hidden="true" />
+                <div className="arch__content">
+                  {s.img ? (
+                    <img className="arch__icon arch__icon--img" src={s.img} alt="" aria-hidden="true" />
+                  ) : (
+                    s.Icon?.({ className: 'arch__icon' })
+                  )}
+                  <span className="arch__label">{s.label}</span>
+                </div>
+
+                <div className="arch__pop" role="group" aria-label={s.label}>
+                  <h3 className="arch__pop-title">{s.label}</h3>
+                  <p className="arch__pop-desc">{s.blurb}</p>
+                  <a className="arch__pop-link" href="#services">
+                    Explore
+                    <span className="arch__pop-circ"><ChevronR /></span>
+                  </a>
+                </div>
+              </div>
+            )
+          })}
+      </div>
+    </section>
+  )
+}

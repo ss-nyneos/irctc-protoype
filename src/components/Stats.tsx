@@ -4,7 +4,7 @@ import { Star } from './Icons.tsx'
 const avatars = [
   '/img/taj-front.jpg',
   '/img/kerala-backwaters.jpg',
-  '/img/hawa-mahal.jpg',
+  '/img/jaipur-hd.jpg',
   '/img/goa.jpg',
 ]
 

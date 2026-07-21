@@ -36,6 +36,7 @@ export default function NavBar() {
   const { user, openLogin, openDiksha, openPartPayment, signOut } = useUI()
   const [menu, setMenu] = useState<MenuKind>(null)
   const [mobile, setMobile] = useState(false)
+  const [hidden, setHidden] = useState(false)
   const rootRef = useRef<HTMLElement>(null)
 
   // close menus on outside click / Escape
@@ -57,10 +58,41 @@ export default function NavBar() {
     }
   }, [])
 
+  // hide the pill on scroll down, reveal it on scroll up
+  useEffect(() => {
+    let lastY = window.scrollY
+    let ticking = false
+
+    const onScroll = () => {
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        const y = window.scrollY
+        const delta = y - lastY
+        // always show near the top; ignore tiny jitters
+        if (y < 80) {
+          setHidden(false)
+        } else if (Math.abs(delta) > 6) {
+          setHidden(delta > 0)
+        }
+        lastY = y
+        ticking = false
+      })
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // keep the nav visible whenever a menu/sheet is open
+  useEffect(() => {
+    if (menu || mobile) setHidden(false)
+  }, [menu, mobile])
+
   const toggle = (k: Exclude<MenuKind, null>) => setMenu((m) => (m === k ? null : k))
 
   return (
-    <header className="nav" ref={rootRef}>
+    <header className={`nav${hidden ? ' nav--hidden' : ''}`} ref={rootRef}>
       <div className="nav__shell">
         <div className="nav__pill">
           <a href="#top" className="nav__brand" aria-label="IRCTC Tourism home">

@@ -1,35 +1,20 @@
 .footer {
-  background: var(--paper-2);
+  background: #0e2149; /* navy blue */
+  padding-block: 0;
+  /* re-map the palette to light so all footer text reads on navy */
+  --ink: #ffffff;
+  --ink-soft: rgba(255, 255, 255, 0.72);
+  --ink-faint: rgba(255, 255, 255, 0.5);
+  --black: #ffffff;
+  --blue: #7ba6ff;
+  --blue-ink: #9dc0ff;
+  --line: rgba(255, 255, 255, 0.16);
   color: var(--ink-soft);
-  padding-block: clamp(3.5rem, 6vw, 5.5rem) 0;
 }
 
-/* full-bleed photo strip at the very bottom */
-.footer__strip {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  margin-top: clamp(2.4rem, 4vw, 3.6rem);
-}
-.footer__strip-cell {
-  position: relative;
-  height: clamp(150px, 13vw, 205px);
-  overflow: hidden;
-}
-.footer__strip-cell img {
-  transition: transform 0.8s var(--ease);
-}
-.footer__strip-cell:hover img {
-  transform: scale(1.07);
-}
-@media (max-width: 900px) {
-  .footer__strip {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-@media (max-width: 520px) {
-  .footer__strip {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* footer content vertical padding */
+.footer > .wrap-wide {
+  padding-block: clamp(3.2rem, 5.5vw, 5rem) clamp(2.4rem, 4vw, 3.5rem);
 }
 .footer__main {
   display: grid;

@@ -16,6 +16,10 @@
   color: #fff;
   box-shadow: 0 40px 90px -40px rgba(36, 117, 238, 0.6);
 }
+/* keep this card at its original width — the global wrap is now wider */
+.apppromo .apppromo__card {
+  max-width: 1240px;
+}
 
 /* ---- Left column ---- */
 .apppromo__rating {

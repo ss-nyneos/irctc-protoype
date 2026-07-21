@@ -5,6 +5,8 @@
   position: relative;
   background: var(--paper);
   padding-top: clamp(5rem, 9vw, 8.5rem);
+  /* breathing room before the footer */
+  margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
   overflow: hidden;
   isolation: isolate;
 }
@@ -62,7 +64,7 @@
 }
 .explore__boat {
   position: absolute;
-  left: 1.5%;
+  left: 0;
   bottom: -1%;
   width: clamp(96px, 12vw, 210px);
   height: auto;

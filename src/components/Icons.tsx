@@ -159,6 +159,66 @@ export const Temple = (p: IconProps) =>
     p,
   )
 
+export const Hotel = (p: IconProps) =>
+  wrap(
+    <>
+      <path d="M5 20.5V4.6a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v15.9" />
+      <path d="M3.4 20.5h17.2" />
+      <path d="M8.4 7.2h2.2M13.4 7.2h2.2" />
+      <path d="M8.4 10.7h2.2M13.4 10.7h2.2" />
+      <path d="M8.4 14.2h2.2M13.4 14.2h2.2" />
+      <path d="M10 20.5v-3h4v3" />
+    </>,
+    p,
+  )
+export const Stupa = (p: IconProps) =>
+  wrap(
+    <>
+      <path d="M4 20.5h16" />
+      <path d="M6.5 20.5v-2.2h11v2.2" />
+      <path d="M7.7 18.3a4.3 4.3 0 0 1 8.6 0" />
+      <path d="M12 14V9.1" />
+      <path d="M9.8 11.4h4.4" />
+      <path d="M10.9 9.1h2.2" />
+      <circle cx="12" cy="7.5" r="0.9" fill="currentColor" stroke="none" />
+    </>,
+    p,
+  )
+export const Trekker = (p: IconProps) =>
+  wrap(
+    <>
+      <circle cx="11" cy="4.6" r="1.7" />
+      <path d="M11.4 6.6 9.8 11l-2.3 4.2" />
+      <path d="m9.8 11 3.2 1.3 1.1 6.4" />
+      <path d="m10.6 8 3.4 1.5" />
+      <path d="M15.2 5 13.4 19" />
+    </>,
+    p,
+  )
+export const TrainFront = (p: IconProps) =>
+  wrap(
+    <>
+      <path d="M7 18.5V8.5a5 5 0 0 1 10 0v10" />
+      <path d="M7 18.5h10" />
+      <rect x="8.6" y="7" width="2.9" height="2.6" rx="0.5" />
+      <rect x="12.5" y="7" width="2.9" height="2.6" rx="0.5" />
+      <circle cx="12" cy="13.2" r="1" />
+      <path d="m8.5 21 1.3-2.5" />
+      <path d="m15.5 21-1.3-2.5" />
+    </>,
+    p,
+  )
+export const Wheel = (p: IconProps) =>
+  wrap(
+    <>
+      <circle cx="12" cy="12" r="8.4" />
+      <circle cx="12" cy="12" r="1.7" />
+      <path d="M12 3.6v3M12 17.4v3M3.6 12h3M17.4 12h3" />
+      <path d="m6.05 6.05 2.12 2.12M15.83 15.83l2.12 2.12M17.95 6.05l-2.12 2.12M8.17 15.83l-2.12 2.12" />
+    </>,
+    p,
+  )
+
 export const iconMap: Record<string, (p: IconProps) => ReactNode> = {
   plane: Plane,
   bed: Bed,

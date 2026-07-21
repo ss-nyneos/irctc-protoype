@@ -8,6 +8,7 @@ import { UIProvider } from './context/UI.tsx'
 import { PrefsProvider } from './context/Prefs.tsx'
 import NavBar from './components/NavBar.tsx'
 import Footer from './components/Footer.tsx'
+import FooterStrip from './components/FooterStrip.tsx'
 import ModalRoot from './components/ModalRoot.tsx'
 import Home from './pages/Home.tsx'
 import Packages from './pages/Packages.tsx'
@@ -23,10 +24,13 @@ export default function App() {
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
       if (reduce) return
 
-      /* ---- Hero: pinned behind the page, drifting and dimming as it goes ---- */
+      /* ---- Hero: pinned behind the page, drifting and dimming as it goes ----
+         Keep the drift within the zoom's overflow (|yPercent| <= (scale-1)/2*100)
+         so the video always covers the hero and its black backdrop never peeks
+         out at the top under the navbar. */
       gsap.to('.hero__img', {
-        yPercent: 26,
-        scale: 1.22,
+        yPercent: 12,
+        scale: 1.3,
         ease: 'none',
         scrollTrigger: {
           trigger: '.hero',
@@ -160,6 +164,7 @@ export default function App() {
             <Route path="/packages" element={<Packages />} />
           </Routes>
           <Footer />
+          <FooterStrip />
           <ModalRoot />
         </div>
       </UIProvider>

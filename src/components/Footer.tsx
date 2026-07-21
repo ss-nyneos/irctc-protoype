@@ -3,16 +3,6 @@ import { footer, contact } from '../data/content.ts'
 import { useUI } from '../context/UI.tsx'
 import { Phone, Mail, ArrowUpRight } from './Icons.tsx'
 
-const strip = [
-  '/img/taj-dawn.jpg',
-  '/img/kerala-backwaters.jpg',
-  '/img/ladakh.jpg',
-  '/img/dancer.jpg',
-  '/img/goa.jpg',
-  '/img/hawa-mahal.jpg',
-  '/img/andaman.jpg',
-]
-
 export default function Footer() {
   const { openPartPayment } = useUI()
   return (
@@ -90,14 +80,6 @@ export default function Footer() {
             </a>
           </div>
         </div>
-      </div>
-
-      <div className="footer__strip" aria-hidden="true">
-        {strip.map((src, i) => (
-          <div className="footer__strip-cell" key={i}>
-            <img src={src} alt="" className="img-cover" loading="lazy" />
-          </div>
-        ))}
       </div>
     </footer>
   )

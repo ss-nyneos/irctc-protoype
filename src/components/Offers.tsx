@@ -12,7 +12,7 @@ const spiritual = [
   '/img/meenakshi.jpg',
   '/img/temple-gopuram.jpg',
   '/img/golden-temple.jpg',
-  '/img/varanasi-ghats.jpg',
+  '/img/varanasi-hd.jpg',
 ]
 
 function Mosaic({ imgs }: { imgs: string[] }) {
@@ -33,7 +33,7 @@ export default function Offers() {
     <section className="offers" id="offers">
       <div className="wrap-wide">
         <div className="offers__head">
-          <h2 className="offers__title">Special Offers</h2>
+          <h2 className="offers__title">Special <span>Offers</span></h2>
           <span className="offers__rule" aria-hidden="true" />
           <div className="offers__nav">
             <button className="offers__arrow" aria-label="Previous offers">
@@ -49,7 +49,7 @@ export default function Offers() {
           {/* ---- ferry offer ---- */}
           <article className="offer offer--ferry">
             <img
-              src="/img/andaman.jpg"
+              src="/img/havelock-hd.jpg"
               alt=""
               className="offer__photo"
               data-parallax="12"

@@ -1,8 +1,7 @@
 import './Hero.css'
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Pin, Calendar, Users, iconMap } from './Icons.tsx'
-import { quickServices } from '../data/content.ts'
+import { Search, Pin, Calendar, Users } from './Icons.tsx'
 import heroVideo from '../assets/hero-india.mp4'
 
 export default function Hero() {
@@ -84,20 +83,6 @@ export default function Hero() {
               <span>Explore</span>
             </button>
           </form>
-        </div>
-      </section>
-
-      <section className="services" aria-label="IRCTC services">
-        <div className="wrap services__row">
-          {quickServices.map((s) => {
-            const Icon = iconMap[s.icon]
-            return (
-              <a key={s.label} href={s.href} className="qs">
-                <span className="qs__icon">{Icon ? Icon({}) : null}</span>
-                <span className="qs__label">{s.label}</span>
-              </a>
-            )
-          })}
         </div>
       </section>
     </>

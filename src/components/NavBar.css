@@ -9,6 +9,16 @@
   z-index: 200;
   padding: 18px var(--gutter) 0;
   pointer-events: none;
+  transform: translateY(0);
+  transition: transform 0.35s var(--ease);
+}
+.nav--hidden {
+  transform: translateY(-130%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav {
+    transition: none;
+  }
 }
 /* shrink-to-fit and centred */
 .nav__shell {

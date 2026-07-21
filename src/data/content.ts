@@ -139,7 +139,7 @@ export const packages: Package[] = [
     code: 'EHH121',
     origin: 'Bagdogra / New Jalpaiguri',
     departure: 'Daily',
-    img: '/img/mountain-train.jpg',
+    img: '/img/gangtok.jpeg',
     desc: 'Kanchenjunga at first light, Darjeeling\u2019s tea slopes and the monastery ridges above Gangtok. Six days across the eastern Himalaya, boarding at Bagdogra or New Jalpaiguri.',
   },
   {
@@ -154,7 +154,7 @@ export const packages: Package[] = [
     code: 'EHH96',
     origin: 'Port Blair',
     departure: 'Daily',
-    img: '/img/andaman.jpg',
+    img: '/img/havelock-hd.jpg',
     desc: 'Radhanagar\u2019s white sand, Neil\u2019s coral shallows and Port Blair\u2019s colonial harbour \u2014 built for families, with stays and transfers handled end to end.',
   },
   {
@@ -169,7 +169,7 @@ export const packages: Package[] = [
     code: 'SHH004',
     origin: 'Hyderabad',
     departure: 'All days except Friday',
-    img: '/img/temple-gopuram.jpg',
+    img: '/img/srisailam-hyderabad.webp',
     desc: 'Srisailam\u2019s hilltop jyotirlinga, the golden gopuram at Yadadri and Hyderabad in between. Four days of darshan with cab, hotel and meals included.',
   },
   {
@@ -199,7 +199,7 @@ export const packages: Package[] = [
     code: 'SEH049',
     origin: 'Kochi',
     departure: 'Every day',
-    img: '/img/kerala-waterfall.jpg',
+    img: '/img/coastal-kerala.webp',
     desc: 'Kochi, Munnar and Thekkady in four unhurried days \u2014 tea estates by morning, cardamom air by evening.',
   },
   {
@@ -229,7 +229,7 @@ export const packages: Package[] = [
     code: 'SEH046',
     origin: 'Kochi',
     departure: 'Every day',
-    img: '/img/dancer.jpg',
+    img: '/img/coastal-kerala.webp',
     desc: 'Kathakali under lamplight, the three seas at Kanyakumari and backwater evenings at Kumarakom \u2014 Kerala\u2019s fullest circuit in eight days.',
   },
   {
@@ -244,7 +244,7 @@ export const packages: Package[] = [
     code: 'EHH139',
     origin: 'Bagdogra / New Jalpaiguri',
     departure: 'Daily',
-    img: '/img/kashmir.jpg',
+    img: '/img/gangtok.jpeg',
     desc: 'Tsomgo Lake, yak trails and the ridge-top capital of Sikkim \u2014 a short Himalayan break with cab, hotel and meals arranged.',
   },
   {
@@ -259,7 +259,7 @@ export const packages: Package[] = [
     code: 'NDR012',
     origin: 'Delhi',
     departure: 'Every Friday & Saturday',
-    img: '/img/varanasi-ghats.jpg',
+    img: '/img/ayodhya.jpeg',
     desc: 'An overnight run from Delhi for Ram Lalla darshan at Ayodhya, with rail, cab, hotel and meals in a single booking.',
   },
   {
@@ -274,7 +274,7 @@ export const packages: Package[] = [
     code: 'EHH140',
     origin: 'Port Blair',
     departure: 'Every day',
-    img: '/img/goa.jpg',
+    img: '/img/andaman-nicobar.webp',
     desc: 'Five days between Port Blair, Neil and Havelock \u2014 reef water, near-empty beaches and slow island ferries.',
   },
   {
@@ -289,7 +289,7 @@ export const packages: Package[] = [
     code: 'SHH001',
     origin: 'Hyderabad',
     departure: 'All days except Friday',
-    img: '/img/spice-market.jpg',
+    img: '/img/hyderabad.webp',
     desc: 'The bazaars around Charminar, the ramparts of Golconda and the film lots at Ramoji \u2014 three days in the Deccan\u2019s grandest city.',
   },
   {
@@ -314,28 +314,28 @@ export const experiences: Experience[] = [
     id: 'dance',
     title: 'Classical Dance & Kathakali',
     blurb: 'Front-row seats to Kathakali, Bharatanatyam and folk stages.',
-    img: '/img/dancer.jpg',
+    img: '/img/kathakali.webp',
     span: 'tall',
   },
   {
     id: 'aarti',
     title: 'Ganga Aarti at Varanasi',
     blurb: 'Lamps, conch and river at the oldest living city on earth.',
-    img: '/img/varanasi-ghats.jpg',
+    img: '/img/varanasi-hd.jpg',
     span: 'wide',
   },
   {
     id: 'thali',
     title: 'Regional Thali Feasts',
     blurb: 'Twenty bowls, one leaf — a whole region on a single plate.',
-    img: '/img/thali.jpg',
+    img: '/img/thali-hd.jpg',
     span: 'std',
   },
   {
     id: 'spice',
     title: 'Spice Trails & Bazaar Walks',
     blurb: 'Cardamom, saffron and stories through the oldest markets.',
-    img: '/img/spice-market.jpg',
+    img: '/img/bazaar-walks.jpeg',
     span: 'std',
   },
   {
@@ -349,19 +349,19 @@ export const experiences: Experience[] = [
     id: 'yoga',
     title: 'Yoga & Wellness, Rishikesh',
     blurb: 'Sunrise asanas where the Ganga leaves the mountains.',
-    img: '/img/rishikesh-yoga.jpg',
+    img: '/img/rishikesh-hd.jpg',
     span: 'tall',
   },
 ]
 
 export const destinations: Destination[] = [
-  { id: 'kashmir', name: 'Srinagar', state: 'Jammu & Kashmir', kind: 'Dal Lake · Shikara', img: '/img/kashmir.jpg' },
+  { id: 'kashmir', name: 'Srinagar', state: 'Jammu & Kashmir', kind: 'Dal Lake · Shikara', img: '/img/kashmir-hd.jpg' },
   { id: 'kerala', name: 'Alleppey', state: 'Kerala', kind: 'Backwaters · Houseboat', img: '/img/kerala-backwaters.jpg' },
   { id: 'ladakh', name: 'Leh', state: 'Ladakh', kind: 'High Desert · Monastery', img: '/img/ladakh.jpg' },
-  { id: 'jaipur', name: 'Jaipur', state: 'Rajasthan', kind: 'Pink City · Forts', img: '/img/hawa-mahal.jpg' },
-  { id: 'varanasi', name: 'Varanasi', state: 'Uttar Pradesh', kind: 'Ghats · Ganga', img: '/img/varanasi-ghats.jpg' },
-  { id: 'andaman', name: 'Havelock', state: 'Andaman & Nicobar', kind: 'Coral · White Sand', img: '/img/andaman.jpg' },
-  { id: 'rishikesh', name: 'Rishikesh', state: 'Uttarakhand', kind: 'Himalaya · Ganga', img: '/img/rishikesh-yoga.jpg' },
+  { id: 'jaipur', name: 'Jaipur', state: 'Rajasthan', kind: 'Pink City · Forts', img: '/img/jaipur-hd.jpg' },
+  { id: 'varanasi', name: 'Varanasi', state: 'Uttar Pradesh', kind: 'Ghats · Ganga', img: '/img/varanasi-hd.jpg' },
+  { id: 'andaman', name: 'Havelock', state: 'Andaman & Nicobar', kind: 'Coral · White Sand', img: '/img/havelock-hd.jpg' },
+  { id: 'rishikesh', name: 'Rishikesh', state: 'Uttarakhand', kind: 'Himalaya · Ganga', img: '/img/rishikesh-hd.jpg' },
 ]
 
 /* The four luxury tourist trains, with their carriage liveries */
@@ -405,10 +405,10 @@ export const trains: Train[] = [
 ]
 
 export const pilgrimage: Pilgrimage[] = [
-  { id: 'kashi', name: 'Kashi Vishwanath', place: 'Varanasi', img: '/img/varanasi-ghats.jpg' },
-  { id: 'golden-temple', name: 'Harmandir Sahib', place: 'Amritsar', img: '/img/golden-temple.jpg' },
-  { id: 'meenakshi', name: 'Meenakshi Amman', place: 'Madurai', img: '/img/meenakshi.jpg' },
-  { id: 'tirupati', name: 'Sri Venkateswara', place: 'Tirupati', img: '/img/temple-gopuram.jpg' },
+  { id: 'kashi', name: 'Kashi Vishwanath', place: 'Varanasi', img: '/img/varanasi-hd.jpg' },
+  { id: 'golden-temple', name: 'Harmandir Sahib', place: 'Amritsar', img: '/img/harmandir-sahib.webp' },
+  { id: 'meenakshi', name: 'Meenakshi Amman', place: 'Madurai', img: '/img/meenakshi-amman.webp' },
+  { id: 'tirupati', name: 'Sri Venkateswara', place: 'Tirupati', img: '/img/venkateshwara.jpg' },
 ]
 
 export const ecosystem: string[] = [
@@ -426,7 +426,7 @@ export const faqs: Faq[] = [
   {
     q: 'How do I book an IRCTC tour package?',
     a: 'Search a destination or theme from the strip above, open any package, choose your departure date and boarding point, then proceed to pay. Registered and guest users can both book online; bookings above ₹50,000 also qualify for the part-payment scheme.',
-    img: '/img/andaman.jpg',
+    img: '/img/havelock-hd.jpg',
   },
   {
     q: 'What does a tour package include?',
@@ -441,7 +441,7 @@ export const faqs: Faq[] = [
   {
     q: 'What are the most popular pilgrimage journeys?',
     a: 'Char Dham, Vaishno Devi, Tirupati, Kashi Vishwanath, Shirdi, Ujjain, Rameswaram and the Buddhist Circuit are among the most-booked — several running as dedicated Bharat Gaurav and Buddhist Circuit trains.',
-    img: '/img/varanasi-ghats.jpg',
+    img: '/img/varanasi-hd.jpg',
   },
   {
     q: 'Can I book international tour packages too?',

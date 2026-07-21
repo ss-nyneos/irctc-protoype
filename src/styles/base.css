@@ -93,11 +93,16 @@ h4 {
 
 /* Section headings: 42px, bold, black */
 .h2 {
-  font-size: clamp(28px, 5.2vw, 42px);
+  font-family: var(--sans); /* Helvetica */
+  font-size: 42px;
   font-weight: 700;
-  line-height: 1.06;
-  letter-spacing: -0.025em;
+  line-height: 1; /* 100% */
+  letter-spacing: 0;
   color: var(--black);
+}
+/* last word of every heading is highlighted blue */
+.h2 span {
+  color: var(--blue);
 }
 
 .h3 {
@@ -173,12 +178,9 @@ em,
 .btn--primary {
   background: var(--saffron);
   color: #fff;
-  box-shadow: 0 10px 22px -8px rgba(242, 107, 33, 0.7);
 }
 .btn--primary:hover {
-  background: #e35d16;
   transform: translateY(-2px);
-  box-shadow: 0 16px 30px -10px rgba(242, 107, 33, 0.75);
 }
 
 .btn--ink {

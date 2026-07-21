@@ -7,7 +7,7 @@ export default function Pilgrimage() {
     <section className="section pilgrimage" id="pilgrimage">
       <div className="wrap-wide">
         <div className="section-head pilgrimage__head">
-          <h2 className="h2">Faith, on rails.</h2>
+          <h2 className="h2">Faith, on <span>rails.</span></h2>
           <a href="#pilgrimage" className="tlink">
             Char Dham · Vaishno Devi · Shirdi
             <ArrowUpRight />

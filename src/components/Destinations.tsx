@@ -37,7 +37,7 @@ export default function Destinations() {
     <section className="section destinations" id="destinations">
       <div className="wrap">
         <div className="destinations__head">
-          <h2 className="h2">The best-kept secrets of India</h2>
+          <h2 className="h2">The best-kept secrets of <span>India</span></h2>
         </div>
 
         <div className="coverflow">

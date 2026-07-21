@@ -60,7 +60,8 @@
   --shadow-float: 0 40px 90px -34px rgba(15, 20, 30, 0.4);
 
   /* ---- Layout ---- */
-  --wrap: 1240px;
+  /* one consistent content width across every section */
+  --wrap: 1440px;
   --wrap-wide: 1440px;
   --gutter: clamp(1.25rem, 4vw, 3.5rem);
   --section-y: clamp(6rem, 12vw, 11rem);

@@ -19,7 +19,7 @@ export default function Experiences() {
       <div className="wrap-wide">
         <div className="section-head experiences__head">
           <h2 className="h2">
-            Come for the sights,<br />stay for the rituals.
+            Come for the sights,<br />stay for the <span>rituals.</span>
           </h2>
         </div>
 

@@ -19,8 +19,9 @@
 .monthly__layout {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: clamp(2rem, 5vw, 5rem);
-  align-items: start;
+  gap: clamp(1.5rem, 3.5vw, 3.5rem);
+  /* stretch the month rail to the grid's height so they line up */
+  align-items: stretch;
 }
 
 /* ---- Bento ----------------------------------------------------------
@@ -29,15 +30,16 @@
 .monthly__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, minmax(240px, 32vh));
+  grid-template-rows: repeat(2, minmax(300px, 38vh));
   grid-template-areas:
     'a b .'
     'c d e';
-  gap: clamp(8px, 0.9vw, 13px);
+  gap: clamp(9px, 1vw, 15px);
   /* big radius on the corners that face a junction; small elsewhere.
-     Four big corners meeting at the centre carve a 4-pointed star
-     out of the (now thin) white gutter between the cards. */
-  --r-big: clamp(54px, 6.2vw, 92px);
+     Four big corners meeting at the centre carve a 4-pointed star out of
+     the white gutter. Kept large for a bold star, but not so large that
+     it eats into the title (which is inset to clear these curves). */
+  --r-big: clamp(60px, 6.8vw, 100px);
   --r-sm: 20px;
 }
 
@@ -56,6 +58,21 @@
   transition:
     transform 0.5s var(--ease),
     box-shadow 0.5s var(--ease);
+  /* fades in each time the month (and its destinations) changes */
+  animation: mtCardIn 0.5s var(--ease);
+}
+@keyframes mtCardIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mt-card {
+    animation: none;
+  }
 }
 .mt-card:hover {
   transform: translateY(-5px);
@@ -72,26 +89,28 @@
 .mt-card__scrim {
   position: absolute;
   inset: 0;
+  /* gentle, smooth wash just behind the title — no hard band across the top */
   background: linear-gradient(
     180deg,
-    rgba(6, 12, 28, 0.62) 0%,
-    rgba(6, 12, 28, 0.24) 34%,
-    rgba(6, 12, 28, 0) 66%
+    rgba(6, 12, 28, 0.34) 0%,
+    rgba(6, 12, 28, 0) 42%
   );
 }
 .mt-card__title {
   position: absolute;
   inset: 0 0 auto 0;
   z-index: 1;
-  padding: clamp(1.1rem, 1.6vw, 1.65rem) clamp(1.15rem, 1.7vw, 1.7rem) 0;
-  max-width: 24ch;
+  /* extra top + left so the text clears the large curved corners */
+  padding: clamp(1.7rem, 2.3vw, 2.4rem) clamp(1.15rem, 1.7vw, 1.7rem) 0
+    clamp(1.7rem, 2.3vw, 2.4rem);
+  max-width: 21ch;
   color: #fff;
   font-family: var(--sans);
-  font-weight: 700;
-  font-size: clamp(1.02rem, 0.9rem + 0.5vw, 1.35rem);
-  line-height: 1.22;
-  letter-spacing: -0.01em;
-  text-shadow: 0 2px 18px rgba(6, 12, 28, 0.55);
+  font-weight: 500;
+  font-size: clamp(0.85rem, 0.75rem + 0.35vw, 1.05rem);
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-shadow: 0 1px 3px rgba(6, 12, 28, 0.8), 0 2px 16px rgba(6, 12, 28, 0.6);
 }
 
 /* ---- Month rail ---------------------------------------------------- */
@@ -99,8 +118,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: clamp(0.7rem, 1.3vw, 1.15rem);
-  padding-top: 0.35rem;
+  /* spread the 12 months across the full height of the card grid */
+  justify-content: space-between;
   white-space: nowrap;
 }
 .month {
@@ -108,17 +127,17 @@
   align-items: center;
   gap: 0.65rem;
   font-family: var(--sans);
-  font-size: clamp(1.2rem, 1rem + 0.6vw, 1.65rem);
+  font-size: clamp(0.88rem, 0.78rem + 0.32vw, 1.15rem);
   font-weight: 500;
-  color: var(--blue-ink);
-  opacity: 0.7;
+  color: var(--ink-faint); /* non-selected months are gray */
+  opacity: 1;
   transition:
     opacity 0.3s var(--ease),
     color 0.3s var(--ease),
     font-size 0.3s var(--ease);
 }
 .month:hover {
-  opacity: 1;
+  color: var(--ink-soft);
 }
 .month::before {
   content: '';
@@ -133,7 +152,7 @@
   color: var(--black);
   font-weight: 700;
   opacity: 1;
-  font-size: clamp(1.5rem, 1.2rem + 0.9vw, 2.1rem);
+  font-size: clamp(1.15rem, 0.95rem + 0.55vw, 1.55rem);
 }
 .month.is-active::before {
   transform: scale(1);
@@ -154,7 +173,7 @@
       'c d'
       'e e';
     /* a-b-c-d still meet in the middle, so the star survives */
-    --r-big: clamp(40px, 8vw, 64px);
+    --r-big: clamp(46px, 8vw, 74px);
   }
   .monthly__months {
     flex-direction: row;

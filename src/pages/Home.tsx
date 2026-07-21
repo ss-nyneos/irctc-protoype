@@ -1,4 +1,5 @@
 import Hero from '../components/Hero.tsx'
+import Services from '../components/Services.tsx'
 import Offers from '../components/Offers.tsx'
 import Stats from '../components/Stats.tsx'
 import Trending from '../components/Trending.tsx'
@@ -16,6 +17,7 @@ export default function Home() {
   return (
     <main>
       <Hero />
+      <Services />
       <Offers />
       <Stats />
       <Trending />

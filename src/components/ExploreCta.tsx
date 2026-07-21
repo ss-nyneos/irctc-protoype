@@ -6,7 +6,7 @@ import skylineReflection from '../assets/explore/skyline-reflection.svg'
 import boat from '../assets/explore/boat.svg'
 
 const floats = [
-  { id: 'a', state: 'Gujarat', tours: 125, img: '/img/hawa-mahal.jpg', pillFirst: false },
+  { id: 'a', state: 'Gujarat', tours: 125, img: '/img/jaipur-hd.jpg', pillFirst: false },
   { id: 'b', state: 'Madhya Pradesh', tours: 125, img: '/img/temple-gopuram.jpg', pillFirst: false },
   { id: 'c', state: 'Tamil Nadu', tours: 125, img: '/img/kerala-waterfall.jpg', pillFirst: true },
 ]
