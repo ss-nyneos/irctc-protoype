@@ -7,6 +7,33 @@ export default {
       fontFamily: {
         sans: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
         display: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+        // the one non-Helvetica face: decorative script on the Experiences cards
+        script: ["Island Moments", "cursive"],
+      },
+
+      /* Design 1 type scale. Mirrors the --text-* custom properties in
+         tokens.css; keep the two in step. Sizes that only specified a size and
+         tracking deliberately omit lineHeight/fontWeight so the call site keeps
+         setting its own. */
+      fontSize: {
+        nav: ["18px", { lineHeight: "154%", letterSpacing: "0em", fontWeight: "700" }],
+        svc: ["16px", { lineHeight: "100%", letterSpacing: "-0.04em", fontWeight: "500" }],
+        faq: ["22px", { lineHeight: "32px", letterSpacing: "0em", fontWeight: "700" }],
+        tile: ["22.62px", { lineHeight: "100%", letterSpacing: "0em", fontWeight: "400" }],
+        script: ["114.73px", { lineHeight: "100%", letterSpacing: "0em", fontWeight: "400" }],
+        "script-sm": ["43.85px", { lineHeight: "100%", letterSpacing: "0em", fontWeight: "400" }],
+        display: ["64px", { letterSpacing: "-0.04em" }],
+        "card-title": ["26px", { letterSpacing: "-0.04em" }],
+        "card-sub": ["22px", { letterSpacing: "0em" }],
+      },
+      transitionTimingFunction: {
+        brand: "cubic-bezier(0.22, 1, 0.36, 1)",
+      },
+      transitionDuration: {
+        250: "250ms",
+      },
+      boxShadow: {
+        float: "var(--shadow-float)",
       },
       colors: {
         background: "hsl(var(--background))",
@@ -55,6 +82,23 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
+        marquee: { to: { transform: "translateX(-50%)" } },
+        trendSlide: { to: { transform: "translateX(calc(-1 * var(--loop, 50%)))" } },
+        mtCardIn: { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
+        modalFade: { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
+        modalRise: {
+          "0%": { opacity: "0", transform: "translateY(16px) scale(0.98)" },
+          "100%": { opacity: "1", transform: "none" },
+        },
+        exploreBob: {
+          "0%, 100%": { transform: "translateY(0) rotate(0deg)" },
+          "50%": { transform: "translateY(-9px) rotate(-1.6deg)" },
+        },
+        /* the lateral flip is baked in so the bob composes with it */
+        faqBoatBob: {
+          "0%, 100%": { transform: "scaleX(-1) translateY(0) rotate(0deg)" },
+          "50%": { transform: "scaleX(-1) translateY(-7px) rotate(-1.5deg)" },
+        },
         floaty: {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" },
@@ -89,6 +133,13 @@ export default {
         },
       },
       animation: {
+        marquee: "marquee 42s linear infinite",
+        "trend-slide": "trendSlide 52s linear infinite",
+        "mt-card-in": "mtCardIn 0.5s cubic-bezier(0.22,1,0.36,1)",
+        "modal-fade": "modalFade 0.3s cubic-bezier(0.22,1,0.36,1)",
+        "modal-rise": "modalRise 0.4s cubic-bezier(0.22,1,0.36,1)",
+        "explore-bob": "exploreBob 7s ease-in-out infinite",
+        "faq-boat-bob": "faqBoatBob 7s ease-in-out infinite",
         floaty: "floaty 6s ease-in-out infinite",
         trainmove: "trainmove 14s linear infinite",
         wheelspin: "wheelspin 1.4s linear infinite",

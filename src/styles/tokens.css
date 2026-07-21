@@ -5,6 +5,21 @@
    ============================================================ */
 
 .design-1-root {
+  /* ---- Type scale ----
+     These were emitted by Tailwind v4's `@theme` on the staging branch. This
+     branch is Tailwind v3, which has no CSS-first theme, so they are declared
+     here and mirrored in tailwind.config.ts (fontSize) so the utilities and
+     the handwritten CSS stay on one set of numbers. */
+  --text-nav: 18px;
+  --text-nav--line-height: 154%;
+  --text-nav--letter-spacing: 0em;
+  --text-nav--font-weight: 700;
+
+  --text-svc: 16px;
+  --text-svc--line-height: 100%;
+  --text-svc--letter-spacing: -0.04em;
+  --text-svc--font-weight: 500;
+
   /* ---- Surfaces (white-dominant) ---- */
   --paper: #ffffff; /* main page */
   --paper-2: #f5f6f8; /* barely-there recessed bands */

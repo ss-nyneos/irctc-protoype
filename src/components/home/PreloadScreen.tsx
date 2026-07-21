@@ -34,7 +34,9 @@ function lerp(a: number, b: number, t: number) {
   return a + (b - a) * Math.max(0, Math.min(1, t));
 }
 
-export function PreloadScreen() {
+/** `to` is where the overlay hands off once it has faded. Defaults to the
+    main app shell; the Design 1 landing page passes its own route. */
+export function PreloadScreen({ to = "/landing" }: { to?: string } = {}) {
   const navigate = useNavigate();
   const [elapsed, setElapsed] = useState(0);
   const startRef = useRef<number | null>(null);
@@ -57,12 +59,12 @@ export function PreloadScreen() {
         rafRef.current = requestAnimationFrame(tick);
       } else if (!doneRef.current) {
         doneRef.current = true;
-        navigate("/landing");
+        navigate(to);
       }
     };
     rafRef.current = requestAnimationFrame(tick);
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
-  }, [navigate]);
+  }, [navigate, to]);
 
   // ── Derived values ────────────────────────────────────────────────────
 

@@ -253,17 +253,30 @@ export default function App() {
     <BrowserRouter>
       <RouterProvider>
         <Routes>
-          {/* Preload intro screen — "/" */}
-          <Route path="/" element={<PreloadRoute />} />
-
-          {/* Main landing page — "/landing" */}
-          <Route path="/landing" element={<Shell />} />
-
-          {/* Design 1 pages */}
+          {/* Design 1 is the landing page.
+              "/" mounts it with the train preload overlaid on top, so the page
+              is already rendered underneath as the overlay fades; the overlay
+              then navigates to "/home", which is the same page without it. */}
           <Route element={<Design1Layout />}>
+            <Route
+              path="/"
+              element={
+                <>
+                  <Home />
+                  <PreloadScreen to="/home" />
+                </>
+              }
+            />
             <Route path="/home" element={<Home />} />
             <Route path="/packages" element={<Packages />} />
           </Route>
+
+          {/* Preload intro screen. It fades, then navigates to "/landing",
+              so moving it off "/" keeps that hand-off intact. */}
+          <Route path="/preload" element={<PreloadRoute />} />
+
+          {/* Main app shell — world / customise / detail / booking views */}
+          <Route path="/landing" element={<Shell />} />
 
           {/* Catch-all: redirect unknown paths to "/" */}
           <Route path="*" element={<Navigate to="/" replace />} />
