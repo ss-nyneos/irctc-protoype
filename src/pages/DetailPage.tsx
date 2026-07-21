@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import {
   ArrowLeft,
   Bus,
@@ -28,6 +28,7 @@ import { ItineraryMap } from "@/components/detail/ItineraryMap";
 import { BookingRail } from "@/components/detail/BookingRail";
 import { PolicyPanel } from "@/components/detail/PolicyPanel";
 import { CallbackForm } from "@/components/detail/CallbackForm";
+import { EditorialPackageCard, HOVER_GROW } from "@/components/package/EditorialPackageCard";
 
 /** IRCTC prints these as a bare icon row with no detail behind them. */
 const inclusionIcons = [
@@ -97,7 +98,7 @@ export function DetailPage({ id }: { id: string }) {
             alt={pkg.name}
             overlay={false}
             width={1800}
-            className="h-full w-full scale-105"
+            className="h-full w-full scale-105 [&_img]:object-[center_25%]"
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60" />
@@ -268,7 +269,10 @@ export function DetailPage({ id }: { id: string }) {
         {/* Capped to the space below the sticky header and scrolled internally:
             pinned at top-[128px] with no height limit, anything past the fold —
             the flight add-on, the book button — simply could not be reached. */}
-        <div className="slim-scrollbar hidden lg:sticky lg:top-[128px] lg:block lg:max-h-[calc(100vh-152px)] lg:self-start lg:overflow-y-auto lg:overscroll-contain lg:pr-2">
+        {/* Deliberately NOT overscroll-contain: once the rail is scrolled to
+            either end, the wheel should chain on to the page rather than dead-end
+            the pointer inside the rail. */}
+        <div className="slim-scrollbar hidden lg:sticky lg:top-[128px] lg:block lg:max-h-[calc(100vh-152px)] lg:self-start lg:overflow-y-auto lg:pr-2">
           <BookingRail
             pkg={pkg}
             classes={detail.classes}
@@ -327,25 +331,25 @@ export function DetailPage({ id }: { id: string }) {
       {/* ── Related ──────────────────────────────────────────── */}
       <div className="mx-auto max-w-7xl px-4 md:px-6">
         <h2 className="reveal font-display text-[22px] font-bold text-ink">You might also like</h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        
+        {/* Same row mechanic as the listing grid: hovering one cell grows it and
+            the rest of the row give back exactly what it takes, so the row's
+            total width never moves. */}
+        <div
+          className="card-row mt-4 flex flex-col gap-4 sm:flex-row"
+          style={
+            {
+              "--cell-grow": 1 + HOVER_GROW,
+              "--cell-shrink": related.length > 1 ? 1 - HOVER_GROW / (related.length - 1) : 1,
+            } as CSSProperties
+          }
+        >
           {related.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => go({ name: "detail", id: p.id })}
-              type="button"
-              className="reveal group overflow-hidden rounded-2xl border bg-white text-left shadow-sm transition hover:shadow-lg"
-            >
-              <ImageWithFallback img={p.img} grad={p.grad} alt={p.name} className="h-28" />
-              <div className="p-3">
-                <div className="line-clamp-1 font-display text-[14px] font-semibold leading-tight text-ink">{p.name}</div>
-                <div className="mt-1 flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1 text-[12px]">
-                    <Star size={11} fill="#F26B21" stroke="none" /> {p.rating.toFixed(1)}
-                  </span>
-                  <span className="font-bold tabular-nums text-ink">{formatINR(p.price)}</span>
-                </div>
+            <div key={p.id} className="card-cell min-w-0">
+              <div className="reveal">
+                <EditorialPackageCard pkg={p} compact />
               </div>
-            </button>
+            </div>
           ))}
         </div>
       </div>

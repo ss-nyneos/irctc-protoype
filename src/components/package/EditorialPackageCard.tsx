@@ -6,6 +6,9 @@ import { InclusionIcons } from "@/components/package/InclusionIcons";
 import { getPackageDetail } from "@/data/packageDetail";
 import { formatINR } from "@/utils/format";
 
+
+export const HOVER_GROW = 0.28;
+
 interface EditorialPackageCardProps {
   pkg: TourPackage;
   /** Wide tiles get a taller frame. */

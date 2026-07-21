@@ -23,7 +23,7 @@ import { packages, getPackageById } from "@/data/packages";
 import type { BudgetBand, Climate, Experience, TourPackage } from "@/types";
 // import { DestinationMarquee } from "@/components/common/DestinationMarquee";
 // import { AiPickBanner } from "@/components/home/AiPickBanner";
-import { EditorialPackageCard } from "@/components/package/EditorialPackageCard";
+import { EditorialPackageCard, HOVER_GROW } from "@/components/package/EditorialPackageCard";
 import { PackageListRow } from "@/components/package/PackageListRow";
 import { RecentPackagesDrawer } from "@/components/package/RecentPackagesDrawer";
 import { FilterPanel, type FilterSection } from "@/components/package/FilterPanel";
@@ -59,8 +59,6 @@ const recentPackages = packages.slice(0, 3);
 
 /** Two-up once there's room — the filter panel takes 30% of the row. */
 const columnsFor = (w: number) => (w >= 640 ? 2 : 1);
-/** How much extra width a hovered card claims from its row-mates. */
-const HOVER_GROW = 0.28;
 
 /** Slider bounds, rounded out to the nearest ₹500 either side of the catalogue. */
 const PRICE_MIN = Math.floor(Math.min(...packages.map((p) => p.price)) / 500) * 500;

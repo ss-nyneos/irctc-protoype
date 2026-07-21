@@ -6,7 +6,7 @@ import { getPackageById } from "@/data/packages";
 import { demoUser, getSuggestions, pastTours } from "@/data/mockProfile";
 import { ImageWithFallback } from "@/components/common/ImageWithFallback";
 import { DestinationMarquee } from "@/components/common/DestinationMarquee";
-import { PackageCard } from "@/components/package/PackageCard";
+import { EditorialPackageCard } from "@/components/package/EditorialPackageCard";
 
 export function MadeForYouPage() {
   const { back } = useRouter();
@@ -99,10 +99,10 @@ export function MadeForYouPage() {
           Picked for your travel style
         </h2>
 
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:auto-rows-[380px] lg:grid-cols-4">
+        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {recommended.map((pkg) => (
-            <div key={pkg.id} className="reveal relative h-full">
-              <PackageCard pkg={pkg} compact />
+            <div key={pkg.id} className="reveal relative">
+              <EditorialPackageCard pkg={pkg} compact />
             </div>
           ))}
         </div>
