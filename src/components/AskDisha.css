@@ -1,14 +1,14 @@
-.diksha {
+.disha {
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
 }
-.diksha__sub {
+.disha__sub {
   color: var(--ink-soft);
   line-height: 1.55;
   margin-top: -0.4rem;
 }
-.diksha__input {
+.disha__input {
   width: 100%;
   resize: vertical;
   padding: 1rem 1.1rem;
@@ -21,21 +21,21 @@
   line-height: 1.5;
   transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
 }
-.diksha__input::placeholder {
+.disha__input::placeholder {
   color: var(--ink-faint);
 }
-.diksha__input:focus {
+.disha__input:focus {
   outline: none;
   border-color: var(--blue);
   box-shadow: 0 0 0 3px rgba(36, 117, 238, 0.16);
 }
 
-.diksha__chips {
+.disha__chips {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
-.diksha__chip {
+.disha__chip {
   padding: 0.55rem 1rem;
   border-radius: 999px;
   border: 1px solid var(--line);
@@ -45,17 +45,17 @@
   font-weight: 600;
   transition: all 0.22s var(--ease);
 }
-.diksha__chip:hover {
+.disha__chip:hover {
   border-color: var(--blue);
   color: var(--black);
 }
-.diksha__chip.is-on {
+.disha__chip.is-on {
   background: var(--blue);
   border-color: var(--blue);
   color: #fff;
 }
 
-.diksha__go {
+.disha__go {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -68,33 +68,33 @@
   font-weight: 700;
   transition: background 0.25s var(--ease), transform 0.25s var(--ease);
 }
-.diksha__go:hover {
+.disha__go:hover {
   background: var(--blue-deep);
   transform: translateY(-1px);
 }
 
 /* ---- Results ---- */
-.diksha__resulthead {
+.disha__resulthead {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 1rem;
 }
-.diksha__resulthead h3 {
+.disha__resulthead h3 {
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--black);
 }
-.diksha__again {
+.disha__again {
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--blue);
 }
-.diksha__again:hover {
+.disha__again:hover {
   text-decoration: underline;
 }
 
-.diksha__list {
+.disha__list {
   display: flex;
   flex-direction: column;
   gap: 0.7rem;

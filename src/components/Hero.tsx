@@ -29,8 +29,11 @@ export default function Hero() {
           preload="auto"
         />
         <div className="hero__inner wrap">
+          {/* three solid bands, stacked in flag order: saffron, white, green */}
           <h1 className="hero__heading">
-            Explore the world<br />with IRCTC
+            <span className="hero__band hero__band--saffron">Explore</span>
+            <span className="hero__band hero__band--white">the world</span>
+            <span className="hero__band hero__band--green">with IRCTC</span>
           </h1>
 
           <form className="hstrip" onSubmit={onSubmit}>

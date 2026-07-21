@@ -59,16 +59,18 @@
   padding-inline: var(--gutter);
 }
 
-.arch {
+/* Named `svc`, not `arch`: base.css owns a global `.arch` motif that sets
+   `overflow: hidden`, which clipped the hover popup at the tile edge. */
+.svc {
   position: relative;
   aspect-ratio: 714 / 932;
   cursor: pointer;
 }
-.arch:hover {
+.svc:hover {
   z-index: 12;
 }
 /* golden glow that blooms inside the arch on hover */
-.arch::before {
+.svc::before {
   content: '';
   position: absolute;
   inset: 7% 10% 12%;
@@ -79,11 +81,11 @@
   pointer-events: none;
   transition: opacity 0.4s var(--ease);
 }
-.arch:hover::before {
+.svc:hover::before {
   opacity: 1;
 }
 
-.arch__frame {
+.svc__frame {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -93,12 +95,12 @@
   z-index: 1;
   transition: filter 0.4s var(--ease), transform 0.4s var(--ease);
 }
-.arch:hover .arch__frame {
+.svc:hover .svc__frame {
   filter: saturate(1.35) brightness(1.03)
     drop-shadow(0 8px 16px rgba(201, 140, 44, 0.4));
 }
 
-.arch__content {
+.svc__content {
   position: absolute;
   left: 13%;
   right: 13%;
@@ -111,39 +113,50 @@
   justify-content: center;
   gap: clamp(0.5rem, 1.1vw, 0.9rem);
 }
-.arch__icon {
+/* full-width box that wraps the icon: it gives the popup something to hang
+   off (its bottom edge is the icon's bottom edge) and keeps the popup's
+   width relative to the tile rather than to the glyph */
+.svc__glyph {
+  position: relative;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+.svc__icon {
   font-size: clamp(2.5rem, 4.4vw, 4.2rem);
   color: var(--p-icon);
 }
 /* uploaded PNG glyphs — sized to sit like the line icons */
-.arch__icon--img {
+.svc__icon--img {
   width: clamp(2.7rem, 4.7vw, 4.6rem);
   height: clamp(2.7rem, 4.7vw, 4.6rem);
   object-fit: contain;
 }
-.arch__label {
+.svc__label {
   font-family: var(--sans);
   font-weight: 500;
   font-size: clamp(0.75rem, 0.6rem + 0.42vw, 0.98rem);
-  color: var(--p-ink);
+  color: #000;
   line-height: 1.15;
   transition: opacity 0.25s var(--ease);
 }
 /* the popup takes the label's place on hover */
-.arch:hover .arch__label {
+.svc:hover .svc__label {
   opacity: 0;
 }
 
 /* ---- Hover popup ---------------------------------------------------- */
-.arch__pop {
+.svc__pop {
   position: absolute;
   left: 50%;
-  top: 47%;
-  width: min(96%, 244px);
+  top: 100%; /* the glyph's bottom edge — the icon stays fully visible */
+  margin-top: clamp(0.5rem, 1vw, 0.85rem);
+  width: min(130%, 244px); /* 130% of the 74%-wide content box ≈ 96% of the tile */
   transform: translate(-50%, 12px);
   z-index: 6;
   padding: clamp(0.95rem, 1.4vw, 1.25rem);
   text-align: left;
+  font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
   background: #fff;
   border-radius: 18px;
   box-shadow:
@@ -157,7 +170,7 @@
     transform 0.35s var(--ease),
     visibility 0s 0.35s;
 }
-.arch:hover .arch__pop {
+.svc:hover .svc__pop {
   opacity: 1;
   visibility: visible;
   transform: translate(-50%, 0);
@@ -166,29 +179,30 @@
     opacity 0.35s var(--ease),
     transform 0.35s var(--ease);
 }
-.arch__pop-title {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-weight: 600;
-  font-size: 1.08rem;
+.svc__pop-title {
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 1.02rem;
+  letter-spacing: -0.01em;
   color: var(--p-ink);
 }
-.arch__pop-desc {
+.svc__pop-desc {
   margin-top: 0.4rem;
   font-size: 0.87rem;
   line-height: 1.5;
   color: #6b5740;
 }
-.arch__pop-link {
+.svc__pop-link {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
   margin-top: 0.85rem;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-weight: 600;
-  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.92rem;
   color: var(--p-gold);
 }
-.arch__pop-circ {
+.svc__pop-circ {
   display: inline-grid;
   place-items: center;
   width: 27px;
@@ -198,7 +212,7 @@
   border: 1.4px solid var(--p-gold);
   transition: transform 0.3s var(--ease), background 0.3s var(--ease), color 0.3s var(--ease);
 }
-.arch__pop-link:hover .arch__pop-circ {
+.svc__pop-link:hover .svc__pop-circ {
   transform: translateX(2px);
   background: var(--p-gold);
   color: #fff;

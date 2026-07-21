@@ -6,7 +6,7 @@ import {
   type ReactNode,
 } from 'react'
 
-type ModalKind = 'login' | 'part-payment' | 'diksha' | null
+type ModalKind = 'login' | 'part-payment' | 'disha' | null
 
 export interface User {
   name: string
@@ -17,7 +17,7 @@ interface UIContextValue {
   user: User | null
   openLogin: () => void
   openPartPayment: () => void
-  openDiksha: () => void
+  openDisha: () => void
   close: () => void
   signIn: (name: string) => void
   signOut: () => void
@@ -31,7 +31,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
 
   const openLogin = useCallback(() => setModal('login'), [])
   const openPartPayment = useCallback(() => setModal('part-payment'), [])
-  const openDiksha = useCallback(() => setModal('diksha'), [])
+  const openDisha = useCallback(() => setModal('disha'), [])
   const close = useCallback(() => setModal(null), [])
   const signIn = useCallback((name: string) => {
     setUser({ name })
@@ -41,7 +41,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
 
   return (
     <UIContext.Provider
-      value={{ modal, user, openLogin, openPartPayment, openDiksha, close, signIn, signOut }}
+      value={{ modal, user, openLogin, openPartPayment, openDisha, close, signIn, signOut }}
     >
       {children}
     </UIContext.Provider>

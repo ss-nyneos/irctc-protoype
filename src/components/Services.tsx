@@ -45,24 +45,28 @@ export default function Services() {
       <div className="palace__grid">
         {SERVICES.map((s) => {
             return (
-              <div className="arch reveal" key={s.label}>
-                <img className="arch__frame" src={archFrame} alt="" aria-hidden="true" />
-                <div className="arch__content">
-                  {s.img ? (
-                    <img className="arch__icon arch__icon--img" src={s.img} alt="" aria-hidden="true" />
-                  ) : (
-                    s.Icon?.({ className: 'arch__icon' })
-                  )}
-                  <span className="arch__label">{s.label}</span>
-                </div>
+              <div className="svc reveal" key={s.label}>
+                <img className="svc__frame" src={archFrame} alt="" aria-hidden="true" />
+                <div className="svc__content">
+                  {/* the popup is anchored to the glyph so it always opens
+                      directly beneath the icon, never on top of it */}
+                  <span className="svc__glyph">
+                    {s.img ? (
+                      <img className="svc__icon svc__icon--img" src={s.img} alt="" aria-hidden="true" />
+                    ) : (
+                      s.Icon?.({ className: 'svc__icon' })
+                    )}
 
-                <div className="arch__pop" role="group" aria-label={s.label}>
-                  <h3 className="arch__pop-title">{s.label}</h3>
-                  <p className="arch__pop-desc">{s.blurb}</p>
-                  <a className="arch__pop-link" href="#services">
-                    Explore
-                    <span className="arch__pop-circ"><ChevronR /></span>
-                  </a>
+                    <div className="svc__pop" role="group" aria-label={s.label}>
+                      <h3 className="svc__pop-title">{s.label}</h3>
+                      <p className="svc__pop-desc">{s.blurb}</p>
+                      <a className="svc__pop-link" href="#services">
+                        Explore
+                        <span className="svc__pop-circ"><ChevronR /></span>
+                      </a>
+                    </div>
+                  </span>
+                  <span className="svc__label">{s.label}</span>
                 </div>
               </div>
             )

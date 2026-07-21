@@ -1,4 +1,4 @@
-import './AskDiksha.css'
+import './AskDisha.css'
 import { useState, type FormEvent } from 'react'
 import Modal from './Modal.tsx'
 import { useUI } from '../context/UI.tsx'
@@ -7,7 +7,7 @@ import { packages, type Package } from '../data/content.ts'
 import { Arrow, Star } from './Icons.tsx'
 
 /* ------------------------------------------------------------------
-   Diksha is a transparent, rules-based recommender: it scores the real
+   Disha is a transparent, rules-based recommender: it scores the real
    package catalogue against the traveller's words and chips. No model
    call — every result is explainable, which is why we show "why this".
    ------------------------------------------------------------------ */
@@ -155,7 +155,7 @@ const CHIPS = [
 
 const inr = (n: number) => '₹' + n.toLocaleString('en-IN')
 
-export default function AskDiksha() {
+export default function AskDisha() {
   const { close } = useUI()
   const { t } = usePrefs()
   const [query, setQuery] = useState('')
@@ -179,25 +179,25 @@ export default function AskDiksha() {
   const anyMatch = results?.some((r) => r.score > 0)
 
   return (
-    <Modal title={t('diksha.title')} eyebrow="AI trip recommender" onClose={close} wide>
+    <Modal title={t('disha.title')} eyebrow="AI trip recommender" onClose={close} wide>
       {!results ? (
-        <form className="diksha" onSubmit={onSubmit}>
-          <p className="diksha__sub">{t('diksha.sub')}</p>
+        <form className="disha" onSubmit={onSubmit}>
+          <p className="disha__sub">{t('disha.sub')}</p>
 
           <textarea
-            className="diksha__input"
+            className="disha__input"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={t('diksha.placeholder')}
+            placeholder={t('disha.placeholder')}
             rows={3}
           />
 
-          <div className="diksha__chips">
+          <div className="disha__chips">
             {CHIPS.map((c) => (
               <button
                 type="button"
                 key={c.id}
-                className={`diksha__chip ${chosen.includes(c.id) ? 'is-on' : ''}`}
+                className={`disha__chip ${chosen.includes(c.id) ? 'is-on' : ''}`}
                 onClick={() => toggleChip(c.id)}
                 aria-pressed={chosen.includes(c.id)}
               >
@@ -206,21 +206,21 @@ export default function AskDiksha() {
             ))}
           </div>
 
-          <button type="submit" className="diksha__go">
+          <button type="submit" className="disha__go">
             <Star />
-            {t('diksha.go')}
+            {t('disha.go')}
           </button>
         </form>
       ) : (
-        <div className="diksha">
-          <div className="diksha__resulthead">
-            <h3>{anyMatch ? t('diksha.results') : t('diksha.none')}</h3>
-            <button className="diksha__again" onClick={reset}>
-              {t('diksha.again')}
+        <div className="disha">
+          <div className="disha__resulthead">
+            <h3>{anyMatch ? t('disha.results') : t('disha.none')}</h3>
+            <button className="disha__again" onClick={reset}>
+              {t('disha.again')}
             </button>
           </div>
 
-          <ul className="diksha__list">
+          <ul className="disha__list">
             {results.map(({ pkg, reasons }) => (
               <li key={pkg.id} className="drec">
                 <img src={pkg.img} alt={pkg.place} className="drec__img" />
@@ -232,7 +232,7 @@ export default function AskDiksha() {
                   </p>
                   {reasons.length > 0 && (
                     <p className="drec__why">
-                      <strong>{t('diksha.why')}:</strong> {reasons.slice(0, 3).join(', ')}
+                      <strong>{t('disha.why')}:</strong> {reasons.slice(0, 3).join(', ')}
                     </p>
                   )}
                 </div>

@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { usePrefs } from '../context/Prefs.tsx'
 import { useUI } from '../context/UI.tsx'
-import logo from '../assets/irctc-logo-full.png'
+import logo from '../assets/irctc-emblem.png'
+import accessIcon from '../assets/graphic/log-in.png'
 import {
   ChevronR,
   Close,
@@ -56,7 +57,7 @@ export default function NavBar() {
     toggleHighlightLinks,
     toggleSeniorMode,
   } = usePrefs()
-  const { user, openLogin, openDiksha, openPartPayment, signOut } = useUI()
+  const { user, openLogin, openDisha, openPartPayment, signOut } = useUI()
   const [menu, setMenu] = useState<MenuKind>(null)
   const [mobile, setMobile] = useState(false)
   const [hidden, setHidden] = useState(false)
@@ -156,9 +157,8 @@ export default function NavBar() {
           </nav>
 
           <div className="nav__right">
-            <button className="nav__diksha" onClick={openDiksha}>
-              <span className="nav__diksha-dot" aria-hidden="true" />
-              {t('nav.diksha')}
+            <button className="nav__disha" onClick={openDisha}>
+              {t('nav.disha')}
             </button>
 
             <button
@@ -168,7 +168,7 @@ export default function NavBar() {
               aria-label={t('nav.access')}
               title={t('nav.access')}
             >
-              <AccessGlyph />
+              <img className="nav__icon-img" src={accessIcon} alt="" aria-hidden="true" />
             </button>
 
             <button
@@ -342,22 +342,5 @@ export default function NavBar() {
         )}
       </div>
     </header>
-  )
-}
-
-/* Universal accessibility glyph (person in a circle) */
-function AccessGlyph() {
-  return (
-    <svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true">
-      <circle cx="12" cy="12" r="9.2" fill="none" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="12" cy="7.6" r="1.5" fill="currentColor" />
-      <path
-        d="M7.4 10.4h9.2M12 10.8v4.2m0 0-2.1 3.6M12 15l2.1 3.6"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
   )
 }

@@ -61,12 +61,15 @@
   border: 1px solid var(--line);
   display: block;
 }
+/* irctc-emblem.png is the full lock-up cropped to just the swirl, with the
+   emblem centred in the frame — so it simply fits the circle, no offsets. */
 .nav__badge img {
   position: absolute;
-  width: 172%;
-  max-width: none;
-  left: -36%;
-  top: -3%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
 }
 .nav__word {
   display: flex;
@@ -132,14 +135,17 @@
   transform: rotate(-90deg);
 }
 
+/* Ask Disha / accessibility / My Space are three different shapes sitting
+   side by side, so they need more air between them than the plain links do */
 .nav__right {
   display: flex;
   align-items: center;
-  gap: 0.15rem;
+  gap: 0.6rem;
+  margin-left: 0.5rem;
 }
 
-/* Ask Diksha — a normal nav item, with a small live dot */
-.nav__diksha {
+/* Ask Disha — a normal nav item */
+.nav__disha {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -152,27 +158,10 @@
   white-space: nowrap;
   transition: background 0.25s var(--ease), color 0.25s var(--ease);
 }
-.nav__diksha:hover {
+.nav__disha:hover {
   background: var(--paper-2);
   color: var(--black);
 }
-.nav__diksha-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--blue);
-  box-shadow: 0 0 0 0 rgba(36, 117, 238, 0.8);
-  animation: dikshaPulse 2.4s var(--ease) infinite;
-}
-@keyframes dikshaPulse {
-  0% { box-shadow: 0 0 0 0 rgba(36, 117, 238, 0.7); }
-  70% { box-shadow: 0 0 0 6px rgba(36, 117, 238, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(36, 117, 238, 0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .nav__diksha-dot { animation: none; }
-}
-
 .nav__icon {
   display: grid;
   place-items: center;
@@ -188,9 +177,37 @@
   background: var(--paper-2);
   color: var(--black);
 }
+/* the accessibility trigger stays neutral when open — no blue fill */
 .nav__icon.is-open {
+  background: var(--paper-2);
+  color: var(--black);
+}
+/* PNG glyph: the artwork is solid black, so it is inverted for dark theme */
+.nav__icon-img {
+  width: 21px;
+  height: 21px;
+  display: block;
+  opacity: 0.72;
+  transition: opacity 0.25s var(--ease);
+}
+.nav__icon:hover .nav__icon-img,
+.nav__icon.is-open .nav__icon-img {
+  opacity: 1;
+}
+:root[data-theme='dark'] .nav__icon-img {
+  filter: invert(1);
+}
+
+/* My Space always reads as a solid blue pill */
+.nav__space,
+.nav__space:hover,
+.nav__space.is-open {
   background: var(--blue);
   color: #fff;
+}
+.nav__space:hover,
+.nav__space.is-open {
+  background: var(--blue-deep);
 }
 .nav__space svg {
   font-size: 1.15rem;
@@ -503,13 +520,8 @@
   .panel--mobile {
     display: flex;
   }
-  .nav__diksha {
+  .nav__disha {
     padding: 0.72rem 0.95rem;
     font-size: 0.88rem;
-  }
-}
-@media (max-width: 560px) {
-  .nav__diksha span:not(.nav__diksha-dot) {
-    display: none;
   }
 }

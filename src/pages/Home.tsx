@@ -12,6 +12,7 @@ import MonthlyTrips from '../components/MonthlyTrips.tsx'
 import Faq from '../components/Faq.tsx'
 import AppPromo from '../components/AppPromo.tsx'
 import ExploreCta from '../components/ExploreCta.tsx'
+import DishaFab from '../components/DishaFab.tsx'
 
 export default function Home() {
   return (
@@ -30,6 +31,7 @@ export default function Home() {
       <Faq />
       <AppPromo />
       <ExploreCta />
+      <DishaFab />
     </main>
   )
 }
