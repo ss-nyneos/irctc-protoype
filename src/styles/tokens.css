@@ -1,0 +1,102 @@
+/* ============================================================
+   IRCTC Tourism — Design Tokens
+   Swiss-minimal: Helvetica, black headings, #2475EE blue,
+   light neutral surfaces. No navy backgrounds.
+   ============================================================ */
+
+.design-1-root {
+  /* ---- Surfaces (white-dominant) ---- */
+  --paper: #ffffff; /* main page */
+  --paper-2: #f5f6f8; /* barely-there recessed bands */
+  --card: #ffffff; /* lifted surfaces */
+
+  /* ---- Ink ---- */
+  --black: #0a0a0a; /* headings */
+  --ink: #17191f; /* body text */
+  --ink-soft: #565c68; /* secondary text */
+  --ink-faint: #8b909b; /* meta / placeholder */
+
+  /* ---- Brand accent ---- */
+  --blue: #2475ee; /* primary — buttons, pills, links, active */
+  --blue-ink: #1a5fd0; /* legible blue for text on light */
+  --blue-deep: #1450b4;
+  --green: #16a34a; /* semantic success only */
+  --navy: #17191f; /* dark ink for marks (no longer a background) */
+
+  /* legacy alias: everything that referenced saffron is now blue */
+  --saffron: var(--blue);
+  --saffron-ink: var(--blue-ink);
+
+  /* ---- Lines ---- */
+  --line: rgba(23, 25, 31, 0.12);
+  --line-strong: rgba(23, 25, 31, 0.22);
+  --line-dark: rgba(255, 255, 255, 0.18);
+  --line-dark-strong: rgba(255, 255, 255, 0.34);
+
+  /* ---- On-dark (glass over media only) ---- */
+  --on-dark: #ffffff;
+  --on-dark-soft: rgba(255, 255, 255, 0.74);
+  --on-dark-faint: rgba(255, 255, 255, 0.52);
+
+  /* ---- Type: Helvetica everywhere ---- */
+  --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --serif: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --deva: 'Kohinoor Devanagari', 'Noto Sans Devanagari', var(--sans);
+
+  /* ---- Radii ---- */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 30px;
+
+  /* ---- Elevation ---- */
+  --shadow-sm: 0 1px 2px rgba(23, 25, 31, 0.05),
+    0 4px 14px rgba(23, 25, 31, 0.05);
+  --shadow-md: 0 8px 24px rgba(23, 25, 31, 0.08),
+    0 2px 6px rgba(23, 25, 31, 0.05);
+  --shadow-lg: 0 30px 70px -24px rgba(15, 20, 30, 0.28),
+    0 10px 30px -18px rgba(15, 20, 30, 0.2);
+  --shadow-float: 0 40px 90px -34px rgba(15, 20, 30, 0.4);
+
+  /* ---- Layout ---- */
+  /* one consistent content width across every section */
+  --wrap: 1440px;
+  --wrap-wide: 1440px;
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
+  --section-y: clamp(6rem, 12vw, 11rem);
+
+  /* ---- Motion ---- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* ============================================================
+   Dark theme — set on <html data-theme="dark"> by the
+   accessibility menu. Surfaces invert; blue lifts for contrast.
+   ============================================================ */
+[data-theme='dark'] .design-1-root {
+  --paper: #0d0f13;
+  --paper-2: #14171d;
+  --card: #171b22;
+
+  --black: #ffffff; /* headings */
+  --ink: #e8eaee;
+  --ink-soft: #a2a9b6;
+  --ink-faint: #7b8290;
+
+  --blue: #4f92ff;
+  --blue-ink: #7fb0ff;
+  --blue-deep: #2f74e6;
+  --navy: #e8eaee;
+
+  --line: rgba(255, 255, 255, 0.13);
+  --line-strong: rgba(255, 255, 255, 0.26);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5), 0 4px 14px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 30px 70px -24px rgba(0, 0, 0, 0.8),
+    0 10px 30px -18px rgba(0, 0, 0, 0.6);
+  --shadow-float: 0 40px 90px -34px rgba(0, 0, 0, 0.85);
+}
+

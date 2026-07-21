@@ -5,8 +5,8 @@
 :root {
   --background: 0 0% 100%;
   --foreground: 215 55% 12%;
-  --card: 0 0% 100%;
-  --card-foreground: 215 55% 12%;
+  --card-hsl: 0 0% 100%;
+  --card-foreground-hsl: 215 55% 12%;
   --primary: 218 82% 23%;
   --primary-foreground: 0 0% 100%;
   --secondary: 218 45% 95%;
@@ -16,17 +16,17 @@
   --accent: 201 90% 45%;
   --accent-foreground: 0 0% 100%;
   --destructive: 0 72% 45%;
-  --border: 218 30% 88%;
+  --border-hsl: 218 30% 88%;
   --input: 218 30% 88%;
   --ring: 220 70% 43%;
   --radius: 0.85rem;
-  --navy: 218 82% 23%;
-  --royal: 220 70% 45%;
-  --azure: 201 90% 45%;
+  --navy-hsl: 218 82% 23%;
+  --royal-hsl: 220 70% 45%;
+  --azure-hsl: 201 90% 45%;
 }
 
 * {
-  border-color: hsl(var(--border));
+  border-color: hsl(var(--border-hsl));
 }
 
 html {
@@ -68,7 +68,7 @@ h4,
 }
 
 .accent-bar {
-  background: linear-gradient(90deg, hsl(var(--navy)) 0%, hsl(var(--royal)) 50%, hsl(var(--azure)) 100%);
+  background: linear-gradient(90deg, hsl(var(--navy-hsl)) 0%, hsl(var(--royal-hsl)) 50%, hsl(var(--azure-hsl)) 100%);
 }
 
 .glass {

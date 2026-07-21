@@ -89,7 +89,7 @@ export function StatsSection() {
 
       <div className="stagger relative z-10 mx-auto grid max-w-7xl gap-6 px-4 md:px-6 lg:grid-cols-12 lg:gap-8">
         {/* ── Anchor stat ─────────────────────────────────────────── */}
-        <div className="relative flex min-h-[220px] flex-col justify-center overflow-hidden rounded-[28px] p-7 shadow-[0_24px_60px_-28px_hsl(var(--navy)/0.55)] ring-1 ring-white/15 lg:col-span-3 lg:min-h-[300px]">
+        <div className="relative flex min-h-[220px] flex-col justify-center overflow-hidden rounded-[28px] p-7 shadow-[0_24px_60px_-28px_hsl(var(--navy-hsl)/0.55)] ring-1 ring-white/15 lg:col-span-3 lg:min-h-[300px]">
           <ParallaxImage src={cardImg1} alt="Two travellers trekking a coastal ridge at golden hour" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/45 to-black/20 backdrop-blur-[1px]" />
           <CornerArcs className="pointer-events-none absolute -right-4 -top-4 h-44 w-44 text-white/[0.14]" />
@@ -102,7 +102,7 @@ export function StatsSection() {
         </div>
 
         {/* ── Photo card ──────────────────────────────────────────── */}
-        <div className="relative min-h-[220px] overflow-hidden rounded-[28px] shadow-[0_24px_60px_-28px_hsl(var(--navy)/0.55)] ring-1 ring-white/15 lg:col-span-4 lg:min-h-[300px]">
+        <div className="relative min-h-[220px] overflow-hidden rounded-[28px] shadow-[0_24px_60px_-28px_hsl(var(--navy-hsl)/0.55)] ring-1 ring-white/15 lg:col-span-4 lg:min-h-[300px]">
           {/* Each card drifts at a slightly different rate — identical parallax
               across a row just reads as the row itself moving. */}
           <ParallaxImage src={cardImg2} alt="A family walking towards their flight with luggage" strength={0.17} />
@@ -117,7 +117,7 @@ export function StatsSection() {
         </div>
 
         {/* ── Combined stats card ─────────────────────────────────── */}
-        <div className="relative flex min-h-[220px] flex-col overflow-hidden rounded-[28px] p-7 shadow-[0_24px_60px_-28px_hsl(var(--navy)/0.55)] ring-1 ring-white/15 lg:col-span-5 lg:min-h-[300px]">
+        <div className="relative flex min-h-[220px] flex-col overflow-hidden rounded-[28px] p-7 shadow-[0_24px_60px_-28px_hsl(var(--navy-hsl)/0.55)] ring-1 ring-white/15 lg:col-span-5 lg:min-h-[300px]">
           <ParallaxImage src={cardImg3} alt="A traveller watching hot-air balloons rise at sunrise" strength={0.09} />
           <div className="absolute inset-0 bg-gradient-to-br from-black/72 via-black/55 to-black/72 backdrop-blur-[1px]" />
 

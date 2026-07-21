@@ -1,0 +1,527 @@
+/* ============================================================
+   Floating pill navbar
+   ============================================================ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  padding: 18px var(--gutter) 0;
+  pointer-events: none;
+  transform: translateY(0);
+  transition: transform 0.35s var(--ease);
+}
+.nav--hidden {
+  transform: translateY(-130%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav {
+    transition: none;
+  }
+}
+/* shrink-to-fit and centred */
+.nav__shell {
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+  position: relative;
+  pointer-events: auto;
+}
+
+.nav__pill {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  backdrop-filter: blur(18px) saturate(1.3);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 8px 7px 7px;
+  box-shadow: 0 10px 34px -14px rgba(10, 15, 25, 0.35);
+}
+
+/* Brand: circular emblem badge + bilingual wordmark */
+.nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: none;
+  padding-right: 0.5rem;
+}
+.nav__badge {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  flex: none;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+  display: block;
+}
+/* irctc-emblem.png is the full lock-up cropped to just the swirl, with the
+   emblem centred in the frame — so it simply fits the circle, no offsets. */
+.nav__badge img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+}
+.nav__word {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+.nav__word-top {
+  font-size: 1.12rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.nav__word-top em {
+  font-style: normal;
+  color: #f58220; /* IRCTC orange */
+}
+.nav__word-top b {
+  font-weight: 700;
+  color: #5ca940; /* Tourism green */
+}
+.nav__word-sub {
+  font-family: var(--deva), var(--sans);
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  margin-top: 3px;
+  letter-spacing: 0.01em;
+}
+
+/* Items */
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  margin-left: 0.35rem;
+}
+.nav__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.72rem 1.15rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  transition: background 0.25s var(--ease), color 0.25s var(--ease);
+}
+.nav__item:hover {
+  background: var(--paper-2);
+  color: var(--black);
+}
+.nav__item.is-open {
+  background: var(--blue);
+  color: #fff;
+}
+.nav__chev {
+  font-size: 1rem;
+  transform: rotate(90deg);
+  transition: transform 0.3s var(--ease);
+}
+.nav__item.is-open .nav__chev {
+  transform: rotate(-90deg);
+}
+
+/* Ask Disha / accessibility / My Space are three different shapes sitting
+   side by side, so they need more air between them than the plain links do */
+.nav__right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-left: 0.5rem;
+}
+
+/* Ask Disha — a normal nav item */
+.nav__disha {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.72rem 1.15rem;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.25s var(--ease), color 0.25s var(--ease);
+}
+.nav__disha:hover {
+  background: var(--paper-2);
+  color: var(--black);
+}
+.nav__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  color: var(--ink-soft);
+  transition: background 0.25s var(--ease), color 0.25s var(--ease);
+}
+.nav__icon:hover {
+  background: var(--paper-2);
+  color: var(--black);
+}
+/* the accessibility trigger stays neutral when open — no blue fill */
+.nav__icon.is-open {
+  background: var(--paper-2);
+  color: var(--black);
+}
+/* PNG glyph: the artwork is solid black, so it is inverted for dark theme */
+.nav__icon-img {
+  width: 21px;
+  height: 21px;
+  display: block;
+  opacity: 0.72;
+  transition: opacity 0.25s var(--ease);
+}
+.nav__icon:hover .nav__icon-img,
+.nav__icon.is-open .nav__icon-img {
+  opacity: 1;
+}
+:root[data-theme='dark'] .nav__icon-img {
+  filter: invert(1);
+}
+
+/* My Space always reads as a solid blue pill */
+.nav__space,
+.nav__space:hover,
+.nav__space.is-open {
+  background: var(--blue);
+  color: #fff;
+}
+.nav__space:hover,
+.nav__space.is-open {
+  background: var(--blue-deep);
+}
+.nav__space svg {
+  font-size: 1.15rem;
+}
+
+.nav__burger {
+  display: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  color: var(--ink);
+}
+
+/* ============================================================
+   Dropdown panels
+   ============================================================ */
+.panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 1.4rem;
+  animation: panelIn 0.28s var(--ease);
+  z-index: 3;
+}
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(-8px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel { animation: none; }
+}
+
+/* Mega */
+.panel--mega {
+  left: 0;
+  width: min(520px, calc(100vw - 2 * var(--gutter)));
+}
+.panel__lead {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--black);
+  margin-bottom: 1.4rem;
+}
+.panel__lead-arrow {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--black);
+  color: var(--card);
+  font-size: 1.1rem;
+  transition: transform 0.35s var(--ease);
+}
+.panel__lead:hover .panel__lead-arrow {
+  transform: translateX(4px);
+}
+.panel__rows li a {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.95rem 0.2rem;
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-weight: 600;
+  transition: color 0.25s var(--ease), padding-left 0.25s var(--ease);
+}
+.panel__rows li:last-child a {
+  border-bottom: 1px solid var(--line);
+}
+.panel__rows li a svg:first-child {
+  font-size: 1.2rem;
+  color: var(--blue);
+}
+.panel__row-arrow {
+  margin-left: auto;
+  font-size: 1.05rem;
+}
+.panel__rows li a:hover {
+  color: var(--black);
+  padding-left: 0.5rem;
+}
+
+/* ---- Accessibility controls ---- */
+.panel--access {
+  right: 0;
+  width: min(430px, calc(100vw - 2 * var(--gutter)));
+  padding: clamp(1.1rem, 2vw, 1.5rem);
+}
+.a11y__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+}
+.a11y__title {
+  font-family: var(--sans);
+  font-size: 1.32rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--black);
+}
+.a11y__close {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: 1.25rem;
+  transition: background 0.25s var(--ease), color 0.25s var(--ease);
+}
+.a11y__close:hover {
+  background: var(--paper-2);
+  color: var(--black);
+}
+
+.a11y__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.a11y__tile {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-align: left;
+  padding: 0.85rem 0.95rem;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.25;
+  box-shadow: var(--shadow-sm);
+  transition:
+    border-color 0.25s var(--ease),
+    background 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+.a11y__tile svg {
+  flex: none;
+  font-size: 1.4rem;
+  color: #f2751f; /* accessibility icons read orange */
+}
+.a11y__tile:hover:not(:disabled) {
+  border-color: #f2751f;
+  transform: translateY(-1px);
+}
+.a11y__tile.is-on {
+  border-color: #f2751f;
+  background: rgba(242, 117, 31, 0.08);
+}
+.a11y__tile:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 460px) {
+  .a11y__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* My Space */
+.panel--space {
+  right: 0;
+  width: min(320px, calc(100vw - 2 * var(--gutter)));
+}
+.space__head {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.space__head strong {
+  display: block;
+  color: var(--black);
+  font-size: 1.02rem;
+}
+.space__head small {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+  line-height: 1.45;
+  margin-top: 2px;
+}
+.space__avatar {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.space__avatar--anon {
+  background: var(--paper-2);
+  color: var(--ink-soft);
+  font-size: 1.3rem;
+}
+.space__list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.4rem;
+}
+.space__list a,
+.space__list button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.6rem;
+  padding: 0.75rem 0.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-align: left;
+  transition: color 0.25s var(--ease), padding-left 0.25s var(--ease);
+}
+.space__list a:hover,
+.space__list button:hover {
+  color: var(--black);
+  padding-left: 0.4rem;
+}
+.space__list svg {
+  color: var(--blue);
+}
+.space__cta,
+.space__signout {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: var(--blue);
+  color: #fff;
+  transition: background 0.25s var(--ease);
+}
+.space__cta:hover,
+.space__signout:hover {
+  background: var(--blue-deep);
+}
+.space__signout {
+  background: var(--paper-2);
+  color: var(--ink);
+}
+.space__signout:hover {
+  background: var(--line);
+}
+
+/* Mobile sheet */
+.panel--mobile {
+  left: 0;
+  right: 0;
+  display: none;
+  flex-direction: column;
+}
+.panel--mobile a {
+  padding: 0.9rem 0.4rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--black);
+  border-bottom: 1px solid var(--line);
+}
+.panel--mobile a:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 1200px) {
+  .nav__word {
+    display: none;
+  }
+}
+@media (max-width: 1120px) {
+  .nav__space-label {
+    display: none;
+  }
+  .nav__space {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 50%;
+  }
+}
+@media (max-width: 900px) {
+  .nav__links {
+    display: none;
+  }
+  .nav__burger {
+    display: grid;
+  }
+  .panel--mobile {
+    display: flex;
+  }
+  .nav__disha {
+    padding: 0.72rem 0.95rem;
+    font-size: 0.88rem;
+  }
+}
