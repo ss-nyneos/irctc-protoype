@@ -76,6 +76,83 @@
   --ease-brand-in-out: var(--ease-in-out);
 }
 
+/* ============================================================
+   Site type scale — the single source of truth for typography.
+
+   A plain `@theme` block (not `inline`), so Tailwind both generates the
+   utilities AND emits the variables onto :root. That means the same values
+   are reachable two ways, and can never drift apart:
+
+     • converted components →  class="text-nav"
+     • plain CSS            →  font-size: var(--text-nav);
+                               line-height: var(--text-nav--line-height);
+
+   Each entry carries size + line-height + letter-spacing + weight, so one
+   class applies the whole spec. Add future headings here in the same shape
+   rather than hardcoding sizes at the call site.
+
+   Note on units: letter-spacing has no percentage form in CSS, so the
+   spec'd percentages are expressed as the equivalent em values (-4% = -0.04em).
+   ============================================================ */
+@theme {
+  /* full-bleed statement headings over imagery — 64px / -4%.
+     Line-height and weight are intentionally not fixed here: the spec only
+     covered size and tracking, so each call site still sets its own. */
+  --text-display: 64px;
+  --text-display--letter-spacing: -0.04em;
+
+  /* card name and the sub-label under it — 26px / -4% and 22px / 0%.
+     Weight and line-height stay at the call site; only size and tracking
+     were specified. */
+  /* NB: not `--text-card` — `--color-card` already exists and Tailwind's
+     `text-*` namespace is shared, so `text-card` compiles to a COLOUR. */
+  --text-card-title: 26px;
+  --text-card-title--letter-spacing: -0.04em;
+  --text-card-sub: 22px;
+  --text-card-sub--letter-spacing: 0em;
+
+  /* navbar options (not the IRCTC Tourism wordmark) — 18px / 154% / 0 / 700 */
+  --text-nav: 18px;
+  --text-nav--line-height: 154%;
+  --text-nav--letter-spacing: 0em;
+  --text-nav--font-weight: 700;
+
+  /* service labels in the dome AND the hover info box — one size for both.
+     The info box keeps its own line-height on the body copy (100% would
+     collapse a multi-line paragraph); hierarchy there comes from weight and
+     colour rather than size. */
+  --text-svc: 16px;
+  --text-svc--line-height: 100%;
+  --text-svc--letter-spacing: -0.04em;
+  --text-svc--font-weight: 500;
+
+  /* FAQ questions — 22px / 32px / 0 / 700 */
+  --text-faq: 22px;
+  --text-faq--line-height: 32px;
+  --text-faq--letter-spacing: 0em;
+  --text-faq--font-weight: 700;
+
+  /* decorative script label on the Experiences cards — the one deliberate
+     exception to Helvetica; the face is loaded in index.html.
+     Both sizes are 100% line-height / 0 tracking / weight 400.
+     Tall cards 114.73px, the short band 43.85px. */
+  --font-script: 'Island Moments', cursive;
+  --text-script: 114.73px;
+  --text-script--line-height: 100%;
+  --text-script--letter-spacing: 0em;
+  --text-script--font-weight: 400;
+  --text-script-sm: 43.85px;
+  --text-script-sm--line-height: 100%;
+  --text-script-sm--letter-spacing: 0em;
+  --text-script-sm--font-weight: 400;
+
+  /* copy set over imagery, e.g. the monthly trip tiles — 22.62px / 100% / 0 / 400 */
+  --text-tile: 22.62px;
+  --text-tile--line-height: 100%;
+  --text-tile--letter-spacing: 0em;
+  --text-tile--font-weight: 400;
+}
+
 /* Keyframed animations lifted out of the component stylesheets. These live in
    a plain `@theme` block (not `inline`) so Tailwind emits the @keyframes too. */
 @theme {

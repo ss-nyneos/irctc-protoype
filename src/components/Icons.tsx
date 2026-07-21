@@ -270,19 +270,6 @@ export const Senior = (p: IconProps) =>
     p,
   )
 
-/* Disha's avatar — lucide ships no gendered person icon, so this is drawn to
-   lucide's grammar (24 grid, 1.6 stroke, round caps): shoulder-length hair
-   over a `user-round` head and shoulders. */
-export const Lady = (p: IconProps) =>
-  wrap(
-    <>
-      <circle cx="12" cy="8.4" r="3.3" />
-      <path d="M6.6 17.4c.6-.9.8-1.9.8-3V8.8a4.6 4.6 0 0 1 9.2 0v5.6c0 1.1.2 2.1.8 3" />
-      <path d="M4.6 21c.5-3.1 3.5-4.8 7.4-4.8s6.9 1.7 7.4 4.8" />
-    </>,
-    p,
-  )
-
 export const iconMap: Record<string, (p: IconProps) => ReactNode> = {
   plane: Plane,
   bed: Bed,

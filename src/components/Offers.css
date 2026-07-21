@@ -61,7 +61,11 @@
   overflow: hidden;
   height: clamp(248px, 21.5vw, 322px);
   background: var(--card);
-  box-shadow: 0 14px 34px -20px rgba(20, 30, 60, 0.4);
+}
+/* Only the white mosaic cards get an edge: they sit on white, so without one
+   they have no boundary at all. The ferry card is navy and defines its own. */
+.offer--tile {
+  border: 1.5px solid var(--line-strong);
 }
 
 /* ============================================================
@@ -216,29 +220,6 @@
 }
 
 /* ---- circular icon badge ---- */
-.offer__badge {
-  position: absolute;
-  z-index: 3;
-  display: grid;
-  place-items: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: #fff;
-  color: #4b3fb0;
-  font-size: 1.4rem;
-  box-shadow: 0 6px 18px -6px rgba(20, 30, 60, 0.45);
-}
-.offer--ferry .offer__badge {
-  right: 0.9rem;
-  bottom: 0.9rem;
-}
-.offer--tile .offer__badge {
-  left: 50%;
-  transform: translate(-50%, -50%);
-  bottom: 3.5rem;
-}
-
 @media (max-width: 980px) {
   .offers__grid {
     grid-template-columns: 1fr 1fr;

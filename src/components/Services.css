@@ -51,12 +51,16 @@
 .palace__grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: clamp(0.4rem, 1vw, 1rem) clamp(0.2rem, 0.7vw, 0.7rem);
+  /* tighter column gap than the row gap: the arches are the artwork, so the
+     width freed up here goes straight into each dome */
+  gap: clamp(0.4rem, 1vw, 1rem) clamp(0.1rem, 0.35vw, 0.35rem);
   align-items: start;
   width: 100%;
   max-width: var(--wrap-wide);
   margin-inline: auto;
-  padding-inline: var(--gutter);
+  /* deliberately narrower than the global --gutter so the six domes read a
+     touch larger; the section header still uses the standard gutter */
+  padding-inline: clamp(0.75rem, 2vw, 1.5rem);
 }
 
 /* Named `svc`, not `arch`: base.css owns a global `.arch` motif that sets
@@ -134,10 +138,12 @@
 }
 .svc__label {
   font-family: var(--sans);
-  font-weight: 500;
-  font-size: clamp(0.75rem, 0.6rem + 0.42vw, 0.98rem);
+  font-weight: var(--text-svc--font-weight);
+  font-size: var(--text-svc);
+  letter-spacing: var(--text-svc--letter-spacing);
+  line-height: var(--text-svc--line-height);
+  text-align: center;
   color: #000;
-  line-height: 1.15;
   transition: opacity 0.25s var(--ease);
 }
 /* the popup takes the label's place on hover */
@@ -181,15 +187,17 @@
 }
 .svc__pop-title {
   font-family: inherit;
-  font-weight: 700;
-  font-size: 1.02rem;
-  letter-spacing: -0.01em;
+  font-weight: var(--text-svc--font-weight);
+  font-size: var(--text-svc);
+  letter-spacing: var(--text-svc--letter-spacing);
+  line-height: var(--text-svc--line-height);
   color: var(--p-ink);
 }
 .svc__pop-desc {
   margin-top: 0.4rem;
-  font-size: 0.87rem;
-  line-height: 1.5;
+  font-size: var(--text-svc);
+  letter-spacing: var(--text-svc--letter-spacing);
+  line-height: 1.5; /* not the token's 100% — this wraps to several lines */
   color: #6b5740;
 }
 .svc__pop-link {
@@ -199,7 +207,8 @@
   margin-top: 0.85rem;
   font-family: inherit;
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: var(--text-svc);
+  letter-spacing: var(--text-svc--letter-spacing);
   color: var(--p-gold);
 }
 .svc__pop-circ {

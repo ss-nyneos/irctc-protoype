@@ -7,13 +7,14 @@ const card =
   'transition-[transform,opacity,filter] duration-700 ease-brand ' +
   'min-[641px]:w-[clamp(280px,34vw,430px)]'
 
-/* frosted, luminous glass with a bright specular top edge */
+/* Plain transparent panel — no backdrop blur or saturation, so the photograph
+   reads straight through it. A light dark tint stays behind the copy because
+   without the blur there is nothing else keeping white text legible on a
+   bright frame; the text shadows do the rest. */
 const panel =
-  'absolute inset-x-[0.9rem] bottom-[0.9rem] rounded-[22px] px-[1.35rem] pt-[1.1rem] pb-[1.2rem] ' +
-  'border border-white/38 ' +
-  'bg-[linear-gradient(180deg,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0.03)_55%),rgba(14,22,40,0.3)] ' +
-  'backdrop-blur-[26px] backdrop-saturate-[1.85] backdrop-brightness-[1.04] ' +
-  'shadow-[inset_0_1.5px_0_rgba(255,255,255,0.6),inset_0_-18px_26px_-22px_rgba(255,255,255,0.28),0_16px_40px_-16px_rgba(4,10,25,0.55)] ' +
+  'absolute inset-x-[0.9rem] bottom-[0.9rem] rounded-[22px] px-[0.85rem] pt-[1.1rem] pb-[1.2rem] ' +
+  'border border-white/30 bg-[rgba(10,16,30,0.22)] ' +
+  'shadow-[inset_0_1.5px_0_rgba(255,255,255,0.4)] ' +
   'transition-[opacity,transform] duration-500 ease-brand delay-150'
 
 const arrow =

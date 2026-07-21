@@ -42,7 +42,7 @@ export const strings = {
     'hero.explore': 'Explore',
 
     'sec.trending': 'Trending journeys this season',
-    'sec.experiences': 'Come for the sights, stay for the rituals.',
+    'sec.experiences': 'Come for the sights, stay for the rituals',
     'sec.destinations': 'The best-kept secrets of India',
     'sec.trains': 'Some journeys are the destination.',
     'sec.pilgrimage': 'Faith, on rails.',
@@ -58,7 +58,6 @@ export const strings = {
     'disha.results': 'Disha recommends',
     'disha.none': 'Nothing matched that exactly — here are the closest journeys.',
     'disha.why': 'Why this',
-    'disha.fab': 'Plan a trip with me',
   },
   hi: {
     'nav.packages': 'पैकेज',
@@ -114,7 +113,6 @@ export const strings = {
     'disha.results': 'दिशा की सिफ़ारिश',
     'disha.none': 'बिल्कुल मेल नहीं मिला — ये सबसे नज़दीकी यात्राएँ हैं।',
     'disha.why': 'क्यों',
-    'disha.fab': 'मेरे साथ यात्रा बनाइए',
   },
 } as const
 

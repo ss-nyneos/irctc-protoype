@@ -54,9 +54,14 @@ export default function Faq() {
                     <img
                       src={boat}
                       alt=""
+                      /* The lateral flip lives in the keyframes, NOT in a
+                         `-scale-x-100` utility: Tailwind v4's scale utilities
+                         set the standalone `scale` property, which would
+                         compose with the keyframes' own scaleX(-1) and cancel
+                         it out. motion-reduce keeps the flip without the bob. */
                       className="absolute right-[-2%] bottom-[3%] z-[1] hidden h-[92%] w-auto
-                                 -scale-x-100 animate-faq-boat-bob motion-reduce:animate-none
-                                 min-[701px]:block"
+                                 animate-faq-boat-bob min-[701px]:block
+                                 motion-reduce:animate-none motion-reduce:[transform:scaleX(-1)]"
                     />
                   </div>
                 )}
@@ -86,8 +91,7 @@ export default function Faq() {
                     }`}
                   >
                     <span
-                      className={`text-[clamp(1.02rem,0.95rem+0.5vw,1.24rem)] leading-snug font-bold
-                                  tracking-[-0.01em] transition-colors duration-300 ease-brand
+                      className={`text-faq transition-colors duration-300 ease-brand
                                   ${isOpen ? 'text-white [text-shadow:0_2px_14px_rgba(4,40,90,0.5)]' : 'text-black'}`}
                     >
                       {f.q}
