@@ -7,6 +7,7 @@ import {
   Headset,
   LayoutGrid,
   MapPin,
+  Navigation,
   Rows3,
   ShieldCheck,
   Sparkles,
@@ -26,6 +27,7 @@ import { EditorialPackageCard } from "@/components/package/EditorialPackageCard"
 import { PackageListRow } from "@/components/package/PackageListRow";
 import { RecentPackagesDrawer } from "@/components/package/RecentPackagesDrawer";
 import { FilterPanel, type FilterSection } from "@/components/package/FilterPanel";
+import { PackageSearchBar, type SearchField } from "@/components/package/PackageSearchBar";
 import heroScene from "@/hero_scene.jpg";
 import { CompareModal } from "@/components/package/CompareModal";
 
@@ -34,6 +36,10 @@ const sortOptions = ["Recommended", "Price: Low to High", "Price: High to Low", 
 type SortOption = (typeof sortOptions)[number];
 
 const regions = [...new Set(packages.map((p) => p.region))].sort();
+/** Cities a package can be joined from — the "from" half of the search strip. */
+const departureCities = [...new Set(packages.map((p) => p.from))].sort();
+/** Anything the search strip leaves unset. Not a real value, so it never filters. */
+const ANY = "Any";
 const budgetBands: BudgetBand[] = ["Value", "Comfort", "Premium", "Luxury"];
 const climates: Climate[] = ["Cool", "Moderate", "Warm", "Tropical"];
 const experienceOptions: { k: Experience; label: string }[] = [
@@ -70,6 +76,7 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
   const { back } = useRouter();
   const ref = useReveal();
   const [category, setCategory] = useState(initialCategory ?? "All");
+  const [fromCity, setFromCity] = useState(ANY);
   const [sort, setSort] = useState<SortOption>("Recommended");
   const [selRegions, setSelRegions] = useState<string[]>([]);
   const [selBands, setSelBands] = useState<BudgetBand[]>([]);
@@ -91,10 +98,12 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
     selExperiences.length +
     (duration !== "Any" ? 1 : 0) +
     (category !== "All" ? 1 : 0) +
+    (fromCity !== ANY ? 1 : 0) +
     (maxPrice !== PRICE_DEFAULT ? 1 : 0);
 
   const clearFilters = () => {
     setCategory("All");
+    setFromCity(ANY);
     setSelRegions([]);
     setSelBands([]);
     setSelClimates([]);
@@ -112,6 +121,7 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
         return false;
       }
       if (p.price > maxPrice) return false;
+      if (fromCity !== ANY && p.from !== fromCity) return false;
       if (selRegions.length && !selRegions.includes(p.region)) return false;
       if (selBands.length && !selBands.includes(p.budgetBand)) return false;
       if (selClimates.length && !selClimates.includes(p.climate)) return false;
@@ -125,7 +135,7 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
     if (sort === "Price: High to Low") list = [...list].sort((a, b) => b.price - a.price);
     if (sort === "Top rated") list = [...list].sort((a, b) => b.rating - a.rating);
     return list;
-  }, [category, sort, selRegions, selBands, selClimates, selExperiences, duration, maxPrice]);
+  }, [category, sort, selRegions, selBands, selClimates, selExperiences, duration, maxPrice, fromCity]);
 
   // The AI pick must come from what's actually on screen. Keep the curated default
   // when it matches the active filters; otherwise surface the best-value package in
@@ -137,6 +147,53 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
   //     [...filtered].sort((a, b) => b.rating - a.rating || discountPct(b) - discountPct(a))[0]
   //   );
   // }, [filtered]);
+
+  /**
+   * The search strip drives the same state the filter panel does. Region and
+   * comfort are multi-select there but single-select here, so the strip reads
+   * the first choice and writes either one value or none — no second source of
+   * truth, and a pick made in either place shows up in both.
+   */
+  const searchFields: SearchField[] = [
+    {
+      key: "from",
+      label: "Leaving from",
+      icon: Navigation,
+      value: fromCity,
+      options: [{ value: ANY, label: "Any city" }, ...departureCities.map((c) => ({ value: c, label: c }))],
+      onChange: setFromCity,
+    },
+    {
+      key: "region",
+      label: "Going to",
+      icon: MapPin,
+      value: selRegions[0] ?? ANY,
+      options: [{ value: ANY, label: "Anywhere" }, ...regions.map((r) => ({ value: r, label: r }))],
+      onChange: (v) => setSelRegions(v === ANY ? [] : [v]),
+    },
+    {
+      key: "duration",
+      label: "Trip length",
+      icon: CalendarDays,
+      value: duration,
+      options: durationOptions.map((d) => ({ value: d, label: d === "Any" ? "Any length" : d })),
+      onChange: (v) => setDuration(v as Duration),
+    },
+    {
+      key: "band",
+      label: "Comfort level",
+      icon: Wallet,
+      value: selBands[0] ?? ANY,
+      options: [{ value: ANY, label: "All levels" }, ...budgetBands.map((b) => ({ value: b, label: b }))],
+      onChange: (v) => setSelBands(v === ANY ? [] : [v as BudgetBand]),
+    },
+  ];
+
+  const quickToggles = (["family", "honeymoon", "adventure"] as Experience[]).map((k) => ({
+    label: experienceOptions.find((o) => o.k === k)!.label,
+    active: selExperiences.includes(k),
+    onToggle: () => toggle(selExperiences, setSelExperiences, k),
+  }));
 
   const filterSections: FilterSection[] = [
     {
@@ -229,9 +286,9 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
       <section className="relative isolate flex min-h-[80vh] w-full flex-col overflow-hidden bg-ink md:min-h-[88vh]">
         <img src={heroScene} alt="" className="absolute inset-0 h-full w-full scale-105 object-cover object-[center_35%]" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/55" />
-        {/* Fades into the tint the results section starts on, not into pure
-            white — a hard white edge under a photo reads as a seam. */}
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[#f4eff1]" />
+        {/* Fades into the navy of the search strip below, not into pure white —
+            the photo should hand off to the next band, not butt against it. */}
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[#0B2E6B]" />
 
         {/* Back and the shelf share one line: last-viewed packages sit at the
             top of the page, so a returning traveller can pick up where they
@@ -253,32 +310,43 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
         {/* Nothing here is clickable, and it covers the whole hero — without
             this it sits over the Back button and eats the click. Centred in
             whatever room the shelf leaves. */}
-        <div className="pointer-events-none relative z-10 flex flex-1 flex-col items-center justify-center px-4 py-16 text-center">
-          <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[11.5px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-md">
+        <div className="pointer-events-none relative z-10 flex flex-1 flex-col items-center justify-center px-4 py-20 text-center md:py-28">
+          {/* <span className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[11.5px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-md">
             <TrainFront size={13} /> Indian Railways · Official tour packages
-          </span>
+          </span> */}
 
-          <h1 className="heading-xl max-w-3xl text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]">
+          {/* heading-xl locks line-height to 100%, which is too tight once the
+              headline wraps on narrow screens — hence the explicit leading. */}
+          <h1 className="heading-xl max-w-3xl leading-[1.06] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] md:text-[54px]">
             Explore &amp; compare packages
           </h1>
-          <p className="mt-3 max-w-xl text-[15px] font-medium text-white/85 drop-shadow-[0_1px_12px_rgba(0,0,0,0.5)]">
+          {/* Balanced and given room: at max-w-xl the last two words dropped to a
+              line of their own, which is what made the stack look crowded. */}
+          <p className="mt-6 max-w-2xl text-balance text-[16px] font-medium leading-relaxed text-white/85 drop-shadow-[0_1px_12px_rgba(0,0,0,0.5)]">
             Hand-picked journeys across India and beyond — filter, shortlist and compare side by side.
           </p>
 
           {/* Gives the headline a base to sit on, so it reads as a composed
               block rather than type dropped onto a photograph. */}
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-x-7 gap-y-2 text-[13px] font-semibold text-white/80 drop-shadow-[0_1px_10px_rgba(0,0,0,0.5)]">
+          {/* <div className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-[13px] font-semibold text-white/80 drop-shadow-[0_1px_10px_rgba(0,0,0,0.5)]">
             <span className="inline-flex items-center gap-2"><ShieldCheck size={15} className="text-white/60" /> Fares inclusive of stay &amp; meals</span>
             <span className="hidden h-4 w-px bg-white/25 sm:block" />
             <span className="inline-flex items-center gap-2"><Ticket size={15} className="text-white/60" /> Rail, road &amp; air itineraries</span>
             <span className="hidden h-4 w-px bg-white/25 sm:block" />
             <span className="inline-flex items-center gap-2"><HandHelping size={15} className="text-white/60" /> Easy Service</span>
-          </div>
+          </div> */}
         </div>
       </section>
 
+      <PackageSearchBar
+        fields={searchFields}
+        quick={quickToggles}
+        count={filtered.length}
+        onSearch={() => document.getElementById("results")?.scrollIntoView({ block: "start" })}
+      />
+
       <div className="bg-[linear-gradient(180deg,#f4eff1_0%,#ffffff_460px)]">
-      <div className="relative mx-auto max-w-[1600px] px-4 pt-6 md:px-8 xl:px-12">
+      <div id="results" className="relative mx-auto max-w-[1600px] scroll-mt-4 px-4 pt-6 md:px-8 xl:px-12">
         {/* {aiPick && (
           <div className="mt-6">
             <AiPickBanner pkg={aiPick} />

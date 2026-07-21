@@ -252,7 +252,10 @@ export function DetailPage({ id }: { id: string }) {
         </div>
 
         {/* ── Fare rail ────────────────────────────────────────── */}
-        <div className="hidden lg:sticky lg:top-[128px] lg:block lg:self-start">
+        {/* Capped to the space below the sticky header and scrolled internally:
+            pinned at top-[128px] with no height limit, anything past the fold —
+            the flight add-on, the book button — simply could not be reached. */}
+        <div className="hidden lg:sticky lg:top-[128px] lg:block lg:max-h-[calc(100vh-152px)] lg:self-start lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
           <BookingRail
             pkg={pkg}
             classes={detail.classes}
