@@ -284,25 +284,32 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
       {/* min-h rather than a fixed height: the recent-packages shelf lives inside
           the hero now, so the section has to be able to grow when it unfolds. */}
       <section className="relative isolate flex min-h-[80vh] w-full flex-col overflow-hidden bg-ink md:min-h-[88vh]">
-        <img src={heroScene} alt="" className="absolute inset-0 h-full w-full scale-105 object-cover object-[center_35%]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/55" />
-        {/* Fades into the navy of the search strip below, not into pure white —
-            the photo should hand off to the next band, not butt against it. */}
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[#0B2E6B]" />
+        {/* Anchored to the top of the frame: at 35% the crop ate the sky and the
+            domes, so the picture sits down and it's the reflection at the foot
+            that gets cut instead. */}
+        <img src={heroScene} alt="" className="absolute inset-0 h-full w-full scale-105 object-cover object-top" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60" />
+        {/* Two passes at the foot: a deep shadow that weights the bottom of the
+            photo, then the navy the search strip is painted in, so the image
+            sinks into the next band instead of butting against it. */}
+        <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-b from-transparent via-black/45 to-black/75" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent to-[#0B2E6B]" />
 
         {/* Back and the shelf share one line: last-viewed packages sit at the
             top of the page, so a returning traveller can pick up where they
             left off without scrolling past the headline. */}
-        <div className="relative z-20 mx-auto flex w-full max-w-[1600px] items-start gap-4 px-4 pt-6 md:px-8">
+        {/* Back is taken out of the flow so the shelf centres on the hero
+            itself rather than on whatever room the button leaves beside it. */}
+        <div className="relative z-20 mx-auto w-full max-w-[1600px] px-4 pt-6 md:px-8">
           <button
             onClick={back}
             type="button"
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white/15 px-3.5 py-1.5 text-[13px] font-semibold text-white backdrop-blur transition hover:bg-white/25"
+            className="absolute left-4 top-6 z-10 inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white/15 px-3.5 py-1.5 text-[13px] font-semibold text-white backdrop-blur transition hover:bg-white/25 md:left-8"
           >
             <ArrowLeft size={15} /> Back
           </button>
 
-          <div className="reveal min-w-0 flex-1">
+          <div className="reveal mx-auto w-full px-16 md:px-24">
             <RecentPackagesDrawer packages={recentPackages} />
           </div>
         </div>
@@ -310,10 +317,11 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
         {/* Nothing here is clickable, and it covers the whole hero — without
             this it sits over the Back button and eats the click. Centred in
             whatever room the shelf leaves. */}
-        <div className="pointer-events-none relative z-10 flex flex-1 flex-col items-center justify-center px-4 py-20 text-center md:py-28">
-          {/* <span className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[11.5px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-md">
+       
+        <div className="pointer-events-none relative z-10 flex flex-1 flex-col items-center justify-end px-4 pb-[8vh] pt-12 text-center">
+          <span className="mb-4 inline-flex items-center gap-8 rounded-full border border-white/25 bg-white/20 px-3.5 py-1.5 text-[11.5px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-md">
             <TrainFront size={13} /> Indian Railways · Official tour packages
-          </span> */}
+          </span>
 
           {/* heading-xl locks line-height to 100%, which is too tight once the
               headline wraps on narrow screens — hence the explicit leading. */}
@@ -322,7 +330,7 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
           </h1>
           {/* Balanced and given room: at max-w-xl the last two words dropped to a
               line of their own, which is what made the stack look crowded. */}
-          <p className="mt-6 max-w-2xl text-balance text-[16px] font-medium leading-relaxed text-white/85 drop-shadow-[0_1px_12px_rgba(0,0,0,0.5)]">
+          <p className="mt-4 max-w-2xl text-balance text-[16px] font-medium leading-relaxed text-white/85 drop-shadow-[0_1px_12px_rgba(0,0,0,0.5)]">
             Hand-picked journeys across India and beyond — filter, shortlist and compare side by side.
           </p>
 

@@ -1,4 +1,4 @@
-import { ArrowRight, CalendarDays, Check, Moon, Scale, Tag } from "lucide-react";
+import { ArrowRight, CalendarDays, Check, Moon, Scale } from "lucide-react";
 import type { TourPackage } from "@/types";
 import { useRouter } from "@/router/RouterContext";
 import { ImageWithFallback } from "@/components/common/ImageWithFallback";
@@ -50,15 +50,12 @@ export function EditorialPackageCard({
         width={featured ? 1400 : 900}
         className="absolute inset-0 h-full w-full transform-gpu transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]"
       />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
+      {/* Carries the readability the caption panel used to provide itself. */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
       {/* Hairline highlight so the white frame reads as part of the photo. */}
       <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/25" />
 
-      <div className="absolute inset-x-5 top-5 flex items-start justify-between gap-2">
-        {/* Holiday type — ours, not IRCTC's: it's what the filter panel sorts by. */}
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-black/35 px-3 py-1.5 text-[12.5px] font-semibold text-white backdrop-blur-md">
-          <Tag size={12} /> {pkg.category}
-        </span>
+      <div className="absolute inset-x-5 top-5 flex items-start justify-end gap-2">
         <div className="flex flex-col items-end gap-2">
           {/* "Starting from" price, the only figure IRCTC prints on a row. */}
           <span className="origin-top-right rounded-full bg-brand px-3.5 py-1.5 text-[15px] font-bold text-white shadow-lg shadow-brand/25 transition-transform duration-500 ease-out group-hover:scale-[1.08]">
@@ -94,7 +91,10 @@ export function EditorialPackageCard({
       </div>
 
       <div
-        className={`absolute inset-x-[7px] bottom-[7px] overflow-hidden rounded-[11px] border border-white/30 bg-white/12 backdrop-blur-md transition-all duration-500 group-hover:bg-white/[0.18] ${
+        // No panel at all: any film or blur here milks the photograph out. The
+        // card's own bottom gradient plus a shadow under the type is what keeps
+        // the white readable, so the picture stays whole.
+        className={`absolute inset-x-[7px] bottom-[7px] overflow-hidden rounded-[11px] transition-all duration-500 [text-shadow:0_1px_10px_rgba(0,0,0,0.75)] ${
           compact ? "px-4 py-3" : "px-5 py-4"
         }`}
       >

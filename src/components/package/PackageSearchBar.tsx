@@ -122,8 +122,10 @@ function ComboField({ field }: { field: SearchField }) {
           inputRef.current?.focus();
           if (!open) openList();
         }}
-        className={`flex w-full cursor-text items-center gap-3 rounded-md bg-white px-3.5 py-2.5 transition ${
-          open ? "ring-2 ring-saffron" : "ring-1 ring-black/5 hover:ring-black/20"
+        // No box of its own: the fields share one white container and are told
+        // apart by the divider between them, so only focus draws an outline.
+        className={`flex h-full w-full cursor-text items-center gap-3 px-3.5 py-2.5 transition ${
+          open ? "bg-saffron/5 ring-2 ring-inset ring-saffron" : "hover:bg-black/[0.03]"
         }`}
       >
         <field.icon size={17} className="shrink-0 text-brand" aria-hidden="true" />
@@ -234,9 +236,13 @@ export function PackageSearchBar({
     <section aria-label="Search packages" className="relative z-30 w-full bg-navy">
       <div className="mx-auto max-w-[1600px] px-4 py-5 md:px-8 xl:px-12">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
-          {fields.map((f) => (
-            <ComboField key={f.key} field={f} />
-          ))}
+          {/* One panel, not four: the fields are divided by a hairline rather
+              than floated apart, so the strip reads as a single control. */}
+          <div className="flex min-w-0 flex-1 flex-col divide-y divide-black/10 rounded-md bg-white shadow-sm lg:flex-row lg:divide-x lg:divide-y-0">
+            {fields.map((f) => (
+              <ComboField key={f.key} field={f} />
+            ))}
+          </div>
 
           <button
             type="button"
