@@ -11,8 +11,7 @@ export const luxuryTrains: LuxuryTrain[] = [
     tag: "World's Leading Luxury Train",
     route: "Delhi · Agra · Rajasthan",
     grad: ["#7f1d1d", "#dc2626"],
-    // maroon throughout — roof, frame and edging all one colour, no contrast trim
-    livery: { roof: ["#8a2a37", "#5f1c26"], side: "#6b1f2a", trim: "#7a2430" },
+    livery: { roof: ["#8a2a37", "#5f1c26"], side: "#6b1f2a", trim: "#e6c565" },
     img: maharajasExpressImg,
   },
   {
