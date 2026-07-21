@@ -259,6 +259,10 @@ export default function App() {
           {/* Main landing page — "/landing" */}
           <Route path="/landing" element={<Shell />} />
 
+          {/* In-app shell routes (view switched via RouterContext) */}
+          <Route path="/personal" element={<Shell />} />
+          <Route path="/customise" element={<Shell />} />
+
           {/* Design 1 pages */}
           <Route element={<Design1Layout />}>
             <Route path="/home" element={<Home />} />

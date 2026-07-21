@@ -1277,38 +1277,11 @@ function ScoreRing({ value }: { value: number }) {
     the nose — used purely as the loader's mascot. */
 function VandeBharatTrain() {
   return (
-    <svg width="200" height="64" viewBox="0 0 200 64" fill="none" role="img" aria-label="Vande Bharat train">
-      {/* body */}
-      <path
-        d="M14 16 H150 C172 16 190 26 196 36 C190 44 176 48 150 48 H14 C8 48 4 44 4 38 V26 C4 20 8 16 14 16 Z"
-        fill="#ffffff"
-        stroke="#d7e0ec"
-        strokeWidth="1.4"
-      />
-      {/* passenger window band */}
-      <rect x="20" y="21" width="118" height="9" rx="3" fill="#14294c" />
-      {/* windshield */}
-      <path d="M150 21 C166 22 179 28 186 35 L168 35 C162 30 157 27 150 27 Z" fill="#14294c" />
-      {/* saffron stripe, sweeping down toward the nose */}
-      <path d="M4 32 H150 C171 32 187 37 196 42 L195 45 C186 41 169 43 150 43 H4 Z" fill="#F2662A" />
-      {/* door seam */}
-      <line x1="88" y1="17" x2="88" y2="47" stroke="#e2e8f0" strokeWidth="1" />
-      {/* headlight */}
-      <circle cx="189" cy="39" r="2.3" fill="#ffe9a8" />
-      {/* wheels */}
-      <g fill="#0e1f38">
-        <circle cx="42" cy="52" r="5.2" />
-        <circle cx="60" cy="52" r="5.2" />
-        <circle cx="118" cy="52" r="5.2" />
-        <circle cx="136" cy="52" r="5.2" />
-      </g>
-      <g fill="#8aa0bd">
-        <circle cx="42" cy="52" r="1.8" />
-        <circle cx="60" cy="52" r="1.8" />
-        <circle cx="118" cy="52" r="1.8" />
-        <circle cx="136" cy="52" r="1.8" />
-      </g>
-    </svg>
+    <img
+      src="/vandeBharat.png"
+      alt="Vande Bharat train"
+      className="w-[200px] h-[64px] object-contain"
+    />
   );
 }
 

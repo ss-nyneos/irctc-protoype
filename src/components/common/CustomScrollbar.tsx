@@ -126,7 +126,7 @@ export function CustomScrollbar() {
       <div
         ref={thumbRef}
         onMouseDown={handleMouseDown}
-        className="absolute left-1/2 -translate-x-1/2 w-44 h-[260px] cursor-grab active:cursor-grabbing select-none"
+        className="absolute left-1/2 -translate-x-1/2 w-10 h-[200px] cursor-grab active:cursor-grabbing select-none"
         style={{
           top: `${getThumbTop()}px`,
           transform: `translate3d(-50%, 0, 0) scaleY(${shouldFlip ? -1 : 1})`,
