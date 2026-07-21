@@ -2,9 +2,16 @@
    reset, and layering Tailwind's on top would restyle every page mid-migration.
    Swap this back to a plain `@import 'tailwindcss'` once the last .css file
    is gone and base.css's reset can be retired. */
-@layer theme, base, components, utilities;
+@layer theme, base, legacy, components, utilities;
 @import 'tailwindcss/theme.css' layer(theme);
+/* not-yet-converted stylesheets, kept below `utilities` — see legacy.css */
+@import './legacy.css' layer(legacy);
 @import 'tailwindcss/utilities.css' layer(utilities);
+
+/* This project themes via <html data-theme="dark">, not Tailwind's default
+   `.dark` class or a media query. Point the `dark:` variant at it so utilities
+   and the handwritten CSS stay on one switch. */
+@custom-variant dark ([data-theme='dark'] &);
 
 /* ============================================================
    Tailwind theme, wired to the existing design tokens.
@@ -43,7 +50,12 @@
   --color-on-dark-faint: var(--on-dark-faint);
 
   /* ---- Type ---- */
+  /* Helvetica everywhere. `font-serif` is deliberately aliased to the same
+     stack so a stray `font-serif` can't reintroduce Georgia/Times. --deva is
+     the one exception and is NOT a style choice: Helvetica has no Devanagari
+     glyphs, so Hindi copy needs a script font before falling back to sans. */
   --font-sans: var(--sans);
+  --font-serif: var(--sans);
   --font-deva: var(--deva);
 
   /* ---- Radii ---- */
@@ -62,4 +74,80 @@
   /* ---- Motion ---- */
   --ease-brand: var(--ease);
   --ease-brand-in-out: var(--ease-in-out);
+}
+
+/* Keyframed animations lifted out of the component stylesheets. These live in
+   a plain `@theme` block (not `inline`) so Tailwind emits the @keyframes too. */
+@theme {
+  --animate-marquee: marquee 42s linear infinite;
+  --animate-modal-fade: modalFade 0.3s var(--ease);
+  --animate-modal-rise: modalRise 0.4s var(--ease);
+  --animate-explore-bob: exploreBob 7s ease-in-out infinite;
+  --animate-mt-card-in: mtCardIn 0.5s var(--ease);
+  /* the flip is baked into the keyframes so the bob composes with it */
+  --animate-faq-boat-bob: faqBoatBob 7s ease-in-out infinite;
+  --animate-trend-slide: trendSlide 52s linear infinite;
+
+  @keyframes trendSlide {
+    to {
+      /* exact measured distance, so a widening card can't shift the loop */
+      transform: translateX(calc(-1 * var(--loop, 50%)));
+    }
+  }
+
+  @keyframes faqBoatBob {
+    0%,
+    100% {
+      transform: scaleX(-1) translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: scaleX(-1) translateY(-7px) rotate(-1.5deg);
+    }
+  }
+
+  @keyframes mtCardIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  --animate-floaty: floaty 6.2s ease-in-out infinite;
+
+  @keyframes exploreBob {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-9px) rotate(-1.6deg);
+    }
+  }
+  @keyframes floaty {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-16px);
+    }
+  }
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes modalFade {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes modalRise {
+    from {
+      opacity: 0;
+      transform: translateY(16px) scale(0.98);
+    }
+  }
 }

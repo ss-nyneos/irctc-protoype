@@ -1,7 +1,24 @@
-import './Destinations.css'
 import { useState, type CSSProperties } from 'react'
 import { destinations } from '../data/content.ts'
 import { ChevronL, ChevronR, Pin } from './Icons.tsx'
+
+const card =
+  'arch absolute top-0 left-1/2 h-full w-[clamp(240px,74vw,320px)] bg-paper-2 shadow-float ' +
+  'transition-[transform,opacity,filter] duration-700 ease-brand ' +
+  'min-[641px]:w-[clamp(280px,34vw,430px)]'
+
+/* frosted, luminous glass with a bright specular top edge */
+const panel =
+  'absolute inset-x-[0.9rem] bottom-[0.9rem] rounded-[22px] px-[1.35rem] pt-[1.1rem] pb-[1.2rem] ' +
+  'border border-white/38 ' +
+  'bg-[linear-gradient(180deg,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0.03)_55%),rgba(14,22,40,0.3)] ' +
+  'backdrop-blur-[26px] backdrop-saturate-[1.85] backdrop-brightness-[1.04] ' +
+  'shadow-[inset_0_1.5px_0_rgba(255,255,255,0.6),inset_0_-18px_26px_-22px_rgba(255,255,255,0.28),0_16px_40px_-16px_rgba(4,10,25,0.55)] ' +
+  'transition-[opacity,transform] duration-500 ease-brand delay-150'
+
+const arrow =
+  'grid size-[52px] place-items-center rounded-full border-[1.5px] border-line-strong text-[1.4rem] ' +
+  'text-ink transition-all duration-300 ease-brand hover:-translate-y-0.5 hover:border-blue hover:bg-blue hover:text-white'
 
 export default function Destinations() {
   const n = destinations.length
@@ -34,35 +51,53 @@ export default function Destinations() {
   }
 
   return (
-    <section className="section destinations" id="destinations">
+    <section className="section overflow-hidden bg-paper" id="destinations">
       <div className="wrap">
-        <div className="destinations__head">
+        <div className="mb-[clamp(2.4rem,5vw,3.6rem)] text-center [&_.h2]:mx-auto [&_.h2]:max-w-[18ch]">
           <h2 className="h2">The best-kept secrets of <span>India</span></h2>
         </div>
 
-        <div className="coverflow">
+        <div className="relative h-[clamp(360px,46vw,500px)] [perspective:1600px] [transform-style:preserve-3d]">
           {destinations.map((d, i) => {
             const isActive = offsetOf(i) === 0
             return (
               <button
                 key={d.id}
-                className={`cf-card arch ${isActive ? 'is-active' : ''}`}
+                className={`${card} ${isActive ? 'cursor-default' : 'cursor-pointer'}`}
                 style={styleFor(i)}
                 onClick={() => setActive(i)}
                 aria-label={`${d.name}, ${d.state}`}
                 aria-current={isActive}
                 tabIndex={isActive ? 0 : -1}
               >
-                <img src={d.img} alt={`${d.name}, ${d.state}`} className="img-cover" loading="lazy" />
-                <span className="cf-card__side">{d.name}</span>
-                <div className="cf-card__panel">
-                  <h3 className="cf-card__name">{d.name}</h3>
-                  <div className="cf-card__meta">
-                    <span className="cf-card__state">
+                <img
+                  src={d.img}
+                  alt={`${d.name}, ${d.state}`}
+                  loading="lazy"
+                  className="img-cover transition-transform duration-1000 ease-brand"
+                />
+                {/* vertical label on the receding cards */}
+                <span
+                  className={`absolute bottom-[1.2rem] left-[0.7rem] rotate-180 [writing-mode:vertical-rl]
+                              font-sans text-[1.2rem] font-medium tracking-[0.02em] text-on-dark
+                              [text-shadow:0_2px_16px_rgba(0,0,0,0.5)] transition-opacity duration-[400ms]
+                              ease-brand min-[641px]:text-[1.5rem] ${isActive ? 'opacity-0' : 'opacity-100'}`}
+                >
+                  {d.name}
+                </span>
+                {/* full detail panel on the active card */}
+                <div
+                  className={`${panel} ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-[14px] opacity-0'}`}
+                >
+                  <h3 className="border-b border-white/24 pb-[0.7rem] font-sans text-[1.8rem] leading-none font-medium text-on-dark [text-shadow:0_1px_14px_rgba(4,10,25,0.5)]">
+                    {d.name}
+                  </h3>
+                  <div className="mt-[0.7rem] flex items-center justify-between gap-4">
+                    <span className="inline-flex items-center gap-[0.35rem] text-[0.95rem] font-semibold text-on-dark [&_svg]:text-blue">
                       <Pin />
                       {d.state}
                     </span>
-                    <span className="cf-card__kind">{d.kind}</span>
+                    <span className="text-right text-[0.85rem] text-on-dark-soft">{d.kind}</span>
                   </div>
                 </div>
               </button>
@@ -70,15 +105,17 @@ export default function Destinations() {
           })}
         </div>
 
-        <div className="coverflow__nav">
-          <button className="cf-arrow" aria-label="Previous destination" onClick={() => go(-1)}>
+        <div className="mt-[clamp(2rem,4vw,3rem)] flex items-center justify-center gap-[1.4rem]">
+          <button className={arrow} aria-label="Previous destination" onClick={() => go(-1)}>
             <ChevronL />
           </button>
-          <div className="cf-dots" role="tablist" aria-label="Destinations">
+          <div className="flex items-center gap-2" role="tablist" aria-label="Destinations">
             {destinations.map((d, i) => (
               <button
                 key={d.id}
-                className={`cf-dot ${offsetOf(i) === 0 ? 'is-active' : ''}`}
+                className={`h-2 rounded-full transition-all duration-300 ease-brand ${
+                  offsetOf(i) === 0 ? 'w-[26px] bg-blue' : 'w-2 bg-line-strong'
+                }`}
                 onClick={() => setActive(i)}
                 aria-label={d.name}
                 aria-selected={offsetOf(i) === 0}
@@ -86,12 +123,12 @@ export default function Destinations() {
               />
             ))}
           </div>
-          <button className="cf-arrow" aria-label="Next destination" onClick={() => go(1)}>
+          <button className={arrow} aria-label="Next destination" onClick={() => go(1)}>
             <ChevronR />
           </button>
         </div>
 
-        <div className="destinations__foot">
+        <div className="mt-[clamp(2rem,4vw,2.8rem)] flex justify-center">
           <a href="#packages" className="btn btn--primary">
             Explore all destinations
           </a>

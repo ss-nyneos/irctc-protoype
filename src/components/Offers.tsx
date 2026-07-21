@@ -1,4 +1,3 @@
-import './Offers.css'
 import { ChevronL, ChevronR, Ferry, Mountain, Temple } from './Icons.tsx'
 
 /* Two four-image mosaics with angled seams, like the reference tiles. */

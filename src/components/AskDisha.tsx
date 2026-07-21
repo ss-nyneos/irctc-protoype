@@ -1,4 +1,3 @@
-import './AskDisha.css'
 import { useState, type FormEvent } from 'react'
 import Modal from './Modal.tsx'
 import { useUI } from '../context/UI.tsx'
@@ -155,6 +154,12 @@ const CHIPS = [
 
 const inr = (n: number) => '₹' + n.toLocaleString('en-IN')
 
+const stack = 'flex flex-col gap-[1.1rem]'
+const chipBase =
+  'rounded-full border px-4 py-[0.55rem] text-[0.9rem] font-semibold transition-all duration-200 ease-brand'
+const chipOn = 'border-blue bg-blue text-white'
+const chipOff = 'border-line bg-card text-ink-soft hover:border-blue hover:text-black'
+
 export default function AskDisha() {
   const { close } = useUI()
   const { t } = usePrefs()
@@ -181,23 +186,26 @@ export default function AskDisha() {
   return (
     <Modal title={t('disha.title')} eyebrow="AI trip recommender" onClose={close} wide>
       {!results ? (
-        <form className="disha" onSubmit={onSubmit}>
-          <p className="disha__sub">{t('disha.sub')}</p>
+        <form className={stack} onSubmit={onSubmit}>
+          <p className="-mt-[0.4rem] leading-[1.55] text-ink-soft">{t('disha.sub')}</p>
 
           <textarea
-            className="disha__input"
+            className="w-full resize-y rounded-md border-[1.5px] border-line bg-paper px-[1.1rem] py-4
+                       font-sans text-base leading-normal text-ink transition-[border-color,box-shadow]
+                       duration-250 ease-brand placeholder:text-ink-faint
+                       focus:border-blue focus:shadow-[0_0_0_3px_rgba(36,117,238,0.16)] focus:outline-none"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('disha.placeholder')}
             rows={3}
           />
 
-          <div className="disha__chips">
+          <div className="flex flex-wrap gap-2">
             {CHIPS.map((c) => (
               <button
                 type="button"
                 key={c.id}
-                className={`disha__chip ${chosen.includes(c.id) ? 'is-on' : ''}`}
+                className={`${chipBase} ${chosen.includes(c.id) ? chipOn : chipOff}`}
                 onClick={() => toggleChip(c.id)}
                 aria-pressed={chosen.includes(c.id)}
               >
@@ -206,39 +214,68 @@ export default function AskDisha() {
             ))}
           </div>
 
-          <button type="submit" className="disha__go">
+          <button
+            type="submit"
+            className="inline-flex items-center justify-center gap-[0.55rem] rounded-full bg-blue
+                       px-[1.4rem] py-4 text-base font-bold text-white
+                       transition-[background,transform] duration-250 ease-brand
+                       hover:-translate-y-px hover:bg-blue-deep"
+          >
             <Star />
             {t('disha.go')}
           </button>
         </form>
       ) : (
-        <div className="disha">
-          <div className="disha__resulthead">
-            <h3>{anyMatch ? t('disha.results') : t('disha.none')}</h3>
-            <button className="disha__again" onClick={reset}>
+        <div className={stack}>
+          <div className="flex items-baseline justify-between gap-4">
+            <h3 className="text-[1.15rem] font-bold text-black">
+              {anyMatch ? t('disha.results') : t('disha.none')}
+            </h3>
+            <button
+              className="text-[0.9rem] font-bold text-blue hover:underline"
+              onClick={reset}
+            >
               {t('disha.again')}
             </button>
           </div>
 
-          <ul className="disha__list">
+          <ul className="flex flex-col gap-[0.7rem]">
             {results.map(({ pkg, reasons }) => (
-              <li key={pkg.id} className="drec">
-                <img src={pkg.img} alt={pkg.place} className="drec__img" />
-                <div className="drec__body">
-                  <span className="drec__place">{pkg.place}</span>
-                  <h4 className="drec__title">{pkg.title}</h4>
-                  <p className="drec__route">
+              <li
+                key={pkg.id}
+                className="flex flex-wrap items-center gap-4 rounded-md border border-line bg-card
+                           p-[0.7rem] transition-[border-color,box-shadow] duration-250 ease-brand
+                           hover:border-transparent hover:shadow-md min-[561px]:flex-nowrap"
+              >
+                <img
+                  src={pkg.img}
+                  alt={pkg.place}
+                  className="size-16 flex-none rounded-sm object-cover min-[561px]:size-[84px]"
+                />
+                <div className="min-w-0 flex-1">
+                  <span className="text-[0.78rem] font-bold tracking-[0.04em] uppercase text-blue-ink">
+                    {pkg.place}
+                  </span>
+                  <h4 className="mt-[0.1rem] text-[1.12rem] leading-[1.15] font-bold text-black">
+                    {pkg.title}
+                  </h4>
+                  <p className="mt-[0.2rem] text-[0.86rem] text-ink-soft">
                     {pkg.nights}N · {pkg.days}D — {pkg.route}
                   </p>
                   {reasons.length > 0 && (
-                    <p className="drec__why">
+                    <p className="mt-[0.35rem] text-[0.84rem] leading-[1.45] text-ink-soft [&_strong]:text-blue-ink">
                       <strong>{t('disha.why')}:</strong> {reasons.slice(0, 3).join(', ')}
                     </p>
                   )}
                 </div>
-                <div className="drec__end">
-                  <span className="drec__price">{inr(pkg.price)}</span>
-                  <a href="#packages" className="drec__cta" onClick={close}>
+                <div className="flex flex-none flex-col items-end gap-2">
+                  <span className="font-bold tabular-nums text-black">{inr(pkg.price)}</span>
+                  <a
+                    href="#packages"
+                    onClick={close}
+                    className="grid size-[38px] place-items-center rounded-full bg-blue text-[1.05rem]
+                               text-white transition-transform duration-300 ease-brand hover:translate-x-[3px]"
+                  >
                     <Arrow />
                   </a>
                 </div>

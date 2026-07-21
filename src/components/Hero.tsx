@@ -1,4 +1,3 @@
-import './Hero.css'
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search, Pin, Calendar, Users } from './Icons.tsx'

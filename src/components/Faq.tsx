@@ -1,4 +1,3 @@
-import './Faq.css'
 import { useState } from 'react'
 import { faqs } from '../data/content.ts'
 import { Plus, Close } from './Icons.tsx'
@@ -9,40 +8,104 @@ export default function Faq() {
   const [open, setOpen] = useState(0)
 
   return (
-    <section className="section faq" id="faq">
+    <section className="section bg-paper" id="faq">
       <div className="wrap">
-        <div className="faq__head">
-          <h2 className="faq__title">
+        <div className="mb-[clamp(2.4rem,4vw,3.4rem)] text-center">
+          <h2 className="font-sans text-[42px] leading-none font-bold text-black [&_span]:text-blue">
             Frequently Asked <span>Questions</span>
           </h2>
-          <p className="faq__sub">Everything worth knowing before you board.</p>
+          <p className="mt-[0.7rem] text-[1.05rem] text-ink-soft">
+            Everything worth knowing before you board.
+          </p>
         </div>
 
-        <div className="faq__list">
+        {/* one continuous frame housing every row */}
+        <div className="mx-auto flex max-w-[920px] flex-col overflow-hidden rounded-lg border border-line bg-card shadow-md">
           {faqs.map((f, i) => {
             const isOpen = open === i
+            /* hairline divider between closed rows only: the open row's own
+               colour acts as the divider, so neither it nor the row above
+               it draws a border. (Was a `:has(+ .is-open)` rule; the open
+               index is known here, so it's just arithmetic.) */
+            const divider = !isOpen && i !== faqs.length - 1 && open !== i + 1
+
             return (
               <div
-                className={`faq-item ${isOpen ? 'is-open' : ''}`}
                 key={f.q}
+                className={`group relative transition-[background] duration-300 ease-brand
+                            ${divider ? 'border-b border-line' : ''}
+                            ${isOpen ? '' : 'hover:bg-paper-2'}`}
               >
                 {isOpen && (
-                  <div className="faq-item__water" aria-hidden="true">
-                    <img src={water} alt="" className="faq-item__water-img" />
-                    <img src={boat} alt="" className="faq-item__boat" />
+                  <div
+                    className="absolute inset-0 z-0 overflow-hidden bg-[#12869b]
+                               after:absolute after:inset-0 after:content-['']
+                               after:bg-[linear-gradient(100deg,rgba(5,45,110,0.74)_0%,rgba(8,70,140,0.52)_42%,rgba(10,90,150,0.12)_72%,rgba(10,90,150,0)_100%)]"
+                    aria-hidden="true"
+                  >
+                    <img
+                      src={water}
+                      alt=""
+                      className="absolute inset-0 h-full w-full object-cover object-center"
+                    />
+                    {/* pinned to the right edge and bleeding off it; the card
+                        clips whatever runs past. Dropped below 700px where it
+                        would collide with the copy. */}
+                    <img
+                      src={boat}
+                      alt=""
+                      className="absolute right-[-2%] bottom-[3%] z-[1] hidden h-[92%] w-auto
+                                 -scale-x-100 animate-faq-boat-bob motion-reduce:animate-none
+                                 min-[701px]:block"
+                    />
                   </div>
                 )}
                 <button
-                  className="faq-item__row"
                   onClick={() => setOpen(isOpen ? -1 : i)}
                   aria-expanded={isOpen}
+                  className={`relative z-[1] flex w-full items-start gap-[clamp(1rem,3vw,2.2rem)]
+                              px-[clamp(1.2rem,2.5vw,2rem)] text-left
+                              ${
+                                isOpen
+                                  ? 'py-[clamp(1.6rem,3vw,2.4rem)] min-[561px]:min-h-[clamp(200px,22vw,250px)]'
+                                  : 'py-[clamp(1.15rem,2.2vw,1.7rem)]'
+                              }`}
                 >
-                  <span className="faq-item__num">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="faq-item__content">
-                    <span className="faq-item__q">{f.q}</span>
-                    {isOpen && <span className="faq-item__a">{f.a}</span>}
+                  <span
+                    className={`w-auto flex-none text-[clamp(1.3rem,1rem+1vw,1.7rem)] leading-tight
+                                font-bold tabular-nums transition-colors duration-300 ease-brand
+                                min-[561px]:w-[2.4ch]
+                                ${isOpen ? 'text-white [text-shadow:0_2px_12px_rgba(4,40,90,0.5)]' : 'text-black'}`}
+                  >
+                    {String(i + 1).padStart(2, '0')}
                   </span>
-                  <span className="faq-item__btn">{isOpen ? <Close /> : <Plus />}</span>
+                  {/* keep the open row's copy clear of the boat on the right */}
+                  <span
+                    className={`flex min-w-0 flex-1 flex-col pt-[0.15rem] ${
+                      isOpen ? 'max-w-full min-[701px]:max-w-[66%]' : ''
+                    }`}
+                  >
+                    <span
+                      className={`text-[clamp(1.02rem,0.95rem+0.5vw,1.24rem)] leading-snug font-bold
+                                  tracking-[-0.01em] transition-colors duration-300 ease-brand
+                                  ${isOpen ? 'text-white [text-shadow:0_2px_14px_rgba(4,40,90,0.5)]' : 'text-black'}`}
+                    >
+                      {f.q}
+                    </span>
+                    {isOpen && (
+                      <span className="mt-[0.7rem] max-w-[60ch] text-[0.98rem] leading-relaxed text-white/95 [text-shadow:0_1px_10px_rgba(4,40,90,0.45)]">
+                        {f.a}
+                      </span>
+                    )}
+                  </span>
+                  {/* always pinned to the far right of the row */}
+                  <span
+                    className={`ml-auto grid size-10 flex-none place-items-center rounded-[11px]
+                                text-[1.2rem] transition-all duration-300 ease-brand
+                                ${isOpen ? 'bg-white text-blue' : 'bg-blue text-white group-hover:bg-blue-deep'}`}
+                  >
+                    {isOpen ? <Close /> : <Plus />}
+                  </span>
                 </button>
               </div>
             )

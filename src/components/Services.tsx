@@ -1,4 +1,3 @@
-import './Services.css'
 import type { SVGProps, ReactNode } from 'react'
 import { Hotel, Stupa, Mountain, Ferry, ChevronR } from './Icons.tsx'
 import archFrame from '../assets/graphic/arch-frame.png'

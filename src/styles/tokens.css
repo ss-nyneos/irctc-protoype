@@ -100,7 +100,3 @@
   --shadow-float: 0 40px 90px -34px rgba(0, 0, 0, 0.85);
 }
 
-:root[data-theme='dark'] .store {
-  background: #0a0a0a;
-  border: 1px solid var(--line);
-}

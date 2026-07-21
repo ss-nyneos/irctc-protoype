@@ -1,4 +1,3 @@
-import './Trains.css'
 import { trains, type Train } from '../data/content.ts'
 import { Arrow } from './Icons.tsx'
 
