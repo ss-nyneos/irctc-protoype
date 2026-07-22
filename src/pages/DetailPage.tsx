@@ -82,8 +82,9 @@ export function DetailPage({ id }: { id: string }) {
   const pkg = getPackageById(id) ?? packages[0];
   const detail = useMemo(() => getPackageDetail(pkg), [pkg]);
 
-  // Never open on a sold-out class.
-  const [classCode, setClassCode] = useState(
+  // Never open on a sold-out class. The class is picked on the booking form, not
+  // here, so this is fixed for the life of the page.
+  const [classCode] = useState(
     () => (detail.classes.find((c) => c.available) ?? detail.classes[0]).code,
   );
   const [travellers, setTravellers] = useState(2);
@@ -179,7 +180,6 @@ export function DetailPage({ id }: { id: string }) {
       departures={detail.departures}
       boardingPoint={boardingPoint}
       selectedClass={selectedClass}
-      onSelectClass={setClassCode}
       travellers={travellers}
       onTravellers={setTravellers}
       departure={departure}
