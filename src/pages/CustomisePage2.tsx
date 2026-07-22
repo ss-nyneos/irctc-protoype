@@ -1282,12 +1282,32 @@ export function CustomisePage() {
                             to={inputs.vibes.join(", ") || "Anywhere"}
                             caption="We've matched your preferences with our premium, verified itineraries."
                             fields={[
-                                { label: "Travellers", value: `${inputs.travellers} · ${inputs.groupType}` },
-                                { label: "Duration", value: dateLabel || inputs.duration || "Flexible" },
-                                { label: "Transport", value: inputs.transports.join(", ") },
+                                { label: "Vibes", value: inputs.vibes.join(", ") || "Any" },
+                                { label: "Travellers", value: String(inputs.travellers) },
+                                { label: "Group", value: inputs.groupType },
+                                { label: "Duration", value: inputs.duration || "Custom" },
+                                { label: "Travel dates", value: dateLabel || "Flexible" },
                                 { label: "Stay", value: inputs.accommodation },
-                                { label: "Interests", value: inputs.experiences.slice(0, 3).join(", ") || "Open to all" },
-                                { label: "Pass no.", value: `IR-${(results[0]?.id ?? "TRIP").toUpperCase()}`, code: true },
+                                { label: "Transport", value: inputs.transports.join(", ") || "Any" },
+                                {
+                                    label: "Experiences",
+                                    value: inputs.experiences.join(", ") || "Open to all",
+                                },
+                                {
+                                    label: "Food budget",
+                                    value: `₹${Number(inputs.customBudget || 20000).toLocaleString("en-IN")}`,
+                                },
+                                {
+                                    label: "Cuisine",
+                                    value: inputs.cateringTypes.join(", ") || "Any",
+                                },
+                                {
+                                    label: "Trip budget",
+                                    value: `Up to ₹${ACCOMMODATION_MAXPRICE[inputs.accommodation].toLocaleString("en-IN")}`,
+                                },
+                                ...(inputs.notes.trim()
+                                    ? [{ label: "Notes", value: inputs.notes.trim() }]
+                                    : []),
                             ]}
                             whatsNext={[
                                 `${results.length} handpicked trips for you`,
@@ -1690,7 +1710,7 @@ function VandeBharatTrain() {
         <img
             src="/vandeBharat.png"
             alt="Vande Bharat train"
-            className="h-[110px] w-[340px] object-contain"
+            className="h-[190px] w-[540px] object-contain object-bottom"
         />
     );
 }
@@ -1704,12 +1724,12 @@ function VandeBharatLoader({ title, sub }: { title: string; sub: string }) {
             aria-live="polite"
             className="animate-fadeIn mx-auto flex min-h-[380px] max-w-3xl flex-col items-center justify-center rounded-3xl border border-white/20 bg-black/35 px-6 py-14 text-center shadow-[0_30px_70px_-24px_rgba(0,0,0,0.55)]"
         >
-            <div className="relative h-[140px] w-[380px]">
-                <div className="absolute bottom-4 left-0 right-0 h-[2px] rounded bg-white/25" />
-                <span className="vb-streak" style={{ top: 40 }} />
-                <span className="vb-streak" style={{ top: 62, animationDelay: "0.28s" }} />
-                <span className="vb-streak" style={{ top: 84, animationDelay: "0.56s" }} />
-                <div className="vb-bob absolute bottom-4 left-1/2">
+            <div className="relative h-[200px] w-[min(100%,560px)]">
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] rounded bg-white/25" />
+                <span className="vb-streak" style={{ top: 52 }} />
+                <span className="vb-streak" style={{ top: 86, animationDelay: "0.28s" }} />
+                <span className="vb-streak" style={{ top: 120, animationDelay: "0.56s" }} />
+                <div className="vb-bob absolute -bottom-1 left-1/2">
                     <VandeBharatTrain />
                 </div>
             </div>

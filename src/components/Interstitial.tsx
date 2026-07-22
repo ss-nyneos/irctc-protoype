@@ -13,7 +13,13 @@ export default function Interstitial() {
         <div className="absolute inset-0 bg-[linear-gradient(100deg,rgba(0,0,0,0.62)_0%,rgba(0,0,0,0.32)_46%,rgba(0,0,0,0.12)_100%)]" />
       </div>
       <div className="wrap w-full">
-        <h2 className="max-w-[18ch] text-[clamp(2.2rem,1.2rem+4.6vw,5rem)] leading-[0.98] font-extrabold tracking-[-0.03em] text-white [text-shadow:0_4px_40px_rgba(0,0,0,0.4)]">
+        {/* 64px is the desktop size; it steps down on narrow viewports or a
+            single line would run well past the screen edge. */}
+        <h2
+          className="max-w-[18ch] font-sans text-display leading-[0.98] font-extrabold text-white
+                     [text-shadow:0_4px_40px_rgba(0,0,0,0.4)]
+                     max-[900px]:text-[48px] max-[560px]:text-[34px]"
+        >
           Every great journey<br />begins at a platform.
         </h2>
       </div>

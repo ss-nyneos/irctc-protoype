@@ -1,4 +1,16 @@
 /* ============================================================
+   NOTE ON `:where(.design-1-root)`
+   The element resets below are scoped with :where(), which contributes
+   ZERO specificity. That is deliberate. Written as `.design-1-root h1`
+   they score (0,1,1) and outrank any single-class rule — so `text-white`
+   on a heading, or `.hseg__input { color:#fff }` on the hero strip, lost
+   to `color: var(--black)`/`inherit` and rendered dark over imagery.
+   `:where()` keeps the scoping but restores the (0,0,1) specificity a
+   bare element reset is supposed to have, so components and Tailwind
+   utilities win normally.
+   ============================================================ */
+
+/* ============================================================
    Base — reset, typography, primitives, cultural motifs
    ============================================================ */
 
@@ -8,7 +20,7 @@
   box-sizing: border-box;
 }
 
-.design-1-root * {
+:where(.design-1-root) * {
   margin: 0;
 }
 
@@ -27,34 +39,34 @@
   overflow-x: hidden;
 }
 
-.design-1-root img,
-.design-1-root picture,
-.design-1-root svg {
+:where(.design-1-root) img,
+:where(.design-1-root) picture,
+:where(.design-1-root) svg {
   display: block;
   max-width: 100%;
 }
 
-.design-1-root button,
-.design-1-root input,
-.design-1-root select,
-.design-1-root textarea {
+:where(.design-1-root) button,
+:where(.design-1-root) input,
+:where(.design-1-root) select,
+:where(.design-1-root) textarea {
   font: inherit;
   color: inherit;
 }
 
-.design-1-root button {
+:where(.design-1-root) button {
   background: none;
   border: none;
   cursor: pointer;
 }
 
-.design-1-root a {
+:where(.design-1-root) a {
   color: inherit;
   text-decoration: none;
 }
 
-.design-1-root ul,
-.design-1-root ol {
+:where(.design-1-root) ul,
+:where(.design-1-root) ol {
   list-style: none;
   padding: 0;
 }
@@ -71,10 +83,10 @@
 }
 
 /* ---------- Headings ---------- */
-.design-1-root h1,
-.design-1-root h2,
-.design-1-root h3,
-.design-1-root h4 {
+:where(.design-1-root) h1,
+:where(.design-1-root) h2,
+:where(.design-1-root) h3,
+:where(.design-1-root) h4 {
   font-family: var(--sans);
   font-weight: 700;
   line-height: 1.05;
