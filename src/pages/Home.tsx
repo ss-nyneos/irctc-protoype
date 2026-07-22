@@ -13,19 +13,32 @@ import Faq from '../components/Faq.tsx'
 import AppPromo from '../components/AppPromo.tsx'
 import ExploreCta from '../components/ExploreCta.tsx'
 import DishaFab from '../components/DishaFab.tsx'
+import { LuxuryTrainsSection } from "@/components/home/LuxuryTrainsSection";
+import { VandeBharatScrollMorph } from "@/components/home/VandeBharatScrollMorph";
+import vandeBharatPhoto from "@/assets/cta/vande-bharat.png";
+
+
+import { CustomScrollbar } from '@/components/common/CustomScrollbar'
 
 export default function Home() {
   return (
     <main>
+      <CustomScrollbar />
       <Hero />
       <Services />
+
       <Offers />
       <Stats />
       <Trending />
       <Experiences />
       <Interstitial />
       <Destinations />
-      <Trains />
+      {/* <Trains /> */}
+      <LuxuryTrainsSection />
+      {/* section wrapper: main > section gets z-index so sticky morph sits above sticky hero */}
+      <section className="relative z-[1]">
+        <VandeBharatScrollMorph imageSrc={vandeBharatPhoto} headline="INDIAN RAIL" />
+      </section>
       <Pilgrimage />
       <MonthlyTrips />
       <Faq />

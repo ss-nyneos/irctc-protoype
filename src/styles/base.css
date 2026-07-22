@@ -36,7 +36,8 @@
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  /* clip (not hidden) so sticky descendants like VandeBharatScrollMorph still work */
+  overflow-x: clip;
 }
 
 :where(.design-1-root) img,

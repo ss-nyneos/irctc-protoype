@@ -11,7 +11,7 @@
  *   2600 – 2800ms → "Explore the world with IRCTC" fades in  (200 ms)
  *   2800 – 3000ms → Hold
  *   3000 – 3300ms → Overlay fades out, revealing landing page  (300 ms)
- *   3300ms        → URL switches to /landing
+ *   3300ms        → URL switches to /home
  * ─────────────────────────────────────────────────────────────────────────
  */
 
@@ -35,8 +35,8 @@ function lerp(a: number, b: number, t: number) {
 }
 
 /** `to` is where the overlay hands off once it has faded. Defaults to the
-    main app shell; the Design 1 landing page passes its own route. */
-export function PreloadScreen({ to = "/landing" }: { to?: string } = {}) {
+    Design 1 landing page. */
+export function PreloadScreen({ to = "/home" }: { to?: string } = {}) {
   const navigate = useNavigate();
   const [elapsed, setElapsed] = useState(0);
   const startRef = useRef<number | null>(null);

@@ -1,8 +1,10 @@
 /* ---- Crystal-clear video hero with heading + glass search strip ---- */
 .hero {
   position: relative;
-  height: min(94vh, 900px);
-  min-height: 560px;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
   background: #0a0a0a;
   isolation: isolate;
