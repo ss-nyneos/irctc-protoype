@@ -1,10 +1,14 @@
 /* ---- Crystal-clear video hero with heading + glass search strip ---- */
 .hero {
   position: relative;
+  /* Fill the viewport exactly — never taller than the screen. dvh tracks the
+     mobile URL-bar collapse; the vh lines are the fallback for browsers without
+     dynamic-viewport units. min + max at 100dvh pins it to exactly one screen. */
   height: 100vh;
   height: 100dvh;
   min-height: 100vh;
   min-height: 100dvh;
+  max-height: 100dvh;
   margin: 0;
   overflow: hidden;
   background: #0a0a0a;
@@ -70,7 +74,7 @@
   color: #ffffff;
 }
 .hero__band--green {
-  color: #138808;
+  color: #0a5205;
   text-shadow:
     0 1px 0 rgba(255, 255, 255, 0.35),
     0 2px 6px rgba(0, 0, 0, 0.55),

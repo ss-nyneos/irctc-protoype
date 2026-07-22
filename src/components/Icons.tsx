@@ -41,6 +41,25 @@ export const Mail = (p: IconProps) =>
     <><rect x="3" y="5.5" width="18" height="13" rx="2" /><path d="m3.5 7 8.5 6 8.5-6" /></>,
     p,
   )
+/* ---- Social glyphs (line style, match the 1.6 stroke set) ---- */
+export const Instagram = (p: IconProps) =>
+  wrap(
+    <>
+      <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="16.6" cy="7.4" r="1" fill="currentColor" stroke="none" />
+    </>,
+    p,
+  )
+export const XLogo = (p: IconProps) => wrap(<path d="m4.6 4.6 14.8 14.8M19.4 4.6 4.6 19.4" />, p)
+export const YouTube = (p: IconProps) =>
+  wrap(
+    <>
+      <rect x="2.5" y="5.5" width="19" height="13" rx="4" />
+      <path d="m10 9.4 5 2.6-5 2.6z" fill="currentColor" />
+    </>,
+    p,
+  )
 export const Star = (p: IconProps) =>
   wrap(
     <path

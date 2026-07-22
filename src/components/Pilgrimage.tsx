@@ -29,17 +29,21 @@ export default function Pilgrimage() {
                            after:mix-blend-soft-light after:transition-opacity after:duration-[450ms]
                            after:ease-brand after:content-[''] group-hover:after:opacity-[0.55]"
               >
+                {/* .px-media frames a landscape source correctly in this
+                    portrait card; a taller overflow over-zooms it to a narrow
+                    centre strip. object-position nudges up so the temple spire
+                    stays in frame as the image drifts with scroll. */}
                 <img
                   src={p.img}
                   alt={`${p.name}, ${p.place}`}
-                  className="px-media"
+                  className="px-media object-[center_38%]"
                   data-parallax="14"
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,rgba(7,22,52,0.5)_100%)]" />
               </div>
               <div className="pt-[1.1rem]">
-                <h3 className="font-sans text-card-title leading-[1.05] font-medium text-ink">{p.name}</h3>
+                <h3 className="font-sans text-card-title leading-[1.05] font-medium text-ink-black">{p.name}</h3>
                 <span className="mt-[0.4rem] inline-flex items-center gap-[0.32rem] font-sans text-card-sub font-semibold text-blue-ink">
                   <Pin />
                   {p.place}

@@ -41,8 +41,12 @@ export default function ExploreCta() {
   const { go } = useRouter()
 
   return (
-    /* padding (not margin) so the paper bg covers any stacked layers below */
-    <section className="relative isolate overflow-hidden bg-paper pb-[clamp(1.5rem,3vw,2.5rem)] pt-[clamp(6.5rem,11vw,10.5rem)]">
+    /* padding (not margin) so the paper bg covers any stacked layers below;
+       the top uses the shared --section-y token so this section keeps the same
+       vertical rhythm as every other one */
+    <section className="explore relative isolate overflow-hidden bg-paper pb-[clamp(1.5rem,3vw,2.5rem)] pt-[var(--section-y)]">
+      {/* night sky — a starlit gradient that only lights up in dark mode */}
+      <div className="explore__night pointer-events-none absolute inset-0 z-0" aria-hidden="true" />
       <div className="wrap relative z-[3] text-center">
         <h2 className="h2 [&_span]:text-blue">
           Ready To Explore The <span>World?</span>
@@ -93,7 +97,7 @@ export default function ExploreCta() {
       ))}
 
       {/* skyline + its reflection in the water */}
-      <div className="relative z-[1] mt-[clamp(0.5rem,1.8vw,1.5rem)]" aria-hidden="true">
+      <div className="explore__skyline relative z-[1] mt-[clamp(0.5rem,1.8vw,1.5rem)]" aria-hidden="true">
         <img src={skyline} alt="" className="block h-auto w-full" />
         <img
           src={skylineReflection}

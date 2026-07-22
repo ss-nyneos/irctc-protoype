@@ -25,7 +25,7 @@ export default function PackageCard({ pkg }: { pkg: Package }) {
           <span>{pkg.place}</span>
           <span className="tabular-nums text-ink-faint">{pkg.nights}N · {pkg.days}D</span>
         </div>
-        <h3 className="text-[1.42rem] leading-[1.05] font-bold tracking-[-0.02em] text-black">
+        <h3 className="text-[1.42rem] leading-[1.05] font-bold tracking-[-0.02em] text-ink-black">
           {pkg.title}
         </h3>
         <p className="mt-[0.3rem] text-[0.98rem] font-bold tabular-nums text-blue-ink">

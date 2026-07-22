@@ -34,7 +34,7 @@ export default function Packages() {
           <h1 className="h2 [&_span]:text-blue">
             Tour <span>Packages</span>
           </h1>
-          <p className="mt-[0.7rem] text-[1.05rem] text-ink-soft [&_strong]:text-black">
+          <p className="mt-[0.7rem] text-[1.05rem] text-ink-soft [&_strong]:text-ink-black">
             {results.length} {results.length === 1 ? 'journey' : 'journeys'}
             {q && (
               <>

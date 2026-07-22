@@ -1,5 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useGSAP } from '@gsap/react'
 import trainLoco from '../assets/trains/vande-bharat-loco.png'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -83,20 +88,75 @@ const month =
   'min-[901px]:before:bg-blue min-[901px]:before:transition-transform min-[901px]:before:duration-300 ' +
   'min-[901px]:before:ease-brand'
 
-export default function MonthlyTrips() {
-  // default to the current month
-  const [active, setActive] = useState(() => new Date().getMonth())
+/* Dissolves between photos instead of swapping them. The outgoing frame stays
+   beneath at full opacity while the incoming one fades in over it, so the card
+   never dips to its own background — that dip, plus the remount the old keys
+   forced, is what made a month change read as a flicker. */
+function CrossfadeImage({ src, alt, className }: { src: string; alt: string; className: string }) {
+  const [current, setCurrent] = useState(src)
+  const [outgoing, setOutgoing] = useState<string | null>(null)
 
-  // auto-rotate to the next month every 4s; a click just resets the timer
   useEffect(() => {
-    const id = setTimeout(() => setActive((m) => (m + 1) % 12), 4000)
-    return () => clearTimeout(id)
-  }, [active])
+    setCurrent((prev) => {
+      if (prev === src) return prev
+      setOutgoing(prev)
+      return src
+    })
+  }, [src])
+
+  // drop the outgoing frame once the dissolve above it has finished
+  useEffect(() => {
+    if (!outgoing) return
+    const id = window.setTimeout(() => setOutgoing(null), 600)
+    return () => window.clearTimeout(id)
+  }, [outgoing])
+
+  return (
+    <>
+      {outgoing && <img src={outgoing} alt="" aria-hidden="true" className={className} />}
+      <img key={current} src={current} alt={alt} className={`${className} animate-mt-dissolve`} />
+    </>
+  )
+}
+
+export default function MonthlyTrips() {
+  // default to the current month; scroll then takes over
+  const [active, setActive] = useState(() => new Date().getMonth())
+  const sectionRef = useRef<HTMLElement>(null)
+
+  /* Warm the whole pool up front: a dissolve is only smooth if the incoming
+     photo is already decoded, otherwise the top layer fades in over nothing. */
+  useEffect(() => {
+    POOL.forEach((p) => {
+      const img = new Image()
+      img.src = p.img
+    })
+  }, [])
+
+  /* Scroll-driven, not time-based: the active month tracks the section's
+     progress through the viewport (top-bottom → bottom-top) across all 12
+     months. Clicking a month still jumps to it; the next scroll re-syncs. */
+  useGSAP(
+    () => {
+      const el = sectionRef.current
+      if (!el) return
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top bottom',
+        end: 'bottom top',
+        onUpdate: (self) => {
+          const idx = Math.min(11, Math.floor(self.progress * 12))
+          setActive((prev) => (prev === idx ? prev : idx))
+        },
+      })
+    },
+    { scope: sectionRef },
+  )
 
   const visible = SLOTS.map((slot, i) => ({ ...slot, ...POOL[(active + i) % POOL.length] }))
 
   return (
-    <section className="section bg-paper" id="monthly">
+    <section ref={sectionRef} className="section bg-paper" id="monthly">
       <div className="wrap-wide">
         <div className="section-head mb-[clamp(2rem,4vw,3.2rem)] items-center">
           <h2 className="h2">
@@ -114,30 +174,45 @@ export default function MonthlyTrips() {
         <div className="grid grid-cols-1 items-stretch gap-[clamp(1.6rem,4vw,2.4rem)] min-[901px]:grid-cols-[1fr_auto] min-[901px]:gap-[clamp(1.5rem,3.5vw,3.5rem)]">
           <div className={grid}>
             {visible.map((t) => (
+              /* The lift and the fade live out here; the rounded clip lives on
+                 the wrapper below. Keeping them on separate elements is the
+                 whole point: when a rounded `overflow-hidden` shares an element
+                 with a transform or opacity animation, Chrome drops the corner
+                 clip mid-composite and the black scrim inside paints as a hard
+                 rectangle over the card. */
+              /* Keyed by slot, NOT by month: a month-dependent key remounted
+                 every card on each change, so the photos re-fetched and the
+                 entrance animation replayed — the glitch. The slot persists
+                 now and only its contents dissolve. */
               <article
-                key={`${active}-${t.area}`}
-                className={`group relative isolate min-h-[210px] animate-mt-card-in overflow-hidden
-                            transition-[transform,box-shadow] duration-500 ease-brand
-                            hover:-translate-y-[5px] hover:shadow-lg motion-reduce:animate-none
-                            ${t.place} ${t.radius}`}
+                key={t.area}
+                className={`group relative min-h-[210px] animate-mt-card-in
+                            transition-transform duration-500 ease-brand
+                            hover:-translate-y-[5px] motion-reduce:animate-none
+                            ${t.place}`}
               >
-                <img
-                  src={t.img}
-                  alt={t.title}
-                  loading="lazy"
-                  className="px-media transition-transform duration-[900ms] ease-brand group-hover:scale-105"
-                />
-                {/* flat 40% black over the whole photo */}
-                <div className="absolute inset-0 bg-black/40" />
-                {/* extra top + left padding so the text clears the big curved corners */}
-                <h3
-                  className="absolute inset-x-0 top-0 z-[1] ml-auto max-w-[21ch] pt-[clamp(1.7rem,2.3vw,2.4rem)]
-                             pr-[clamp(1.15rem,1.7vw,1.7rem)] pl-[clamp(1.7rem,2.3vw,2.4rem)]
-                             text-right font-sans text-tile text-white
-                             [text-shadow:0_1px_3px_rgba(6,12,28,0.8),0_2px_16px_rgba(6,12,28,0.6)]"
-                >
-                  {t.title}
-                </h3>
+                <div className={`relative isolate h-full w-full overflow-hidden ${t.radius}`}>
+                  <CrossfadeImage
+                    src={t.img}
+                    alt={t.title}
+                    className="px-media transition-transform duration-[900ms] ease-brand group-hover:scale-105"
+                  />
+                  {/* flat 40% black over the whole photo. Carries the card's own
+                      radius so it can never square off, clip or no clip. */}
+                  <div className={`absolute inset-0 bg-black/40 ${t.radius}`} />
+                  {/* extra top + left padding so the text clears the big curved corners */}
+                  <h3
+                    className="absolute inset-x-0 top-0 z-[1] ml-auto max-w-[21ch] pt-[clamp(1.7rem,2.3vw,2.4rem)]
+                               pr-[clamp(1.15rem,1.7vw,1.7rem)] pl-[clamp(1.7rem,2.3vw,2.4rem)]
+                               text-right font-sans text-tile text-white
+                               [text-shadow:0_1px_3px_rgba(6,12,28,0.8),0_2px_16px_rgba(6,12,28,0.6)]"
+                  >
+                    {/* keyed so the new title fades in rather than snapping */}
+                    <span key={t.title} className="block animate-fadeIn">
+                      {t.title}
+                    </span>
+                  </h3>
+                </div>
               </article>
             ))}
           </div>
@@ -157,7 +232,7 @@ export default function MonthlyTrips() {
                 onClick={() => setActive(i)}
                 className={`${month} ${
                   i === active
-                    ? 'text-[clamp(1.15rem,0.95rem+0.55vw,1.55rem)] font-bold text-blue min-[901px]:text-black min-[901px]:before:scale-100'
+                    ? 'text-[clamp(1.15rem,0.95rem+0.55vw,1.55rem)] font-bold text-blue min-[901px]:text-ink-black min-[901px]:before:scale-100'
                     : 'text-[clamp(0.88rem,0.78rem+0.32vw,1.15rem)] text-ink-faint hover:text-ink-soft min-[901px]:before:scale-0'
                 }`}
               >

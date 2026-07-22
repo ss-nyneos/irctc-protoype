@@ -31,7 +31,7 @@ const avatar = 'size-[29px] rounded-full border-2 border-white/85 object-cover -
 
 export default function Stats() {
   return (
-    <section className="bg-paper pt-[clamp(4.5rem,9vw,8rem)] pb-0">
+    <section className="bg-paper py-[var(--section-y)]">
       <div className="wrap-wide grid grid-cols-1 gap-[clamp(14px,1.5vw,26px)] min-[621px]:grid-cols-2 min-[1041px]:grid-cols-[1fr_1.32fr_1.76fr]">
         {/* ---- travellers: muted olive wash + faint rings ---- */}
         <article

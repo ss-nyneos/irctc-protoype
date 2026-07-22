@@ -4,11 +4,11 @@ import { useUI } from '../context/UI.tsx'
 
 const item =
   'inline-flex items-center gap-[0.45rem] font-medium tracking-[0.01em] ' +
-  'transition-colors duration-250 ease-brand hover:text-black ' +
+  'transition-colors duration-250 ease-brand hover:text-ink-black ' +
   '[&_svg]:text-base [&_svg]:text-blue'
 
 const link =
-  'font-semibold tracking-[0.01em] text-ink-soft transition-colors duration-250 ease-brand hover:text-black'
+  'font-semibold tracking-[0.01em] text-ink-soft transition-colors duration-250 ease-brand hover:text-ink-black'
 
 const sep = 'h-3.5 w-px flex-none bg-line-strong'
 
