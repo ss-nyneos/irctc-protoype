@@ -58,22 +58,6 @@ function CurrentPage() {
   }
 }
 
-/** The main app shell — header, content, footer, chatbot, scrollbar */
-function Shell() {
-  const { view } = useRouter();
-  const hideFooter = view.name === "customise";
-
-  return (
-    <div className="route-in flex min-h-screen flex-col bg-background">
-      <Header />
-      <main className="flex-1">
-        <CurrentPage />
-      </main>
-      {!hideFooter && <Footer />}
-      <DishaChatbot />
-    </div>
-  );
-}
 
 /**
  * "/" route — the preload overlay sits on top of a fully-mounted Shell.
@@ -245,6 +229,34 @@ function Design1Layout() {
           <Outlet />
           <FooterD1 />
           <FooterStrip />
+          <ModalRoot />
+        </div>
+      </UIProvider>
+    </PrefsProvider>
+  );
+}
+
+/** The main app shell — header, content, footer, chatbot, scrollbar */
+function Shell() {
+  const { view } = useRouter();
+  const root = useRef<HTMLDivElement>(null);
+  const hideFooter = view.name === "customise";
+  // Booking is a focused checkout flow — its own stepper replaces the site nav.
+  const hideNav = view.name === "booking";
+
+  return (
+    <PrefsProvider>
+      <UIProvider>
+        <div
+          ref={root}
+          className="route-in design-1-root flex min-h-screen flex-col bg-background"
+        >
+          {!hideNav && <NavBar />}
+          <main className="flex-1">
+            <CurrentPage />
+          </main>
+          {!hideFooter && <Footer />}
+          <DishaChatbot />
           <ModalRoot />
         </div>
       </UIProvider>

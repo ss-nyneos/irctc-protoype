@@ -61,7 +61,7 @@ export function SectionNav({
   const active = useScrollSpy(sections.map((s) => s.id));
 
   return (
-    <nav aria-label="Package sections" className="rounded-3xl border bg-white p-3 shadow-sm">
+    <nav aria-label="Package sections" className="px-1">
       <ul className="space-y-1.5">
         {sections.map((s) => {
           const isActive = active === s.id;
@@ -71,10 +71,8 @@ export function SectionNav({
                 type="button"
                 onClick={() => onNavigate(s.id)}
                 aria-current={isActive ? "location" : undefined}
-                className={`flex min-h-[54px] w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-[16px] font-bold transition ${
-                  isActive
-                    ? "bg-brand/[0.08] text-brand"
-                    : "text-muted-foreground hover:bg-secondary/70 hover:text-ink"
+                className={`flex min-h-[54px] w-full origin-left items-center gap-3 px-2 py-3 text-left text-[16px] font-bold transition-[color,transform] duration-200 ${
+                  isActive ? "scale-[1.14] text-brand" : "text-muted-foreground hover:text-ink"
                 }`}
               >
                 {s.label}

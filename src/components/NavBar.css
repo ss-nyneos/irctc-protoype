@@ -1,13 +1,21 @@
 /* ============================================================
    Floating pill navbar
    ============================================================ */
+:root {
+  /* Top offset of the pill + the pill's own height (46px badge + 7px padding
+     and 1px border either side). Pages whose first row of content sits at the
+     very top of a hero pad by this so the pill doesn't cover it. */
+  --nav-pad-y: 48px;
+  --nav-h: calc(var(--nav-pad-y) + 62px);
+}
+
 .nav {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 200;
-  padding: 48px var(--gutter) 0;
+  padding: var(--nav-pad-y) var(--gutter) 0;
   pointer-events: none;
   transform: translateY(0);
   transition: transform 0.35s var(--ease);

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import {
-  ArrowLeft,
   ArrowUpDown,
   CalendarDays,
   HandHelping,
@@ -18,7 +17,6 @@ import {
   X,
 } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
-import { useRouter } from "@/router/RouterContext";
 import { packages, getPackageById } from "@/data/packages";
 import type { BudgetBand, Climate, Experience, TourPackage } from "@/types";
 // import { DestinationMarquee } from "@/components/common/DestinationMarquee";
@@ -72,7 +70,6 @@ const PRICE_DEFAULT = Math.round((PRICE_MIN + PRICE_MAX) / 2 / 500) * 500;
 // const discountPct = (p: TourPackage) => (p.oldPrice ? (p.oldPrice - p.price) / p.oldPrice : 0);
 
 export function WorldPage({ initialCategory }: { initialCategory?: string }) {
-  const { back } = useRouter();
   const ref = useReveal();
   const [category, setCategory] = useState(initialCategory ?? "All");
   const [fromCity, setFromCity] = useState(ANY);
@@ -302,15 +299,12 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
             left off without scrolling past the headline. */}
         {/* Back is taken out of the flow so the shelf centres on the hero
             itself rather than on whatever room the button leaves beside it. */}
-        <div className="relative z-20 mx-auto w-full max-w-[1600px] px-4 pt-6 md:px-8">
-          <button
-            onClick={back}
-            type="button"
-            className="absolute left-4 top-6 z-10 inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white/15 px-3.5 py-1.5 text-[13px] font-semibold text-white backdrop-blur transition hover:bg-white/25 md:left-8"
-          >
-            <ArrowLeft size={15} /> Back
-          </button>
-
+        {/* The pill navbar is fixed, so the shelf has to start below it or the
+            pill sits straight on top of the Recent cards. */}
+        <div
+          className="relative z-20 mx-auto w-full max-w-[1600px] px-4 md:px-8"
+          style={{ paddingTop: "calc(var(--nav-h, 110px) + 1.5rem)" }}
+        >
           <div className="reveal mx-auto w-full px-16 md:px-24">
             <RecentPackagesDrawer packages={recentPackages} />
           </div>

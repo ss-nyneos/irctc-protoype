@@ -319,8 +319,8 @@ export function DishaChatbot() {
       >
         <Sparkles size={20} className="flex-none" />
         <span className="hidden leading-tight sm:block">
-          <span className="block text-[13px] font-bold">Don&apos;t know what to choose?</span>
-          <span className="block text-[11px] font-medium text-white/85">Ask Disha 2.0 — we&apos;re here to help!</span>
+          {/* <span className="block text-[13px] font-bold">Don&apos;t know what to choose?</span> */}
+          <span className="block text-[13px] font-bold text-white/85">Ask Disha 2.0 — we&apos;re here to help!</span>
         </span>
       </button>
 

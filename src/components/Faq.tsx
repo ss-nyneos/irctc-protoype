@@ -14,9 +14,9 @@ export default function Faq() {
           <h2 className="font-sans text-[42px] leading-none font-bold text-ink-black [&_span]:text-blue">
             Frequently Asked <span>Questions</span>
           </h2>
-          <p className="mt-[0.7rem] text-[1.05rem] text-ink-soft">
+          {/* <p className="mt-[0.7rem] text-[1.05rem] text-ink-soft">
             Everything worth knowing before you board.
-          </p>
+          </p> */}
         </div>
 
         {/* one continuous frame housing every row */}

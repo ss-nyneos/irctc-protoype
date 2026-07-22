@@ -129,7 +129,7 @@ export default function NavBar() {
     <header className={`nav${hidden ? ' nav--hidden' : ''}`} ref={rootRef}>
       <div className="nav__shell">
         <div className="nav__pill">
-          <a href="#top" className="nav__brand" aria-label="IRCTC Tourism home">
+          <Link to="/home" onClick={goToPage} className="nav__brand" aria-label="IRCTC Tourism home">
             <span className="nav__badge">
               <img src={logo} alt="" />
             </span>
@@ -139,7 +139,7 @@ export default function NavBar() {
               </span>
               <span className="nav__word-sub">भारतीय रेल · Ministry of Railways</span>
             </span>
-          </a>
+          </Link>
 
           <nav className="nav__links" aria-label="Primary">
             <button

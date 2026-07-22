@@ -379,9 +379,9 @@ export function BookingPage({
           >
             <ArrowLeft size={15} /> Back to package
           </button>
-          <ol className="flex items-center gap-2">
+          <ol className="flex items-center justify-center gap-2">
             {steps.map((label, i) => (
-              <li key={label} className="flex flex-1 items-center gap-2">
+              <li key={label} className="flex items-center gap-2">
                 <span
                   aria-current={i === step ? "step" : undefined}
                   className={`flex h-8 w-8 flex-none items-center justify-center rounded-full text-[13px] font-bold transition ${
@@ -394,7 +394,7 @@ export function BookingPage({
                   {label}
                 </span>
                 {i < steps.length - 1 && (
-                  <span className={`h-0.5 flex-1 rounded ${i < step ? "bg-emerald-500" : "bg-white/15"}`} />
+                  <span className={`h-0.5 w-12 rounded sm:w-24 lg:w-36 ${i < step ? "bg-emerald-500" : "bg-white/15"}`} />
                 )}
               </li>
             ))}
@@ -460,7 +460,8 @@ export function BookingPage({
                     <span className="mb-1.5 flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground">
                       <MapPin size={13} className="text-muted-foreground" /> Departure city
                     </span>
-                    <div className="flex h-12 items-center rounded-xl bg-secondary/50 px-3.5 text-[15px] font-medium text-ink">
+                    {/* min-h, not h — a long boarding list wraps to several lines. */}
+                    <div className="flex min-h-12 items-center rounded-xl bg-secondary/50 px-3.5 py-2.5 text-[15px] font-medium leading-relaxed text-ink">
                       {pkg.from} · flights booked on your selected date
                     </div>
                   </div>

@@ -21,7 +21,7 @@ export function CollapsibleSection({
   children: ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-[88px] overflow-hidden rounded-2xl border bg-white shadow-sm">
+    <section id={id} className="scroll-mt-[88px] overflow-hidden border-y bg-white">
       <h2>
         <button
           type="button"

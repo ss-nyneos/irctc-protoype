@@ -1,6 +1,5 @@
 import { useMemo, useState, type CSSProperties } from "react";
 import {
-  ArrowLeft,
   BedDouble,
   BusFront,
   CalendarDays,
@@ -98,7 +97,7 @@ const importantInclusionNotes = [
 ];
 
 export function DetailPage({ id }: { id: string }) {
-  const { back, go } = useRouter();
+  const { go } = useRouter();
   const ref = useReveal();
   const pkg = getPackageById(id) ?? packages[0];
   const detail = useMemo(() => getPackageDetail(pkg), [pkg]);
@@ -219,14 +218,7 @@ export function DetailPage({ id }: { id: string }) {
         <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-b from-transparent via-black/45 to-black/75" />
         <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent to-[#0B2E6B]" />
 
-        <div className="relative z-20 mx-auto flex w-full max-w-[1600px] items-center justify-between px-4 pt-6 md:px-8">
-          <button
-            onClick={back}
-            type="button"
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white/15 px-3.5 py-1.5 text-[13px] font-semibold text-white backdrop-blur transition hover:bg-white/25"
-          >
-            <ArrowLeft size={15} /> Back
-          </button>
+        <div className="relative z-20 mx-auto flex w-full max-w-[1600px] items-center justify-end px-4 pt-6 md:px-8">
           <div className="flex gap-2">
             <button
               type="button"
@@ -373,9 +365,11 @@ export function DetailPage({ id }: { id: string }) {
               ))}
             </div>
 
-            <div className="mt-7 rounded-3xl border bg-white p-5">
-              <div className="grid gap-5 border-t pt-6 xl:grid-cols-[minmax(0,1fr)_minmax(320px,0.78fr)]">
-                <div className="rounded-2xl border border-emerald-100 bg-emerald-50/35 p-4">
+            <div className="mt-7 overflow-hidden rounded-2xl border bg-white">
+              {/* One panel, split by a single rule — vertical when the two sit
+                  side by side, horizontal once they stack. */}
+              <div className="grid divide-y xl:grid-cols-[minmax(0,1fr)_minmax(320px,0.78fr)] xl:divide-x xl:divide-y-0">
+                <div className="p-5">
                   <div className="mb-4">
                     <div className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-emerald-700">
                       <Check size={15} /> Official inclusions
@@ -385,7 +379,7 @@ export function DetailPage({ id }: { id: string }) {
 
                   <ul className="grid gap-2.5">
                     {detailedInclusions.map((item) => (
-                      <li key={item} className="flex items-start gap-3 rounded-2xl bg-white/75 p-3 text-[14px] leading-relaxed text-foreground/82">
+                      <li key={item} className="flex items-start gap-3 text-[14px] leading-relaxed text-foreground/82">
                         <span className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-emerald-600 text-white">
                           <Check size={12} />
                         </span>
@@ -395,7 +389,7 @@ export function DetailPage({ id }: { id: string }) {
                   </ul>
                 </div>
 
-                <div className="rounded-2xl border bg-secondary/20 p-4">
+                <div className="p-5">
                   <div className="mb-4 flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-muted-foreground">
                     <X size={15} /> Exclusions
                   </div>

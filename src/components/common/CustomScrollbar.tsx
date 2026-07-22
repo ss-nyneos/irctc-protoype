@@ -120,7 +120,7 @@ export function CustomScrollbar() {
     <div
       ref={trackRef}
       onClick={handleTrackClick}
-      className="fixed right-3 -top-0 bottom-3 w-10 z-[100] cursor-pointer bg-transparent select-none"
+      className="fixed right-1 -top-0 bottom-3 w-10 z-[100] cursor-pointer bg-transparent select-none"
       style={{ touchAction: "none" }}
     >
       <div
