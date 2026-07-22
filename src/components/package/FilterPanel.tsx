@@ -52,7 +52,7 @@ export function FilterPanel({
 
   return (
     <div className="flex flex-col gap-4">
-      <section className="rounded-2xl border border-white/70 bg-white/60 p-5 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.25)] ring-1 ring-inset ring-white/60 backdrop-blur-xl">
+      <section className="rounded-2xl border border-[#DADADB] bg-white/60 p-5 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.25)] ring-1 ring-inset ring-white/60 backdrop-blur-xl">
         <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-brand">Price range</div>
 
         <div className="relative mt-8 pb-1">
@@ -89,7 +89,7 @@ export function FilterPanel({
         </div>
       </section>
 
-      <section className="overflow-hidden rounded-2xl border border-white/70 bg-white/60 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.25)] ring-1 ring-inset ring-white/60 backdrop-blur-xl">
+      <section className="overflow-hidden rounded-2xl border border-[#DADADB] bg-white/60 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.25)] ring-1 ring-inset ring-white/60 backdrop-blur-xl">
         <header className="flex items-center justify-between border-b border-white/70 px-5 py-4">
           <span className="inline-flex items-center gap-2 text-[15px] font-bold text-ink">
             <SlidersHorizontal size={16} className="text-brand" /> Refine results

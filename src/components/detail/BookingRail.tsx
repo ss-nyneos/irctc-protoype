@@ -2,13 +2,6 @@ import { Calendar, Check, MapPin, Plane, ShieldCheck, Users } from "lucide-react
 import type { BoardingPoint, CoachClass, TourPackage } from "@/types";
 import { formatINR } from "@/utils/format";
 
-/**
- * The fare panel. Holds the prime sticky slot that irctctourism.com gives to a
- * callback form and a bus advert — while its only Book Now sits at the top of
- * the page and scrolls away. Here the price travels with the reader, and the
- * class selector replaces "Starting from ₹15600", which quietly hid the fact
- * that the same tour sells at three fares.
- */
 export function BookingRail({
   pkg,
   classes,
@@ -20,8 +13,6 @@ export function BookingRail({
   onTravellers,
   departure,
   onDeparture,
-  addFlight,
-  onAddFlight,
   onBook,
 }: {
   pkg: TourPackage;
@@ -34,15 +25,15 @@ export function BookingRail({
   onTravellers: (n: number) => void;
   departure: string;
   onDeparture: (d: string) => void;
-  addFlight: boolean;
-  onAddFlight: (v: boolean) => void;
   onBook: () => void;
 }) {
-  const hasFlightAddon = pkg.flightAddon > 0;
-  const flightTotal = addFlight && hasFlightAddon ? pkg.flightAddon * travellers : 0;
+  const hasFlightAddon = false;
+  const addFlight = false;
+  const onAddFlight = (value: boolean) => value;
+  const flightTotal = 0;
   const fareTotal = selectedClass.price * travellers;
-  const gst = Math.round((fareTotal + flightTotal) * 0.05);
-  const total = fareTotal + flightTotal + gst;
+  const gst = Math.round(fareTotal * 0.05);
+  const total = fareTotal + gst;
   const saving = pkg.oldPrice ? (pkg.oldPrice - classes[0].price) * travellers : 0;
 
   return (
@@ -127,7 +118,6 @@ export function BookingRail({
               );
             })}
           </div>
-          <p className="mt-2 text-[12px] leading-snug text-muted-foreground">{selectedClass.detail}</p>
         </fieldset>
 
         <div className="mt-4 flex items-center justify-between rounded-xl border p-3">
@@ -187,7 +177,7 @@ export function BookingRail({
           </div>
         )}
 
-        {hasFlightAddon ? (
+        {hasFlightAddon && (
           <button
             onClick={() => onAddFlight(!addFlight)}
             type="button"
@@ -203,7 +193,7 @@ export function BookingRail({
             >
               <Plane size={18} />
             </span>
-            <span className="flex-1">
+            {/* <span className="flex-1">
               <span className="flex items-center gap-1.5 text-[14px] font-bold text-ink">
                 Add IRCTC flights
                 <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700">
@@ -213,7 +203,7 @@ export function BookingRail({
               <span className="text-[12px] text-muted-foreground">
                 Return airfare to {pkg.from} · from {formatINR(pkg.flightAddon)}/person
               </span>
-            </span>
+            </span> */}
             <span
               className={`flex h-6 w-6 flex-none items-center justify-center rounded-full border-2 ${
                 addFlight ? "border-brand bg-brand text-white" : "border-muted"
@@ -222,10 +212,6 @@ export function BookingRail({
               {addFlight && <Check size={13} />}
             </span>
           </button>
-        ) : (
-          <div className="mt-3 flex items-center gap-2 rounded-2xl bg-brand/5 p-3.5 text-[12px] text-muted-foreground">
-            <Plane size={16} className="flex-none text-brand" /> Onboard rail travel already included in this journey.
-          </div>
         )}
 
         {/* GST is stated here rather than sprung at checkout. */}

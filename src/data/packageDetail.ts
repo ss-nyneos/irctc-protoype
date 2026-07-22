@@ -12,40 +12,36 @@ import { cancellationBands, conductTopics, importantNotes } from "@/data/policyC
  */
 
 /**
- * Comfort tiers per travel mode, cheapest first. `delta` is the uplift over the
- * base fare. Labels follow IRCTC's own naming ("Economy - SL", "Standard - 3AC",
- * "Comfort - 2AC") so the booking form reads the way the real one does.
+ * Booking categories per travel mode, cheapest first. `delta` is the uplift over
+ * the base fare. IRCTC sells its tourism packages under two categories —
+ * "Comfort" and "Superior" — so every mode carries the same pair; only the
+ * `detail` line, which spells out what the category buys on that mode, differs.
  */
 const tiers: Record<
   TravelMode,
   Array<Omit<CoachClass, "price" | "childPrice" | "available" | "seatsLeft"> & { delta: number }>
 > = {
   Train: [
-    { code: "SL", label: "Economy", detail: "Non-AC sleeper berths, open coach", delta: 0 },
-    { code: "3AC", label: "Standard", detail: "AC 3-tier, six berths a bay", delta: 0.34 },
-    { code: "2AC", label: "Comfort", detail: "AC 2-tier, four berths a bay, curtained", delta: 0.72 },
+    { code: "CMF", label: "Comfort", detail: "AC 3-tier berths, 3-star stays", delta: 0 },
+    { code: "SUP", label: "Superior", detail: "AC 2-tier berths, 4-star stays", delta: 0.3 },
   ],
   "Rail + Road": [
-    { code: "SL", label: "Economy", detail: "Non-AC sleeper berths, open coach", delta: 0 },
-    { code: "3AC", label: "Standard", detail: "AC 3-tier, six berths a bay", delta: 0.34 },
-    { code: "2AC", label: "Comfort", detail: "AC 2-tier, four berths a bay, curtained", delta: 0.72 },
+    { code: "CMF", label: "Comfort", detail: "AC 3-tier berths, 3-star stays", delta: 0 },
+    { code: "SUP", label: "Superior", detail: "AC 2-tier berths, 4-star stays", delta: 0.3 },
   ],
   "Luxury Train": [
-    { code: "DLX", label: "Deluxe Cabin", detail: "Twin beds, en-suite bath, picture window", delta: 0 },
-    { code: "JRS", label: "Junior Suite", detail: "Larger cabin with lounge seating", delta: 0.55 },
-    { code: "PRS", label: "Presidential Suite", detail: "Full carriage, private dining room", delta: 1.6 },
+    { code: "CMF", label: "Comfort", detail: "Deluxe cabin, en-suite bath, picture window", delta: 0 },
+    { code: "SUP", label: "Superior", detail: "Suite cabin with lounge seating", delta: 0.45 },
   ],
   Air: [
-    { code: "STD", label: "Standard", detail: "3-star stays, economy airfare", delta: 0 },
-    { code: "DLX", label: "Deluxe", detail: "4-star stays, preferred flight timings", delta: 0.28 },
-    { code: "PRM", label: "Premium", detail: "5-star stays, front-row seats", delta: 0.66 },
+    { code: "CMF", label: "Comfort", detail: "3-star stays, economy airfare", delta: 0 },
+    { code: "SUP", label: "Superior", detail: "4-star stays, preferred flight timings", delta: 0.3 },
   ],
-  // Road packages are joined at the destination, so the tier you pick is the
-  // hotel category rather than a coach class.
+  // Road packages are joined at the destination, so the category you pick is the
+  // hotel grade rather than a coach class.
   Road: [
-    { code: "STD", label: "Standard", detail: "3-star stays, AC cab or coach", delta: 0 },
-    { code: "DLX", label: "Deluxe", detail: "4-star stays, private transfers", delta: 0.28 },
-    { code: "PRM", label: "Premium", detail: "5-star stays, dedicated vehicle", delta: 0.66 },
+    { code: "CMF", label: "Comfort", detail: "3-star stays, AC cab or coach", delta: 0 },
+    { code: "SUP", label: "Superior", detail: "4-star stays, private transfers", delta: 0.3 },
   ],
 };
 
@@ -179,10 +175,10 @@ function buildClasses(pkg: TourPackage): CoachClass[] {
       price,
       // Children 5–11 travel at a small discount, as on the real fare chart.
       childPrice: Math.round((price * 0.95) / 100) * 100,
-      // Classes genuinely sell out. The middle tier always survives so every
-      // package stays bookable; the other two turn over per package.
-      available: i === 1 || hash(pkg.id + tier.code) % 4 !== 0,
-      // Scarcity thins out as the class gets pricier, which is how these sell.
+      // Categories genuinely sell out. Comfort (the base) always survives so
+      // every package stays bookable; Superior turns over per package.
+      available: i === 0 || hash(pkg.id + tier.code) % 4 !== 0,
+      // Scarcity thins out as the category gets pricier, which is how these sell.
       seatsLeft: 4 + (hash(pkg.id + tier.code) % (18 - i * 5)),
     };
   });

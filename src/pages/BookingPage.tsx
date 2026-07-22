@@ -7,8 +7,10 @@ import {
   CreditCard,
   Download,
   MapPin,
+  Minus,
   Moon,
   PartyPopper,
+  Plus,
   Shield,
   Ticket,
   User,
@@ -28,6 +30,85 @@ const steps = ["Basic detail", "Passenger detail", "Review"];
 
 const berthPrefs = ["No preference", "Lower", "Middle", "Upper", "Side lower", "Side upper"];
 const idTypes = ["Aadhaar", "PAN", "Passport", "Voter ID", "Driving licence"];
+
+/** Per-person rates by how many share the room, the way IRCTC prints them:
+ *  the fewer to a room, the more each pays. The base category fare is the
+ *  single-occupancy rate; the rest step down from it. */
+interface OccupancyRates {
+  single: number;
+  double: number;
+  triple: number;
+  childWithBed: number;
+  childNoBed: number;
+}
+
+function occupancyRates(price: number): OccupancyRates {
+  const r10 = (n: number) => Math.round(n / 10) * 10;
+  const r5 = (n: number) => Math.round(n / 5) * 5;
+  return {
+    single: price,
+    double: r10(price * 0.752),
+    triple: r10(price * 0.649),
+    childWithBed: r5(price * 0.587),
+    childNoBed: r5(price * 0.488),
+  };
+}
+
+/** The room combinations IRCTC sells, in its own order and wording. One room
+ *  takes one of these; the fare is the sum of its occupants' rates. */
+const accommodationTypes: Array<{
+  id: string;
+  label: string;
+  adults: number;
+  children: number;
+  fare: (r: OccupancyRates) => number;
+}> = [
+  { id: "a1", label: "1 Adult", adults: 1, children: 0, fare: (r) => r.single },
+  {
+    id: "a1cb",
+    label: "1 Adult + 1 Child with bed",
+    adults: 1,
+    children: 1,
+    fare: (r) => r.single + r.childWithBed,
+  },
+  {
+    id: "a1cn",
+    label: "1 Adult + 1 child WithOut Extra Bed",
+    adults: 1,
+    children: 1,
+    fare: (r) => r.single + r.childNoBed,
+  },
+  { id: "a2", label: "2 Adult", adults: 2, children: 0, fare: (r) => r.double * 2 },
+  {
+    id: "a2cb",
+    label: "2 Adult + 1 Child with bed",
+    adults: 2,
+    children: 1,
+    fare: (r) => r.double * 2 + r.childWithBed,
+  },
+  {
+    id: "a2cn",
+    label: "2 Adult + 1 Child without bed",
+    adults: 2,
+    children: 1,
+    fare: (r) => r.double * 2 + r.childNoBed,
+  },
+  {
+    id: "a2c2",
+    label: "2 Adult + 2 child One WithOut Extra Bed & Other With Bed",
+    adults: 2,
+    children: 2,
+    fare: (r) => r.double * 2 + r.childWithBed + r.childNoBed,
+  },
+  { id: "a3", label: "3 Adult", adults: 3, children: 0, fare: (r) => r.triple * 3 },
+  {
+    id: "a3cn",
+    label: "3 Adult+1 child WithOut Extra Bed",
+    adults: 3,
+    children: 1,
+    fare: (r) => r.triple * 3 + r.childNoBed,
+  },
+];
 
 interface Passenger {
   name: string;
@@ -68,7 +149,7 @@ function Field({
   const id = `f-${label.replace(/\W+/g, "-").toLowerCase()}`;
   return (
     <div>
-      <label htmlFor={id} className="mb-1.5 block text-[13px] font-semibold text-ink">
+      <label htmlFor={id} className="mb-1.5 block text-[13px] font-medium text-muted-foreground">
         {label}
       </label>
       <input
@@ -115,7 +196,7 @@ function Select({
   const id = `s-${label.replace(/\W+/g, "-").toLowerCase()}`;
   return (
     <div>
-      <label htmlFor={id} className="mb-1.5 flex items-center gap-1.5 text-[13px] font-semibold text-ink">
+      <label htmlFor={id} className="mb-1.5 flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground">
         {Icon && <Icon size={13} className="text-muted-foreground" />}
         {label}
       </label>
@@ -140,7 +221,6 @@ export function BookingPage({
   classCode,
   departure,
   boarding,
-  travellers: initialPax,
 }: {
   id: string;
   classCode?: string;
@@ -170,8 +250,9 @@ export function BookingPage({
     const wanted = detail.classes.find((c) => c.code === classCode);
     return wanted?.available ? wanted.code : firstAvailable.code;
   });
-  const [adults, setAdults] = useState(initialPax ?? 1);
-  const [children, setChildren] = useState(0);
+  // One entry per room, holding the id of the accommodation type chosen for it.
+  // Starts empty — the traveller picks the occupancy before they can continue.
+  const [rooms, setRooms] = useState<string[]>([""]);
 
   // ── Step 2: passengers ──────────────────────────────────────
   const [pax, setPax] = useState<Passenger[]>([blankPassenger(false)]);
@@ -186,7 +267,13 @@ export function BookingPage({
   const boardAt = detail.boarding.find((b) => b.code === boardingCode);
   const deboardAt = detail.boarding.find((b) => b.code === deboardingCode);
 
-  const fare = cls.price * adults + cls.childPrice * children;
+  const rates = occupancyRates(cls.price);
+  const chosen = rooms.map((id) => accommodationTypes.find((t) => t.id === id) ?? null);
+  const roomsComplete = chosen.every(Boolean);
+
+  const adults = chosen.reduce((n, t) => n + (t?.adults ?? 0), 0);
+  const children = chosen.reduce((n, t) => n + (t?.children ?? 0), 0);
+  const fare = chosen.reduce((sum, t) => sum + (t ? t.fare(rates) : 0), 0);
   const gst = Math.round(fare * 0.05);
   const total = fare + gst;
   const partAmount = Math.round(total * 0.25);
@@ -284,7 +371,7 @@ export function BookingPage({
     <div ref={ref} className="min-h-screen pb-24">
       {/* ── Stepper ──────────────────────────────────────────── */}
       <div className="bg-navy text-white">
-        <div className="mx-auto max-w-5xl px-4 py-6 md:px-6">
+        <div className="mx-auto max-w-6xl px-4 py-6 md:px-6">
           <button
             onClick={back}
             type="button"
@@ -316,7 +403,7 @@ export function BookingPage({
       </div>
       <AccentBar />
 
-      <div className="mx-auto grid max-w-5xl gap-6 px-4 py-8 md:px-6 lg:grid-cols-[1.5fr_1fr]">
+      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:px-6 lg:grid-cols-[minmax(0,1.45fr)_minmax(360px,0.95fr)] lg:gap-10">
         <div className="min-w-0">
           {/* ── Step 1 — Basic detail ──────────────────────────── */}
           {step === 0 && (
@@ -336,11 +423,11 @@ export function BookingPage({
                 />
 
                 <div>
-                  <span className="mb-1.5 flex items-center gap-1.5 text-[13px] font-semibold text-ink">
+                  <span className="mb-1.5 flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground">
                     <Moon size={13} className="text-muted-foreground" /> Duration
                   </span>
                   {/* Read-only, as on IRCTC — it's a fact about the package, not a choice. */}
-                  <div className="flex h-12 items-center rounded-xl bg-secondary/50 px-3.5 text-[15px] font-semibold text-ink">
+                  <div className="flex h-12 items-center rounded-xl bg-secondary/50 px-3.5 text-[15px] font-medium text-ink">
                     {pkg.nights} Nights / {pkg.days} Days
                   </div>
                 </div>
@@ -370,10 +457,10 @@ export function BookingPage({
                   </>
                 ) : (
                   <div className="sm:col-span-2">
-                    <span className="mb-1.5 flex items-center gap-1.5 text-[13px] font-semibold text-ink">
+                    <span className="mb-1.5 flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground">
                       <MapPin size={13} className="text-muted-foreground" /> Departure city
                     </span>
-                    <div className="flex h-12 items-center rounded-xl bg-secondary/50 px-3.5 text-[15px] font-semibold text-ink">
+                    <div className="flex h-12 items-center rounded-xl bg-secondary/50 px-3.5 text-[15px] font-medium text-ink">
                       {pkg.from} · flights booked on your selected date
                     </div>
                   </div>
@@ -382,7 +469,7 @@ export function BookingPage({
 
               {/* ── Categories ───────────────────────────────── */}
               <fieldset className="mt-7 border-t pt-6">
-                <legend className="text-[13px] font-semibold text-ink">Available categories</legend>
+                <legend className="text-[14px] font-bold text-ink">Available categories</legend>
                 <div className="mt-3 space-y-2">
                   {detail.classes.map((c) => {
                     const isSelected = c.code === selectedCode && c.available;
@@ -408,19 +495,19 @@ export function BookingPage({
                         />
                         <span className="min-w-0 flex-1">
                           <span className="flex flex-wrap items-center gap-2">
-                            <span className="text-[14px] font-bold text-ink">
+                            <span className="text-[14px] font-medium text-ink">
                               {c.label} - {c.code}
                             </span>
                             {/* Never colour alone: the words carry the meaning too. */}
                             <span
-                              className={`text-[12px] font-bold ${c.available ? "text-emerald-700" : "text-destructive"}`}
+                              className={`text-[12px] font-medium ${c.available ? "text-emerald-700" : "text-destructive"}`}
                             >
                               {c.available ? "Available" : "Not available"}
                             </span>
                           </span>
                           <span className="block text-[12px] text-muted-foreground">{c.detail}</span>
                         </span>
-                        <span className="flex-none text-right font-display text-[15px] font-bold tabular-nums text-ink">
+                        <span className="flex-none text-right text-[15px] font-semibold tabular-nums text-ink">
                           {formatINR(c.price)}
                         </span>
                       </label>
@@ -429,44 +516,111 @@ export function BookingPage({
                 </div>
               </fieldset>
 
-              {/* ── Occupancy ────────────────────────────────── */}
+              {/* ── Rates card, as IRCTC prints it: read-only reference for
+                     the accommodation picker below. ─────────────────── */}
               <div className="mt-7 border-t pt-6">
-                <h3 className="flex items-center gap-1.5 text-[13px] font-semibold text-ink">
+                <h3 className="flex flex-wrap items-center gap-1.5 text-[14px] font-bold text-ink">
                   <BedDouble size={14} className="text-muted-foreground" /> Rooms / occupancy
-                  <span className="font-medium text-muted-foreground">(rates are per person)</span>
+                  <span className="text-[12px] font-normal text-muted-foreground">(rates are per person)</span>
                 </h3>
 
-                <div className="mt-3 space-y-3">
-                  <div className="flex items-center justify-between gap-4 rounded-2xl bg-secondary/40 p-3.5">
-                    <div className="min-w-0">
-                      <div className="text-[14px] font-bold text-ink">Occupancy (adult)</div>
-                      <div className="text-[12px] text-muted-foreground">12 years and over · twin sharing</div>
-                    </div>
-                    <div className="flex flex-none items-center gap-3">
-                      <span className="w-20 text-right font-display text-[15px] font-bold tabular-nums text-ink">
-                        {formatINR(cls.price)}
-                      </span>
-                      <Stepper value={adults} min={1} max={12} onChange={setAdults} label="adults" />
-                    </div>
+                <div className="mt-3 space-y-2">
+                  <div className="rounded-2xl bg-secondary/40 p-3.5">
+                    <div className="text-[13px] font-medium text-muted-foreground">Occupancy (adult)</div>
+                    <dl className="mt-2 grid gap-x-4 gap-y-1.5 text-[13px] sm:grid-cols-3">
+                      {[
+                        ["Single", rates.single],
+                        ["Double", rates.double],
+                        ["Triple", rates.triple],
+                      ].map(([k, v]) => (
+                        <div key={k as string} className="flex justify-between gap-2 sm:justify-start">
+                          <dt className="text-muted-foreground">{k}</dt>
+                          <dd className="font-semibold tabular-nums text-ink">{formatINR(v as number)}</dd>
+                        </div>
+                      ))}
+                    </dl>
                   </div>
 
-                  <div className="flex items-center justify-between gap-4 rounded-2xl bg-secondary/40 p-3.5">
-                    <div className="min-w-0">
-                      <div className="text-[14px] font-bold text-ink">Child (5 - 11 yrs)</div>
-                      <div className="text-[12px] text-muted-foreground">Shares a berth with an adult</div>
-                    </div>
-                    <div className="flex flex-none items-center gap-3">
-                      <span className="w-20 text-right font-display text-[15px] font-bold tabular-nums text-ink">
-                        {formatINR(cls.childPrice)}
-                      </span>
-                      <Stepper value={children} min={0} max={8} onChange={setChildren} label="children" />
-                    </div>
+                  <div className="rounded-2xl bg-secondary/40 p-3.5">
+                    <div className="text-[13px] font-medium text-muted-foreground">Child (5 - 11 yrs)</div>
+                    <dl className="mt-2 grid gap-x-4 gap-y-1.5 text-[13px] sm:grid-cols-3">
+                      {[
+                        ["Child with bed", rates.childWithBed],
+                        ["Child without bed", rates.childNoBed],
+                      ].map(([k, v]) => (
+                        <div key={k as string} className="flex justify-between gap-2 sm:justify-start">
+                          <dt className="text-muted-foreground">{k}</dt>
+                          <dd className="font-semibold tabular-nums text-ink">{formatINR(v as number)}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                </div>
+              </div>
+
+              {/* ── Accommodation type, one dropdown per room ─────── */}
+              <div className="mt-7 border-t pt-6">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h3 className="text-[14px] font-bold text-ink">Select accommodation type</h3>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      aria-label="Remove a room"
+                      onClick={() => setRooms((r) => (r.length > 1 ? r.slice(0, -1) : r))}
+                      disabled={rooms.length <= 1}
+                      className="flex h-9 w-9 items-center justify-center rounded-full border text-ink transition hover:bg-secondary disabled:opacity-30"
+                    >
+                      <Minus size={15} />
+                    </button>
+                    <span className="w-14 text-center text-[13px] tabular-nums text-muted-foreground">
+                      {rooms.length} room{rooms.length > 1 ? "s" : ""}
+                    </span>
+                    <button
+                      type="button"
+                      aria-label="Add a room"
+                      onClick={() => setRooms((r) => (r.length < 6 ? [...r, ""] : r))}
+                      disabled={rooms.length >= 6}
+                      className="flex h-9 w-9 items-center justify-center rounded-full border text-ink transition hover:bg-secondary disabled:opacity-30"
+                    >
+                      <Plus size={15} />
+                    </button>
                   </div>
                 </div>
 
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  {rooms.map((value, i) => (
+                    <Select
+                      key={i}
+                      label={`Room ${i + 1}`}
+                      value={value}
+                      onChange={(v) => setRooms((r) => r.map((old, j) => (j === i ? v : old)))}
+                      options={[
+                        { value: "", label: "Select" },
+                        ...accommodationTypes.map((t) => ({
+                          value: t.id,
+                          label: `${t.label} (${t.fare(rates).toLocaleString("en-IN")}/-)`,
+                        })),
+                      ]}
+                    />
+                  ))}
+                </div>
+
+                <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-2 border-t pt-4 text-[13px]">
+                  {[
+                    ["Total passenger", String(adults + children)],
+                    ["Adult", String(adults)],
+                    ["Child", String(children)],
+                    ["Fare", formatINR(fare)],
+                  ].map(([k, v]) => (
+                    <div key={k} className="flex items-center gap-1.5">
+                      <dt className="text-muted-foreground">{k}</dt>
+                      <dd className="font-semibold tabular-nums text-ink">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
+
                 <p className="mt-3 text-[12px] text-muted-foreground">
-                  No. of pax: <b className="tabular-nums text-ink">{adults + children}</b>. Infants under 5 travel free
-                  and need no berth.
+                  Infants under 5 travel free and need no berth.
                 </p>
               </div>
             </div>
@@ -715,8 +869,9 @@ export function BookingPage({
             {step === 0 && (
               <button
                 onClick={goToPassengers}
+                disabled={!roomsComplete}
                 type="button"
-                className="min-h-[48px] rounded-xl bg-brand px-7 text-[15px] font-bold text-white shadow-lg transition hover:brightness-95"
+                className="min-h-[48px] rounded-xl bg-brand px-7 text-[15px] font-bold text-white shadow-lg transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Continue
               </button>
@@ -745,6 +900,12 @@ export function BookingPage({
             )}
           </div>
 
+          {step === 0 && !roomsComplete && (
+            <p className="mt-3 text-right text-[13px] text-muted-foreground">
+              Choose an accommodation type for every room to continue.
+            </p>
+          )}
+
           {step === 1 && touched && !step2Valid && (
             <p role="alert" className="mt-3 text-right text-[13px] font-semibold text-destructive">
               Please complete the highlighted fields.
@@ -755,10 +916,10 @@ export function BookingPage({
         {/* ── Fare summary ─────────────────────────────────────── */}
         <div className="lg:sticky lg:top-24 lg:self-start">
           <div className="overflow-hidden rounded-3xl border bg-white shadow-sm">
-            <ImageWithFallback img={pkg.img} grad={pkg.grad} alt={pkg.name} className="h-32" />
-            <div className="p-5">
-              <div className="font-display text-[16px] font-semibold leading-tight text-ink">{pkg.name}</div>
-              <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-[12px] text-muted-foreground">
+            <ImageWithFallback img={pkg.img} grad={pkg.grad} alt={pkg.name} className="h-48 md:h-52" />
+            <div className="p-6">
+              <div className="font-display text-[20px] font-bold leading-tight text-ink">{pkg.name}</div>
+              <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5 text-[13px] text-muted-foreground">
                 <span className="inline-flex items-center gap-1">
                   <Ticket size={12} /> {detail.code}
                 </span>
@@ -770,28 +931,26 @@ export function BookingPage({
                 </span>
               </div>
 
-              <div className="my-4 border-t" />
+              <div className="my-5 border-t" />
 
-              <dl className="space-y-1.5 text-[13px] tabular-nums">
-                <div className="flex justify-between gap-2">
-                  <dt className="text-muted-foreground">
-                    {cls.label} - {cls.code} × {adults}
-                  </dt>
-                  <dd className="font-semibold">{formatINR(cls.price * adults)}</dd>
-                </div>
-                {children > 0 && (
-                  <div className="flex justify-between gap-2">
-                    <dt className="text-muted-foreground">Child (5-11) × {children}</dt>
-                    <dd className="font-semibold">{formatINR(cls.childPrice * children)}</dd>
+              <dl className="space-y-2.5 text-[14px] tabular-nums">
+                {/* One line per room, so the occupancy chosen above is what the
+                    traveller sees priced here. */}
+                {chosen.map((t, i) => (
+                  <div key={i} className="flex justify-between gap-2">
+                    <dt className="min-w-0 text-muted-foreground">
+                      Room {i + 1} · {t ? t.label : "Not selected"}
+                    </dt>
+                    <dd className="font-semibold">{formatINR(t ? t.fare(rates) : 0)}</dd>
                   </div>
-                )}
+                ))}
                 <div className="flex justify-between gap-2">
                   <dt className="text-muted-foreground">GST (5%)</dt>
                   <dd className="font-semibold">{formatINR(gst)}</dd>
                 </div>
                 <div className="mt-2 flex items-center justify-between border-t pt-2">
                   <dt className="font-bold text-ink">Total</dt>
-                  <dd className="font-display text-[22px] font-bold text-ink">{formatINR(total)}</dd>
+                  <dd className="font-display text-[28px] font-bold text-ink">{formatINR(total)}</dd>
                 </div>
               </dl>
 
@@ -809,7 +968,7 @@ export function BookingPage({
               )}
 
               {startDate && (
-                <div className="mt-4 flex items-center gap-2 rounded-xl bg-secondary/50 p-2.5 text-[12px] text-foreground/75">
+                <div className="mt-5 flex items-center gap-2 rounded-xl bg-secondary/50 p-3 text-[13px] text-foreground/75">
                   <Calendar size={13} className="flex-none text-brand" />
                   Departs {startDate}
                   {boardAt ? ` from ${boardAt.station}` : ""}
@@ -819,45 +978,6 @@ export function BookingPage({
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-/** Small +/− counter. Touch targets stay at 44px even though the chrome is small. */
-function Stepper({
-  value,
-  min,
-  max,
-  onChange,
-  label,
-}: {
-  value: number;
-  min: number;
-  max: number;
-  onChange: (n: number) => void;
-  label: string;
-}) {
-  return (
-    <div className="flex flex-none items-center gap-1">
-      <button
-        type="button"
-        aria-label={`One fewer ${label}`}
-        onClick={() => onChange(Math.max(min, value - 1))}
-        disabled={value <= min}
-        className="flex h-11 w-11 items-center justify-center rounded-lg border bg-white text-ink transition hover:bg-secondary disabled:opacity-30"
-      >
-        −
-      </button>
-      <span className="w-6 text-center font-bold tabular-nums text-ink">{value}</span>
-      <button
-        type="button"
-        aria-label={`One more ${label}`}
-        onClick={() => onChange(Math.min(max, value + 1))}
-        disabled={value >= max}
-        className="flex h-11 w-11 items-center justify-center rounded-lg border bg-white text-ink transition hover:bg-secondary disabled:opacity-30"
-      >
-        +
-      </button>
     </div>
   );
 }

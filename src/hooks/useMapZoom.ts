@@ -21,9 +21,9 @@ const IDENTITY: ZoomState = { k: 1, x: 0, y: 0 };
  * reader halfway down a page. Zoom is ctrl/⌘ + wheel, drag, double-click, or the
  * buttons — all of which are unambiguous intent.
  */
-export function useMapZoom(width: number, height: number, maxZoom = 8) {
+export function useMapZoom(width: number, height: number, maxZoom = 8, initial: ZoomState = IDENTITY) {
   const frameRef = useRef<HTMLDivElement | null>(null);
-  const [zoom, setZoom] = useState<ZoomState>(IDENTITY);
+  const [zoom, setZoom] = useState<ZoomState>(initial);
   const drag = useRef<{ x: number; y: number; tx: number; ty: number } | null>(null);
 
   /** Never let the box show emptiness beside the map. */
@@ -68,7 +68,11 @@ export function useMapZoom(width: number, height: number, maxZoom = 8) {
 
   const zoomIn = useCallback(() => zoomAt(1.6, width / 2, height / 2), [zoomAt, width, height]);
   const zoomOut = useCallback(() => zoomAt(1 / 1.6, width / 2, height / 2), [zoomAt, width, height]);
-  const reset = useCallback(() => setZoom(IDENTITY), []);
+  const reset = useCallback(() => setZoom(clamp(initial)), [clamp, initial]);
+
+  useEffect(() => {
+    setZoom(clamp(initial));
+  }, [clamp, initial]);
 
   // Wheel has to be bound by hand: React's synthetic listener is passive, and a
   // passive listener can't preventDefault the browser's own page zoom.

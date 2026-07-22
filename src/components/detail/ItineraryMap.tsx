@@ -17,6 +17,8 @@ const LABEL_EDGE = 40;
 const LABEL_INSET = 238;
 const PLATE_H = 42;
 const BADGE_R = 11;
+const ROUTE_PADDING = 160;
+const DEFAULT_ROUTE_ZOOM = 2.8;
 
 /**
  * SVG has no text metrics before paint, so plate widths are estimated. Helvetica
@@ -81,13 +83,41 @@ export function ItineraryMap({
   onActive: (index: number) => void;
 }) {
   const uid = useId().replace(/:/g, "");
-  const { zoom, frameRef, zoomIn, zoomOut, reset, handlers, project } = useMapZoom(
-    INDIA_VIEW.width,
-    INDIA_VIEW.height,
-  );
 
   const stops = useMemo(() => resolveStops(days), [days]);
   const points = useMemo(() => stops.map((s) => projectPoint(s.coordinates)), [stops]);
+  const initialZoom = useMemo(() => {
+    if (points.length < 2) return { k: 1, x: 0, y: 0 };
+
+    const xs = points.map((p) => p[0]);
+    const ys = points.map((p) => p[1]);
+    const minX = Math.min(...xs);
+    const maxX = Math.max(...xs);
+    const minY = Math.min(...ys);
+    const maxY = Math.max(...ys);
+    const routeW = Math.max(1, maxX - minX);
+    const routeH = Math.max(1, maxY - minY);
+    const fitted = Math.min(
+      INDIA_VIEW.width / (routeW + ROUTE_PADDING * 2),
+      INDIA_VIEW.height / (routeH + ROUTE_PADDING * 2),
+    );
+    const k = Math.min(DEFAULT_ROUTE_ZOOM, Math.max(1.35, fitted));
+    const cx = (minX + maxX) / 2;
+    const cy = (minY + maxY) / 2;
+
+    return {
+      k,
+      x: Math.min(0, Math.max(INDIA_VIEW.width - INDIA_VIEW.width * k, INDIA_VIEW.width / 2 - cx * k)),
+      y: Math.min(0, Math.max(INDIA_VIEW.height - INDIA_VIEW.height * k, INDIA_VIEW.height / 2 - cy * k)),
+    };
+  }, [points]);
+
+  const { zoom, frameRef, zoomIn, zoomOut, reset, handlers, project } = useMapZoom(
+    INDIA_VIEW.width,
+    INDIA_VIEW.height,
+    8,
+    initialZoom,
+  );
 
   const captions = useMemo(
     () => stops.map((s) => (s.from === s.to ? `DAY ${s.from}` : `DAY ${s.from}–${s.to}`)),
@@ -120,7 +150,8 @@ export function ItineraryMap({
     return <ItineraryRail days={days} active={active} onActive={onActive} />;
   }
 
-  const day = days[active];
+  // `active` is -1 until a pin or a label is picked, so there may be no open day.
+  const day: ItineraryDay | undefined = days[active];
   const travelSeconds = Math.max(10, stops.length * 2.2);
   const k = zoom.k;
 
@@ -296,6 +327,9 @@ export function ItineraryMap({
                   role="button"
                   aria-label={`Stop ${i + 1}, day ${stop.from}, ${stop.label}`}
                 >
+                  {/* Invisible hit target: the pin itself is a thin stick and a
+                      small head, which is a hard thing to click. */}
+                  <circle cx={0} cy={-stick} r={head + 12} fill="transparent" />
                   {/* Ground shadow — the pin stands on the map, not in it. */}
                   <ellipse cx={0} cy={1} rx={head * 0.8} ry={head * 0.3} fill="#0B1B33" opacity={0.18} />
                   <line
@@ -363,16 +397,24 @@ export function ItineraryMap({
       {/* ── The open day, in words ──────────────────────────── */}
       <div className="mt-4 flex items-start gap-3 rounded-2xl border border-border bg-white p-4">
         <div key={active} className="min-w-0 flex-1 animate-tileIn">
-          <span className="text-[11px] font-bold uppercase tracking-wide text-brand">Day {day.day}</span>
-          <h3 className="mt-0.5 font-display text-[17px] font-bold text-ink">{day.title}</h3>
-          <p className="mt-1 text-[14px] leading-relaxed text-foreground/75">{day.detail}</p>
+          {day ? (
+            <>
+              <span className="text-[11px] font-bold uppercase tracking-wide text-brand">Day {day.day}</span>
+              <h3 className="mt-0.5 font-display text-[17px] font-bold text-ink">{day.title}</h3>
+              <p className="mt-1 text-[14px] leading-relaxed text-foreground/75">{day.detail}</p>
+            </>
+          ) : (
+            <p className="text-[14px] leading-relaxed text-muted-foreground">
+              Pick a pin on the map — or a stop from the list beside it — to open that day.
+            </p>
+          )}
         </div>
 
         <div className="flex flex-none gap-2">
           <button
             type="button"
             onClick={() => select(Math.max(0, active - 1))}
-            disabled={active === 0}
+            disabled={active <= 0}
             aria-label="Previous day"
             className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-ink transition hover:bg-secondary/50 disabled:opacity-35"
           >
@@ -380,7 +422,7 @@ export function ItineraryMap({
           </button>
           <button
             type="button"
-            onClick={() => select(Math.min(days.length - 1, active + 1))}
+            onClick={() => select(active < 0 ? 0 : Math.min(days.length - 1, active + 1))}
             disabled={active === days.length - 1}
             aria-label="Next day"
             className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-ink transition hover:bg-secondary/50 disabled:opacity-35"
