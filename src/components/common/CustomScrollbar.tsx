@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import { usePrefs } from "@/context/Prefs";
 
 export function CustomScrollbar() {
+  const { theme } = usePrefs();
   const [scrollRatio, setScrollRatio] = useState(0);
   const [isScrollingUp, setIsScrollingUp] = useState(false);
   const [isAtBottom, setIsAtBottom] = useState(false);
@@ -135,7 +137,7 @@ export function CustomScrollbar() {
       >
         {/* Custom train image indicator (increased size) */}
         <img
-          src="/scroll.png"
+          src={theme === "dark" ? "/darkTrain.png" : "/scroll.png"}
           alt="Train scroll indicator"
           className="w-full h-full object-contain drop-shadow-md"
           draggable="false"
