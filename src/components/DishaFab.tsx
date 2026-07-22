@@ -13,7 +13,7 @@ export default function DishaFab() {
       onClick={openDisha}
       aria-label={t('nav.disha')}
       title={t('nav.disha')}
-      className="fixed right-4 bottom-4 z-[150] grid size-[62px] place-items-center overflow-hidden rounded-full
+      className="fixed right-4 bottom-4 z-[150] grid size-[80px] place-items-center overflow-hidden rounded-full
                  bg-white shadow-[0_14px_38px_-14px_rgba(10,15,25,0.45)]
                  transition-[transform,box-shadow] duration-300 ease-brand
                  hover:-translate-y-0.5

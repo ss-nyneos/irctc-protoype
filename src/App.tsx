@@ -21,6 +21,7 @@ import { PrefsProvider } from "@/context/Prefs";
 import NavBar from "@/components/NavBar";
 import FooterD1 from "@/components/Footer";
 import FooterStrip from "@/components/FooterStrip";
+import DishaFab from "@/components/DishaFab";
 import ModalRoot from "@/components/ModalRoot";
 import Home from "@/pages/Home";
 import Packages from "@/pages/Packages";
@@ -229,6 +230,8 @@ function Design1Layout() {
           <Outlet />
           <FooterD1 />
           <FooterStrip />
+          {/* layout-level so every page in this layout gets it, not just Home */}
+          <DishaFab />
           <ModalRoot />
         </div>
       </UIProvider>

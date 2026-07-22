@@ -12,7 +12,6 @@ import MonthlyTrips from '../components/MonthlyTrips.tsx'
 import Faq from '../components/Faq.tsx'
 import AppPromo from '../components/AppPromo.tsx'
 import ExploreCta from '../components/ExploreCta.tsx'
-import DishaFab from '../components/DishaFab.tsx'
 import { LuxuryTrainsSection } from "@/components/home/LuxuryTrainsSection";
 import { VandeBharatScrollMorph } from "@/components/home/VandeBharatScrollMorph";
 import vandeBharatPhoto from "@/assets/cta/vande-bharat.png";
@@ -45,7 +44,6 @@ export default function Home() {
       {/* AppPromo is the last section before the footer */}
       <ExploreCta />
       <AppPromo />
-      <DishaFab />
     </main>
   )
 }
