@@ -112,8 +112,10 @@
   gap: 0.4rem;
   padding: 0.72rem 1.15rem;
   border-radius: 999px;
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: var(--text-nav);
+  line-height: var(--text-nav--line-height);
+  letter-spacing: var(--text-nav--letter-spacing);
+  font-weight: var(--text-nav--font-weight);
   color: var(--ink-soft);
   white-space: nowrap;
   transition: background 0.25s var(--ease), color 0.25s var(--ease);
@@ -153,8 +155,10 @@
   border-radius: 999px;
   background: transparent;
   color: var(--ink-soft);
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: var(--text-nav);
+  line-height: var(--text-nav--line-height);
+  letter-spacing: var(--text-nav--letter-spacing);
+  font-weight: var(--text-nav--font-weight);
   white-space: nowrap;
   transition: background 0.25s var(--ease), color 0.25s var(--ease);
 }
@@ -522,6 +526,5 @@
   }
   .nav__disha {
     padding: 0.72rem 0.95rem;
-    font-size: 0.88rem;
   }
 }

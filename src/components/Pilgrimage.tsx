@@ -39,8 +39,8 @@ export default function Pilgrimage() {
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_55%,rgba(7,22,52,0.5)_100%)]" />
               </div>
               <div className="pt-[1.1rem]">
-                <h3 className="font-sans text-[1.42rem] leading-[1.05] font-medium text-ink">{p.name}</h3>
-                <span className="mt-[0.4rem] inline-flex items-center gap-[0.32rem] text-[0.9rem] font-semibold text-blue-ink">
+                <h3 className="font-sans text-card-title leading-[1.05] font-medium text-ink">{p.name}</h3>
+                <span className="mt-[0.4rem] inline-flex items-center gap-[0.32rem] font-sans text-card-sub font-semibold text-blue-ink">
                   <Pin />
                   {p.place}
                 </span>

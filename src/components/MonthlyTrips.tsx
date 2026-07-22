@@ -127,14 +127,13 @@ export default function MonthlyTrips() {
                   loading="lazy"
                   className="px-media transition-transform duration-[900ms] ease-brand group-hover:scale-105"
                 />
-                {/* gentle top-weighted wash just behind the title */}
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(6,12,28,0.34)_0%,rgba(6,12,28,0)_42%)]" />
+                {/* flat 40% black over the whole photo */}
+                <div className="absolute inset-0 bg-black/40" />
                 {/* extra top + left padding so the text clears the big curved corners */}
                 <h3
-                  className="absolute inset-x-0 top-0 z-[1] max-w-[21ch] pt-[clamp(1.7rem,2.3vw,2.4rem)]
+                  className="absolute inset-x-0 top-0 z-[1] ml-auto max-w-[21ch] pt-[clamp(1.7rem,2.3vw,2.4rem)]
                              pr-[clamp(1.15rem,1.7vw,1.7rem)] pl-[clamp(1.7rem,2.3vw,2.4rem)]
-                             font-sans text-[clamp(0.85rem,0.75rem+0.35vw,1.05rem)] leading-[1.25]
-                             font-medium text-white
+                             text-right font-sans text-tile text-white
                              [text-shadow:0_1px_3px_rgba(6,12,28,0.8),0_2px_16px_rgba(6,12,28,0.6)]"
                 >
                   {t.title}

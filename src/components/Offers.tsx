@@ -1,4 +1,4 @@
-import { ChevronL, ChevronR, Ferry, Mountain, Temple } from './Icons.tsx'
+import { ChevronL, ChevronR } from './Icons.tsx'
 
 /* Two four-image mosaics with angled seams, like the reference tiles. */
 const escapes = [
@@ -65,17 +65,11 @@ export default function Offers() {
                 <li>Port Blair</li>
               </ul>
             </div>
-            <span className="offer__badge" aria-hidden="true">
-              <Ferry />
-            </span>
           </article>
 
           {/* ---- escapes ---- */}
           <article className="offer offer--tile">
             <Mosaic imgs={escapes} />
-            <span className="offer__badge" aria-hidden="true">
-              <Mountain />
-            </span>
             <div className="offer__caption">
               <h3>Exciting Escapes</h3>
               <p>Explore Nature, Wildlife &amp; Culture</p>
@@ -85,9 +79,6 @@ export default function Offers() {
           {/* ---- spiritual ---- */}
           <article className="offer offer--tile">
             <Mosaic imgs={spiritual} />
-            <span className="offer__badge" aria-hidden="true">
-              <Temple />
-            </span>
             <div className="offer__caption">
               <h3>Spiritual Journeys</h3>
               <p>Heritage. Culture. Timeless Memories.</p>

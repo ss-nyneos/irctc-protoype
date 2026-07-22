@@ -1,4 +1,5 @@
 import { footer, contact } from '../data/content.ts'
+import emblem from '../assets/irctc-emblem.png'
 import { useUI } from '../context/UI.tsx'
 import { Phone, Mail, ArrowUpRight } from './Icons.tsx'
 
@@ -16,9 +17,9 @@ const contactLink =
 
 const colLink =
   'text-[0.94rem] text-ink-soft transition-[color,padding-left] duration-250 ease-brand ' +
-  'hover:pl-1 hover:text-black'
+  'hover:pl-1 hover:text-white'
 
-const legalLink = 'text-[0.88rem] text-ink-soft transition-colors duration-250 ease-brand hover:text-black'
+const legalLink = 'text-[0.88rem] text-ink-soft transition-colors duration-250 ease-brand hover:text-white'
 
 export default function Footer() {
   const { openPartPayment } = useUI()
@@ -29,17 +30,13 @@ export default function Footer() {
           <div>
             <a href="#top" className="inline-flex items-center gap-[0.7rem]">
               <span
-                className="grid size-11 place-items-center rounded-xl border border-line bg-card"
+                className="grid size-11 place-items-center rounded-xl border border-line bg-white"
                 aria-hidden="true"
               >
-                <svg viewBox="0 0 40 40" width="34" height="34">
-                  <path d="M9 30V18c0-6.1 4.9-11 11-11s11 4.9 11 11v12" fill="none" stroke="var(--blue)" strokeWidth="2.6" strokeLinecap="round" />
-                  <circle cx="20" cy="18" r="2.4" fill="var(--navy)" />
-                  <rect x="7.5" y="30" width="25" height="2.6" rx="1.3" fill="var(--navy)" />
-                </svg>
+                <img src={emblem} alt="" className="size-8 object-contain" />
               </span>
               <span>
-                <span className="block font-sans text-[1.24rem] font-bold tracking-[-0.01em] text-black">
+                <span className="block font-sans text-[1.24rem] font-bold tracking-[-0.01em] text-white">
                   IRCTC Tourism
                 </span>
                 <span className="mt-0.5 block font-deva text-[0.74rem] text-ink-faint">
@@ -61,7 +58,7 @@ export default function Footer() {
                 <li key={s}>
                   <a
                     href="#top"
-                    className="text-[0.9rem] font-medium text-ink-soft transition-colors duration-250 ease-brand hover:text-black"
+                    className="text-[0.9rem] font-medium text-ink-soft transition-colors duration-250 ease-brand hover:text-white"
                   >
                     {s}
                   </a>
