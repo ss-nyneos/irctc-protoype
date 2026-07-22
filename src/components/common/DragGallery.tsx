@@ -315,12 +315,10 @@ export function DragGallery({
     return () => cancelAnimationFrame(raf);
   }, [draw]);
 
-  const setPill = (visible: boolean) => {
-    const pill = pillRef.current;
-    if (!pill) return;
-    pill.style.opacity = visible ? "1" : "0";
-    pill.style.transform = visible ? "translate(-50%, -50%) scale(1)" : "translate(-50%, -50%) scale(0.92)";
-  };
+  /* The pill stays on screen the whole time. It used to hide on pointer-down
+     and only return if you hadn't actually dragged (moved < 4), so any real
+     drag made it vanish for good. It's pointer-events-none, so leaving it up
+     can't interfere with the drag itself. */
 
   const onDown = (e: React.PointerEvent<HTMLDivElement>) => {
     const st = s.current;
@@ -330,7 +328,6 @@ export function DragGallery({
     st.lastX = e.clientX;
     st.lastY = e.clientY;
     st.moved = 0;
-    setPill(false);
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   };
 
@@ -353,7 +350,6 @@ export function DragGallery({
     const st = s.current;
     if (!st.dragging) return;
     st.dragging = false;
-    if (st.moved < 4) setPill(true);
   };
 
   const cells = Array.from({ length: grid.cols * grid.rows }, (_, i) => i);

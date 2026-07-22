@@ -2,11 +2,11 @@
    Laid out as a single 6-column grid so the rows stay locked together —
    tall cards span 3, the short band spans 2 each. */
 const CARDS = [
-  { kind: 'mountains',      place: 'Kashmir',   img: '/img/kashmir-hd.jpg',        size: 'lg' },
+  { kind: 'Mountains',      place: 'Kashmir',   img: '/img/kashmir-hd.jpg',        size: 'lg' },
   { kind: 'Beaches',        place: 'Goa',       img: '/img/goa.jpg',               size: 'lg' },
-  { kind: 'greenery',       place: 'Meghalaya', img: '/img/kerala-waterfall.jpg',  size: 'sm' },
-  { kind: 'ghats',          place: 'Varanasi',  img: '/img/varanasi-ghats.jpg',    size: 'sm' },
-  { kind: 'passes',         place: 'Ladakh',    img: '/img/ladakh.jpg',            size: 'sm' },
+  { kind: 'Greenery',       place: 'Meghalaya', img: '/img/kerala-waterfall.jpg',  size: 'sm' },
+  { kind: 'Ghats',          place: 'Varanasi',  img: '/img/varanasi-ghats.jpg',    size: 'sm' },
+  { kind: 'Passes',         place: 'Ladakh',    img: '/img/ladakh.jpg',            size: 'sm' },
   { kind: 'Royal heritage', place: 'Jaipur',    img: '/img/hawa-mahal.jpg',        size: 'lg' },
   { kind: 'Backwaters',     place: 'Kerala',    img: '/img/kerala-backwaters.jpg', size: 'lg' },
 ] as const
@@ -20,11 +20,11 @@ const caption =
 
 export default function Experiences() {
   return (
-    <section className="section bg-paper-2" id="experiences">
+    <section className="section bg-paper" id="experiences">
       <div className="wrap-wide">
         <div className="section-head mb-[clamp(2.2rem,4vw,3.4rem)]">
           <h2 className="h2">
-            Come for the sights,<br />stay for the <span>rituals</span>
+            Come for the sights,<br />stay for the <span>experience</span>
           </h2>
         </div>
 

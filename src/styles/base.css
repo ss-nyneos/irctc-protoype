@@ -273,6 +273,43 @@ em,
   overflow: hidden;
 }
 
+/* Per-card gradient border for the Treasures coverflow. A gradient fill masked
+   down to just the padding ring (the box XOR its own content-box), so the
+   stroke traces .arch's curved top instead of squaring off the way
+   `border-image` would. `border-radius: inherit` pulls the arch curve from the
+   card; --g1/--g2 are set per card from the photo's own colours. Kept thin
+   (2px) so it reads as a light, coloured edge rather than a heavy frame. */
+.grad-ring {
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(150deg, var(--g1, #ffffff) 0%, var(--g2, #999999) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Grey radial "stage" behind the Treasures-of-India coverflow. Without it the
+   cards float on bare paper and the section reads empty; the soft grey pool
+   grounds the rail and concentrates attention on the centred card. Neutral ink
+   on the light page, a faint white lift on the dark one, so it never turns to
+   mud on either surface. */
+.treasure-stage {
+  background: radial-gradient(
+    56% 60% at 50% 46%,
+    rgba(23, 25, 31, 0.1) 0%,
+    rgba(23, 25, 31, 0.045) 42%,
+    rgba(23, 25, 31, 0) 72%
+  );
+}
+[data-theme='dark'] .treasure-stage {
+  background: radial-gradient(
+    56% 60% at 50% 46%,
+    rgba(255, 255, 255, 0.09) 0%,
+    rgba(255, 255, 255, 0.03) 42%,
+    rgba(255, 255, 255, 0) 72%
+  );
+}
+
 /* ---------- Cultural motif: railway-track hairline divider ---------- */
 .track-rule {
   height: 14px;

@@ -4,299 +4,229 @@
   text-align: center;
   /* lifted top edge as it slides up over the pinned hero */
   box-shadow: 0 -24px 50px -24px rgba(10, 15, 30, 0.28);
+  /* Tighter than the global --section-y: the palace render carries its own
+     generous margin above the domes and below the plinth, so the standard
+     section padding stacked on top of that read as a band of dead space. */
+  padding-block: clamp(1.75rem, 3.5vw, 3rem) clamp(1.5rem, 3vw, 2.5rem);
   --p-ink: #4a3418;
-  --p-icon: #1a1a1a;
   --p-gold: #c1852c;
-  --p-sub: #86663c;
 }
 
 /* ---- Header --------------------------------------------------------- */
+/* Overlaid onto the palace image, centred in the dome band between the two
+   inner domes — the top ~fifth of the facade render is open sky, so the
+   heading now fills that space instead of sitting above it with a gap. */
 .palace__head {
-  margin-bottom: clamp(2.4rem, 5vw, 4.2rem);
+  position: absolute;
+  top: 19%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  margin: 0;
+  width: max-content;
+  max-width: 92vw;
+  pointer-events: none;
 }
-.palace__crest {
-  width: clamp(52px, 6vw, 78px);
-  height: auto;
-  color: var(--p-gold);
-  margin: 0 auto 0.5rem;
-}
+/* Helvetica 700 / 42px / 100% line-height / -4% tracking, per spec. Capped at
+   42px but allowed to scale down on narrow screens so it can't spill into the
+   inner domes when the facade shrinks.
+   Written out rather than reusing .h2: that shared class sets its own
+   letter-spacing: 0, which would fight the -4% called for here. */
 .palace__title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(0.9rem, 2vw, 1.8rem);
   font-family: var(--sans);
   font-weight: 700;
-  color: var(--black);
-  font-size: 42px;
-  letter-spacing: 0;
-  line-height: 1;
+  font-size: clamp(1.5rem, 4.2vw, 42px);
+  line-height: 100%;
+  letter-spacing: -0.04em;
+  text-align: center;
+  color: #323232;
 }
-/* keep "Our Services" together as one flex item (only the last word is accented) */
-.palace__title > .palace__titletext {
-  color: var(--black);
-}
-/* the accent word reads orange here, overriding the global blue on .h2 span */
-.palace__title .palace__titletext span {
-  color: #2475EE; /* IRCTC orange */
-}
-.palace__sub {
-  margin-top: 0.85rem;
-  font-family: var(--sans);
-  color: var(--p-sub);
-  font-size: clamp(1rem, 0.9rem + 0.45vw, 1.32rem);
+.palace__title span {
+  color: #2475ee;
 }
 
-/* ---- Grid of arches ------------------------------------------------- */
-.palace__grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  /* tighter column gap than the row gap: the arches are the artwork, so the
-     width freed up here goes straight into each dome */
-  gap: clamp(0.4rem, 1vw, 1rem) clamp(0.1rem, 0.35vw, 0.35rem);
-  align-items: start;
-  width: 100%;
-  max-width: var(--wrap-wide);
-  margin-inline: auto;
-  /* deliberately narrower than the global --gutter so the six domes read a
-     touch larger; the section header still uses the standard gutter */
-  padding-inline: clamp(0.75rem, 2vw, 1.5rem);
-}
-
-/* Named `svc`, not `arch`: base.css owns a global `.arch` motif that sets
-   `overflow: hidden`, which clipped the hover popup at the tile edge. */
-.svc {
+/* ============================================================
+   The palace photo — one continuous image, not a grid of tiles.
+   Each service photo is inset into the %-coordinates of its carved
+   window (see WINDOWS in Services.tsx), so the whole facade scales
+   and reflows as a single piece.
+   ============================================================ */
+.palace__photo {
   position: relative;
-  aspect-ratio: 714 / 932;
-  cursor: pointer;
+  /* Full-bleed, edge to edge. No padding-inline here on purpose: the
+     percentage top/left on .svc resolves against this element's padding box,
+     so any inset would push every photo off its window. */
+  width: 100vw;
+  left: 50%;
+  margin-left: -50vw;
 }
-.svc:hover {
-  z-index: 12;
-}
-/* golden glow that blooms inside the arch on hover */
-.svc::before {
-  content: '';
-  position: absolute;
-  inset: 7% 10% 12%;
-  border-radius: 48% 48% 14% 14%;
-  background: radial-gradient(58% 54% at 50% 42%, rgba(201, 140, 44, 0.32), rgba(201, 140, 44, 0) 72%);
-  opacity: 0;
-  z-index: 0;
+.palace__facade {
+  display: block;
+  width: 100%;
+  height: auto;
   pointer-events: none;
-  transition: opacity 0.4s var(--ease);
-}
-.svc:hover::before {
-  opacity: 1;
+  user-select: none;
 }
 
-.svc__frame {
+/* Named `svc`, not `arch`: base.css owns a global `.arch` motif that also sets
+   overflow, and index.css owns `.reveal` — neither may be used here, because
+   both write to `translate`/`opacity` and would fight the centring below. */
+.svc {
+  position: absolute;
+  translate: -50% -50%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  /* The exact cusped Mughal arch, traced from the PNG opening (see ARCH_CLIP in
+     Services.tsx). A border-radius can only make a rounded dome, which left a
+     cream triangle at the pointed apex — the clip path fills it precisely. */
+  clip-path: url(#svc-arch);
+  isolation: isolate;
+  /* drop-shadow, not box-shadow: box-shadow would be clipped away by clip-path,
+     whereas the filter shadow follows the arch silhouette */
+  transition: filter 0.4s var(--ease);
+}
+.svc:hover,
+.svc:focus-visible {
+  z-index: 12;
+  filter: drop-shadow(0 14px 22px rgba(60, 40, 15, 0.45));
+}
+
+.svc__photo {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  pointer-events: none;
-  z-index: 1;
-  transition: filter 0.4s var(--ease), transform 0.4s var(--ease);
+  object-fit: cover;
+  transition: transform 0.7s var(--ease);
 }
-/* No drop-shadow here on purpose: arch-frame.png is a fully OPAQUE rectangle
-   (alpha 255 throughout, #fefefe ground) with the arch painted on it, so a
-   CSS drop-shadow traces the image's bounding box rather than the dome —
-   producing a white square behind the arch on hover. Only the colour lift
-   remains; the info box is the hover affordance. */
-.svc:hover .svc__frame {
-  filter: saturate(1.35);
+.svc:hover .svc__photo {
+  transform: scale(1.07);
 }
 
-.svc__content {
+/* keeps the caption legible over any photograph */
+.svc__scrim {
   position: absolute;
-  left: 13%;
-  right: 13%;
-  top: 28%;
-  bottom: 13%;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(0.5rem, 1.1vw, 0.9rem);
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 12, 20, 0) 42%,
+    rgba(10, 12, 20, 0.62) 100%
+  );
+  transition: opacity 0.4s var(--ease);
 }
-/* full-width box that wraps the icon: it gives the popup something to hang
-   off (its bottom edge is the icon's bottom edge) and keeps the popup's
-   width relative to the tile rather than to the glyph */
-.svc__glyph {
-  position: relative;
-  width: 100%;
-  display: grid;
-  place-items: center;
-}
-.svc__icon {
-  font-size: clamp(2.5rem, 4.4vw, 4.2rem);
-  color: var(--p-icon);
-}
-/* uploaded PNG glyphs — sized to sit like the line icons */
-.svc__icon--img {
-  width: clamp(2.7rem, 4.7vw, 4.6rem);
-  height: clamp(2.7rem, 4.7vw, 4.6rem);
-  object-fit: contain;
-}
+
 .svc__label {
+  position: absolute;
+  inset-inline: 4%;
+  bottom: 5%;
   font-family: var(--sans);
-  font-weight: var(--text-svc--font-weight);
-  font-size: var(--text-svc);
-  letter-spacing: var(--text-svc--letter-spacing);
+  font-weight: 600;
+  font-size: clamp(0.6rem, 0.92vw, 0.86rem);
   line-height: 1.15;
+  letter-spacing: -0.01em;
   text-align: center;
-  color: #323232;
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(6, 12, 28, 0.75);
   transition: opacity 0.25s var(--ease);
-}
-/* each word on its own line so the label fits inside the dome */
-.svc__labelword {
-  display: block;
-}
-/* the popup takes the label's place on hover */
-.svc:hover .svc__label {
-  opacity: 0;
 }
 
 /* ---- Hover popup ---------------------------------------------------- */
 .svc__pop {
   position: absolute;
-  left: 50%;
-  top: 100%; /* the glyph's bottom edge — the icon stays fully visible */
-  margin-top: clamp(0.5rem, 1vw, 0.85rem);
-  width: min(130%, 244px); /* 130% of the 74%-wide content box ≈ 96% of the tile */
-  transform: translate(-50%, 12px);
-  z-index: 6;
-  padding: clamp(0.95rem, 1.4vw, 1.25rem);
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 8% 7%;
   text-align: left;
   font-family: var(--sans);
-  background: #fff;
-  border-radius: 18px;
-  box-shadow:
-    0 26px 54px -18px rgba(60, 40, 15, 0.42),
-    0 4px 16px rgba(60, 40, 15, 0.12);
+  background: rgba(20, 14, 4, 0.88);
+  backdrop-filter: blur(3px);
   opacity: 0;
-  visibility: hidden;
   pointer-events: none;
-  transition:
-    opacity 0.35s var(--ease),
-    transform 0.35s var(--ease),
-    visibility 0s 0.35s;
+  transition: opacity 0.32s var(--ease);
 }
-.svc:hover .svc__pop {
+.svc:hover .svc__pop,
+.svc:focus-visible .svc__pop {
   opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, 0);
   pointer-events: auto;
-  transition:
-    opacity 0.35s var(--ease),
-    transform 0.35s var(--ease);
 }
 .svc__pop-title {
-  font-family: inherit;
-  font-weight: var(--text-svc--font-weight);
-  font-size: var(--text-svc);
-  letter-spacing: var(--text-svc--letter-spacing);
-  line-height: var(--text-svc--line-height);
-  color: var(--p-ink);
+  font-weight: 700;
+  font-size: clamp(0.62rem, 0.95vw, 0.9rem);
+  line-height: 1.15;
+  color: #fff;
 }
 .svc__pop-desc {
-  margin-top: 0.4rem;
-  font-size: var(--text-svc);
-  letter-spacing: var(--text-svc--letter-spacing);
-  line-height: 1.5; /* not the token's 100% — this wraps to several lines */
-  color: #6b5740;
+  font-size: clamp(0.5rem, 0.78vw, 0.75rem);
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.82);
+  /* the openings are narrow — keep the blurb to what actually fits */
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .svc__pop-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  margin-top: 0.85rem;
-  font-family: inherit;
+  gap: 0.35rem;
+  margin-top: 0.15rem;
   font-weight: 700;
-  font-size: var(--text-svc);
-  letter-spacing: var(--text-svc--letter-spacing);
-  color: var(--p-gold);
+  font-size: clamp(0.5rem, 0.78vw, 0.75rem);
+  color: #f0c98a;
 }
 .svc__pop-circ {
   display: inline-grid;
   place-items: center;
-  width: 27px;
-  height: 27px;
-  font-size: 0.95rem;
+  width: 1.35em;
+  height: 1.35em;
   border-radius: 50%;
-  border: 1.4px solid var(--p-gold);
-  transition: transform 0.3s var(--ease), background 0.3s var(--ease), color 0.3s var(--ease);
-}
-.svc__pop-link:hover .svc__pop-circ {
-  transform: translateX(2px);
-  background: var(--p-gold);
-  color: #fff;
+  border: 1.2px solid currentColor;
 }
 
 /* ---- Responsive ----------------------------------------------------- */
-@media (max-width: 1024px) {
-  .palace__grid { grid-template-columns: repeat(4, 1fr); }
-}
-@media (max-width: 720px) {
-  .palace__grid { grid-template-columns: repeat(3, 1fr); }
+/* The openings get very small on a phone, so the caption is dropped and the
+   photo alone carries the window; the popup still names the service. */
+@media (max-width: 700px) {
+  .svc__label,
+  .svc__pop-desc,
+  .svc__pop-link {
+    display: none;
+  }
+  .svc__pop {
+    justify-content: center;
+    text-align: center;
+    padding: 6%;
+  }
 }
 @media (max-width: 560px) {
-  .palace__title { font-size: 30px; }
-}
-@media (max-width: 480px) {
-  .palace__grid { grid-template-columns: repeat(2, 1fr); }
+  .palace__title {
+    font-size: 30px;
+  }
 }
 
 /* ============================================================
-   Dark theme — the arches become glowing, lantern-lit niches.
-   arch-frame.png is an OPAQUE cream rectangle with the arch painted on
-   it, so on a dark page it reads as a white box. Inverting flips the
-   cream ground to near-black and swings the warm lines back to warm;
-   `screen` then drops the near-black ground into the page so only the
-   arch itself glows — no square, just light.
+   Dark theme — the cream facade is inverted so its near-white ground
+   drops into the night page and only the carved relief glows. The
+   service photos sit above that and are left untouched.
    ============================================================ */
 [data-theme='dark'] .palace {
-  --p-sub: #b89b6c;
   box-shadow: 0 -24px 60px -24px rgba(0, 0, 0, 0.6);
 }
-/* `.svc` is its own stacking context (will-change on .reveal), so the frame's
-   `screen` blend needs a backdrop to dissolve into. Painting the tile with the
-   SAME navy as the page means the inverted near-black ground screens straight
-   back to page-navy — no square, and the tile is invisible against the section
-   so only the glowing dome remains. */
-[data-theme='dark'] .svc {
+/* #323232 is all but invisible on the night page — the accent stays blue */
+[data-theme='dark'] .palace__title {
+  color: var(--black);
+}
+[data-theme='dark'] .palace__photo {
   background: var(--paper);
 }
-[data-theme='dark'] .svc__frame {
-  filter: invert(1) hue-rotate(180deg) brightness(1.12) saturate(1.3);
+[data-theme='dark'] .palace__facade {
+  filter: invert(1) hue-rotate(180deg) brightness(1.1) saturate(1.25);
   mix-blend-mode: screen;
-}
-[data-theme='dark'] .svc:hover .svc__frame {
-  filter: invert(1) hue-rotate(180deg) brightness(1.5) saturate(1.55);
-}
-/* golden glyphs so they read as lit inside the niche. SVG icons take the gold
-   directly; the PNG line-art is dark, so it's inverted to white then colourised
-   to a matching gold (darken → sepia → saturate → brighten). */
-[data-theme='dark'] .svc__icon {
-  color: #e6b65f;
-}
-[data-theme='dark'] .svc__icon--img {
-  filter: invert(1) brightness(0.6) sepia(1) saturate(2.2) hue-rotate(-6deg) brightness(1.12);
-}
-[data-theme='dark'] .svc__label {
-  color: var(--ink);
-}
-/* soft, always-on warm glow behind each dome — the lantern within */
-[data-theme='dark'] .svc::before {
-  opacity: 0.55;
-  background: radial-gradient(
-    56% 52% at 50% 40%,
-    rgba(243, 200, 130, 0.3),
-    rgba(243, 200, 130, 0) 72%
-  );
-}
-[data-theme='dark'] .svc:hover::before {
-  opacity: 0.95;
 }

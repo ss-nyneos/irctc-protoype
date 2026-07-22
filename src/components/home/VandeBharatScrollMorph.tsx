@@ -48,12 +48,15 @@ const TRAIN_PATH =
 
 // ─── 2. Design tokens ──────────────────────────────────────────────────────
 
+/* Theme tokens, not fixed hex: these resolve through --vb-* (see tokens.css),
+   which invert under [data-theme='dark'] so the whole morph flips to night
+   instead of staying a light band in dark mode. Inline style honours var(). */
 const T = {
-  bg: "#F5F6F7",   // cool steel-white
-  ink: "#0E1B2B",   // near-navy (headline + body text)
-  muted: "#5B6672",   // secondary text
-  accent: "#E8532E",   // VB saffron-orange (check icons, ticks)
-  rail: "#8FA0B2",   // cool steel-blue (dividers)
+  bg: "var(--vb-bg)",       // section surface
+  ink: "var(--vb-ink)",     // headline + body text
+  muted: "var(--vb-muted)", // secondary text
+  accent: "var(--vb-accent)", // VB saffron-orange (check icons, ticks)
+  rail: "var(--vb-rail)",   // dividers
 };
 
 // ─── 3. Checklist data ─────────────────────────────────────────────────────

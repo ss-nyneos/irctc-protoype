@@ -60,6 +60,11 @@
   line-height: 1.02;
   letter-spacing: -0.02em;
 }
+/* keeps "Explore the world" on a single line (saffron + white side by side) */
+.hero__line {
+  display: flex;
+  gap: 0.28em;
+}
 /* solid flag colours — no gradient. The deeper shadow keeps saffron and green
    legible where the footage runs bright behind them. */
 .hero__band {

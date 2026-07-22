@@ -1,4 +1,5 @@
 import Hero from '../components/Hero.tsx'
+import TripGenieStrip from '../components/TripGenieStrip.tsx'
 import Services from '../components/Services.tsx'
 import Offers from '../components/Offers.tsx'
 import Stats from '../components/Stats.tsx'
@@ -12,7 +13,6 @@ import MonthlyTrips from '../components/MonthlyTrips.tsx'
 import Faq from '../components/Faq.tsx'
 import AppPromo from '../components/AppPromo.tsx'
 import ExploreCta from '../components/ExploreCta.tsx'
-import DishaFab from '../components/DishaFab.tsx'
 import { LuxuryTrainsSection } from "@/components/home/LuxuryTrainsSection";
 import { VandeBharatScrollMorph } from "@/components/home/VandeBharatScrollMorph";
 import vandeBharatPhoto from "@/assets/cta/vande-bharat.png";
@@ -25,6 +25,7 @@ export default function Home() {
     <main>
       <CustomScrollbar />
       <Hero />
+      <TripGenieStrip />
       <Services />
 
       <Offers />
@@ -45,7 +46,6 @@ export default function Home() {
       {/* AppPromo is the last section before the footer */}
       <ExploreCta />
       <AppPromo />
-      <DishaFab />
     </main>
   )
 }

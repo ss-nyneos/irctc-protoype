@@ -1,11 +1,28 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search, Pin, Calendar, Users } from './Icons.tsx'
+import { usePrefs } from '../context/Prefs.tsx'
 import heroVideo from '../assets/hero-india.mp4'
+import heroVideoDark from '../assets/darkModeHero.mp4'
 
 export default function Hero() {
   const [where, setWhere] = useState('')
   const navigate = useNavigate()
+  const { theme } = usePrefs()
+  const isDark = theme === 'dark'
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  /* Changing <video src> alone doesn't reliably re-decode — the element can sit
+     on the previous clip's last frame. load() forces the swap without
+     remounting the node (see the note on the element below). */
+  useEffect(() => {
+    const v = videoRef.current
+    if (!v) return
+    v.load()
+    v.play().catch(() => {
+      /* autoplay can be blocked; the poster still shows */
+    })
+  }, [isDark])
 
 
   const onSubmit = (e: FormEvent) => {
@@ -16,9 +33,14 @@ export default function Hero() {
 
   return (
     <section className="hero" id="top">
+      {/* Deliberately NOT keyed: App.tsx's GSAP pins `.hero__img` on mount, so
+          remounting on a theme toggle would leave that tween bound to a
+          detached node and kill the hero drift. The node persists and the
+          effect above reloads it in place instead. */}
       <video
+        ref={videoRef}
         className="hero__img"
-        src={heroVideo}
+        src={isDark ? heroVideoDark : heroVideo}
         poster="/img/taj-dawn.jpg"
         autoPlay
         muted
@@ -29,8 +51,11 @@ export default function Hero() {
       <div className="hero__inner wrap">
         {/* three solid bands, stacked in flag order: saffron, white, green */}
         <h1 className="hero__heading">
-          <span className="hero__band hero__band--saffron">Explore</span>
-          <span className="hero__band hero__band--white">the world</span>
+          {/* line 1: "Explore the world" (saffron + white), line 2: "with IRCTC" (green) */}
+          <span className="hero__line">
+            <span className="hero__band hero__band--saffron">Explore</span>
+            <span className="hero__band hero__band--white">the world</span>
+          </span>
           <span className="hero__band hero__band--green">with IRCTC</span>
         </h1>
 

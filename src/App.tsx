@@ -2,7 +2,6 @@ import { useRef } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation, Outlet } from "react-router-dom";
 import { RouterProvider, useRouter } from "@/router/RouterContext";
 import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { DishaChatbot } from "@/components/chatbot/DishaChatbot";
 import { HomePage } from "@/pages/HomePage";
 import { WorldPage } from "@/pages/WorldPage";
@@ -21,6 +20,7 @@ import { PrefsProvider } from "@/context/Prefs";
 import NavBar from "@/components/NavBar";
 import FooterD1 from "@/components/Footer";
 import FooterStrip from "@/components/FooterStrip";
+import DishaFab from "@/components/DishaFab";
 import ModalRoot from "@/components/ModalRoot";
 import Home from "@/pages/Home";
 import Packages from "@/pages/Packages";
@@ -229,6 +229,8 @@ function Design1Layout() {
           <Outlet />
           <FooterD1 />
           <FooterStrip />
+          {/* layout-level so every page in this layout gets it, not just Home */}
+          <DishaFab />
           <ModalRoot />
         </div>
       </UIProvider>
@@ -255,7 +257,12 @@ function Shell() {
           <main className="flex-1">
             <CurrentPage />
           </main>
-          {!hideFooter && <Footer />}
+          {!hideFooter && (
+            <>
+              <FooterD1 />
+              <FooterStrip />
+            </>
+          )}
           <DishaChatbot />
           <ModalRoot />
         </div>

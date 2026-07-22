@@ -43,7 +43,7 @@ export const strings = {
 
     'sec.trending': 'Trending journeys this season',
     'sec.experiences': 'Find Your Perfect Escape',
-    'sec.destinations': 'The best-kept secrets of India',
+    'sec.destinations': 'Treasures Of India',
     'sec.trains': 'Some journeys are the destination.',
     'sec.pilgrimage': 'Faith, on rails',
     'sec.faq': 'Frequently Asked',

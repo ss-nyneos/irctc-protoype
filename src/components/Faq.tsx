@@ -72,7 +72,7 @@ export default function Faq() {
                               px-[clamp(1.2rem,2.5vw,2rem)] text-left
                               ${
                                 isOpen
-                                  ? 'py-[clamp(1.6rem,3vw,2.4rem)] min-[561px]:min-h-[clamp(200px,22vw,250px)]'
+                                  ? 'py-[clamp(1.1rem,1.8vw,1.6rem)] min-[561px]:min-h-[clamp(200px,22vw,250px)]'
                                   : 'py-[clamp(1.15rem,2.2vw,1.7rem)]'
                               }`}
                 >

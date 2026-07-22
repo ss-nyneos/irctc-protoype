@@ -26,26 +26,31 @@ const SLOTS = [
     area: 'a',
     place: '[grid-area:a]',
     radius: 'rounded-[var(--mt-sm)_var(--mt-sm)_var(--mt-big)_var(--mt-sm)]',
+    textPos: 'top',
   },
   {
     area: 'b',
     place: '[grid-area:b]',
     radius: 'rounded-[var(--mt-sm)_var(--mt-sm)_var(--mt-big)_var(--mt-big)]',
+    textPos: 'top',
   },
   {
     area: 'c',
     place: '[grid-area:c]',
     radius: 'rounded-[var(--mt-sm)_var(--mt-big)_var(--mt-sm)_var(--mt-sm)]',
+    textPos: 'bottom',
   },
   {
     area: 'd',
     place: '[grid-area:d]',
     radius: 'rounded-[var(--mt-big)_var(--mt-big)_var(--mt-sm)_var(--mt-sm)]',
+    textPos: 'bottom',
   },
   {
     area: 'e',
     place: '[grid-area:e]',
     radius: 'rounded-[var(--mt-big)_var(--mt-sm)_var(--mt-sm)_var(--mt-sm)]',
+    textPos: 'bottom',
   },
 ] as const
 
@@ -200,12 +205,15 @@ export default function MonthlyTrips() {
                   {/* flat 40% black over the whole photo. Carries the card's own
                       radius so it can never square off, clip or no clip. */}
                   <div className={`absolute inset-0 bg-black/40 ${t.radius}`} />
-                  {/* extra top + left padding so the text clears the big curved corners */}
+                  {/* top row (a, b) keeps the title top-right, clearing the big
+                      bottom corners; bottom row (c, d, e) sits bottom-right,
+                      clearing the big top corners */}
                   <h3
-                    className="absolute inset-x-0 top-0 z-[1] ml-auto max-w-[21ch] pt-[clamp(1.7rem,2.3vw,2.4rem)]
+                    className={`absolute inset-x-0 z-[1] ml-auto max-w-[21ch]
                                pr-[clamp(1.15rem,1.7vw,1.7rem)] pl-[clamp(1.7rem,2.3vw,2.4rem)]
                                text-right font-sans text-tile text-white
-                               [text-shadow:0_1px_3px_rgba(6,12,28,0.8),0_2px_16px_rgba(6,12,28,0.6)]"
+                               [text-shadow:0_1px_3px_rgba(6,12,28,0.8),0_2px_16px_rgba(6,12,28,0.6)]
+                               ${t.textPos === 'top' ? 'top-0 pt-[clamp(1.7rem,2.3vw,2.4rem)]' : 'bottom-0 pb-[clamp(1.7rem,2.3vw,2.4rem)]'}`}
                   >
                     {/* keyed so the new title fades in rather than snapping */}
                     <span key={t.title} className="block animate-fadeIn">

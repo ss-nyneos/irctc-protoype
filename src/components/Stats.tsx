@@ -1,4 +1,61 @@
+import { useEffect, useRef, useState } from 'react'
 import { Star } from './Icons.tsx'
+
+/* Counts up to `to` the first time the number scrolls into view, then stops.
+   Large values use en-IN grouping so they read 2,40,000 rather than 240,000.
+   Under prefers-reduced-motion it renders the final figure straight away. */
+function CountUp({
+  to,
+  decimals = 0,
+  suffix = '',
+  duration = 1700,
+}: {
+  to: number
+  decimals?: number
+  suffix?: string
+  duration?: number
+}) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const [val, setVal] = useState(0)
+  const ran = useRef(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setVal(to)
+      return
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting || ran.current) return
+        ran.current = true
+        io.disconnect()
+        const start = performance.now()
+        const tick = (now: number) => {
+          const p = Math.min(1, (now - start) / duration)
+          // ease-out cubic, so it decelerates into the final figure
+          setVal(to * (1 - Math.pow(1 - p, 3)))
+          if (p < 1) requestAnimationFrame(tick)
+          else setVal(to)
+        }
+        requestAnimationFrame(tick)
+      },
+      { threshold: 0.4 },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [to, duration])
+
+  const text = decimals > 0 ? val.toFixed(decimals) : Math.round(val).toLocaleString('en-IN')
+
+  return (
+    <span ref={ref}>
+      {text}
+      {suffix}
+    </span>
+  )
+}
 
 const avatars = [
   '/img/taj-front.jpg',
@@ -30,8 +87,12 @@ const sub = 'text-[clamp(0.84rem,0.8rem+0.2vw,0.98rem)] leading-snug text-white/
 const avatar = 'size-[29px] rounded-full border-2 border-white/85 object-cover -ml-[9px] first:ml-0'
 
 export default function Stats() {
+  /* Recessed grey band plus hairline rules top and bottom, marking the section
+     off from the plain-paper ones around it. --paper-2 and --line are the
+     shared tokens, so both invert in dark mode rather than staying greys that
+     go muddy. */
   return (
-    <section className="bg-paper py-[var(--section-y)]">
+    <section className="border-y border-line bg-paper-2 py-[var(--section-y)]">
       <div className="wrap-wide grid grid-cols-1 gap-[clamp(14px,1.5vw,26px)] min-[621px]:grid-cols-2 min-[1041px]:grid-cols-[1fr_1.32fr_1.76fr]">
         {/* ---- travellers: muted olive wash + faint rings ---- */}
         <article
@@ -44,7 +105,7 @@ export default function Stats() {
                        rounded-full bg-[repeating-radial-gradient(circle,transparent_0_24px,rgba(255,255,255,0.08)_24px_25px)]"
           />
           <div className={`${body} top-1/2 -translate-y-1/2`}>
-            <span className={num}>2,40,000+</span>
+            <span className={num}><CountUp to={240000} suffix="+" /></span>
             <span className={label}>Happy travellers a year</span>
             <p className={`${note} mt-[0.7rem] max-w-[22ch]`}>
               Journeys booked with the trust of Indian Railways.
@@ -58,7 +119,7 @@ export default function Stats() {
         >
           <img src="/img/train-scenic.jpg" alt="" className={bg} data-parallax="11" loading="lazy" />
           <div className={`${body} bottom-0`}>
-            <span className={num}>1,200+</span>
+            <span className={num}><CountUp to={1200} suffix="+" /></span>
             <span className={label}>Curated packages</span>
             <p className={`${note} mt-[0.25rem] max-w-[34ch]`}>Handpicked across Bharat &amp; beyond</p>
           </div>
@@ -82,13 +143,13 @@ export default function Stats() {
             {/* vertical rule, top half only */}
             <div className={`${cell} border-r border-white/32`}>
               <span className={big}>
-                4 <em>Luxury Trains</em>
+                <CountUp to={4} /> <em>Luxury Trains</em>
               </span>
               <span className={sub}>Maharajas', Golden Chariot &amp; more</span>
             </div>
 
             <div className={cell}>
-              <span className={big}>100%</span>
+              <span className={big}><CountUp to={100} suffix="%" /></span>
               <span className={sub}>Secure government payments</span>
             </div>
 
@@ -106,7 +167,7 @@ export default function Stats() {
 
             <div className={cell}>
               <span className={`${big} items-center [&_svg]:text-[0.62em] [&_svg]:text-white`}>
-                4.8 <Star />
+                <CountUp to={4.8} decimals={1} /> <Star />
               </span>
               <span className={sub}>Average traveller rating</span>
             </div>

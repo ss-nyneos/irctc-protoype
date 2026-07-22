@@ -21,7 +21,7 @@ interface Trait {
 
 const TRAITS: Trait[] = [
   {
-    id: 'mountains',
+    id: 'Mountains',
     label: 'Mountains',
     words: ['mountain', 'hill', 'snow', 'cold', 'cool', 'himalaya', 'trek', 'altitude'],
     matches: (p) => ['Hill Escape', 'High Altitude', 'Hill Railway'].includes(p.tag),

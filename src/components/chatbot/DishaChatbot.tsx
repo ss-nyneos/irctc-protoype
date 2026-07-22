@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Send, Sparkles, X } from "lucide-react";
 import { useRouter } from "@/router/RouterContext";
+import dishaIcon from "@/assets/graphic/askdisha-2.png";
 import { DISHA_EVENT } from "@/components/layout/Header";
 import { packages, getPackageById } from "@/data/packages";
 import { ImageWithFallback } from "@/components/common/ImageWithFallback";
@@ -248,7 +249,9 @@ function PkgCard({ id }: { id: string }) {
 }
 
 export function DishaChatbot() {
-  const { go } = useRouter();
+  const { go, view } = useRouter();
+  /* no floating launcher during the book-now flow — it sits over the form */
+  const hideLauncher = view.name === "booking" || view.name === "customise";
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -308,20 +311,19 @@ export function DishaChatbot() {
 
   return (
     <>
+      {/* Round AskDISHA 2.0 badge — same launcher as the Design 1 pages, so the
+          icon is identical everywhere instead of a wide text pill here. */}
       <button
         onClick={() => setOpen(true)}
         type="button"
-       
+        aria-label="Ask Disha 2.0"
+        title="Ask Disha 2.0"
         style={{ bottom: "calc(1.25rem + var(--dock-offset, 0px))" }}
-        className={`pulse-ring fixed right-5 z-40 flex items-center gap-2.5 rounded-full bg-brand py-3.5 pl-4 pr-5 text-left text-white shadow-2xl transition-[bottom,filter] duration-300 hover:brightness-95 ${
-          open ? "hidden" : ""
+        className={`pulse-ring fixed right-5 z-40 grid size-[80px] place-items-center overflow-hidden rounded-full bg-white shadow-2xl transition-[bottom,transform,box-shadow] duration-300 hover:-translate-y-0.5 ${
+          open || hideLauncher ? "hidden" : ""
         }`}
       >
-        <Sparkles size={20} className="flex-none" />
-        <span className="hidden leading-tight sm:block">
-          {/* <span className="block text-[13px] font-bold">Don&apos;t know what to choose?</span> */}
-          <span className="block text-[13px] font-bold text-white/85">Ask Disha 2.0 — we&apos;re here to help!</span>
-        </span>
+        <img src={dishaIcon} alt="" aria-hidden="true" className="size-full object-cover" />
       </button>
 
       {open && (

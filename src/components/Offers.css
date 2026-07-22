@@ -28,36 +28,53 @@
 .offers__title span {
   color: var(--blue);
 }
-.offers__nav {
+/* ---- auto-rotating rail ------------------------------------------------
+   The cards drift horizontally in a seamless loop, the same idea as the
+   Trending Packages rail: the full set is rendered twice and the track is
+   translated by exactly -50%, which lands the duplicate where the original
+   began. Note there is NO `gap` — the spacing lives on each card's
+   margin-right instead, so every card occupies an identical width+margin
+   unit and -50% is exactly one full set. A flex `gap` would leave one extra
+   gap unaccounted for and the loop would jump each cycle. */
+.offers__rail {
+  overflow: hidden;
+  /* room for the cards' hover shadow so it isn't clipped */
+  padding-block: 6px;
+}
+.offers__track {
   display: flex;
-  gap: 0.6rem;
-  margin-left: auto;
+  width: max-content;
+  animation: offersSlide 46s linear infinite;
+  will-change: transform;
 }
-.offers__arrow {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: var(--blue);
-  color: #fff;
-  font-size: 1.15rem;
-  transition: background 0.25s var(--ease), transform 0.25s var(--ease);
+.offers__rail:hover .offers__track,
+.offers__rail:focus-within .offers__track {
+  animation-play-state: paused;
 }
-.offers__arrow:hover {
-  background: var(--blue-deep);
-  transform: translateY(-2px);
+/* dissolves the wrapper so the duplicated cards are flex items of the track,
+   while still letting the whole pass be aria-hidden */
+.offers__dup {
+  display: contents;
+}
+@keyframes offersSlide {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .offers__track {
+    animation: none;
+  }
+  .offers__rail {
+    overflow-x: auto;
+  }
 }
 
-/* ---- grid ---- */
-.offers__grid {
-  display: grid;
-  /* all three cards identical width */
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(14px, 1.5vw, 24px);
-}
 .offer {
   position: relative;
+  flex: none;
+  width: clamp(280px, 27vw, 400px);
+  margin-right: clamp(14px, 1.5vw, 24px);
   border-radius: 18px;
   overflow: hidden;
   height: clamp(248px, 21.5vw, 322px);
@@ -162,7 +179,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  gap: 3px;
+  /* no gap: the 3px gutter showed the white ground below as seams */
+  gap: 0;
   background: #fff;
   overflow: hidden;
 }
@@ -178,18 +196,30 @@
 .offer--tile:hover .mosaic__cell img {
   transform: scale(1.06);
 }
-/* angled seams between the four frames */
+/* The photos meet ALONG the blue diagonal instead of being separated by it.
+   Previously each cell was clipped inside its own grid column, so the wedge
+   one cell gave up was not filled by its neighbour and the white ground showed
+   through. Now the right-hand cell is clipped to the diagonal and the cells
+   OVERLAP, so there is always photo on both sides of the line:
+
+     row 1 — the seam sits right of centre, so the left cell reaches across it
+     row 2 — the seam has crossed left of centre, so the right cell reaches back
+
+   The seam runs 56% → 50% → 44% of the mosaic width, top to bottom: one
+   straight, continuous line through both rows, which the slash then covers. */
+.mosaic__cell {
+  position: relative;
+}
 .mosaic__cell--1 {
-  clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%);
-}
-.mosaic__cell--2 {
-  clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
-}
-.mosaic__cell--3 {
-  clip-path: polygon(0 0, 100% 0, 84% 100%, 0 100%);
+  margin-right: -12%;
 }
 .mosaic__cell--4 {
-  clip-path: polygon(16% 0, 100% 0, 100% 100%, 0 100%);
+  margin-left: -12%;
+}
+.mosaic__cell--2,
+.mosaic__cell--4 {
+  z-index: 1;
+  clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
 }
 /* the blue diagonal accent running through the mosaic */
 .mosaic__slash {
@@ -220,25 +250,10 @@
   color: var(--ink-soft);
 }
 
-/* ---- circular icon badge ---- */
-@media (max-width: 980px) {
-  .offers__grid {
-    grid-template-columns: 1fr 1fr;
-  }
-  .offer--ferry {
-    grid-column: span 2;
-    height: clamp(280px, 46vw, 340px);
-  }
-}
 @media (max-width: 620px) {
-  .offers__grid {
-    grid-template-columns: 1fr;
-  }
-  .offer--ferry {
-    grid-column: span 1;
-  }
   .offer {
-    height: clamp(300px, 78vw, 360px);
+    width: clamp(240px, 76vw, 300px);
+    height: clamp(280px, 74vw, 340px);
   }
 }
 

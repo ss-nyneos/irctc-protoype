@@ -1,5 +1,3 @@
-import { ChevronL, ChevronR } from './Icons.tsx'
-
 /* Two four-image mosaics with angled seams, like the reference tiles. */
 const escapes = [
   '/img/ladakh.jpg',
@@ -13,6 +11,23 @@ const spiritual = [
   '/img/golden-temple.jpg',
   '/img/varanasi-hd.jpg',
 ]
+/* The two navy "IRCTC Presents" cards. Same layout, different offer. */
+const ferryOffers = {
+  andaman: {
+    img: '/img/havelock-hd.jpg',
+    name: 'Andaman Ferry Booking',
+    price: 'starting from ₹950/-',
+    pill: 'Our Destinations',
+    items: ['Swaraj Dweep (Havelock)', 'Shaheed Dweep (Neil)', 'Port Blair'],
+  },
+  charDham: {
+    img: '/img/rishikesh-hd.jpg',
+    name: 'Char Dham Heli Yatra',
+    price: 'starting from ₹1,10,000/-',
+    pill: 'Our Sectors',
+    items: ['Kedarnath', 'Badrinath', 'Gangotri & Yamunotri'],
+  },
+}
 
 function Mosaic({ imgs }: { imgs: string[] }) {
   return (
@@ -27,63 +42,70 @@ function Mosaic({ imgs }: { imgs: string[] }) {
   )
 }
 
+function FerryCard({ offer }: { offer: (typeof ferryOffers)[keyof typeof ferryOffers] }) {
+  return (
+    <article className="offer offer--ferry">
+      <img src={offer.img} alt="" className="offer__photo" loading="lazy" />
+      <span className="offer__wave" aria-hidden="true" />
+      <div className="offer__content">
+        <span className="offer__kicker">IRCTC Presents</span>
+        <h3 className="offer__name">{offer.name}</h3>
+        <p className="offer__price">{offer.price}</p>
+        <span className="offer__pill">{offer.pill}</span>
+        <ul className="offer__list">
+          {offer.items.map((it) => (
+            <li key={it}>{it}</li>
+          ))}
+        </ul>
+      </div>
+    </article>
+  )
+}
+
+function TileCard({ imgs, title, sub }: { imgs: string[]; title: string; sub: string }) {
+  return (
+    <article className="offer offer--tile">
+      <Mosaic imgs={imgs} />
+      <div className="offer__caption">
+        <h3>{title}</h3>
+        <p>{sub}</p>
+      </div>
+    </article>
+  )
+}
+
+/* One pass of the rail. Rendered twice below so the marquee can loop
+   seamlessly: translating the track by exactly -50% lands the duplicate
+   set precisely where the original started. */
+function OfferSet() {
+  return (
+    <>
+      <FerryCard offer={ferryOffers.andaman} />
+      <TileCard imgs={escapes} title="Exciting Escapes" sub="Explore Nature, Wildlife & Culture" />
+      <TileCard imgs={spiritual} title="Spiritual Journeys" sub="Heritage. Culture. Timeless Memories." />
+      <FerryCard offer={ferryOffers.charDham} />
+    </>
+  )
+}
+
 export default function Offers() {
   return (
     <section className="offers" id="offers">
       <div className="wrap-wide">
         <div className="offers__head">
           <h2 className="offers__title">Special <span>Offers</span></h2>
-          <div className="offers__nav">
-            <button className="offers__arrow" aria-label="Previous offers">
-              <ChevronL />
-            </button>
-            <button className="offers__arrow" aria-label="Next offers">
-              <ChevronR />
-            </button>
-          </div>
         </div>
+      </div>
 
-        <div className="offers__grid">
-          {/* ---- ferry offer ---- */}
-          <article className="offer offer--ferry">
-            <img
-              src="/img/havelock-hd.jpg"
-              alt=""
-              className="offer__photo"
-              data-parallax="12"
-              loading="lazy"
-            />
-            <span className="offer__wave" aria-hidden="true" />
-            <div className="offer__content">
-              <span className="offer__kicker">IRCTC Presents</span>
-              <h3 className="offer__name">Andaman Ferry Booking</h3>
-              <p className="offer__price">starting from ₹950/-</p>
-              <span className="offer__pill">Our Destinations</span>
-              <ul className="offer__list">
-                <li>Swaraj Dweep (Havelock)</li>
-                <li>Shaheed Dweep (Neil)</li>
-                <li>Port Blair</li>
-              </ul>
-            </div>
-          </article>
-
-          {/* ---- escapes ---- */}
-          <article className="offer offer--tile">
-            <Mosaic imgs={escapes} />
-            <div className="offer__caption">
-              <h3>Exciting Escapes</h3>
-              <p>Explore Nature, Wildlife &amp; Culture</p>
-            </div>
-          </article>
-
-          {/* ---- spiritual ---- */}
-          <article className="offer offer--tile">
-            <Mosaic imgs={spiritual} />
-            <div className="offer__caption">
-              <h3>Spiritual Journeys</h3>
-              <p>Heritage. Culture. Timeless Memories.</p>
-            </div>
-          </article>
+      {/* full-bleed rail: the cards drift horizontally in a seamless loop and
+          hold still while the pointer is over them */}
+      <div className="offers__rail">
+        <div className="offers__track">
+          <OfferSet />
+          {/* duplicate pass — aria-hidden so the loop isn't announced twice */}
+          <span className="offers__dup" aria-hidden="true">
+            <OfferSet />
+          </span>
         </div>
       </div>
     </section>
