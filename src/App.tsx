@@ -64,7 +64,7 @@ function Shell() {
   const hideFooter = view.name === "customise";
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="route-in flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1">
         <CurrentPage />
@@ -240,7 +240,7 @@ function Design1Layout() {
   return (
     <PrefsProvider>
       <UIProvider>
-        <div ref={root} className="design-1-root min-h-screen">
+        <div ref={root} className="route-in design-1-root min-h-screen">
           <NavBar />
           <Outlet />
           <FooterD1 />
@@ -273,6 +273,7 @@ export default function App() {
           </Route>
 
           {/* In-app shell routes */}
+          <Route path="/world" element={<Shell />} />
           <Route path="/personal" element={<Shell />} />
           <Route path="/customise" element={<Shell />} />
           <Route path="/landing" element={<Shell />} />

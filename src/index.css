@@ -615,7 +615,21 @@ h4,
   }
 }
 
+@keyframes routeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.route-in {
+  animation: routeIn 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .route-in,
   .train-marquee,
   .dest-marquee,
   .svc-marquee,

@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import type { View } from "@/types";
 
 interface RouterState {
@@ -15,21 +16,27 @@ export function useRouter(): RouterState {
   return ctx;
 }
 
-/** Maps view names to real browser URLs. */
-function pathForView(view: View): string {
+function pathForView(view: View): string | null {
   switch (view.name) {
+    case "world":
+      return "/world";
     case "customise":
       return "/customise";
     case "madeforyou":
       return "/personal";
+    // The shell's own home page lives at /landing; /home is the Design-1
+    // landing, which belongs to react-router, not to this router.
     case "home":
+      return "/landing";
     default:
-      return "/home";
+      return null;
   }
 }
 
 function viewForPath(path: string): View {
   switch (path) {
+    case "/world":
+      return { name: "world" };
     case "/customise":
       return { name: "customise" };
     case "/personal":
@@ -42,6 +49,9 @@ function viewForPath(path: string): View {
   }
 }
 
+
+const shellPaths = new Set(["/world", "/personal", "/customise", "/landing", "/preload"]);
+
 /**
  * Lightweight client-only "router". This app is intentionally a single page
  * with view-switching handled in state (no full history/URL syncing), matching
@@ -51,21 +61,36 @@ function viewForPath(path: string): View {
 export function RouterProvider({ children }: { children: ReactNode }) {
   const [view, setView] = useState<View>(() => viewForPath(window.location.pathname));
   const stack = useRef<View[]>([]);
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onPopState = () => {
+      // Leaving the shell entirely: let react-router unmount it as-is.
+      if (!shellPaths.has(window.location.pathname)) return;
       setView(viewForPath(window.location.pathname));
     };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
 
+  
+  const firstLocation = useRef(true);
+  useEffect(() => {
+    if (firstLocation.current) {
+      firstLocation.current = false;
+      return;
+    }
+    if (!shellPaths.has(pathname)) return;
+    setView(viewForPath(pathname));
+  }, [pathname]);
+
   const go = useCallback(
     (next: View) => {
       stack.current.push(view);
       setView(next);
       const path = pathForView(next);
-      if (window.location.pathname !== path) {
+      if (path && window.location.pathname !== path) {
         window.history.pushState(null, "", path);
       }
       window.scrollTo({ top: 0, behavior: "instant" });
@@ -74,14 +99,24 @@ export function RouterProvider({ children }: { children: ReactNode }) {
   );
 
   const back = useCallback(() => {
+    // Nothing left to go back to inside the shell: hand off to the Design-1
+    // landing through react-router, so the layout swaps in one commit. Setting
+    // the view to "home" here instead would paint the shell's own home page for
+    // a frame first, which reads as a flash of the wrong page.
+    if (stack.current.length === 0) {
+      navigate("/home");
+      window.scrollTo({ top: 0, behavior: "instant" });
+      return;
+    }
+
     const prev = stack.current.pop() ?? { name: "home" };
     setView(prev);
     const path = pathForView(prev);
-    if (window.location.pathname !== path) {
+    if (path && window.location.pathname !== path) {
       window.history.pushState(null, "", path);
     }
     window.scrollTo({ top: 0, behavior: "instant" });
-  }, []);
+  }, [navigate]);
 
   return <RouterContext.Provider value={{ view, go, back }}>{children}</RouterContext.Provider>;
 }
