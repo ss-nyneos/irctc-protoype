@@ -9,7 +9,6 @@ import {
     Camera,
     Car,
     Castle,
-    ChefHat,
     Check,
     ChevronLeft,
     ChevronRight,
@@ -38,7 +37,6 @@ import {
     TrainFront,
     Users,
     Utensils,
-    UtensilsCrossed,
     Wallet,
     Waves,
 } from "lucide-react";
@@ -57,8 +55,12 @@ import imgDate from "@/assets/customise/date.jpg";
 import imgStay from "@/assets/customise/stay.jpg";
 import imgTransport from "@/assets/customise/transport.webp";
 import imgExperience from "@/assets/customise/experience.jpg";
-import imgFood from "@/assets/customise/food.avif";
+import imgBudget from "@/assets/customise/budget.webp";
 import imgNotes from "@/assets/customise/budget.webp";
+import imgBudgetFriendly from "@/assets/irctc_services_assets/svc-retiring-room.jpg";
+import imgBudgetBalance from "@/assets/irctc_services_assets/svc-hotels.jpg";
+import imgBudgetLuxury from "@/assets/irctc_services_assets/svc-maharajas.jpg";
+import imgBudgetComfortable from "@/assets/irctc_services_assets/svc-lounge.webp";
 // "Where do you want to go?" vibe artwork
 import imgHills from "@/assets/customise/hills.png";
 import imgBeaches from "@/assets/customise/beaches.webp";
@@ -73,6 +75,26 @@ import imgCityNewDelhi from "@/assets/cutomise2/new-delhi.jpg";
 import imgCityMumbai from "@/assets/cutomise2/mumbai.jpg";
 import imgCityBengaluru from "@/assets/cutomise2/bengaluru.jpg";
 import imgCityChennai from "@/assets/cutomise2/chennai.jpg";
+import imgFerry from "@/assets/cutomise2/ferry.jpg";
+import imgHeli from "@/assets/cutomise2/heli.jpg";
+import imgExpAdventure from "@/assets/cutomise2/categories/adventure.jpg";
+import imgExpTrekking from "@/assets/cutomise2/categories/Trekking.jpg";
+import imgExpPhotography from "@/assets/cutomise2/categories/Photography.jpg";
+import imgExpTemple from "@/assets/cutomise2/categories/Temple visits.jpg";
+import imgExpWildlife from "@/assets/cutomise2/categories/Wildlife.jpg";
+import imgExpWaterfalls from "@/assets/cutomise2/categories/Waterfalls.jpg";
+import imgExpLocalFood from "@/assets/cutomise2/categories/Local food.jpg";
+import imgExpShopping from "@/assets/cutomise2/categories/Shopping.jpg";
+import imgExpHistory from "@/assets/cutomise2/categories/History.jpg";
+import imgExpNightlife from "@/assets/cutomise2/categories/Nightlife.jpg";
+import imgExpWellness from "@/assets/cutomise2/categories/Wellness.jpg";
+import imgExpSnow from "@/assets/cutomise2/categories/Snow.jpg";
+import imgExpCulture from "@/assets/cutomise2/categories/Culture.jpg";
+import imgExpTeaGardens from "@/assets/cutomise2/categories/Tea gardens.jpg";
+import imgStayStandard from "@/assets/cutomise2/categories/standard.jpg";
+import imgStayHeritage from "@/assets/cutomise2/categories/heritage.jpg";
+import vandeBharatLoco from "@/assets/cta/vande-bharat-loco.png";
+import imgAskDisha from "@/assets/graphic/askdisha-2.png";
 
 const fromCities = [...new Set(packages.map((p) => p.from))];
 const POPULAR_CITIES: { name: string; image: string }[] = [
@@ -144,7 +166,7 @@ const STAYS: Option[] = [
         key: "Standard",
         icon: <BedDouble size={16} strokeWidth={1.75} />,
         desc: "Comfortable and clean stays",
-        image: "https://images.unsplash.com/photo-1611891405120-449e7e78072e?auto=format&fit=crop&w=600&q=80",
+        image: imgStayStandard,
     },
     {
         key: "Comfort",
@@ -174,7 +196,7 @@ const STAYS: Option[] = [
         key: "Heritage",
         icon: <Castle size={16} strokeWidth={1.75} />,
         desc: "Royal & heritage experiences",
-        image: "https://images.unsplash.com/photo-1585983224974-084a8e065e76?auto=format&fit=crop&w=600&q=80",
+        image: imgStayHeritage,
     },
 ];
 
@@ -201,7 +223,7 @@ const TRANSPORTS: Option[] = [
         key: "Ferry",
         icon: <Ship size={16} strokeWidth={1.75} />,
         desc: "Scenic water routes",
-        image: "https://images.unsplash.com/photo-1516690561799-46d8f74f9abf?auto=format&fit=crop&w=600&q=80",
+        image: imgFerry,
     },
     {
         key: "Road Trip",
@@ -213,7 +235,7 @@ const TRANSPORTS: Option[] = [
         key: "Helicopter",
         icon: <Compass size={16} strokeWidth={1.75} />,
         desc: "Quick & scenic rides",
-        image: "https://images.unsplash.com/photo-1540962351504-03099e0a754b?auto=format&fit=crop&w=600&q=80",
+        image: imgHeli,
     },
 ];
 
@@ -222,118 +244,115 @@ const EXPERIENCES: Option[] = [
         key: "Adventure",
         icon: <Compass size={13} />,
         desc: "Thrilling outdoor sports & activities",
-        image: "https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=600&q=80",
+        image: imgExpAdventure,
     },
     {
         key: "Trekking",
         icon: <Footprints size={13} />,
         desc: "Mountain trails & hiking adventures",
-        image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80",
+        image: imgExpTrekking,
     },
     {
         key: "Photography",
         icon: <Camera size={13} />,
         desc: "Scenic viewpoints & landscape shoots",
-        image: "https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&fit=crop&w=600&q=80",
+        image: imgExpPhotography,
     },
     {
         key: "Temple visits",
         icon: <Landmark size={13} />,
         desc: "Spiritual tours & sacred temples",
-        image: "https://images.unsplash.com/photo-1602631985686-2bb0686a6ae6?auto=format&fit=crop&w=600&q=80",
+        image: imgExpTemple,
     },
     {
         key: "Wildlife",
         icon: <Bird size={13} />,
         desc: "Jungle safaris & animal sightings",
-        image: "https://images.unsplash.com/photo-1475809913362-28a064062ccd?auto=format&fit=crop&w=600&q=80",
+        image: imgExpWildlife,
     },
     {
         key: "Waterfalls",
         icon: <Waves size={13} />,
         desc: "Majestic cascades & natural pools",
-        image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80",
+        image: imgExpWaterfalls,
     },
     {
         key: "Local food",
         icon: <Utensils size={13} />,
         desc: "Traditional street food & regional cuisine",
-        image: "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&q=80",
+        image: imgExpLocalFood,
     },
     {
         key: "Shopping",
         icon: <ShoppingBag size={13} />,
         desc: "Bustling bazaars & handicraft stalls",
-        image: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?auto=format&fit=crop&w=600&q=80",
+        image: imgExpShopping,
     },
     {
         key: "History",
         icon: <History size={13} />,
         desc: "Forts, palaces & archaeological sites",
-        image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=600&q=80",
+        image: imgExpHistory,
     },
     {
         key: "Nightlife",
         icon: <Moon size={13} />,
         desc: "City clubs, bars & evening entertainment",
-        image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=600&q=80",
+        image: imgExpNightlife,
     },
     {
         key: "Wellness",
         icon: <Leaf size={13} />,
         desc: "Spa therapies, yoga & retreats",
-        image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80",
+        image: imgExpWellness,
     },
     {
         key: "Snow",
         icon: <Snowflake size={13} />,
         desc: "Snow activities & winter sports",
-        image: "https://images.unsplash.com/photo-1482867996988-2faec3cbb4f9?auto=format&fit=crop&w=600&q=80",
+        image: imgExpSnow,
     },
     {
         key: "Culture",
         icon: <Landmark size={13} />,
         desc: "Folk arts, craft walks & local heritage",
-        image: "https://images.unsplash.com/photo-1561375750-7e28df959775?auto=format&fit=crop&w=600&q=80",
+        image: imgExpCulture,
     },
     {
         key: "Tea gardens",
         icon: <Leaf size={13} />,
         desc: "Scenic estate walks & tea tastings",
-        image: "https://images.unsplash.com/photo-1563889362-49e07584bd8c?auto=format&fit=crop&w=600&q=80",
+        image: imgExpTeaGardens,
     },
 ];
 
-/** Quick-fill shortcuts for the food-budget input — clicking one fills the amount in
- *  rather than acting as an exclusive radio choice, so typing a custom number always works too. */
-const CATERING_TYPES: Option[] = [
+/** Trip budget style cards — exclusive feel via single-select in the question UI. */
+const BUDGET_STYLES: Option[] = [
     {
-        key: "Traditional",
-        icon: <UtensilsCrossed size={16} />,
-        desc: "Local authentic thalis & classic dishes",
-        image: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80",
+        key: "Budget friendly",
+        icon: <Wallet size={16} />,
+        desc: "Smart spends & great value stays",
+        image: imgBudgetFriendly,
     },
     {
-        key: "Continental",
-        icon: <Utensils size={16} />,
-        desc: "Western, Italian & European favorites",
-        image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=600&q=80",
+        key: "Balance",
+        icon: <Banknote size={16} />,
+        desc: "A mix of comfort and value",
+        image: imgBudgetBalance,
     },
     {
-        key: "Gourmet",
-        icon: <ChefHat size={16} />,
-        desc: "Fine dining & premium chef specialties",
-        image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
+        key: "Luxury",
+        icon: <Crown size={16} />,
+        desc: "Premium stays & elevated experiences",
+        image: imgBudgetLuxury,
     },
     {
-        key: "Regional",
-        icon: <MapPin size={16} />,
-        desc: "State specialties & popular street food",
-        image: "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?auto=format&fit=crop&w=600&q=80",
+        key: "Comfortable",
+        icon: <Sofa size={16} />,
+        desc: "Relaxed travel with solid amenities",
+        image: imgBudgetComfortable,
     },
 ];
-const NOTES_TAGS = ["No spicy food", "Quiet places", "Accessible stays", "Extra comfort"];
-
 /** How each preference maps onto the fields the packages actually carry. */
 const VIBE_EXP: Record<string, Experience[]> = {
     Hills: ["nature"],
@@ -482,7 +501,7 @@ const defaultInputs: TripInputs = {
     experiences: ["Adventure"],
     cateringCost: "Mid",
     customBudget: "",
-    cateringTypes: ["Traditional"],
+    cateringTypes: ["Balance"],
     notes: "",
 };
 
@@ -570,6 +589,8 @@ export function CustomisePage() {
     const [results, setResults] = useState<TourPackage[]>([]);
     const [matchScore, setMatchScore] = useState(96);
     const [step, setStep] = useState(0);
+    /** Furthest question index reached — rail clicks may only jump to filled steps (≤ this). */
+    const [maxReached, setMaxReached] = useState(0);
     const [exiting, setExiting] = useState(false);
     const [dir, setDir] = useState<1 | -1>(1); // 1 = forward, -1 = back — drives slide direction
     // Results are laid out row by row so a hovered card can steal width from its
@@ -604,26 +625,12 @@ export function CustomisePage() {
     const set = <K extends keyof TripInputs>(key: K, value: TripInputs[K]) =>
         setInputs((prev) => ({ ...prev, [key]: value }));
 
-    const toggleArr = (key: "vibes" | "transports" | "experiences" | "cateringTypes", value: string) =>
+    const toggleArr = (key: "vibes" | "transports" | "experiences", value: string) =>
         setInputs((prev) => {
             const current = prev[key];
             const next = current.includes(value) ? current.filter((v) => v !== value) : [...current, value];
             // never let a multi-select empty out completely — keep at least one choice
             return { ...prev, [key]: next.length ? next : current };
-        });
-
-    const toggleNote = (tag: string) =>
-        setInputs((prev) => {
-            const has = prev.notes.toLowerCase().includes(tag.toLowerCase());
-            if (has) {
-                const notes = prev.notes
-                    .replace(new RegExp(`\\s*,?\\s*${tag}`, "i"), "")
-                    .replace(/^\s*,\s*/, "")
-                    .trim();
-                return { ...prev, notes };
-            }
-            const sep = prev.notes.trim() ? ", " : "";
-            return { ...prev, notes: (prev.notes.trim() + sep + tag).slice(0, 120) };
         });
 
     /** Picking a duration preset blocks off that many nights on the calendar, starting
@@ -736,10 +743,12 @@ export function CustomisePage() {
                 setPhase("interstitial");
                 window.setTimeout(() => {
                     setStep(next);
+                    setMaxReached((m) => Math.max(m, next));
                     setPhase("questions");
                 }, INTERSTITIAL_MS);
             } else {
                 setStep(next);
+                setMaxReached((m) => Math.max(m, next));
             }
         }, CARD_EXIT_MS);
     };
@@ -750,6 +759,17 @@ export function CustomisePage() {
         setExiting(true);
         window.setTimeout(() => {
             setStep((s) => s - 1);
+            setExiting(false);
+        }, CARD_EXIT_MS);
+    };
+
+    /** Jump via the numbered rail — only steps already filled (≤ maxReached). */
+    const goToStep = (i: number) => {
+        if (exiting || phase !== "questions" || i === step || i < 0 || i > maxReached) return;
+        setDir(i < step ? -1 : 1);
+        setExiting(true);
+        window.setTimeout(() => {
+            setStep(i);
             setExiting(false);
         }, CARD_EXIT_MS);
     };
@@ -778,6 +798,7 @@ export function CustomisePage() {
     const startOver = () => {
         setInputs(defaultInputs);
         setStep(0);
+        setMaxReached(0);
         setDir(1);
         setExiting(false);
         setPhase("questions");
@@ -789,7 +810,7 @@ export function CustomisePage() {
             key: "from",
             title: (
                 <>
-                    Where are you <span className="text-brand">starting</span> from?
+                    Where are you starting <span className="accent">from?</span>
                 </>
             ),
             subtitle: "Tell us your city or current location and we'll plan from there.",
@@ -803,7 +824,7 @@ export function CustomisePage() {
                             value={inputs.from}
                             onChange={(e) => set("from", e.target.value)}
                             placeholder="Search city or location"
-                            className="w-full rounded-xl border bg-white py-3 pl-10 pr-3.5 text-[15.5px] font-semibold text-ink outline-none focus:border-brand"
+                            className="w-full rounded-xl border bg-[#FFFFFF] py-3 pl-10 pr-3.5 text-[15.5px] font-semibold text-[#323232] outline-none focus:border-[#2475EE]"
                         />
                         <datalist id="from-cities">
                             {fromCities.map((c) => (
@@ -821,7 +842,7 @@ export function CustomisePage() {
                                     type="button"
                                     aria-pressed={active}
                                     onClick={() => set("from", c.name)}
-                                    className={`group relative h-44 overflow-hidden rounded-2xl text-left shadow-sm transition ${active ? "ring-2 ring-brand ring-offset-2 ring-offset-white" : "ring-1 ring-black/10 hover:ring-black/20"
+                                    className={`group relative h-44 overflow-hidden rounded-2xl text-left shadow-sm transition ${active ? "ring-2 ring-[#2475EE] ring-offset-2 ring-offset-[#FFFFFF]" : "ring-1 ring-[#323232]/10 hover:ring-[#323232]/20"
                                         }`}
                                 >
                                     <img
@@ -834,16 +855,16 @@ export function CustomisePage() {
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
 
                                     {active && (
-                                        <span className="absolute right-2.5 top-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-brand text-white shadow-md ring-2 ring-white/60">
+                                        <span className="absolute right-2.5 top-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-[#2475EE] text-[#FFFFFF] shadow-md ring-2 ring-[#FFFFFF]/60">
                                             <Check size={13} />
                                         </span>
                                     )}
 
                                     {/* frosted-glass label */}
                                     <div className="absolute inset-x-1.5 bottom-1.5">
-                                        <div className="rounded-xl border border-white/30 bg-transparent px-2 py-1.5">
-                                            <span className="flex items-center gap-1.5 font-display text-[16.5px] font-bold text-white [text-shadow:_0_1px_6px_rgba(0,0,0,0.45)]">
-                                                <MapPin size={16} className="text-white/90" />
+                                        <div className="rounded-xl border border-[#FFFFFF]/30 bg-transparent px-2 py-1.5">
+                                            <span className="flex items-center gap-1.5 font-display text-[16.5px] font-bold text-[#FFFFFF] [text-shadow:_0_1px_6px_rgba(0,0,0,0.45)]">
+                                                <MapPin size={16} className="text-[#FFFFFF]/90" />
                                                 {c.name}
                                             </span>
                                         </div>
@@ -859,7 +880,7 @@ export function CustomisePage() {
             key: "vibes",
             title: (
                 <>
-                    Where do you want to <span className="text-brand">go</span>?
+                    Where do you want to <span className="accent">go?</span>
                 </>
             ),
             subtitle: "Pick one or more vibes that excite you the most.",
@@ -870,7 +891,7 @@ export function CustomisePage() {
             key: "travellers",
             title: (
                 <>
-                    How many are <span className="text-brand">travelling</span>?
+                    How many are <span className="accent">travelling?</span>
                 </>
             ),
             subtitle: "This helps us suggest the best stays and experiences.",
@@ -882,19 +903,19 @@ export function CustomisePage() {
                             onClick={() => set("travellers", Math.max(1, inputs.travellers - 1))}
                             type="button"
                             aria-label="Fewer travellers"
-                            className="flex h-11 w-11 items-center justify-center rounded-xl border text-[18px] font-bold text-ink hover:bg-secondary"
+                            className="flex h-11 w-11 items-center justify-center rounded-xl border text-[18px] font-bold text-[#323232] hover:bg-secondary"
                         >
                             −
                         </button>
-                        <span className="inline-flex items-center gap-2 font-display text-[22px] font-bold text-ink">
-                            <Users size={20} className="text-brand" />
+                        <span className="inline-flex items-center gap-2 font-display text-[22px] font-bold text-[#323232]">
+                            <Users size={20} className="text-[#2475EE]" />
                             {inputs.travellers} {inputs.travellers === 1 ? "Traveller" : "Travellers"}
                         </span>
                         <button
                             onClick={() => set("travellers", Math.min(12, inputs.travellers + 1))}
                             type="button"
                             aria-label="More travellers"
-                            className="flex h-11 w-11 items-center justify-center rounded-xl border text-[18px] font-bold text-ink hover:bg-secondary"
+                            className="flex h-11 w-11 items-center justify-center rounded-xl border text-[18px] font-bold text-[#323232] hover:bg-secondary"
                         >
                             +
                         </button>
@@ -914,7 +935,7 @@ export function CustomisePage() {
             key: "date",
             title: (
                 <>
-                    When do you want to <span className="text-brand">travel</span>?
+                    When do you want to <span className="accent">travel?</span>
                 </>
             ),
             subtitle: "Your dates help us find the best availability and prices.",
@@ -923,11 +944,11 @@ export function CustomisePage() {
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start py-2">
                     <div className="md:col-span-5 flex flex-col justify-start">
                         <div>
-                            <h3 className="font-display text-[20px] font-bold leading-tight text-ink md:text-[25px]">
-                                Select Date range between we can plan your trip
+                            <h3 className="heading-xl">
+                                Select Date range between we can plan your <span className="accent">trip</span>
                             </h3>
                         </div>
-                        <div className="mt-6 pt-6 border-t border-black/5">
+                        <div className="mt-6 pt-6 border-t border-[#323232]/5">
                             <div className="mb-3 text-[13px] font-bold uppercase tracking-wider text-muted-foreground">
                                 Trip duration
                             </div>
@@ -949,7 +970,7 @@ export function CustomisePage() {
             key: "stay",
             title: (
                 <>
-                    What kind of <span className="text-brand">stay</span> do you prefer?
+                    What kind of stay do you <span className="accent">prefer?</span>
                 </>
             ),
             subtitle: "Highlighted picks fit your destination best.",
@@ -968,7 +989,7 @@ export function CustomisePage() {
             key: "transport",
             title: (
                 <>
-                    How do you like to <span className="text-brand">travel</span>?
+                    How do you like to <span className="accent">travel?</span>
                 </>
             ),
             subtitle: "Choose your preferred mode of travel — pick all you're open to.",
@@ -987,7 +1008,7 @@ export function CustomisePage() {
             key: "experiences",
             title: (
                 <>
-                    What do you want to <span className="text-brand">experience</span>?
+                    What do you want to <span className="accent">experience?</span>
                 </>
             ),
             subtitle: "Pick all that you're excited about — highlighted picks fit your destination.",
@@ -1003,19 +1024,19 @@ export function CustomisePage() {
             ),
         },
         {
-            key: "food",
+            key: "budget",
             title: (
                 <>
-                    And what about <span className="text-brand">food</span>?
+                    What about your <span className="accent">budget?</span>
                 </>
             ),
             subtitle: "It helps us suggest better places for you.",
-            image: imgFood,
+            image: imgBudget,
             control: (
                 <div className="space-y-5">
                     <div>
                         <PriceRangeSlider
-                            label="Food budget"
+                            label="Trip budget"
                             value={Number(inputs.customBudget) || 20000}
                             onChange={(v) => {
                                 set("customBudget", String(v));
@@ -1027,11 +1048,11 @@ export function CustomisePage() {
                         />
                     </div>
                     <div>
-                        <div className="mb-3 text-[13px] font-bold uppercase tracking-wide text-muted-foreground">Cuisine style</div>
+                        <div className="mb-3 text-[13px] font-bold uppercase tracking-wide text-muted-foreground">Budget style</div>
                         <OptionImageCards
-                            options={CATERING_TYPES}
+                            options={BUDGET_STYLES}
                             selected={inputs.cateringTypes}
-                            onSelect={(k) => toggleArr("cateringTypes", k)}
+                            onSelect={(k) => set("cateringTypes", [k])}
                             gridCols="grid-cols-2 gap-3 sm:grid-cols-4"
                         />
                     </div>
@@ -1042,45 +1063,16 @@ export function CustomisePage() {
             key: "notes",
             title: (
                 <>
-                    Anything else you want us to <span className="text-brand">know</span>?
+                    Anything else you want us to <span className="accent">know?</span>
                 </>
             ),
             subtitle: "Tell us your preferences and we'll personalize everything.",
             image: imgNotes,
             control: (
-                <div className="space-y-4">
-                    <div className="relative">
-                        <textarea
-                            value={inputs.notes}
-                            maxLength={120}
-                            onChange={(e) => set("notes", e.target.value)}
-                            rows={4}
-                            placeholder="E.g. no spicy food, quiet places, accessible stays, extra comfort, etc."
-                            className="w-full resize-none rounded-xl border bg-white p-3.5 pb-7 text-[15.5px] font-medium text-ink outline-none focus:border-brand"
-                        />
-                        <span className="pointer-events-none absolute bottom-2.5 right-3 text-[12px] text-muted-foreground">
-                            {inputs.notes.length}/120
-                        </span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                        {NOTES_TAGS.map((tag) => {
-                            const active = inputs.notes.toLowerCase().includes(tag.toLowerCase());
-                            return (
-                                <button
-                                    key={tag}
-                                    type="button"
-                                    onClick={() => toggleNote(tag)}
-                                    aria-pressed={active}
-                                    className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[13.5px] font-semibold transition ${active ? "border-brand bg-brand/10 text-brand" : "bg-white text-ink hover:bg-secondary"
-                                        }`}
-                                >
-                                    {active && <Check size={13} />}
-                                    {tag}
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
+                <NotesChatControl
+                    notes={inputs.notes}
+                    onNotesChange={(v) => set("notes", v)}
+                />
             ),
         },
     ];
@@ -1104,7 +1096,7 @@ export function CustomisePage() {
           Dropped once results land — the rest of the site is light-themed, so results
           fall back to the plain page background instead of staying in the dark cinematic. */}
             {phase === "results" ? (
-                <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 bg-white" />
+                <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 bg-[#FFFFFF]" />
             ) : (
                 <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0">
                     <video
@@ -1129,19 +1121,19 @@ export function CustomisePage() {
                     <button
                         onClick={back}
                         type="button"
-                        className={`mb-4 inline-flex items-center gap-1.5 text-[14px] font-semibold transition ${phase === "results" ? "text-muted-foreground hover:text-ink" : "text-white/80 hover:text-white"
+                        className={`mb-4 inline-flex items-center gap-1.5 text-[14px] font-semibold transition ${phase === "results" ? "text-muted-foreground hover:text-[#323232]" : "text-[#FFFFFF]/80 hover:text-[#FFFFFF]"
                             }`}
                     >
                         <ArrowLeft size={16} /> Back
                     </button>
                     <h1
-                        className={`heading-xl text-[48px] md:text-[58px] ${phase === "results" ? "text-ink" : "text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]"
+                        className={`heading-xl ${phase === "results" ? "" : "!text-[#FFFFFF] drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]"
                             }`}
                     >
-                        Built around <span className="text-saffron">your</span> trip.
+                        Built around your <span className="accent">trip.</span>
                     </h1>
                     {phase !== "results" && (
-                        <p className="mt-2.5 max-w-xl text-[16.5px] text-white/85">
+                        <p className="mt-2.5 max-w-xl text-[16.5px] text-[#FFFFFF]/85">
                             A few thoughtful choices are all we need to shape an unforgettable journey, made completely for you.
                         </p>
                     )}
@@ -1152,14 +1144,14 @@ export function CustomisePage() {
                 {/* intro — the backdrop video plays solo, a soft hint promises what's coming */}
                 {phase === "intro" && (
                     <div className="animate-fadeIn mx-auto flex min-h-[380px] max-w-3xl flex-col items-center justify-center text-center">
-                        <div className="inline-flex items-center gap-2.5 rounded-full border border-white/25 bg-black/30 px-5 py-2.5">
+                        <div className="inline-flex items-center gap-2.5 rounded-full border border-[#FFFFFF]/25 bg-black/30 px-5 py-2.5">
                             <span className="relative flex h-2.5 w-2.5">
-                                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white/80" />
-                                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-white" />
+                                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#FFFFFF]/80" />
+                                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#FFFFFF]" />
                             </span>
-                            <span className="text-[13px] font-bold uppercase tracking-wide text-white/85">Setting up your trip planner</span>
+                            <span className="text-[13px] font-bold uppercase tracking-wide text-[#FFFFFF]/85">Setting up your trip planner</span>
                         </div>
-                        <p className="mt-4 text-[14px] text-white/70">Your questions are on their way…</p>
+                        <p className="mt-4 text-[14px] text-[#FFFFFF]/70">Your questions are on their way…</p>
                     </div>
                 )}
 
@@ -1169,8 +1161,8 @@ export function CustomisePage() {
                         <div key={step} className={`${cardAnim} mx-auto w-full max-w-6xl`}>
                             {/* plain white card with a faint blue wash — no photo, so the ink text
                   and controls sit on a clean, high-contrast surface */}
-                            <div className="relative flex w-full overflow-hidden rounded-3xl border border-white/70 bg-gradient-to-br from-white via-[#f4f8fe] to-[#e7f0fb] shadow-[0_30px_70px_-24px_rgba(0,0,0,0.55)] md:h-[650px]">
-                                <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/60" />
+                            <div className="relative flex w-full overflow-hidden rounded-3xl border border-[#FFFFFF]/70 bg-gradient-to-br from-white via-[#f4f8fe] to-[#e7f0fb] shadow-[0_30px_70px_-24px_rgba(0,0,0,0.55)] md:h-[650px]">
+                                <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-[#FFFFFF]/60" />
 
                                 {/* step rail — only a few numbered dots are visible at once, in a capped-height
                                     scroll box (scrollbar hidden) that auto-scrolls so the current step stays centred. */}
@@ -1179,23 +1171,29 @@ export function CustomisePage() {
                                     className="flex max-h-[196px] flex-col items-center gap-2.5 overflow-y-auto overflow-x-visible py-2 [-webkit-mask-image:linear-gradient(to_bottom,transparent,black_18px,black_calc(100%-18px),transparent)] [mask-image:linear-gradient(to_bottom,transparent,black_18px,black_calc(100%-18px),transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
                                 >
                                     {questions.map((q, i) => {
-                                        const state = i === step ? "active" : i < step ? "done" : "upcoming";
+                                        const state = i === step ? "active" : i <= maxReached ? "done" : "upcoming";
+                                        const canJump = state === "done" && !exiting;
                                         return (
-                                            <span
+                                            <button
                                                 key={q.key}
+                                                type="button"
+                                                disabled={!canJump}
+                                                aria-label={`Go to step ${i + 1}`}
+                                                aria-current={state === "active" ? "step" : undefined}
+                                                onClick={() => goToStep(i)}
                                                 ref={(el) => {
                                                     if (state === "active") el?.scrollIntoView({ block: "center" });
                                                 }}
-                                                className={`flex shrink-0 items-center justify-center rounded-full font-bold transition ${
+                                                className={`flex shrink-0 items-center justify-center rounded-full font-bold transition rounded-2xl ${
                                                     state === "active"
-                                                        ? "h-9 w-9 bg-brand text-[14px] text-white shadow-md shadow-brand/30"
+                                                        ? "h-9 w-9 cursor-default bg-[#2475EE] text-[14px] text-[#FFFFFF] shadow-md shadow-[#2475EE]/30"
                                                         : state === "done"
-                                                          ? "h-8 w-8 bg-[#64748b] text-[13px] text-white"
-                                                          : "h-8 w-8 text-[13px] text-muted-foreground/40"
+                                                          ? "h-8 w-8 cursor-pointer bg-gray-200 text-[13px] text-gray-400 hover:bg-[#2475EE] hover:text-[#FFFFFF] hover:shadow-md hover:shadow-[#2475EE]/30"
+                                                          : "h-8 w-8 cursor-not-allowed text-[13px] text-muted-foreground/40"
                                                 }`}
                                             >
                                                 {String(i + 1).padStart(2, "0")}
-                                            </span>
+                                            </button>
                                         );
                                     })}
                                 </div>
@@ -1203,15 +1201,15 @@ export function CustomisePage() {
 
                                 <div className="relative z-10 flex min-h-0 flex-1 flex-col p-5 md:px-6 md:py-8">
                                     <div className="mb-1 text-center text-[13px] font-bold tracking-wide text-muted-foreground md:hidden">
-                                        <span className="text-brand">{String(step + 1).padStart(2, "0")}</span> — {String(total).padStart(2, "0")}
+                                        <span className="text-[#2475EE]">{String(step + 1).padStart(2, "0")}</span> — {String(total).padStart(2, "0")}
                                     </div>
 
                                     {/* title + back/continue on one aligned row */}
                                     <div className="flex items-start justify-between gap-4">
                                         {current.key !== "date" ? (
                                             <div>
-                                                <h2 className="font-display text-[25px] font-bold leading-tight text-ink md:text-[29px]">{current.title}</h2>
-                                                <p className="mt-1.5 text-[15px] font-semibold text-ink/60">{current.subtitle}</p>
+                                                <h2 className="heading-xl">{current.title}</h2>
+                                                <p className="mt-1.5 text-[15px] font-semibold text-[#323232]/60">{current.subtitle}</p>
                                             </div>
                                         ) : (
                                             <div />
@@ -1225,7 +1223,7 @@ export function CustomisePage() {
                                                 onClick={onBack}
                                                 disabled={step === 0 || exiting}
                                                 aria-label="Back"
-                                                className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/10 bg-white text-ink transition hover:bg-secondary disabled:pointer-events-none disabled:opacity-30"
+                                                className="flex h-11 w-11 items-center justify-center rounded-full border border-[#323232]/10 bg-[#FFFFFF] text-[#323232] transition hover:bg-secondary disabled:pointer-events-none disabled:opacity-30"
                                             >
                                                 <ArrowLeft size={20} />
                                             </button>
@@ -1235,7 +1233,7 @@ export function CustomisePage() {
                                                     onClick={onContinue}
                                                     disabled={exiting}
                                                     aria-label="Continue"
-                                                    className="flex h-11 w-11 items-center justify-center rounded-full bg-brand text-white shadow-md shadow-brand/30 transition hover:brightness-95 disabled:opacity-70"
+                                                    className="flex h-11 w-11 items-center justify-center rounded-full bg-[#2475EE] text-[#FFFFFF] shadow-md shadow-[#2475EE]/30 transition hover:brightness-95 disabled:opacity-70"
                                                 >
                                                     <ArrowRight size={20} />
                                                 </button>
@@ -1253,7 +1251,7 @@ export function CustomisePage() {
                                                 onClick={findTours}
                                                 disabled={exiting}
                                                 type="button"
-                                                className="inline-flex items-center gap-2 rounded-2xl bg-brand px-6 py-3.5 text-[15px] font-bold text-white shadow-lg transition hover:brightness-95 disabled:opacity-70"
+                                                className="inline-flex items-center gap-2 rounded-2xl bg-[#2475EE] px-6 py-3.5 text-[15px] font-bold text-[#FFFFFF] shadow-lg transition hover:brightness-95 disabled:opacity-70"
                                             >
                                                 <Sparkles size={18} /> Show &amp; Get My Trip
                                             </button>
@@ -1294,16 +1292,12 @@ export function CustomisePage() {
                                     value: inputs.experiences.join(", ") || "Open to all",
                                 },
                                 {
-                                    label: "Food budget",
+                                    label: "Trip budget",
                                     value: `₹${Number(inputs.customBudget || 20000).toLocaleString("en-IN")}`,
                                 },
                                 {
-                                    label: "Cuisine",
+                                    label: "Budget style",
                                     value: inputs.cateringTypes.join(", ") || "Any",
-                                },
-                                {
-                                    label: "Trip budget",
-                                    value: `Up to ₹${ACCOMMODATION_MAXPRICE[inputs.accommodation].toLocaleString("en-IN")}`,
                                 },
                                 ...(inputs.notes.trim()
                                     ? [{ label: "Notes", value: inputs.notes.trim() }]
@@ -1314,8 +1308,6 @@ export function CustomisePage() {
                                 "Best prices & availability",
                                 "Real photos & verified stays",
                             ]}
-                            ctaLabel="Show My Trips"
-                            onShowTrips={() => gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
                             onAdjust={startOver}
                         />
 
@@ -1355,6 +1347,117 @@ export function CustomisePage() {
     );
 }
 
+/** Last-step notes UI:
+ *  right-aligned AskDISHA chats — typing dots → "Namaste" → 2nd typing dots → follow-up,
+ *  then the large reply box below. Avatars share a fixed column so bubbles
+ *  and the input share one clean right edge. */
+function NotesChatControl({
+    notes,
+    onNotesChange,
+}: {
+    notes: string;
+    onNotesChange: (value: string) => void;
+}) {
+    /** typing → namaste → typing2 → ready */
+    const [phase, setPhase] = useState<"typing" | "namaste" | "typing2" | "ready">("typing");
+
+    useEffect(() => {
+        // 1s + 45ms + 30ms = 1075ms → first chat "Namaste"
+        const namasteAt = 1075;
+        const typing2At = namasteAt + 200;
+        const readyAt = typing2At + 900;
+        const t1 = window.setTimeout(() => setPhase("namaste"), namasteAt);
+        const t2 = window.setTimeout(() => setPhase("typing2"), typing2At);
+        const t3 = window.setTimeout(() => setPhase("ready"), readyAt);
+        return () => {
+            window.clearTimeout(t1);
+            window.clearTimeout(t2);
+            window.clearTimeout(t3);
+        };
+    }, []);
+
+    const bubble =
+        "rounded-2xl rounded-br-md border border-[#323232]/8 bg-[#FFFFFF] px-4 py-3 text-left text-[14.5px] font-medium leading-relaxed text-[#323232] shadow-sm";
+
+    const TypingDots = () => (
+        <div className={`flex items-center gap-1.5 ${bubble}`} aria-label="Disha is typing">
+            {[0, 150, 300].map((d) => (
+                <span
+                    key={d}
+                    className="h-2 w-2 animate-bounce rounded-full bg-[#2475EE]/55"
+                    style={{ animationDelay: `${d}ms` }}
+                />
+            ))}
+        </div>
+    );
+
+    const showSecond = phase === "typing2" || phase === "ready";
+
+    return (
+        <div className="flex w-full flex-col gap-5">
+            {/* shared full-width column: bubble | avatar — matches input width */}
+            <div className="flex w-full flex-col gap-3">
+                {/* chat 1 — typing, then Namaste */}
+                <div className="grid w-full grid-cols-[minmax(0,1fr)_2.75rem] items-center gap-2.5">
+                    <div className="flex justify-end">
+                        {phase === "typing" ? (
+                            <TypingDots />
+                        ) : (
+                            <div className={`animate-fadeIn ${bubble} text-[15px] font-semibold`}>
+                                Namaste
+                            </div>
+                        )}
+                    </div>
+                    <img
+                        src={imgAskDisha}
+                        alt="AskDISHA 2.0"
+                        className="h-11 w-11 rounded-full object-cover shadow-sm ring-2 ring-[#FFFFFF]"
+                    />
+                </div>
+
+                {/* chat 2 — typing dots, then follow-up */}
+                {showSecond && (
+                    <div className="animate-fadeIn grid w-full grid-cols-[minmax(0,1fr)_2.75rem] items-center gap-2.5">
+                        <div className="flex justify-end">
+                            {phase === "typing2" ? (
+                                <TypingDots />
+                            ) : (
+                                <div className={`animate-fadeIn max-w-[min(100%,28rem)] ${bubble}`}>
+                                    Almost there — anything else I should keep in mind for your trip?
+                                </div>
+                            )}
+                        </div>
+                        <img
+                            src={imgAskDisha}
+                            alt=""
+                            aria-hidden="true"
+                            className="h-11 w-11 rounded-full object-cover shadow-sm ring-2 ring-[#FFFFFF]"
+                        />
+                    </div>
+                )}
+            </div>
+
+            {/* large reply box — same width as the chat grid above */}
+            {phase === "ready" && (
+                <div className="animate-fadeIn relative w-full">
+                    <textarea
+                        value={notes}
+                        maxLength={120}
+                        onChange={(e) => onNotesChange(e.target.value)}
+                        rows={6}
+                        autoFocus
+                        placeholder="Type your reply…"
+                        className="min-h-[160px] w-full resize-none !rounded-xl border bg-[#FFFFFF] p-4 pb-8 text-[15.5px] font-medium text-[#323232] outline-none focus:border-[#2475EE]"
+                    />
+                    <span className="pointer-events-none absolute bottom-3 right-3.5 text-[12px] text-muted-foreground">
+                        {notes.length}/120
+                    </span>
+                </div>
+            )}
+        </div>
+    );
+}
+
 /** Destination "vibe" picker — each choice is a photo card with a frosted-glass label
     (blurred bar over the image) carrying the name + description. Multi-select, with a
     brand ring + check when chosen. */
@@ -1377,7 +1480,7 @@ function VibeCards({
                         type="button"
                         aria-pressed={active}
                         onClick={() => onSelect(o.key)}
-                        className={`group relative h-44 overflow-hidden rounded-2xl text-left shadow-sm transition duration-200 ${active ? "shadow-xl ring-2 ring-brand" : "ring-1 ring-black/10 hover:ring-black/20"
+                        className={`group relative h-44 overflow-hidden rounded-2xl text-left shadow-sm transition duration-200 ${active ? "shadow-xl ring-2 ring-[#2475EE]" : "ring-1 ring-[#323232]/10 hover:ring-[#323232]/20"
                             }`}
                     >
                         <img
@@ -1390,21 +1493,21 @@ function VibeCards({
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
 
                         {active && (
-                            <span className="absolute right-2.5 top-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-brand text-white shadow-md ring-2 ring-white/60">
+                            <span className="absolute right-2.5 top-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-[#2475EE] text-[#FFFFFF] shadow-md ring-2 ring-[#FFFFFF]/60">
                                 <Check size={13} />
                             </span>
                         )}
 
                         {/* frosted-glass label */}
                         <div className="absolute inset-x-1.5 bottom-1.5">
-                            <div className="rounded-xl border border-white/30 bg-transparent px-2 py-1.5">
-                                <div className="flex items-center gap-1.5 text-white">
-                                    <span className="text-white/90">{o.icon}</span>
+                            <div className="rounded-xl border border-[#FFFFFF]/30 bg-transparent px-2 py-1.5">
+                                <div className="flex items-center gap-1.5 text-[#FFFFFF]">
+                                    <span className="text-[#FFFFFF]/90">{o.icon}</span>
                                     <span className="font-display text-[16.5px] font-bold [text-shadow:_0_1px_6px_rgba(0,0,0,0.45)]">
                                         {o.key}
                                     </span>
                                 </div>
-                                <div className="mt-0.5 text-[12px] font-medium leading-snug text-white/85 [text-shadow:_0_1px_4px_rgba(0,0,0,0.5)]">
+                                <div className="mt-0.5 text-[12px] font-medium leading-snug text-[#FFFFFF]/85 [text-shadow:_0_1px_4px_rgba(0,0,0,0.5)]">
                                     {o.desc}
                                 </div>
                             </div>
@@ -1452,10 +1555,10 @@ function OptionImageCards({
                             blocked
                                 ? "cursor-not-allowed opacity-50 grayscale"
                                 : active
-                                  ? "shadow-xl ring-2 ring-brand"
+                                  ? "shadow-xl ring-2 ring-[#2475EE]"
                                   : highlighted
-                                    ? "shadow-md ring-2 ring-brand/45"
-                                    : "ring-1 ring-black/10 hover:ring-black/20"
+                                    ? "shadow-md ring-2 ring-[#2475EE]/45"
+                                    : "ring-1 ring-[#323232]/10 hover:ring-[#323232]/20"
                         }`}
                     >
                         {o.image && (
@@ -1470,22 +1573,22 @@ function OptionImageCards({
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
 
                         {active && (
-                            <span className="absolute right-2.5 top-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-brand text-white shadow-md ring-2 ring-white/60">
+                            <span className="absolute right-2.5 top-2.5 flex h-6 w-6 items-center justify-center rounded-full bg-[#2475EE] text-[#FFFFFF] shadow-md ring-2 ring-[#FFFFFF]/60">
                                 <Check size={13} />
                             </span>
                         )}
 
                         {/* frosted-glass label */}
                         <div className="absolute inset-x-1.5 bottom-1.5">
-                            <div className="rounded-xl border border-white/30 bg-transparent px-2 py-1.5">
-                                <div className="flex items-center gap-1.5 text-white">
-                                    <span className="text-white/90">{o.icon}</span>
+                            <div className="rounded-xl border border-[#FFFFFF]/30 bg-transparent px-2 py-1.5">
+                                <div className="flex items-center gap-1.5 text-[#FFFFFF]">
+                                    <span className="text-[#FFFFFF]/90">{o.icon}</span>
                                     <span className="font-display text-[16.5px] font-bold [text-shadow:_0_1px_6px_rgba(0,0,0,0.45)]">
                                         {o.key}
                                     </span>
                                 </div>
                                 {(blocked || o.desc) && (
-                                    <div className="mt-0.5 text-[12px] font-medium leading-snug text-white/85 [text-shadow:_0_1px_4px_rgba(0,0,0,0.5)]">
+                                    <div className="mt-0.5 text-[12px] font-medium leading-snug text-[#FFFFFF]/85 [text-shadow:_0_1px_4px_rgba(0,0,0,0.5)]">
                                         {blocked || o.desc}
                                     </div>
                                 )}
@@ -1528,10 +1631,10 @@ function Pills({
                         aria-pressed={active}
                         onClick={() => onSelect(o.key)}
                         className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[13.5px] font-semibold transition ${active
-                                ? "border-brand bg-brand/10 text-brand"
+                                ? "border-[#2475EE] bg-[#2475EE]/10 text-[#2475EE]"
                                 : suggested
-                                  ? "border-brand/30 bg-brand/[0.04] text-ink hover:bg-brand/10"
-                                  : "bg-white text-ink hover:bg-secondary"
+                                  ? "border-[#2475EE]/30 bg-[#2475EE]/[0.04] text-[#323232] hover:bg-[#2475EE]/10"
+                                  : "bg-[#FFFFFF] text-[#323232] hover:bg-secondary"
                             }`}
                     >
                         {active && showCheck ? <Check size={13} /> : o.icon}
@@ -1592,26 +1695,26 @@ function DateRangeCalendar({
     ];
 
     return (
-        <div className="rounded-3xl border border-black/5 bg-white p-6 shadow-[0_4px_25px_rgba(0,0,0,0.03)] max-w-md mx-auto">
+        <div className="rounded-3xl border border-[#323232]/5 bg-[#FFFFFF] p-6 shadow-[0_4px_25px_rgba(0,0,0,0.03)] max-w-md mx-auto">
             <div className="mb-5 flex items-center justify-between">
                 <button
                     type="button"
                     onClick={() => setView(new Date(y, m - 1, 1))}
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-brand text-white shadow-md shadow-brand/20 hover:brightness-95 transition"
+                    className="flex h-9 w-9 items-center justify-center rounded-full bg-[#2475EE] text-[#FFFFFF] shadow-md shadow-[#2475EE]/20 hover:brightness-95 transition"
                     aria-label="Previous month"
                 >
                     <ChevronLeft size={18} strokeWidth={2.5} />
                 </button>
-                <div className="flex items-center gap-1 font-display text-[17px] font-bold text-ink">
+                <div className="flex items-center gap-1 font-display text-[17px] font-bold text-[#323232]">
                     <span>{monthName}</span>
-                    <span className="text-brand text-[10px] translate-y-[0.5px]">▼</span>
+                    <span className="text-[#2475EE] text-[10px] translate-y-[0.5px]">▼</span>
                     <span className="ml-1">{y}</span>
-                    <span className="text-brand text-[10px] translate-y-[0.5px]">▼</span>
+                    <span className="text-[#2475EE] text-[10px] translate-y-[0.5px]">▼</span>
                 </div>
                 <button
                     type="button"
                     onClick={() => setView(new Date(y, m + 1, 1))}
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-brand text-white shadow-md shadow-brand/20 hover:brightness-95 transition"
+                    className="flex h-9 w-9 items-center justify-center rounded-full bg-[#2475EE] text-[#FFFFFF] shadow-md shadow-[#2475EE]/20 hover:brightness-95 transition"
                     aria-label="Next month"
                 >
                     <ChevronRight size={18} strokeWidth={2.5} />
@@ -1642,7 +1745,7 @@ function DateRangeCalendar({
                             key={dISO}
                             className={`h-10 w-full flex justify-center items-center ${
                                 inRange
-                                    ? "bg-brand/10 text-brand"
+                                    ? "bg-[#2475EE]/10 text-[#2475EE]"
                                     : isStart && end
                                         ? "bg-gradient-to-r from-transparent to-brand/10 rounded-l-full"
                                         : isEnd && start
@@ -1658,10 +1761,10 @@ function DateRangeCalendar({
                                     past
                                         ? "text-muted-foreground/35 cursor-not-allowed"
                                         : isEdge
-                                            ? "bg-[#1a56db] text-white rounded-full shadow-md"
+                                            ? "bg-[#2475EE] text-[#FFFFFF] rounded-full shadow-md"
                                             : inRange
-                                                ? "text-[#1a56db] hover:bg-brand/20 rounded-none"
-                                                : "text-ink hover:bg-secondary rounded-full"
+                                                ? "text-[#2475EE] hover:bg-[#2475EE]/20 rounded-none"
+                                                : "text-[#323232] hover:bg-secondary rounded-full"
                                 }`}
                             >
                                 {day}
@@ -1696,21 +1799,21 @@ function ScoreRing({ value }: { value: number }) {
                     style={{ transition: "stroke-dashoffset 1s ease-out" }}
                 />
             </svg>
-            <div className="absolute inset-0 flex items-center justify-center font-display text-[22px] font-bold text-ink">
+            <div className="absolute inset-0 flex items-center justify-center font-display text-[22px] font-bold text-[#323232]">
                 {value}%
             </div>
         </div>
     );
 }
 
-/** A sleek side profile of a Vande Bharat set — white body, saffron stripe sweeping to
-    the nose — used purely as the loader's mascot. */
+/** Vande Bharat loco mascot for the interstitial loader.
+ *  Asset faces left — mirrored so the nose points into the motion (streaks whoosh left). */
 function VandeBharatTrain() {
     return (
         <img
-            src="/vandeBharat.png"
+            src={vandeBharatLoco}
             alt="Vande Bharat train"
-            className="h-[190px] w-[540px] object-contain object-bottom"
+            className="h-[190px] w-[540px] -scale-x-100 object-contain object-bottom"
         />
     );
 }
@@ -1722,10 +1825,10 @@ function VandeBharatLoader({ title, sub }: { title: string; sub: string }) {
         <div
             role="status"
             aria-live="polite"
-            className="animate-fadeIn mx-auto flex min-h-[380px] max-w-3xl flex-col items-center justify-center rounded-3xl border border-white/20 bg-black/35 px-6 py-14 text-center shadow-[0_30px_70px_-24px_rgba(0,0,0,0.55)]"
+            className="animate-fadeIn mx-auto flex min-h-[380px] max-w-3xl flex-col items-center justify-center px-6 py-14 text-center"
         >
             <div className="relative h-[200px] w-[min(100%,560px)]">
-                <div className="absolute bottom-0 left-0 right-0 h-[2px] rounded bg-white/25" />
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] rounded bg-[#FFFFFF]/25" />
                 <span className="vb-streak" style={{ top: 52 }} />
                 <span className="vb-streak" style={{ top: 86, animationDelay: "0.28s" }} />
                 <span className="vb-streak" style={{ top: 120, animationDelay: "0.56s" }} />
@@ -1733,11 +1836,11 @@ function VandeBharatLoader({ title, sub }: { title: string; sub: string }) {
                     <VandeBharatTrain />
                 </div>
             </div>
-            <div className="mt-7 font-display text-[19px] font-bold text-white">
+            <div className="mt-7 font-display text-[19px] font-bold text-[#FFFFFF]">
                 {title}
                 <span className="vb-dots" />
             </div>
-            <div className="mt-1.5 text-[13px] text-white/70">{sub}</div>
+            <div className="mt-1.5 text-[13px] text-[#FFFFFF]/70">{sub}</div>
         </div>
     );
 }

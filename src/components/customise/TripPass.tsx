@@ -13,11 +13,6 @@ const Train = (p: SVGProps<SVGSVGElement>) => (
         <circle cx="15.5" cy="8" r=".6" />
     </svg>
 );
-const Arrow = (p: SVGProps<SVGSVGElement>) => (
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" {...p}>
-        <path d="M5 12h14M13 6l6 6-6 6" />
-    </svg>
-);
 
 interface TripPassField {
     label: string;
@@ -34,8 +29,6 @@ interface TripPassProps {
     fields?: TripPassField[];
     whatsNextTitle?: string;
     whatsNext?: string[];
-    ctaLabel?: string;
-    onShowTrips?: () => void;
     onAdjust?: () => void;
 }
 
@@ -55,8 +48,6 @@ export default function TripPass({
     ],
     whatsNextTitle = "What's next",
     whatsNext = ["6 handpicked trips for you", "Best prices & availability", "Real photos & verified stays"],
-    ctaLabel = "Show my trips",
-    onShowTrips = () => {},
     onAdjust,
 }: TripPassProps) {
     return (
@@ -116,43 +107,36 @@ export default function TripPass({
 
             {/* stub */}
             <aside
-                className="relative flex flex-col bg-navy p-[30px_26px] font-sans text-white
-                   before:absolute before:bg-[radial-gradient(circle_at_10px_10px,transparent_6px,#fff_6.5px)]
+                className="relative z-10 flex min-h-[220px] flex-col bg-navy p-[30px_26px] font-sans text-white
+                   before:pointer-events-none before:absolute before:z-0 before:bg-[radial-gradient(circle_at_10px_10px,transparent_6px,#fff_6.5px)]
                    before:bg-[length:20px_20px] before:bg-center
                    before:left-0 before:right-0 before:top-[-10px] before:h-5
                    md:before:bottom-0 md:before:left-[-10px] md:before:right-auto md:before:top-0 md:before:h-auto md:before:w-5"
             >
-                <h3 className="mb-4 font-display text-[15px] font-bold tracking-tight">{whatsNextTitle}</h3>
-                <div className="flex flex-col">
+                <h3 className="relative z-10 mb-4 font-display text-[15px] font-bold tracking-tight text-white">
+                    {whatsNextTitle}
+                </h3>
+                <div className="relative z-10 flex flex-col">
                     {whatsNext.map((item, i) => (
-                        <div key={i} className="mb-3 flex items-start gap-2.5 text-[13.5px] leading-snug text-white/80">
+                        <div key={i} className="mb-3 flex items-start gap-2.5 text-[13.5px] leading-snug text-white/90">
                             <Check className="mt-px shrink-0 text-saffron" />
-                            <span>{item}</span>
+                            <span className="text-white/90">{item}</span>
                         </div>
                     ))}
                 </div>
 
-                <div className="mt-auto flex gap-2.5 pt-4">
-                    {onAdjust && (
+                {onAdjust && (
+                    <div className="relative z-10 mt-auto shrink-0 pt-6">
                         <button
                             onClick={onAdjust}
                             type="button"
-                            className="rounded-xl border border-white/30 px-[18px] py-3 text-[15px] font-semibold
-                         text-white transition hover:border-white/60"
+                            className="w-full rounded-xl bg-white px-[18px] py-3.5 text-[15px] font-bold text-navy
+                         shadow-md transition hover:bg-white/90"
                         >
                             Adjust
                         </button>
-                    )}
-                    <button
-                        onClick={onShowTrips}
-                        type="button"
-                        className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-brand
-                       px-[18px] py-3 text-[15px] font-semibold text-white transition
-                       hover:-translate-y-px hover:brightness-110"
-                    >
-                        {ctaLabel} <Arrow />
-                    </button>
-                </div>
+                    </div>
+                )}
             </aside>
         </div>
     );

@@ -31,8 +31,9 @@ const PERMS = [
   [2, 1, 0],
 ];
 
-/** Slot indices (0–11) inside each Unit that become personal cards instead of photos. */
-const PERSONAL_SLOTS = [2, 5, 9] as const;
+/** Slot indices (0–11) inside each Unit that become personal cards instead of photos.
+ *  Picked from the short masonry row (260px) so the solid cards don’t feel empty. */
+const PERSONAL_SLOTS = [1, 5, 6] as const;
 
 const DEFAULT_IMAGES = [
   kashmirImg,
@@ -82,23 +83,22 @@ function PersonalCard({
   profile: GalleryProfile;
 }) {
   const years = new Date().getFullYear() - profile.memberSince;
+  const shell =
+    "relative flex h-full flex-col justify-between overflow-hidden rounded-2xl p-4 text-left shadow-[0_12px_28px_-16px_rgba(15,32,74,0.35)]";
 
   // Solid saturated fills so cards don't blend into photos / white page.
   // Typography matches MadeForYouPage (font-display, tight tracking).
   if (variant === 0) {
     return (
-      <div
-        className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-[#6D28D9] p-5 text-left shadow-[0_12px_28px_-16px_rgba(15,32,74,0.35)]"
-        style={{ height }}
-      >
-        <p className="relative text-[12.5px] font-medium text-white/70">Made for you</p>
+      <div className={`${shell} bg-[#6D28D9]`} style={{ height }}>
+        <p className="relative text-[11.5px] font-medium text-white/70">Made for you</p>
         <div className="relative">
-          <p className="text-[13px] font-medium text-white/70">Welcome back,</p>
-          <p className="font-display text-[38px] font-bold leading-none tracking-tight text-white">
+          <p className="text-[12px] font-medium text-white/70">Welcome back,</p>
+          <p className="font-display text-[28px] font-bold leading-none tracking-tight text-white">
             {profile.name}
           </p>
           {profile.homeCity && (
-            <p className="mt-2.5 text-[12.5px] text-white/65">Exploring from {profile.homeCity}</p>
+            <p className="mt-1.5 text-[11.5px] text-white/65">Exploring from {profile.homeCity}</p>
           )}
         </div>
         <span className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/25" />
@@ -108,30 +108,27 @@ function PersonalCard({
 
   if (variant === 1) {
     return (
-      <div
-        className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-[#0F766E] p-5 text-left shadow-[0_12px_28px_-16px_rgba(15,32,74,0.35)]"
-        style={{ height }}
-      >
-        <div className="relative flex items-center gap-2 text-white/70">
-          <CalendarHeart size={15} />
-          <span className="text-[13px] font-medium">Your journey</span>
+      <div className={`${shell} bg-[#0F766E]`} style={{ height }}>
+        <div className="relative flex items-center gap-1.5 text-white/70">
+          <CalendarHeart size={14} />
+          <span className="text-[12px] font-medium">Your journey</span>
         </div>
-        <div className="relative space-y-4">
+        <div className="relative flex items-end gap-5">
           <div>
-            <p className="font-display text-[42px] font-bold leading-none tracking-tight text-white">
+            <p className="font-display text-[30px] font-bold leading-none tracking-tight text-white">
               {profile.memberSince}
             </p>
-            <p className="mt-2.5 text-[12.5px] text-white/70">
-              Member since · {years} yrs with us
+            <p className="mt-1.5 text-[11.5px] text-white/70">
+              Member · {years} yrs
             </p>
           </div>
-          <div className="h-px w-16 bg-white/30" />
+          <div className="mb-1 h-8 w-px bg-white/30" />
           <div>
-            <p className="font-display text-[42px] font-bold leading-none tracking-tight text-white">
+            <p className="font-display text-[30px] font-bold leading-none tracking-tight text-white">
               {profile.toursCompleted}
             </p>
-            <p className="mt-2.5 text-[12.5px] text-white/70">
-              {profile.toursCompleted === 1 ? "tour completed" : "tours completed"}
+            <p className="mt-1.5 text-[11.5px] text-white/70">
+              {profile.toursCompleted === 1 ? "tour done" : "tours done"}
             </p>
           </div>
         </div>
@@ -141,28 +138,25 @@ function PersonalCard({
   }
 
   return (
-    <div
-      className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-[#C2410C] p-5 text-left shadow-[0_12px_28px_-16px_rgba(15,32,74,0.35)]"
-      style={{ height }}
-    >
-      <div className="relative flex items-center gap-2 text-white/70">
-        <Sparkles size={15} />
-        <span className="text-[13px] font-medium">Travel style</span>
+    <div className={`${shell} bg-[#C2410C]`} style={{ height }}>
+      <div className="relative flex items-center gap-1.5 text-white/70">
+        <Sparkles size={14} />
+        <span className="text-[12px] font-medium">Travel style</span>
       </div>
       <div className="relative">
-        <p className="font-display text-[32px] font-bold leading-none tracking-tight text-white">
+        <p className="font-display text-[24px] font-bold leading-none tracking-tight text-white">
           What you love
         </p>
-        <ul className="mt-4 flex flex-wrap gap-2">
+        <ul className="mt-2.5 flex flex-wrap gap-1.5">
           {profile.tags.map((tag) => (
             <li
               key={tag}
-              className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1.5 text-[12.5px] font-medium text-white ring-1 ring-white/25"
+              className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-[11.5px] font-medium text-white ring-1 ring-white/25"
             >
               {tag.toLowerCase().includes("hill") ? (
-                <Mountain size={12} />
+                <Mountain size={11} />
               ) : tag.toLowerCase().includes("photo") ? (
-                <Camera size={12} />
+                <Camera size={11} />
               ) : null}
               {tag}
             </li>
@@ -315,10 +309,7 @@ export function DragGallery({
     return () => cancelAnimationFrame(raf);
   }, [draw]);
 
-  /* The pill stays on screen the whole time. It used to hide on pointer-down
-     and only return if you hadn't actually dragged (moved < 4), so any real
-     drag made it vanish for good. It's pointer-events-none, so leaving it up
-     can't interfere with the drag itself. */
+  const [pillHidden, setPillHidden] = useState(false);
 
   const onDown = (e: React.PointerEvent<HTMLDivElement>) => {
     const st = s.current;
@@ -328,6 +319,7 @@ export function DragGallery({
     st.lastX = e.clientX;
     st.lastY = e.clientY;
     st.moved = 0;
+    setPillHidden(true);
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   };
 
@@ -350,6 +342,7 @@ export function DragGallery({
     const st = s.current;
     if (!st.dragging) return;
     st.dragging = false;
+    setPillHidden(false);
   };
 
   const cells = Array.from({ length: grid.cols * grid.rows }, (_, i) => i);
@@ -375,7 +368,9 @@ export function DragGallery({
 
       <div
         ref={pillRef}
-        className="pointer-events-none absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/90 px-5 py-2.5 text-[13px] font-semibold tracking-wide text-ink shadow-[0_12px_40px_-12px_rgba(0,0,0,0.45)] backdrop-blur-md transition-[opacity,transform] duration-300"
+        className={`pointer-events-none absolute bottom-8 left-1/2 z-10 -translate-x-1/2 rounded-full bg-white/90 px-5 py-2.5 text-[13px] font-semibold tracking-wide text-ink shadow-[0_12px_40px_-12px_rgba(0,0,0,0.45)] backdrop-blur-md transition-[opacity,transform] duration-300 ${
+          pillHidden ? "translate-y-2 opacity-0" : "translate-y-0 opacity-100"
+        }`}
       >
         {label}
       </div>

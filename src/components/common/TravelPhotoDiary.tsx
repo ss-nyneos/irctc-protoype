@@ -113,8 +113,8 @@ export function TravelPhotoDiary() {
 
   return (
     <section>
-      <h2 className="reveal font-display text-[42px] font-bold leading-none tracking-tight text-ink">
-        Your travel photo diary
+      <h2 className="heading-xl reveal">
+        Top 3 Trips for <span className="accent">You</span>
       </h2>
 
       <div className="mt-12 space-y-16 md:space-y-20">
@@ -130,15 +130,15 @@ export function TravelPhotoDiary() {
               <aside className="flex flex-col justify-between gap-8 md:min-h-[280px] lg:min-h-[320px]">
                 <div>
                   <p className="text-[16px] font-medium text-muted-foreground">Trip</p>
-                  <p className="mt-3 font-display text-[22px] font-bold tracking-tight text-ink">
+                  <p className="mt-3 font-display text-[22px] font-bold tracking-[-0.04em] text-[#323232]">
                     {n} {trip.title}
                   </p>
-                  <p className="mt-2 text-[17px] text-muted-foreground">
+                  {/* <p className="mt-2 text-[17px] text-muted-foreground">
                     {trip.region} · {trip.category}
-                  </p>
+                  </p> */}
                 </div>
 
-                <div>
+                {/* <div>
                   <ul className="space-y-2.5">
                     {trip.tags.map((tag) => (
                       <li key={tag} className="text-[17px] text-muted-foreground">
@@ -146,7 +146,7 @@ export function TravelPhotoDiary() {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </div> */}
               </aside>
 
               <ScrollShiftImage src={trip.photo} alt={trip.title} />
@@ -156,30 +156,24 @@ export function TravelPhotoDiary() {
                   <p className="text-[15px] font-medium text-muted-foreground">
                     {n} / {total} · Diary
                   </p>
-                  <h3 className="mt-4 font-display text-[40px] font-bold leading-none tracking-tight text-ink sm:text-[48px]">
+                  <h3 className="mt-4 font-display text-[42px] font-bold leading-none tracking-[-0.04em] text-[#323232]">
                     {trip.title}
                   </h3>
-                  <p className="mt-3 text-[16px] font-medium text-muted-foreground">
-                    {trip.category}
-                  </p>
-                  <p className="mt-4 max-w-md text-[17px] leading-relaxed text-foreground/85">
-                    {trip.note}
+                  <p className="mt-2 text-[17px] text-muted-foreground">
+                    {trip.region} · {trip.category}
                   </p>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => go({ name: "detail", id: trip.packageId })}
-                  className="group mt-8 inline-flex max-w-sm flex-col gap-2.5 text-left md:mt-0"
+                  className="group mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-[#2475EE] px-5 py-2.5 text-[15px] font-semibold text-[#FFFFFF] shadow-[0_10px_24px_-14px_rgba(36,117,238,0.7)] transition hover:brightness-95 md:mt-0"
                 >
-                  <span className="h-px w-full bg-ink/20 transition-colors group-hover:bg-ink/50" />
-                  <span className="inline-flex items-center gap-2 text-[15px] font-semibold text-ink">
-                    View package
-                    <ArrowUpRight
-                      size={15}
-                      className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                    />
-                  </span>
+                  View package
+                  <ArrowUpRight
+                    size={15}
+                    className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
                 </button>
               </div>
             </article>

@@ -45,7 +45,7 @@ export default function TripGenieStrip() {
                      shadow-[0_10px_24px_-14px_rgba(36,117,238,0.7)]
                      transition-[background] duration-250 ease-brand hover:bg-blue-deep"
         >
-          Try our Trip Genie
+          Try our Trip Guide
         </button>
       </div>
     </section>

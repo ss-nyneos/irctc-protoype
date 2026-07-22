@@ -55,15 +55,15 @@ h4,
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-/* Page/section heading spec: Helvetica 700, 42px/100%, -4% tracking.
-   Color is set per-usage (text-ink on light backgrounds, text-white on dark
-   photo banners) since #323232 is unreadable on dark/photo surfaces. */
+/* Page/section heading spec: Helvetica 700, 42px/100%, -4% tracking, #323232.
+   Wrap the last word in <span class="accent"> for #2475EE. */
 .heading-xl {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 700;
   font-size: 42px;
   line-height: 100%;
   letter-spacing: -0.04em;
+  color: #323232;
 }
 .heading-xl .accent {
   color: #2475ee;
