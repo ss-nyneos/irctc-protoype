@@ -41,8 +41,8 @@ export default function ExploreCta() {
   const { go } = useRouter()
 
   return (
-    /* margin-bottom gives breathing room before the footer */
-    <section className="relative isolate mb-[clamp(2.5rem,5vw,4.5rem)] overflow-hidden bg-paper pt-[clamp(6.5rem,11vw,10.5rem)]">
+    /* padding (not margin) so the paper bg covers any stacked layers below */
+    <section className="relative isolate overflow-hidden bg-paper pb-[clamp(1.5rem,3vw,2.5rem)] pt-[clamp(6.5rem,11vw,10.5rem)]">
       <div className="wrap relative z-[3] text-center">
         <h2 className="h2 [&_span]:text-blue">
           Ready To Explore The <span>World?</span>

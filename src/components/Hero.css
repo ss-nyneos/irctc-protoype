@@ -5,11 +5,13 @@
   height: 100dvh;
   min-height: 100vh;
   min-height: 100dvh;
+  margin: 0;
   overflow: hidden;
   background: #0a0a0a;
   isolation: isolate;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
+  padding-bottom: clamp(2.5rem, 8vh, 5.5rem);
 }
 .hero__img {
   position: absolute;
