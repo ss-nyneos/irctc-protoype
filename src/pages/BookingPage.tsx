@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   BedDouble,
@@ -331,6 +331,10 @@ export function BookingPage({
 
   const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [step, done]);
 
   // ── Step 1: basic detail ────────────────────────────────────
   const [startDate, setStartDate] = useState(departure ?? detail.departures[0]);
