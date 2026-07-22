@@ -86,7 +86,7 @@
   --animate-mt-card-in: mtCardIn 0.5s var(--ease);
   /* the flip is baked into the keyframes so the bob composes with it */
   --animate-faq-boat-bob: faqBoatBob 7s ease-in-out infinite;
-  --animate-trend-slide: trendSlide 52s linear infinite;
+  --animate-trend-slide: trendSlide 65s linear infinite;
 
   @keyframes trendSlide {
     to {

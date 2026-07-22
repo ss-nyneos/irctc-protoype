@@ -6,7 +6,8 @@
   --navy-2: #2a5aa0;
   --gold: #e8b93c;
   background: var(--paper);
-  padding-block: clamp(4.5rem, 9vw, 8rem) clamp(4rem, 8vw, 7rem);
+  /* shared section rhythm — same token as .section, .luxe, Trending */
+  padding-block: var(--section-y);
 }
 
 /* ---- header ---- */
@@ -38,13 +39,13 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: #eef1fa;
-  color: var(--navy);
+  background: var(--blue);
+  color: #fff;
   font-size: 1.15rem;
   transition: background 0.25s var(--ease), transform 0.25s var(--ease);
 }
 .offers__arrow:hover {
-  background: #dde4f6;
+  background: var(--blue-deep);
   transform: translateY(-2px);
 }
 
@@ -239,4 +240,25 @@
   .offer {
     height: clamp(300px, 78vw, 360px);
   }
+}
+
+/* ============================================================
+   Dark theme — the mosaic tiles hardcode a white card + caption for
+   the light page (and .offers pins --navy locally, so the heading
+   stays dark navy). Both need an explicit black card and light type
+   here, or they glare white against the night page.
+   ============================================================ */
+[data-theme='dark'] .offer--tile,
+[data-theme='dark'] .offer--tile .offer__caption,
+/* the mosaic's own white ground shows through the 3px gaps and the angled
+   seams between the four frames — it has to go black too, or the card keeps
+   white diagonal lines running through it */
+[data-theme='dark'] .offer--tile .mosaic {
+  background: #000;
+}
+[data-theme='dark'] .offer__caption h3 {
+  color: #ffffff;
+}
+[data-theme='dark'] .offer__caption p {
+  color: rgba(255, 255, 255, 0.72);
 }

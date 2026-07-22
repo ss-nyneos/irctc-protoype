@@ -145,10 +145,14 @@
   font-weight: var(--text-svc--font-weight);
   font-size: var(--text-svc);
   letter-spacing: var(--text-svc--letter-spacing);
-  line-height: var(--text-svc--line-height);
+  line-height: 1.15;
   text-align: center;
-  color: #000;
+  color: #323232;
   transition: opacity 0.25s var(--ease);
+}
+/* each word on its own line so the label fits inside the dome */
+.svc__labelword {
+  display: block;
 }
 /* the popup takes the label's place on hover */
 .svc:hover .svc__label {
@@ -243,4 +247,56 @@
 }
 @media (max-width: 480px) {
   .palace__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ============================================================
+   Dark theme — the arches become glowing, lantern-lit niches.
+   arch-frame.png is an OPAQUE cream rectangle with the arch painted on
+   it, so on a dark page it reads as a white box. Inverting flips the
+   cream ground to near-black and swings the warm lines back to warm;
+   `screen` then drops the near-black ground into the page so only the
+   arch itself glows — no square, just light.
+   ============================================================ */
+[data-theme='dark'] .palace {
+  --p-sub: #b89b6c;
+  box-shadow: 0 -24px 60px -24px rgba(0, 0, 0, 0.6);
+}
+/* `.svc` is its own stacking context (will-change on .reveal), so the frame's
+   `screen` blend needs a backdrop to dissolve into. Painting the tile with the
+   SAME navy as the page means the inverted near-black ground screens straight
+   back to page-navy — no square, and the tile is invisible against the section
+   so only the glowing dome remains. */
+[data-theme='dark'] .svc {
+  background: var(--paper);
+}
+[data-theme='dark'] .svc__frame {
+  filter: invert(1) hue-rotate(180deg) brightness(1.12) saturate(1.3);
+  mix-blend-mode: screen;
+}
+[data-theme='dark'] .svc:hover .svc__frame {
+  filter: invert(1) hue-rotate(180deg) brightness(1.5) saturate(1.55);
+}
+/* golden glyphs so they read as lit inside the niche. SVG icons take the gold
+   directly; the PNG line-art is dark, so it's inverted to white then colourised
+   to a matching gold (darken → sepia → saturate → brighten). */
+[data-theme='dark'] .svc__icon {
+  color: #e6b65f;
+}
+[data-theme='dark'] .svc__icon--img {
+  filter: invert(1) brightness(0.6) sepia(1) saturate(2.2) hue-rotate(-6deg) brightness(1.12);
+}
+[data-theme='dark'] .svc__label {
+  color: var(--ink);
+}
+/* soft, always-on warm glow behind each dome — the lantern within */
+[data-theme='dark'] .svc::before {
+  opacity: 0.55;
+  background: radial-gradient(
+    56% 52% at 50% 40%,
+    rgba(243, 200, 130, 0.3),
+    rgba(243, 200, 130, 0) 72%
+  );
+}
+[data-theme='dark'] .svc:hover::before {
+  opacity: 0.95;
 }

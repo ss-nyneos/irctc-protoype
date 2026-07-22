@@ -32,6 +32,23 @@ const SERVICES: Svc[] = [
   { label: 'Golden Chariot', img: icTrain2, blurb: 'A regal rail journey through the south’s temples and coasts.' },
 ]
 
+/* Stack each word of the label on its own line so it fits inside the narrow
+   dome. A lone "&" (Ferry & Cruises) is merged into the next word so it never
+   sits alone on a line. */
+function labelLines(label: string): string[] {
+  const words = label.split(' ')
+  const lines: string[] = []
+  for (let i = 0; i < words.length; i++) {
+    if (words[i] === '&' && i + 1 < words.length) {
+      lines.push(`& ${words[i + 1]}`)
+      i++
+    } else {
+      lines.push(words[i])
+    }
+  }
+  return lines
+}
+
 export default function Services() {
   return (
     <section className="section palace" id="services">
@@ -65,7 +82,11 @@ export default function Services() {
                       </a>
                     </div>
                   </span>
-                  <span className="svc__label">{s.label}</span>
+                  <span className="svc__label">
+                    {labelLines(s.label).map((line, i) => (
+                      <span className="svc__labelword" key={i}>{line}</span>
+                    ))}
+                  </span>
                 </div>
               </div>
             )

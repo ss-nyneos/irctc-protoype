@@ -18,7 +18,7 @@ const scrim =
 /* frosted price panel — appears on hover */
 const price =
   'pointer-events-none absolute top-[5%] right-[5%] z-[2] flex flex-col items-center gap-[0.38rem] ' +
-  'rounded-[14px] border border-white/32 bg-white/14 px-3 pt-[0.6rem] pb-[0.58rem] ' +
+  'rounded-[14px] border border-white/20 bg-black/40 px-3 pt-[0.6rem] pb-[0.58rem] ' +
   'backdrop-blur-[16px] backdrop-saturate-[1.3] ' +
   '-translate-y-2.5 opacity-0 transition-[opacity,transform] duration-[400ms] ease-brand delay-[50ms] ' +
   'group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100'
@@ -96,7 +96,7 @@ export default function Trending() {
                 <span className={`${reveal} mb-0 block text-[0.75rem] font-semibold group-hover:mb-[0.32rem] group-hover:max-h-[2em]`}>
                   {p.nights} Nights / {p.days} Days
                 </span>
-                <h3 className="text-[clamp(1.02rem,0.9rem+0.45vw,1.28rem)] leading-[1.12] font-bold tracking-[-0.02em] text-white">
+                <h3 className="text-[clamp(1.02rem,0.9rem+0.45vw,1.28rem)] leading-[1.12] font-semibold tracking-[-0.02em] text-white">
                   {p.title}
                 </h3>
                 <p className={`${reveal} mt-0 text-[0.82rem] leading-[1.45] group-hover:mt-[0.45rem] group-hover:max-h-[8em]`}>

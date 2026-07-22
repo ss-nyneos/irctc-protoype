@@ -4,7 +4,7 @@ import { usePrefs } from '../context/Prefs.tsx'
 import { useUI } from '../context/UI.tsx'
 import { useRouter } from '@/router/RouterContext'
 import logo from '../assets/irctc-emblem.png'
-import accessIcon from '../assets/graphic/log-in.png'
+import { TbSettingsPlus } from 'react-icons/tb'
 import {
   ChevronR,
   Close,
@@ -59,7 +59,7 @@ export default function NavBar() {
     toggleHighlightLinks,
     toggleSeniorMode,
   } = usePrefs()
-  const { user, openLogin, openDisha, openPartPayment, signOut } = useUI()
+  const { user, openLogin, openPartPayment, signOut } = useUI()
   const [menu, setMenu] = useState<MenuKind>(null)
   const [mobile, setMobile] = useState(false)
   const [hidden, setHidden] = useState(false)
@@ -159,10 +159,6 @@ export default function NavBar() {
           </nav>
 
           <div className="nav__right">
-            <button className="nav__disha" onClick={openDisha}>
-              {t('nav.disha')}
-            </button>
-
             <button
               className={`nav__icon ${menu === 'access' ? 'is-open' : ''}`}
               onClick={() => toggle('access')}
@@ -170,7 +166,7 @@ export default function NavBar() {
               aria-label={t('nav.access')}
               title={t('nav.access')}
             >
-              <img className="nav__icon-img" src={accessIcon} alt="" aria-hidden="true" />
+              <TbSettingsPlus className="nav__icon-glyph" aria-hidden="true" />
             </button>
 
             <button

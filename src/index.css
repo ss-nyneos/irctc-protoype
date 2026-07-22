@@ -680,12 +680,16 @@ h4,
   }
 }
 
-/* Hide default scrollbars globally */
-html, body {
+/* Hide default scrollbars globally. `.design-1-root` is included because its
+   `overflow-x: hidden` makes IT the page's scroll container, not html/body —
+   leaving it out let a real scrollbar show there and reflow the layout. */
+html, body, .design-1-root {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
 }
-html::-webkit-scrollbar, body::-webkit-scrollbar {
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.design-1-root::-webkit-scrollbar {
   display: none !important;
 }
 

@@ -100,7 +100,9 @@ export default function Destinations() {
                   src={d.img}
                   alt={`${d.name}, ${d.state}`}
                   loading="lazy"
-                  className="img-cover transition-transform duration-1000 ease-brand"
+                  className={`img-cover transition-transform duration-1000 ease-brand motion-reduce:animate-none ${
+                    isActive ? 'animate-ken-burns' : ''
+                  }`}
                 />
                 {/* lighter on the focused card so the photo stays the hero */}
                 <span

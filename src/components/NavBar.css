@@ -137,35 +137,17 @@
   transform: rotate(-90deg);
 }
 
-/* Ask Disha / accessibility / My Space are three different shapes sitting
-   side by side, so they need more air between them than the plain links do */
+/* accessibility / My Space are different shapes sitting side by side, so they
+   need more air between them than the plain links do */
 .nav__right {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  /* ~15px: the accessibility circle and the My Space pill are different
+     shapes, so they need more air between them than the plain links do */
+  gap: 0.95rem;
   margin-left: 0.5rem;
 }
 
-/* Ask Disha — a normal nav item */
-.nav__disha {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.72rem 1.15rem;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--ink-soft);
-  font-size: var(--text-nav);
-  line-height: var(--text-nav--line-height);
-  letter-spacing: var(--text-nav--letter-spacing);
-  font-weight: var(--text-nav--font-weight);
-  white-space: nowrap;
-  transition: background 0.25s var(--ease), color 0.25s var(--ease);
-}
-.nav__disha:hover {
-  background: var(--paper-2);
-  color: var(--black);
-}
 .nav__icon {
   display: grid;
   place-items: center;
@@ -186,20 +168,19 @@
   background: var(--paper-2);
   color: var(--black);
 }
-/* PNG glyph: the artwork is solid black, so it is inverted for dark theme */
-.nav__icon-img {
-  width: 21px;
-  height: 21px;
+/* SVG glyph (react-icons): draws in currentColor, so it inherits the button's
+   colour and themes itself — no dark-mode invert needed the way the old PNG
+   artwork did. */
+.nav__icon-glyph {
+  width: 22px;
+  height: 22px;
   display: block;
-  opacity: 0.72;
+  opacity: 0.78;
   transition: opacity 0.25s var(--ease);
 }
-.nav__icon:hover .nav__icon-img,
-.nav__icon.is-open .nav__icon-img {
+.nav__icon:hover .nav__icon-glyph,
+.nav__icon.is-open .nav__icon-glyph {
   opacity: 1;
-}
-:root[data-theme='dark'] .nav__icon-img {
-  filter: invert(1);
 }
 
 /* My Space always reads as a solid blue pill */
@@ -523,8 +504,5 @@
   }
   .panel--mobile {
     display: flex;
-  }
-  .nav__disha {
-    padding: 0.72rem 0.95rem;
   }
 }

@@ -158,7 +158,7 @@ const stack = 'flex flex-col gap-[1.1rem]'
 const chipBase =
   'rounded-full border px-4 py-[0.55rem] text-[0.9rem] font-semibold transition-all duration-200 ease-brand'
 const chipOn = 'border-blue bg-blue text-white'
-const chipOff = 'border-line bg-card text-ink-soft hover:border-blue hover:text-black'
+const chipOff = 'border-line bg-card text-ink-soft hover:border-blue hover:text-ink-black'
 
 export default function AskDisha() {
   const { close } = useUI()
@@ -228,7 +228,7 @@ export default function AskDisha() {
       ) : (
         <div className={stack}>
           <div className="flex items-baseline justify-between gap-4">
-            <h3 className="text-[1.15rem] font-bold text-black">
+            <h3 className="text-[1.15rem] font-bold text-ink-black">
               {anyMatch ? t('disha.results') : t('disha.none')}
             </h3>
             <button
@@ -256,7 +256,7 @@ export default function AskDisha() {
                   <span className="text-[0.78rem] font-bold tracking-[0.04em] uppercase text-blue-ink">
                     {pkg.place}
                   </span>
-                  <h4 className="mt-[0.1rem] text-[1.12rem] leading-[1.15] font-bold text-black">
+                  <h4 className="mt-[0.1rem] text-[1.12rem] leading-[1.15] font-bold text-ink-black">
                     {pkg.title}
                   </h4>
                   <p className="mt-[0.2rem] text-[0.86rem] text-ink-soft">
@@ -269,7 +269,7 @@ export default function AskDisha() {
                   )}
                 </div>
                 <div className="flex flex-none flex-col items-end gap-2">
-                  <span className="font-bold tabular-nums text-black">{inr(pkg.price)}</span>
+                  <span className="font-bold tabular-nums text-ink-black">{inr(pkg.price)}</span>
                   <a
                     href="#packages"
                     onClick={close}

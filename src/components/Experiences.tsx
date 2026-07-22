@@ -29,10 +29,10 @@ export default function Experiences() {
         </div>
 
         <div
-          className="grid auto-rows-[clamp(200px,52vw,260px)] grid-cols-1 gap-[clamp(8px,0.8vw,12px)]
+          className="grid auto-rows-[clamp(188px,48vw,240px)] grid-cols-1 gap-[clamp(8px,0.8vw,12px)]
                      min-[561px]:grid-cols-2
                      min-[901px]:auto-rows-auto min-[901px]:grid-cols-6
-                     min-[901px]:grid-rows-[clamp(280px,30vw,425px)_clamp(110px,12vw,150px)_clamp(260px,28vw,400px)]"
+                     min-[901px]:grid-rows-[clamp(262px,28vw,392px)_clamp(130px,14vw,178px)_clamp(244px,26vw,368px)]"
         >
           {CARDS.map((c) => {
             const big = c.size === 'lg'
@@ -42,7 +42,7 @@ export default function Experiences() {
                 className={`reveal group relative isolate overflow-hidden rounded-[14px] ${
                   big
                     ? 'min-[901px]:col-span-3'
-                    : 'min-[561px]:max-[900px]:h-[clamp(140px,22vw,180px)] min-[901px]:col-span-2'
+                    : 'min-[561px]:max-[900px]:h-[clamp(160px,25vw,206px)] min-[901px]:col-span-2'
                 }`}
               >
                 <img
