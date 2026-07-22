@@ -71,10 +71,10 @@ export function SectionNav({
                 type="button"
                 onClick={() => onNavigate(s.id)}
                 aria-current={isActive ? "location" : undefined}
-                className={`flex min-h-[54px] w-full items-center gap-3 rounded-2xl border-l-[3px] px-4 py-3 text-left text-[16px] font-bold transition ${
+                className={`flex min-h-[54px] w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-[16px] font-bold transition ${
                   isActive
-                    ? "border-brand bg-brand/[0.08] text-brand"
-                    : "border-transparent text-muted-foreground hover:bg-secondary/70 hover:text-ink"
+                    ? "bg-brand/[0.08] text-brand"
+                    : "text-muted-foreground hover:bg-secondary/70 hover:text-ink"
                 }`}
               >
                 {s.label}
