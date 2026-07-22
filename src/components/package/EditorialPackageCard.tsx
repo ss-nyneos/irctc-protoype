@@ -1,10 +1,13 @@
-import { ArrowRight, CalendarDays, Check, Moon, Scale, Tag } from "lucide-react";
+import { ArrowRight, CalendarDays, Check, Moon, Scale } from "lucide-react";
 import type { TourPackage } from "@/types";
 import { useRouter } from "@/router/RouterContext";
 import { ImageWithFallback } from "@/components/common/ImageWithFallback";
 import { InclusionIcons } from "@/components/package/InclusionIcons";
 import { getPackageDetail } from "@/data/packageDetail";
 import { formatINR } from "@/utils/format";
+
+
+export const HOVER_GROW = 0.28;
 
 interface EditorialPackageCardProps {
   pkg: TourPackage;
@@ -50,24 +53,22 @@ export function EditorialPackageCard({
         width={featured ? 1400 : 900}
         className="absolute inset-0 h-full w-full transform-gpu transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]"
       />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
+      {/* Carries the readability the caption panel used to provide itself. */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
       {/* Hairline highlight so the white frame reads as part of the photo. */}
       <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/25" />
 
-      <div className="absolute inset-x-5 top-5 flex items-start justify-between gap-2">
-        {/* Holiday type — ours, not IRCTC's: it's what the filter panel sorts by. */}
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-black/35 px-3 py-1.5 text-[12.5px] font-semibold text-white backdrop-blur-md">
-          <Tag size={12} /> {pkg.category}
-        </span>
+      <div className="absolute inset-x-5 top-5 flex items-start justify-end gap-2">
         <div className="flex flex-col items-end gap-2">
           {/* "Starting from" price, the only figure IRCTC prints on a row. */}
           <span className="origin-top-right rounded-full bg-brand px-3.5 py-1.5 text-[15px] font-bold text-white shadow-lg shadow-brand/25 transition-transform duration-500 ease-out group-hover:scale-[1.08]">
             {formatINR(pkg.price)}
           </span>
 
-          {/* Shortlist toggle: a bare icon until you reach the card, then it
-              opens out into a labelled pill. Selected, it stays open and the
-              whole card takes a brand frame — the state reads from a distance. */}
+          {/* Shortlist toggle: always a full labelled pill, never hover-only —
+              on touch there is no hover, so a bare icon reads as decoration.
+              Selected, the whole card takes a brand frame too, so the state
+              reads from a distance. */}
           {onCompare && (
             <button
               onClick={(e) => {
@@ -76,25 +77,22 @@ export function EditorialPackageCard({
               }}
               type="button"
               aria-pressed={comparing}
-              className={`inline-flex h-8 items-center gap-1.5 overflow-hidden rounded-full px-2 text-[12px] font-bold shadow-md backdrop-blur-md transition-all duration-300 ease-out ${
+              className={`inline-flex h-8 items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-[12px] font-bold shadow-md backdrop-blur-md transition-colors duration-300 ease-out ${
                 comparing ? "bg-brand text-white" : "bg-black/40 text-white hover:bg-brand"
               }`}
             >
               {comparing ? <Check size={14} className="shrink-0" /> : <Scale size={14} className="shrink-0" />}
-              <span
-                className={`grid transition-[grid-template-columns] duration-300 ease-out ${
-                  comparing ? "grid-cols-[1fr]" : "grid-cols-[0fr] group-hover:grid-cols-[1fr]"
-                }`}
-              >
-                <span className="overflow-hidden whitespace-nowrap pr-1">{comparing ? "Added" : "Compare"}</span>
-              </span>
+              {comparing ? "Added" : "Compare"}
             </button>
           )}
         </div>
       </div>
 
       <div
-        className={`absolute inset-x-[7px] bottom-[7px] overflow-hidden rounded-[11px] border border-white/30 bg-white/12 backdrop-blur-md transition-all duration-500 group-hover:bg-white/[0.18] ${
+        // No panel at all: any film or blur here milks the photograph out. The
+        // card's own bottom gradient plus a shadow under the type is what keeps
+        // the white readable, so the picture stays whole.
+        className={`absolute inset-x-[7px] bottom-[7px] overflow-hidden rounded-[11px] transition-all duration-500 [text-shadow:0_1px_10px_rgba(0,0,0,0.75)] ${
           compact ? "px-4 py-3" : "px-5 py-4"
         }`}
       >
@@ -106,9 +104,9 @@ export function EditorialPackageCard({
           {pkg.name}
         </h3>
 
-        {/* Scan-level facts stay put — duration, origin, destination and the
-            journey date are what you compare on, so they are never behind an
-            interaction. */}
+        {/* Scan-level facts only — duration and the journey date. The route
+            itself is long enough to wrap the title off the photo, so it moves
+            into the hover panel below with the rest of the detail. */}
         <div
           className={`mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-semibold text-white/85 ${
             compact ? "text-[11.5px]" : "text-[13px]"
@@ -118,10 +116,6 @@ export function EditorialPackageCard({
             <Moon size={13} className="text-white/60" /> {pkg.nights} Nights/{pkg.days} Days
           </span>
           <span className="text-white/40">|</span>
-          <span>{pkg.from}</span>
-          <ArrowRight size={13} className="text-white/55" />
-          <span>{pkg.region}</span>
-          <span className="text-white/40">|</span>
           <span className="inline-flex items-center gap-1.5">
             <CalendarDays size={13} className="text-white/60" /> {detail.nextDeparture}
           </span>
@@ -130,6 +124,17 @@ export function EditorialPackageCard({
         <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out group-hover:grid-rows-[1fr]">
           <div className="overflow-hidden">
             <div className={`border-t border-white/20 ${compact ? "mt-2 pt-2" : "mt-3 pt-3"}`}>
+              {/* The route, revealed on hover: origin, then every stop. */}
+              <div
+                className={`flex items-center gap-1.5 font-semibold text-white/85 ${
+                  compact ? "mb-1.5 text-[11.5px]" : "mb-2.5 text-[12.5px]"
+                }`}
+              >
+                <span className="shrink-0">{pkg.from}</span>
+                <ArrowRight size={13} className="shrink-0 text-white/55" />
+                <span className="truncate">{pkg.region}</span>
+              </div>
+
               {/* The shelf's cards are half height — the label/value grid won't
                   fit there without swallowing the photo, so it stays on the
                   full-size cards and the shelf keeps the inclusions row. */}

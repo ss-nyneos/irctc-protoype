@@ -36,12 +36,12 @@
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  /* `overflow-x: hidden` promotes overflow-y to a scroll container, so THIS
-     element — not html — owns the page scrollbar. Reserve its gutter
-     permanently so a height change (e.g. toggling dark theme) can't add/remove
-     the scrollbar and shift the centred, right-anchored nav sideways. */
-  overflow-x: hidden;
-  scrollbar-gutter: stable;
+  /* clip (not hidden) so sticky descendants like VandeBharatScrollMorph still
+     work: `hidden` would promote this to a scroll container and capture them.
+     `clip` still contains decorative horizontal overflow. The page scrollbar
+     therefore lives on <html>, whose stable gutter + hidden bar (index.css)
+     keep a theme toggle from shifting the centred nav sideways. */
+  overflow-x: clip;
 }
 
 :where(.design-1-root) img,

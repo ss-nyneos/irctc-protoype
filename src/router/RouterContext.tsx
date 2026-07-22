@@ -15,14 +15,31 @@ export function useRouter(): RouterState {
   return ctx;
 }
 
-/** Maps view names to real browser URLs. Only "customise" is wired up today;
- *  everything else still lives at "/" with no URL syncing. */
+/** Maps view names to real browser URLs. */
 function pathForView(view: View): string {
-  return view.name === "customise" ? "/customise" : "/";
+  switch (view.name) {
+    case "customise":
+      return "/customise";
+    case "madeforyou":
+      return "/personal";
+    case "home":
+    default:
+      return "/home";
+  }
 }
 
 function viewForPath(path: string): View {
-  return path === "/customise" ? { name: "customise" } : { name: "home" };
+  switch (path) {
+    case "/customise":
+      return { name: "customise" };
+    case "/personal":
+      return { name: "madeforyou" };
+    case "/home":
+    case "/landing":
+    case "/":
+    default:
+      return { name: "home" };
+  }
 }
 
 /**

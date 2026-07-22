@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { usePrefs } from '../context/Prefs.tsx'
 import { useUI } from '../context/UI.tsx'
+import { useRouter } from '@/router/RouterContext'
 import logo from '../assets/irctc-emblem.png'
 import accessIcon from '../assets/graphic/log-in.png'
 import {
@@ -41,6 +42,8 @@ const packageLinks: {
 ]
 
 export default function NavBar() {
+  const navigate = useNavigate()
+  const { go } = useRouter()
   const {
     t,
     theme,
@@ -167,9 +170,15 @@ export default function NavBar() {
             </button>
 
             <button
-              className={`nav__item nav__space ${menu === 'space' ? 'is-open' : ''}`}
-              onClick={() => toggle('space')}
-              aria-expanded={menu === 'space'}
+              className="nav__item nav__space"
+              type="button"
+              onClick={() => {
+                setMenu(null)
+                setMobile(false)
+                go({ name: 'madeforyou' })
+                navigate('/personal')
+              }}
+              aria-label={t('nav.myspace')}
             >
               <Users />
               <span className="nav__space-label">{t('nav.myspace')}</span>
@@ -333,6 +342,16 @@ export default function NavBar() {
             <a href="#experiences" onClick={() => setMobile(false)}>{t('nav.experiences')}</a>
             <a href="#trains" onClick={() => setMobile(false)}>{t('nav.trains')}</a>
             <a href="#pilgrimage" onClick={() => setMobile(false)}>{t('nav.pilgrimage')}</a>
+            <button
+              type="button"
+              onClick={() => {
+                setMobile(false)
+                go({ name: 'madeforyou' })
+                navigate('/personal')
+              }}
+            >
+              {t('nav.myspace')}
+            </button>
           </div>
         )}
       </div>

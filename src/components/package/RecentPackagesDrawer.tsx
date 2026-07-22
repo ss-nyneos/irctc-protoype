@@ -17,24 +17,25 @@ export function RecentPackagesDrawer({ packages }: RecentPackagesDrawerProps) {
   const { go } = useRouter();
   const [open, setOpen] = useState(true);
 
-  // Solid white on purpose: this sits on a photograph, and a translucent panel
-  // takes the picture's colour with it and stops being readable.
+  // Frosted white rather than a clear film: at 12% the panel took the sunset's
+  // colour and the label disappeared into it. A heavy blur plus a mostly-white
+  // wash keeps the glass look but gives dark type something to sit on.
   return (
-    <section className="mx-auto w-full overflow-hidden rounded-md border border-black/5 bg-white shadow-[0_16px_40px_-16px_rgba(0,0,0,0.45)] lg:w-3/5">
+    <section className="mx-auto w-full overflow-hidden rounded-xl border border-white/60 bg-white/75 shadow-[0_16px_40px_-16px_rgba(0,0,0,0.45)] backdrop-blur-2xl backdrop-saturate-150 lg:w-[30%]">
       <button
         onClick={() => setOpen((v) => !v)}
         type="button"
         aria-expanded={open}
-        className="group/bar flex w-full items-center justify-between gap-4 px-4 py-2 text-left transition hover:bg-secondary/50"
+        className="group/bar flex w-full items-center justify-between gap-4 px-4 py-2 text-left transition hover:bg-white/60"
       >
         <span className="inline-flex items-center gap-2.5">
           <HistoryIcon size={14} className="shrink-0 text-saffron" />
           <span className="font-display text-[12.5px] font-bold uppercase tracking-[0.22em] text-ink">
             Recent
-            <span className="ml-1.5 font-medium tracking-[0.22em] text-muted-foreground">tour packages</span>
+            <span className="ml-1.5 font-medium tracking-[0.22em] text-ink/60">tour packages</span>
           </span>
         </span>
-        <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-secondary text-navy transition group-hover/bar:bg-secondary-foreground/15">
+        <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-navy/10 text-navy transition group-hover/bar:bg-navy/20">
           <ChevronDown size={14} className={`transition-transform duration-500 ease-out ${open ? "" : "-rotate-180"}`} />
         </span>
       </button>
@@ -46,7 +47,7 @@ export function RecentPackagesDrawer({ packages }: RecentPackagesDrawerProps) {
         }`}
       >
         <div className="overflow-hidden">
-          <ul className="divide-y divide-border border-t border-border">
+          <ul className="divide-y divide-black/10 border-t border-black/10">
             {packages.map((pkg, i) => (
               <li key={pkg.id}>
                 <button
@@ -54,12 +55,12 @@ export function RecentPackagesDrawer({ packages }: RecentPackagesDrawerProps) {
                   type="button"
                   // Rows deal themselves in behind the drawer as it opens.
                   style={{ transitionDelay: open ? `${140 + i * 70}ms` : "0ms" }}
-                  className={`group/row relative flex w-full items-center gap-3 px-4 py-1.5 text-left transition-all duration-500 ease-out hover:bg-secondary/50 ${
+                  className={`group/row relative flex w-full items-center gap-3 px-4 py-1.5 text-left transition-all duration-500 ease-out hover:bg-white/60 ${
                     open ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
                   }`}
                 >
                   {/* Fills in from the left on hover, like a track lighting up. */}
-                  <span className="absolute inset-y-0 left-0 w-0 bg-gradient-to-r from-saffron/15 to-transparent transition-all duration-500 ease-out group-hover/row:w-full" />
+                  <span className="absolute inset-y-0 left-0 w-0 bg-gradient-to-r from-saffron/25 to-transparent transition-all duration-500 ease-out group-hover/row:w-full" />
 
                   <ImageWithFallback
                     img={pkg.img}
@@ -74,7 +75,7 @@ export function RecentPackagesDrawer({ packages }: RecentPackagesDrawerProps) {
                     <span className="block truncate text-[13px] font-semibold tracking-tight text-ink transition group-hover/row:text-navy">
                       {pkg.name}
                     </span>
-                    <span className="block truncate text-[11px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
+                    <span className="block truncate text-[11px] font-medium uppercase tracking-[0.1em] text-ink/60">
                       {pkg.nights}N / {pkg.days}D
                     </span>
                   </span>
@@ -84,7 +85,7 @@ export function RecentPackagesDrawer({ packages }: RecentPackagesDrawerProps) {
                   </span>
                   <ChevronRight
                     size={15}
-                    className="relative shrink-0 text-muted-foreground/60 transition group-hover/row:translate-x-0.5 group-hover/row:text-ink"
+                    className="relative shrink-0 text-ink/40 transition group-hover/row:translate-x-0.5 group-hover/row:text-ink"
                   />
                 </button>
               </li>

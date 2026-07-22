@@ -10,7 +10,6 @@ import { CustomisePage } from "@/pages/CustomisePage2";
 import { MadeForYouPage } from "@/pages/MadeForYouPage";
 import { DetailPage } from "@/pages/DetailPage";
 import { BookingPage } from "@/pages/BookingPage";
-import { CustomScrollbar } from "@/components/common/CustomScrollbar";
 import { PreloadScreen } from "@/components/home/PreloadScreen";
 
 // Design 1 imports
@@ -66,7 +65,6 @@ function Shell() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <CustomScrollbar />
       <Header />
       <main className="flex-1">
         <CurrentPage />
@@ -190,20 +188,26 @@ function Design1Layout() {
         );
       });
 
-      // Cards / features batch reveal
-      gsap.set(".reveal", { opacity: 0, y: 46 });
-      ScrollTrigger.batch(".reveal", {
-        start: "top 90%",
-        onEnter: (batch) =>
-          gsap.to(batch, {
-            opacity: 1,
-            y: 0,
-            duration: 0.85,
-            ease: "power3.out",
-            stagger: 0.09,
-            overwrite: true,
-          }),
-      });
+      // Cards / features batch reveal — skip sections that own their reveal
+      // (e.g. LuxuryTrainsSection via useReveal on HomePage + Design1 Home).
+      const revealEls = gsap.utils
+        .toArray<HTMLElement>(".reveal")
+        .filter((el) => !el.closest("[data-skip-gsap-reveal]"));
+      if (revealEls.length) {
+        gsap.set(revealEls, { opacity: 0, y: 46 });
+        ScrollTrigger.batch(revealEls, {
+          start: "top 90%",
+          onEnter: (batch) =>
+            gsap.to(batch, {
+              opacity: 1,
+              y: 0,
+              duration: 0.85,
+              ease: "power3.out",
+              stagger: 0.09,
+              overwrite: true,
+            }),
+        });
+      }
 
       /* ---- Offers + Stats: cards introduce themselves one by one ---- */
       gsap.utils.toArray<HTMLElement>(".offers__grid, .stats__grid").forEach((grid) => {
@@ -253,10 +257,7 @@ export default function App() {
     <BrowserRouter>
       <RouterProvider>
         <Routes>
-          {/* Design 1 is the landing page.
-              "/" mounts it with the train preload overlaid on top, so the page
-              is already rendered underneath as the overlay fades; the overlay
-              then navigates to "/home", which is the same page without it. */}
+          {/* Design 1 landing — "/" shows Home under preload, then hands off to "/home" */}
           <Route element={<Design1Layout />}>
             <Route
               path="/"
@@ -271,15 +272,13 @@ export default function App() {
             <Route path="/packages" element={<Packages />} />
           </Route>
 
-          {/* Preload intro screen. It fades, then navigates to "/landing",
-              so moving it off "/" keeps that hand-off intact. */}
+          {/* In-app shell routes */}
+          <Route path="/personal" element={<Shell />} />
+          <Route path="/customise" element={<Shell />} />
+          <Route path="/landing" element={<Shell />} />
           <Route path="/preload" element={<PreloadRoute />} />
 
-          {/* Main app shell — world / customise / detail / booking views */}
-          <Route path="/landing" element={<Shell />} />
-
-          {/* Catch-all: redirect unknown paths to "/" */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </RouterProvider>
     </BrowserRouter>

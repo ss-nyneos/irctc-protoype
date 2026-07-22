@@ -27,13 +27,13 @@ const SPOTS: Spot[] = [
 
 function MarqueeCard({ spot }: { spot: Spot }) {
   return (
-    <div className="relative h-[210px] w-[168px] shrink-0 overflow-hidden rounded-[26px] shadow-[0_22px_44px_-18px_rgba(0,0,0,0.55)] ring-1 ring-black/5 sm:h-[268px] sm:w-[214px]">
-      <ImageWithFallback img={spot.img} grad={spot.grad} alt={spot.name} className="h-full w-full" width={520} />
-      <div className="absolute inset-x-0 bottom-0 p-4 text-center">
-        <div className="font-display text-[19px] font-bold leading-tight text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.65)] sm:text-[21px]">
+    <div className="relative h-[260px] w-[200px] shrink-0 overflow-hidden rounded-[28px] shadow-[0_22px_44px_-18px_rgba(0,0,0,0.55)] ring-1 ring-black/5 sm:h-[340px] sm:w-[260px]">
+      <ImageWithFallback img={spot.img} grad={spot.grad} alt={spot.name} className="h-full w-full" width={640} />
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 via-black/20 to-transparent p-5 pt-14 text-center">
+        <div className="font-display text-[22px] font-bold leading-tight text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.65)] sm:text-[26px]">
           {spot.name}
         </div>
-        <div className="mt-1 text-[12px] font-semibold text-white/85 sm:text-[13px]">{spot.tours}</div>
+        <div className="mt-1 text-[13px] font-semibold text-white/85 sm:text-[14px]">{spot.tours}</div>
       </div>
     </div>
   );

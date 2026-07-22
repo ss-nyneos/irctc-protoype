@@ -1,4 +1,8 @@
-export type TravelMode = "Rail + Road" | "Train" | "Air" | "Luxury Train";
+import type { InclusionKey } from "@/utils/inclusions";
+
+/** "Road" covers the packages IRCTC sells with no train and no flight leg —
+ *  cab or coach only, joined at the destination city. */
+export type TravelMode = "Rail + Road" | "Train" | "Air" | "Road" | "Luxury Train";
 export type Climate = "Cool" | "Moderate" | "Warm" | "Tropical";
 export type BudgetBand = "Value" | "Comfort" | "Premium" | "Luxury";
 export type Experience =
@@ -16,14 +20,48 @@ export interface ItineraryDay {
   detail: string;
 }
 
+/**
+ * The fields IRCTC itself publishes on a listing row. These are read straight
+ * out of `tourDetail.json` and must never be edited by hand — the live site is
+ * the source of truth for every one of them.
+ */
+export interface IrctcListing {
+  /** IRCTC package code, e.g. "SEH035". */
+  code: string;
+  name: string;
+  nights: number;
+  days: number;
+  /** IRCTC's own wording, e.g. "4 Nights/5 Days" or "1 Day". */
+  durationLabel: string;
+  origin: string;
+  destination: string;
+  /** Which days the package runs, e.g. "All Days (Except Friday)". */
+  departure: string;
+  /** "Upcoming Date Of Journey", printed as DD-MMM-YY. */
+  nextDeparture: string;
+  /** The inclusion icon row, in IRCTC's own order. */
+  inclusions: InclusionKey[];
+  /** "Starting from" fare, in rupees. */
+  price: number;
+}
+
 export interface TourPackage {
   id: string;
+  /** IRCTC package code — the join key back into `tourDetail.json`. */
+  code: string;
   name: string;
   category: string;
+  /** IRCTC's "Destination" string, verbatim. */
   region: string;
+  /** IRCTC's "Origin" string, verbatim. */
   from: string;
   nights: number;
   days: number;
+  durationLabel: string;
+  departure: string;
+  nextDeparture: string;
+  /** IRCTC's inclusion icons. Distinct from `inclusions`, which is prose. */
+  inclusionKeys: InclusionKey[];
   price: number;
   oldPrice?: number;
   rating: number;
@@ -109,9 +147,33 @@ export interface CoachClass {
   seatsLeft: number;
 }
 
-export interface PolicySection {
+/** One rung of the cancellation ladder: what is withheld when you cancel this
+ *  many days before the tour starts. */
+export interface CancellationBand {
+  label: string;
+  /** `null` at the last-minute rung, which has no lower bound. */
+  minDays: number | null;
+  /** `null` at the earliest rung, which has no upper bound. */
+  maxDays: number | null;
+  /** Flat per-passenger deduction in rupees. Mutually exclusive with `percent`. */
+  flat?: number;
+  /** Share of the package cost withheld, 0–100. */
+  percent?: number;
+}
+
+/** A named cluster of conduct rules — "Attire", "Safety and security". */
+export interface PolicyTopic {
   title: string;
   points: string[];
+}
+
+/** A block of the terms. Exactly one of `points`, `bands` or `topics` is set;
+ *  `PolicyPanel` picks its renderer from whichever is present. */
+export interface PolicySection {
+  title: string;
+  points?: string[];
+  bands?: CancellationBand[];
+  topics?: PolicyTopic[];
 }
 
 /** The booking-desk detail IRCTC publishes per package. Kept apart from the

@@ -2,12 +2,13 @@
 .hero {
   position: relative;
   /* Fill the viewport exactly — never taller than the screen. dvh tracks the
-     mobile URL-bar collapse; the vh line is the fallback for browsers without
-     dynamic-viewport units. */
+     mobile URL-bar collapse; the vh lines are the fallback for browsers without
+     dynamic-viewport units. min + max at 100dvh pins it to exactly one screen. */
   height: 100vh;
   height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
   max-height: 100dvh;
-  min-height: 560px;
   overflow: hidden;
   background: #0a0a0a;
   isolation: isolate;

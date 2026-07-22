@@ -1,4 +1,5 @@
 import type { BoardingPoint, CoachClass, PackageDetail, PolicySection, TourPackage, TravelMode } from "@/types";
+import { cancellationBands, conductTopics, importantNotes } from "@/data/policyContent";
 
 /**
  * Booking-desk detail for a package: code, class-wise fares, boarding chain,
@@ -39,53 +40,13 @@ const tiers: Record<
     { code: "DLX", label: "Deluxe", detail: "4-star stays, preferred flight timings", delta: 0.28 },
     { code: "PRM", label: "Premium", detail: "5-star stays, front-row seats", delta: 0.66 },
   ],
-};
-
-/** IRCTC-style package codes: zone + tour + serial. */
-const codes: Record<string, string> = {
-  chardham: "NRCD10",
-  keralabackwaters: "SRKL05",
-  dakshinbharat: "NDBG42",
-  northeastsafari: "ERNE06",
-  maharajas: "MEXP08",
-  goldenchariot: "GCSR07",
-  andaman: "SRAN05",
-  kashmir: "NRKS06",
-  srilanka: "INSL06",
-  jyotirlinga: "WRJY11",
-  rajasthan: "NRRJ06",
-  dubai: "INDX05",
-};
-
-const departurePattern: Record<string, string> = {
-  chardham: "All Days (Except Friday)",
-  keralabackwaters: "Everyday",
-  dakshinbharat: "Weekday",
-  northeastsafari: "All Days (Except Thursday & Friday)",
-  maharajas: "Wednesday",
-  goldenchariot: "Monday",
-  andaman: "Everyday",
-  kashmir: "Daily",
-  srilanka: "All Days (Except Sunday)",
-  jyotirlinga: "Daily",
-  rajasthan: "All Days (Except Friday)",
-  dubai: "Everyday",
-};
-
-/** IRCTC's "Upcoming Date Of Journey", in its DD-MMM-YY print format. */
-const nextDeparture: Record<string, string> = {
-  chardham: "24-JUL-26",
-  keralabackwaters: "26-JUL-26",
-  dakshinbharat: "27-JUL-26",
-  northeastsafari: "02-AUG-26",
-  maharajas: "05-AUG-26",
-  goldenchariot: "10-AUG-26",
-  andaman: "26-JUL-26",
-  kashmir: "25-JUL-26",
-  srilanka: "29-JUL-26",
-  jyotirlinga: "26-JUL-26",
-  rajasthan: "31-JUL-26",
-  dubai: "28-JUL-26",
+  // Road packages are joined at the destination, so the tier you pick is the
+  // hotel category rather than a coach class.
+  Road: [
+    { code: "STD", label: "Standard", detail: "3-star stays, AC cab or coach", delta: 0 },
+    { code: "DLX", label: "Deluxe", detail: "4-star stays, private transfers", delta: 0.28 },
+    { code: "PRM", label: "Premium", detail: "5-star stays, dedicated vehicle", delta: 0.66 },
+  ],
 };
 
 /**
@@ -133,14 +94,6 @@ const boardingChains: Record<string, BoardingPoint[]> = {
     { station: "Alwar Junction", code: "AWR", arr: "19:10", dep: "19:15" },
     { station: "Jaipur Junction", code: "JP", arr: "21:20", dep: null },
   ],
-  maharajas: [
-    { station: "Mumbai CSMT", code: "CSMT", arr: null, dep: "14:00" },
-    { station: "Vadodara Junction", code: "BRC", arr: "20:15", dep: "20:35" },
-  ],
-  goldenchariot: [
-    { station: "Bengaluru Yeshwantpur", code: "YPR", arr: null, dep: "14:30" },
-    { station: "Mysuru Junction", code: "MYS", arr: "18:45", dep: "19:05" },
-  ],
 };
 
 const baseDepartures = ["20 Jul 2026", "03 Aug 2026", "17 Aug 2026", "07 Sep 2026", "19 Oct 2026"];
@@ -157,12 +110,7 @@ const commonPolicy: PolicySection[] = [
   },
   {
     title: "Cancellation & refund",
-    points: [
-      "More than 30 days before departure: 90% refund.",
-      "30 to 15 days before departure: 50% refund.",
-      "Under 15 days before departure: no refund.",
-      "Refunds reach the original payment method within 7 to 10 working days.",
-    ],
+    bands: cancellationBands,
   },
   {
     title: "Identity & documents",
@@ -243,16 +191,26 @@ function buildClasses(pkg: TourPackage): CoachClass[] {
 function buildPolicy(pkg: TourPackage): PolicySection[] {
   const modePolicy = pkg.travelMode === "Air" ? airPolicy : railPolicy;
   const extra = extraPolicy[pkg.id];
-  return [...commonPolicy.slice(0, 2), modePolicy, ...(extra ? [extra] : []), commonPolicy[2]];
+  return [
+    ...commonPolicy.slice(0, 2),
+    { title: "Important notes", points: importantNotes },
+    modePolicy,
+    ...(extra ? [extra] : []),
+    commonPolicy[2],
+    { title: "On-tour conduct", topics: conductTopics },
+  ];
 }
 
 export function getPackageDetail(pkg: TourPackage): PackageDetail {
   return {
-    code: codes[pkg.id] ?? `IR${pkg.id.slice(0, 4).toUpperCase()}`,
-    departure: departurePattern[pkg.id] ?? "Everyday",
-    nextDeparture: nextDeparture[pkg.id] ?? "26-JUL-26",
+    // Straight off the IRCTC listing — see `tourDetail.json`.
+    code: pkg.code,
+    departure: pkg.departure,
+    nextDeparture: pkg.nextDeparture,
     classes: buildClasses(pkg),
-    boarding: boardingChains[pkg.id] ?? [],
+    // Only a package with a rail leg has a boarding chain to show. Air and
+    // road-only tours are joined at the destination city.
+    boarding: pkg.inclusionKeys.includes("Train") ? boardingChains[pkg.id] ?? [] : [],
     departures: baseDepartures,
     policy: buildPolicy(pkg),
   };
