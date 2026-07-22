@@ -16,7 +16,7 @@ export default {
          tracking deliberately omit lineHeight/fontWeight so the call site keeps
          setting its own. */
       fontSize: {
-        nav: ["18px", { lineHeight: "154%", letterSpacing: "0em", fontWeight: "700" }],
+        nav: ["16px", { lineHeight: "154%", letterSpacing: "0em", fontWeight: "500" }],
         svc: ["16px", { lineHeight: "100%", letterSpacing: "-0.04em", fontWeight: "500" }],
         faq: ["22px", { lineHeight: "32px", letterSpacing: "0em", fontWeight: "700" }],
         tile: ["22.62px", { lineHeight: "100%", letterSpacing: "0em", fontWeight: "400" }],
@@ -65,6 +65,11 @@ export default {
         azure: "hsl(var(--azure-hsl))",
         brand: "#2475EE",
         ink: "var(--ink)",
+        /* Heading ink. Deliberately NOT a remap of Tailwind's built-in `black`:
+           that stays true #000 for the scrims and rings (bg-black/40,
+           ring-black/5, from-black/80 …) which need real black at low alpha.
+           Use `text-ink-black` for type. */
+        "ink-black": "var(--black)",
         saffron: "#F2662A",
 
         // Design 1 specific colors mapping to CSS variables scoped to .design-1-root
@@ -92,6 +97,11 @@ export default {
       keyframes: {
         marquee: { to: { transform: "translateX(-50%)" } },
         trendSlide: { to: { transform: "translateX(calc(-1 * var(--loop, 50%)))" } },
+        /* slow, subtle drift+zoom for the focused destination card's photo */
+        kenBurns: {
+          "0%": { transform: "scale(1.02) translate3d(0, 0, 0)" },
+          "100%": { transform: "scale(1.09) translate3d(-1.5%, -1%, 0)" },
+        },
         mtCardIn: { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
         modalFade: { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
         modalRise: {
@@ -142,7 +152,8 @@ export default {
       },
       animation: {
         marquee: "marquee 42s linear infinite",
-        "trend-slide": "trendSlide 52s linear infinite",
+        "trend-slide": "trendSlide 65s linear infinite",
+        "ken-burns": "kenBurns 14s ease-in-out infinite alternate",
         "mt-card-in": "mtCardIn 0.5s cubic-bezier(0.22,1,0.36,1)",
         "modal-fade": "modalFade 0.3s cubic-bezier(0.22,1,0.36,1)",
         "modal-rise": "modalRise 0.4s cubic-bezier(0.22,1,0.36,1)",

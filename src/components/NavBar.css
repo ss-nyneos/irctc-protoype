@@ -137,8 +137,8 @@
   transform: rotate(-90deg);
 }
 
-/* Ask Disha / accessibility / My Space are three different shapes sitting
-   side by side, so they need more air between them than the plain links do */
+/* accessibility / My Space are different shapes sitting side by side, so they
+   need more air between them than the plain links do */
 .nav__right {
   display: flex;
   align-items: center;
@@ -146,26 +146,6 @@
   margin-left: 0.5rem;
 }
 
-/* Ask Disha — a normal nav item */
-.nav__disha {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.72rem 1.15rem;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--ink-soft);
-  font-size: var(--text-nav);
-  line-height: var(--text-nav--line-height);
-  letter-spacing: var(--text-nav--letter-spacing);
-  font-weight: var(--text-nav--font-weight);
-  white-space: nowrap;
-  transition: background 0.25s var(--ease), color 0.25s var(--ease);
-}
-.nav__disha:hover {
-  background: var(--paper-2);
-  color: var(--black);
-}
 .nav__icon {
   display: grid;
   place-items: center;
@@ -523,8 +503,5 @@
   }
   .panel--mobile {
     display: flex;
-  }
-  .nav__disha {
-    padding: 0.72rem 0.95rem;
   }
 }

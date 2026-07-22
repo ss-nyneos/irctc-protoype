@@ -38,7 +38,9 @@ const pill =
 export default function ExploreCta() {
   return (
     /* margin-bottom gives breathing room before the footer */
-    <section className="relative isolate mb-[clamp(2.5rem,5vw,4.5rem)] overflow-hidden bg-paper pt-[clamp(6.5rem,11vw,10.5rem)]">
+    <section className="explore relative isolate mb-[clamp(2.5rem,5vw,4.5rem)] overflow-hidden bg-paper pt-[var(--section-y)]">
+      {/* night sky — a starlit gradient that only lights up in dark mode */}
+      <div className="explore__night pointer-events-none absolute inset-0 z-0" aria-hidden="true" />
       <div className="wrap relative z-[3] text-center">
         <h2 className="h2 [&_span]:text-blue">
           Ready To Explore The <span>World?</span>
@@ -85,7 +87,7 @@ export default function ExploreCta() {
       ))}
 
       {/* skyline + its reflection in the water */}
-      <div className="relative z-[1] mt-[clamp(0.5rem,1.8vw,1.5rem)]" aria-hidden="true">
+      <div className="explore__skyline relative z-[1] mt-[clamp(0.5rem,1.8vw,1.5rem)]" aria-hidden="true">
         <img src={skyline} alt="" className="block h-auto w-full" />
         <img
           src={skylineReflection}

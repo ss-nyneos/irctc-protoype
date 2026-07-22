@@ -10,6 +10,8 @@ import deccanImg from '../assets/trains/deccan-odyssey.jpg'
 import maharajasImg from '../assets/trains/maharajas-express.jpg'
 import goldenChariotImg from '../assets/trains/golden-chariot.jpg'
 import palaceImg from '../assets/trains/palace-on-wheels.jpg'
+import kashiImg from '../assets/places/kashi_vishwanath.png'
+import venkateshwaraImg from '../assets/places/venkateshwara_temple.png'
 
 export interface NavItem {
   label: string
@@ -105,6 +107,7 @@ export const contact = {
   landline: '080-4464 7998',
   landlineAlt: '080-3573 4998',
   email: 'tourism@irctc.com',
+  address: ['Statesman House, Barakhamba Road', 'New Delhi 110001, India'],
 } as const
 
 export const nav: NavItem[] = [
@@ -405,10 +408,10 @@ export const trains: Train[] = [
 ]
 
 export const pilgrimage: Pilgrimage[] = [
-  { id: 'kashi', name: 'Kashi Vishwanath', place: 'Varanasi', img: '/img/varanasi-hd.jpg' },
+  { id: 'kashi', name: 'Kashi Vishwanath', place: 'Varanasi', img: kashiImg },
   { id: 'golden-temple', name: 'Harmandir Sahib', place: 'Amritsar', img: '/img/harmandir-sahib.webp' },
   { id: 'meenakshi', name: 'Meenakshi Amman', place: 'Madurai', img: '/img/meenakshi-amman.webp' },
-  { id: 'tirupati', name: 'Sri Venkateswara', place: 'Tirupati', img: '/img/venkateshwara.jpg' },
+  { id: 'tirupati', name: 'Sri Venkateswara', place: 'Tirupati', img: venkateshwaraImg },
 ]
 
 export const ecosystem: string[] = [

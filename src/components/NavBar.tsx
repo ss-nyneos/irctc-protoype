@@ -56,7 +56,7 @@ export default function NavBar() {
     toggleHighlightLinks,
     toggleSeniorMode,
   } = usePrefs()
-  const { user, openLogin, openDisha, openPartPayment, signOut } = useUI()
+  const { user, openLogin, openPartPayment, signOut } = useUI()
   const [menu, setMenu] = useState<MenuKind>(null)
   const [mobile, setMobile] = useState(false)
   const [hidden, setHidden] = useState(false)
@@ -156,10 +156,6 @@ export default function NavBar() {
           </nav>
 
           <div className="nav__right">
-            <button className="nav__disha" onClick={openDisha}>
-              {t('nav.disha')}
-            </button>
-
             <button
               className={`nav__icon ${menu === 'access' ? 'is-open' : ''}`}
               onClick={() => toggle('access')}

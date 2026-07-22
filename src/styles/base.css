@@ -36,7 +36,12 @@
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* `overflow-x: hidden` promotes overflow-y to a scroll container, so THIS
+     element — not html — owns the page scrollbar. Reserve its gutter
+     permanently so a height change (e.g. toggling dark theme) can't add/remove
+     the scrollbar and shift the centred, right-anchored nav sideways. */
   overflow-x: hidden;
+  scrollbar-gutter: stable;
 }
 
 :where(.design-1-root) img,
@@ -404,4 +409,49 @@ main > section:not(.hero) {
 :root[data-senior] a,
 :root[data-senior] button {
   text-underline-offset: 3px;
+}
+
+/* ============================================================
+   Dark-mode "night" treatments for illustrated sections whose
+   artwork is drawn for a light page. Keyed on [data-theme='dark'];
+   invisible / neutral in light mode.
+   ============================================================ */
+
+/* ExploreCta: a starlit night sky behind the CTA, a moon, and a warm
+   horizon glow. The overlay is transparent in light mode. */
+.explore__night {
+  opacity: 0;
+  transition: opacity 0.5s var(--ease);
+}
+[data-theme='dark'] .explore__night {
+  opacity: 1;
+  background:
+    radial-gradient(140% 90% at 50% -12%, rgba(58, 76, 138, 0.42), rgba(10, 13, 24, 0) 55%),
+    radial-gradient(92% 62% at 50% 102%, rgba(214, 150, 70, 0.16), rgba(10, 13, 24, 0) 60%),
+    radial-gradient(2px 2px at 12% 18%, rgba(255, 255, 255, 0.9), transparent 60%),
+    radial-gradient(2px 2px at 28% 31%, rgba(255, 255, 255, 0.7), transparent 60%),
+    radial-gradient(1.5px 1.5px at 42% 12%, rgba(255, 255, 255, 0.85), transparent 60%),
+    radial-gradient(1.5px 1.5px at 57% 26%, rgba(255, 255, 255, 0.6), transparent 60%),
+    radial-gradient(2px 2px at 72% 16%, rgba(255, 255, 255, 0.85), transparent 60%),
+    radial-gradient(1.5px 1.5px at 84% 30%, rgba(255, 255, 255, 0.7), transparent 60%),
+    radial-gradient(1.5px 1.5px at 20% 44%, rgba(255, 255, 255, 0.5), transparent 60%),
+    radial-gradient(1.5px 1.5px at 66% 45%, rgba(255, 255, 255, 0.55), transparent 60%),
+    radial-gradient(2px 2px at 90% 48%, rgba(255, 255, 255, 0.6), transparent 60%),
+    radial-gradient(1.5px 1.5px at 8% 35%, rgba(255, 255, 255, 0.6), transparent 60%);
+  background-repeat: no-repeat;
+}
+[data-theme='dark'] .explore__night::before {
+  content: '';
+  position: absolute;
+  top: clamp(28px, 6vw, 72px);
+  right: clamp(40px, 12vw, 190px);
+  width: clamp(34px, 5vw, 62px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 38%, #fdf6e3, #e8dcc0 55%, rgba(232, 220, 192, 0) 72%);
+  box-shadow: 0 0 44px 10px rgba(253, 246, 227, 0.22);
+}
+/* the daytime skyline reads as an evening silhouette rather than glaring */
+[data-theme='dark'] .explore__skyline img {
+  filter: brightness(0.68) saturate(0.82) contrast(1.06);
 }

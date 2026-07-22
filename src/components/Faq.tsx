@@ -11,7 +11,7 @@ export default function Faq() {
     <section className="section bg-paper" id="faq">
       <div className="wrap">
         <div className="mb-[clamp(2.4rem,4vw,3.4rem)] text-center">
-          <h2 className="font-sans text-[42px] leading-none font-bold text-black [&_span]:text-blue">
+          <h2 className="font-sans text-[42px] leading-none font-bold text-ink-black [&_span]:text-blue">
             Frequently Asked <span>Questions</span>
           </h2>
           <p className="mt-[0.7rem] text-[1.05rem] text-ink-soft">
@@ -80,7 +80,7 @@ export default function Faq() {
                     className={`w-auto flex-none text-[clamp(1.3rem,1rem+1vw,1.7rem)] leading-tight
                                 font-bold tabular-nums transition-colors duration-300 ease-brand
                                 min-[561px]:w-[2.4ch]
-                                ${isOpen ? 'text-white [text-shadow:0_2px_12px_rgba(4,40,90,0.5)]' : 'text-black'}`}
+                                ${isOpen ? 'text-white [text-shadow:0_2px_12px_rgba(4,40,90,0.5)]' : 'text-ink-black'}`}
                   >
                     {String(i + 1).padStart(2, '0')}
                   </span>
@@ -92,7 +92,7 @@ export default function Faq() {
                   >
                     <span
                       className={`text-faq transition-colors duration-300 ease-brand
-                                  ${isOpen ? 'text-white [text-shadow:0_2px_14px_rgba(4,40,90,0.5)]' : 'text-black'}`}
+                                  ${isOpen ? 'text-white [text-shadow:0_2px_14px_rgba(4,40,90,0.5)]' : 'text-ink-black'}`}
                     >
                       {f.q}
                     </span>

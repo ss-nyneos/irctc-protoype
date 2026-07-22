@@ -10,10 +10,10 @@
      branch is Tailwind v3, which has no CSS-first theme, so they are declared
      here and mirrored in tailwind.config.ts (fontSize) so the utilities and
      the handwritten CSS stay on one set of numbers. */
-  --text-nav: 18px;
+  --text-nav: 16px;
   --text-nav--line-height: 154%;
   --text-nav--letter-spacing: 0em;
-  --text-nav--font-weight: 700;
+  --text-nav--font-weight: 500;
 
   /* Island Moments script on the Experiences cards — 114.73px / 100% / 0 / 400
      (43.85px for the short band). The face is loaded in index.html; the
@@ -40,7 +40,7 @@
   --card: #ffffff; /* lifted surfaces */
 
   /* ---- Ink ---- */
-  --black: #0a0a0a; /* headings */
+  --black: #323232; /* headings */
   --ink: #17191f; /* body text */
   --ink-soft: #565c68; /* secondary text */
   --ink-faint: #8b909b; /* meta / placeholder */
@@ -105,14 +105,16 @@
    accessibility menu. Surfaces invert; blue lifts for contrast.
    ============================================================ */
 [data-theme='dark'] .design-1-root {
-  --paper: #0d0f13;
-  --paper-2: #14171d;
-  --card: #171b22;
+  /* Night-navy, not neutral black — a faint blue undertone reads as evening
+     sky and lets the warm accents (arches, city lights) glow against it. */
+  --paper: #0a0d18;
+  --paper-2: #111527;
+  --card: #151a2b;
 
   --black: #ffffff; /* headings */
-  --ink: #e8eaee;
-  --ink-soft: #a2a9b6;
-  --ink-faint: #7b8290;
+  --ink: #e9ebf1;
+  --ink-soft: #a3aabb;
+  --ink-faint: #7b8292;
 
   --blue: #4f92ff;
   --blue-ink: #7fb0ff;
