@@ -4,7 +4,7 @@ import { usePrefs } from '../context/Prefs.tsx'
 import { useUI } from '../context/UI.tsx'
 import { useRouter } from '@/router/RouterContext'
 import logo from '../assets/irctc-emblem.png'
-import accessIcon from '../assets/graphic/log-in.png'
+import { TbSettingsPlus } from 'react-icons/tb'
 import {
   ChevronR,
   Close,
@@ -166,7 +166,7 @@ export default function NavBar() {
               aria-label={t('nav.access')}
               title={t('nav.access')}
             >
-              <img className="nav__icon-img" src={accessIcon} alt="" aria-hidden="true" />
+              <TbSettingsPlus className="nav__icon-glyph" aria-hidden="true" />
             </button>
 
             <button

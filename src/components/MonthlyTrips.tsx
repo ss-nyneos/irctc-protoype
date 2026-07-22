@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
@@ -88,10 +88,50 @@ const month =
   'min-[901px]:before:bg-blue min-[901px]:before:transition-transform min-[901px]:before:duration-300 ' +
   'min-[901px]:before:ease-brand'
 
+/* Dissolves between photos instead of swapping them. The outgoing frame stays
+   beneath at full opacity while the incoming one fades in over it, so the card
+   never dips to its own background — that dip, plus the remount the old keys
+   forced, is what made a month change read as a flicker. */
+function CrossfadeImage({ src, alt, className }: { src: string; alt: string; className: string }) {
+  const [current, setCurrent] = useState(src)
+  const [outgoing, setOutgoing] = useState<string | null>(null)
+
+  useEffect(() => {
+    setCurrent((prev) => {
+      if (prev === src) return prev
+      setOutgoing(prev)
+      return src
+    })
+  }, [src])
+
+  // drop the outgoing frame once the dissolve above it has finished
+  useEffect(() => {
+    if (!outgoing) return
+    const id = window.setTimeout(() => setOutgoing(null), 600)
+    return () => window.clearTimeout(id)
+  }, [outgoing])
+
+  return (
+    <>
+      {outgoing && <img src={outgoing} alt="" aria-hidden="true" className={className} />}
+      <img key={current} src={current} alt={alt} className={`${className} animate-mt-dissolve`} />
+    </>
+  )
+}
+
 export default function MonthlyTrips() {
   // default to the current month; scroll then takes over
   const [active, setActive] = useState(() => new Date().getMonth())
   const sectionRef = useRef<HTMLElement>(null)
+
+  /* Warm the whole pool up front: a dissolve is only smooth if the incoming
+     photo is already decoded, otherwise the top layer fades in over nothing. */
+  useEffect(() => {
+    POOL.forEach((p) => {
+      const img = new Image()
+      img.src = p.img
+    })
+  }, [])
 
   /* Scroll-driven, not time-based: the active month tracks the section's
      progress through the viewport (top-bottom → bottom-top) across all 12
@@ -140,18 +180,21 @@ export default function MonthlyTrips() {
                  with a transform or opacity animation, Chrome drops the corner
                  clip mid-composite and the black scrim inside paints as a hard
                  rectangle over the card. */
+              /* Keyed by slot, NOT by month: a month-dependent key remounted
+                 every card on each change, so the photos re-fetched and the
+                 entrance animation replayed — the glitch. The slot persists
+                 now and only its contents dissolve. */
               <article
-                key={`${active}-${t.area}`}
+                key={t.area}
                 className={`group relative min-h-[210px] animate-mt-card-in
                             transition-transform duration-500 ease-brand
                             hover:-translate-y-[5px] motion-reduce:animate-none
                             ${t.place}`}
               >
                 <div className={`relative isolate h-full w-full overflow-hidden ${t.radius}`}>
-                  <img
+                  <CrossfadeImage
                     src={t.img}
                     alt={t.title}
-                    loading="lazy"
                     className="px-media transition-transform duration-[900ms] ease-brand group-hover:scale-105"
                   />
                   {/* flat 40% black over the whole photo. Carries the card's own
@@ -164,7 +207,10 @@ export default function MonthlyTrips() {
                                text-right font-sans text-tile text-white
                                [text-shadow:0_1px_3px_rgba(6,12,28,0.8),0_2px_16px_rgba(6,12,28,0.6)]"
                   >
-                    {t.title}
+                    {/* keyed so the new title fades in rather than snapping */}
+                    <span key={t.title} className="block animate-fadeIn">
+                      {t.title}
+                    </span>
                   </h3>
                 </div>
               </article>
