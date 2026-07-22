@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import {
   ArrowUpDown,
   CalendarDays,
@@ -12,7 +12,6 @@ import {
   Sparkles,
   Sun,
   Ticket,
-  TrainFront,
   Wallet,
   X,
 } from "lucide-react";
@@ -83,6 +82,32 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
   const [view, setView] = useState<"gallery" | "list">("gallery");
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [showCompare, setShowCompare] = useState(false);
+
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const [showRecent, setShowRecent] = useState(true);
+
+  useEffect(() => {
+    const heading = headingRef.current;
+    if (!heading) return;
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      // Hidden once the headline has risen past the fixed nav.
+      const navHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--nav-h")) || 110;
+      setShowRecent(heading.getBoundingClientRect().top > navHeight);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
+    measure();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
 
   const toggle = <T,>(list: T[], setList: (v: T[]) => void, value: T) =>
     setList(list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
@@ -174,14 +199,6 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
       value: duration,
       options: durationOptions.map((d) => ({ value: d, label: d === "Any" ? "Any length" : d })),
       onChange: (v) => setDuration(v as Duration),
-    },
-    {
-      key: "band",
-      label: "Comfort level",
-      icon: Wallet,
-      value: selBands[0] ?? ANY,
-      options: [{ value: ANY, label: "All levels" }, ...budgetBands.map((b) => ({ value: b, label: b }))],
-      onChange: (v) => setSelBands(v === ANY ? [] : [v as BudgetBand]),
     },
   ];
 
@@ -305,7 +322,15 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
           className="relative z-20 mx-auto w-full max-w-[1600px] px-4 md:px-8"
           style={{ paddingTop: "calc(var(--nav-h, 110px) + 1.5rem)" }}
         >
-          <div className="reveal mx-auto w-full px-16 md:px-24">
+          {/* The shelf greets you on arrival and steps aside once you've read
+              far enough to reach the headline — pointer-events go with it so a
+              faded shelf can't swallow clicks. */}
+          <div
+            aria-hidden={!showRecent}
+            className={`reveal mx-auto w-full px-16 transition-all duration-500 ease-out md:px-24 ${
+              showRecent ? "opacity-100" : "pointer-events-none -translate-y-3 opacity-0"
+            }`}
+          >
             <RecentPackagesDrawer packages={recentPackages} />
           </div>
         </div>
@@ -315,14 +340,12 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
             whatever room the shelf leaves. */}
        
         <div className="pointer-events-none relative z-10 flex flex-1 flex-col items-center justify-end px-4 pb-[8vh] pt-12 text-center">
-          <span className="mb-4 inline-flex items-center gap-8 rounded-full border border-white/25 bg-white/20 px-3.5 py-1.5 text-[11.5px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-md">
-            <TrainFront size={13} /> Indian Railways · Official tour packages
-          </span>
-
-          {/* heading-xl locks line-height to 100%, which is too tight once the
-              headline wraps on narrow screens — hence the explicit leading. */}
-          <h1 className="heading-xl max-w-3xl leading-[1.06] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] md:text-[54px]">
-            Explore &amp; compare packages
+          {/* heading-xl carries the spec: Helvetica 700, 42px, -4% tracking. */}
+          <h1
+            ref={headingRef}
+            className="heading-xl max-w-3xl text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]"
+          >
+            Explore &amp; Compare Packages
           </h1>
           {/* Balanced and given room: at max-w-xl the last two words dropped to a
               line of their own, which is what made the stack look crowded. */}

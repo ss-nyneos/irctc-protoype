@@ -24,35 +24,14 @@ import { getPackageDetail } from "@/data/packageDetail";
 import { formatINR } from "@/utils/format";
 import { ImageWithFallback } from "@/components/common/ImageWithFallback";
 import { AccentBar } from "@/components/common/AccentBar";
+import { SelectMenu } from "@/components/common/SelectMenu";
+import { occupancyRates, type OccupancyRates } from "@/utils/occupancy";
 
 /** Mirrors irctctourism.com's own three steps. */
 const steps = ["Basic detail", "Passenger detail", "Review"];
 
 const berthPrefs = ["No preference", "Lower", "Middle", "Upper", "Side lower", "Side upper"];
-const idTypes = ["Aadhaar", "PAN", "Passport", "Voter ID", "Driving licence"];
 
-/** Per-person rates by how many share the room, the way IRCTC prints them:
- *  the fewer to a room, the more each pays. The base category fare is the
- *  single-occupancy rate; the rest step down from it. */
-interface OccupancyRates {
-  single: number;
-  double: number;
-  triple: number;
-  childWithBed: number;
-  childNoBed: number;
-}
-
-function occupancyRates(price: number): OccupancyRates {
-  const r10 = (n: number) => Math.round(n / 10) * 10;
-  const r5 = (n: number) => Math.round(n / 5) * 5;
-  return {
-    single: price,
-    double: r10(price * 0.752),
-    triple: r10(price * 0.649),
-    childWithBed: r5(price * 0.587),
-    childNoBed: r5(price * 0.488),
-  };
-}
 
 /** The room combinations IRCTC sells, in its own order and wording. One room
  *  takes one of these; the fare is the sum of its occupants' rates. */
@@ -110,18 +89,117 @@ const accommodationTypes: Array<{
   },
 ];
 
+const indianStates = [
+  "ANDAMAN AND NICOBAR ISLANDS", "ANDHRA PRADESH", "ARUNACHAL PRADESH", "ASSAM", "BIHAR", "CHANDIGARH",
+  "CHHATTISGARH", "DADRA AND NAGAR HAVELI AND DAMAN AND DIU", "DELHI", "GOA", "GUJARAT", "HARYANA",
+  "HIMACHAL PRADESH", "JAMMU AND KASHMIR", "JHARKHAND", "KARNATAKA", "KERALA", "LADAKH", "LAKSHADWEEP",
+  "MADHYA PRADESH", "MAHARASHTRA", "MANIPUR", "MEGHALAYA", "MIZORAM", "NAGALAND", "ODISHA", "PUDUCHERRY",
+  "PUNJAB", "RAJASTHAN", "SIKKIM", "TAMIL NADU", "TELANGANA", "TRIPURA", "UTTAR PRADESH", "UTTARAKHAND",
+  "WEST BENGAL",
+];
+
+const countries = ["India", "Nepal", "Bhutan", "Bangladesh", "Sri Lanka", "Other"];
+
+/**
+ * IRCTC's own Id-Card list, in its order and wording. Each carries the rule its
+ * number is checked against.
+ *
+ * Only the documents with a nationally fixed format are checked strictly (PAN,
+ * Aadhaar, Voter, Passport). Driving licences and the two generic cards have no
+ * single national format — a DL number is issued per state — so those are held
+ * to a length and character check only. A rule that rejects a valid document is
+ * worse than no rule.
+ */
+interface IdCardType {
+  value: string;
+  /** Shown under the number field before anything is typed. */
+  hint: string;
+  test: (normalised: string) => boolean;
+  message: string;
+}
+
+const idCardTypes: IdCardType[] = [
+  {
+    value: "Driving License",
+    hint: "As printed on the licence",
+    // State-issued, no common national format — length and charset only.
+    test: (v) => /^[A-Z0-9]{8,18}$/.test(v),
+    message: "Enter the licence number as printed (8–18 letters or digits).",
+  },
+  {
+    value: "Govt issued I-Card",
+    hint: "As printed on the card",
+    test: (v) => /^[A-Z0-9]{4,20}$/.test(v),
+    message: "Enter the number as printed (4–20 letters or digits).",
+  },
+  {
+    value: "Pan Card",
+    hint: "10 characters, e.g. ABCDE1234F",
+    // Five letters, four digits, one letter — fixed by the Income Tax Dept.
+    test: (v) => /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(v),
+    message: "A PAN is 5 letters, 4 digits and 1 letter — e.g. ABCDE1234F.",
+  },
+  {
+    value: "Passport Number",
+    hint: "8 characters, e.g. A1234567",
+    // Indian passports: one letter followed by seven digits.
+    test: (v) => /^[A-Z][0-9]{7}$/.test(v),
+    message: "An Indian passport number is one letter followed by 7 digits.",
+  },
+  {
+    value: "Student I-Card",
+    hint: "As printed on the card",
+    test: (v) => /^[A-Z0-9]{4,20}$/.test(v),
+    message: "Enter the number as printed (4–20 letters or digits).",
+  },
+  {
+    value: "UID/Aadhar Card",
+    hint: "12 digits",
+    // UIDAI issues 12 digits; spaces are stripped before this runs.
+    test: (v) => /^[0-9]{12}$/.test(v),
+    message: "An Aadhaar number is 12 digits.",
+  },
+  {
+    value: "Voter I-Card",
+    hint: "3 letters then 7 digits, e.g. ABC1234567",
+    // EPIC: a three-letter state code followed by a seven-digit serial.
+    test: (v) => /^[A-Z]{3}[0-9]{7}$/.test(v),
+    message: "A Voter ID is 3 letters followed by 7 digits — e.g. ABC1234567.",
+  },
+];
+
+/** Documents are quoted with spaces and hyphens; the rules above don't want them. */
+const normaliseId = (raw: string) => raw.toUpperCase().replace(/[^A-Z0-9]/g, "");
+
 interface Passenger {
-  name: string;
+  firstName: string;
+  lastName: string;
   age: string;
   gender: string;
+  nationality: string;
+  passportNumber: string;
+  passportExpiry: string;
   berth: string;
   /** Children 5–11 are fared differently, so the slot remembers which it is. */
   child: boolean;
 }
 
 function blankPassenger(child: boolean): Passenger {
-  return { name: "", age: "", gender: "", berth: "No preference", child };
+  return {
+    firstName: "",
+    lastName: "",
+    age: "",
+    gender: "",
+    nationality: "Indian",
+    passportNumber: "",
+    passportExpiry: "",
+    berth: "No preference",
+    child,
+  };
 }
+
+/** Full name for the summary rows, which read as one string. */
+const paxName = (p: Passenger) => `${p.firstName} ${p.lastName}`.trim();
 
 function Field({
   label,
@@ -186,32 +264,46 @@ function Select({
   onChange,
   options,
   icon: Icon,
+  error,
+  hint,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   options: Array<{ value: string; label: string }>;
   icon?: typeof Calendar;
+  error?: string;
+  hint?: string;
 }) {
   const id = `s-${label.replace(/\W+/g, "-").toLowerCase()}`;
   return (
     <div>
-      <label htmlFor={id} className="mb-1.5 flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground">
+      <label
+        htmlFor={id}
+        onClick={() => document.getElementById(id)?.focus()}
+        className="mb-1.5 flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground"
+      >
         {Icon && <Icon size={13} className="text-muted-foreground" />}
         {label}
       </label>
-      <select
+      <SelectMenu
         id={id}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="h-12 w-full cursor-pointer rounded-xl border bg-white px-3 text-[15px] text-ink outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20"
-      >
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
+        onChange={onChange}
+        options={options}
+        ariaLabel={label}
+        invalid={Boolean(error)}
+        describedBy={error || hint ? `${id}-help` : undefined}
+      />
+      {(error || hint) && (
+        <p
+          id={`${id}-help`}
+          role={error ? "alert" : undefined}
+          className={`mt-1.5 text-[12px] ${error ? "font-semibold text-destructive" : "text-muted-foreground"}`}
+        >
+          {error || hint}
+        </p>
+      )}
     </div>
   );
 }
@@ -256,7 +348,23 @@ export function BookingPage({
 
   // ── Step 2: passengers ──────────────────────────────────────
   const [pax, setPax] = useState<Passenger[]>([blankPassenger(false)]);
-  const [contact, setContact] = useState({ email: "", phone: "", idType: idTypes[0], idNumber: "" });
+  // Mandatory on IRCTC — the tour is sold with travel insurance attached.
+  const [nominee, setNominee] = useState({ name: "", relation: "", contact: "" });
+  const [gstChoice, setGstChoice] = useState("No");
+  const [gstin, setGstin] = useState({ number: "", company: "" });
+  const [contact, setContact] = useState({
+    phone: "",
+    email: "",
+    address: "",
+    city: "",
+    state: "",
+    pin: "",
+    country: "India",
+    nationality: "Indian",
+    // Empty, like IRCTC's "Select" — the traveller has to choose.
+    idType: "",
+    idNumber: "",
+  });
   const [touched, setTouched] = useState(false);
 
   // ── Step 3: review ──────────────────────────────────────────
@@ -267,7 +375,9 @@ export function BookingPage({
   const boardAt = detail.boarding.find((b) => b.code === boardingCode);
   const deboardAt = detail.boarding.find((b) => b.code === deboardingCode);
 
-  const rates = occupancyRates(cls.price);
+  // IRCTC's published sheet for the chosen category — Comfort and Superior are
+  // priced separately, so switching category re-prices every room option.
+  const rates = occupancyRates(cls.code);
   const chosen = rooms.map((id) => accommodationTypes.find((t) => t.id === id) ?? null);
   const roomsComplete = chosen.every(Boolean);
 
@@ -282,8 +392,40 @@ export function BookingPage({
 
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email.trim());
   const phoneValid = /^[6-9]\d{9}$/.test(contact.phone.trim());
-  const paxValid = pax.every((p) => p.name.trim().length >= 2 && Number(p.age) > 0 && p.gender);
-  const step2Valid = paxValid && emailValid && phoneValid && contact.idNumber.trim().length >= 4;
+  const pinValid = /^\d{6}$/.test(contact.pin.trim());
+  const nomineePhoneValid = /^[6-9]\d{9}$/.test(nominee.contact.trim());
+  const paxValid = pax.every(
+    (p) => p.firstName.trim().length >= 2 && p.lastName.trim().length >= 1 && Number(p.age) > 0 && p.gender,
+  );
+  // Every field IRCTC stars is required here too.
+  const nomineeValid = nominee.name.trim().length >= 2 && nominee.relation.trim().length >= 2 && nomineePhoneValid;
+
+  /* The number is checked against whichever document was picked, so a PAN can't
+     pass as an Aadhaar. Nothing is checked until a type is chosen — there'd be
+     no rule to check it against. */
+  const idCard = idCardTypes.find((t) => t.value === contact.idType) ?? null;
+  const idNumberError = !idCard
+    ? undefined
+    : contact.idNumber.trim() === ""
+      ? "Id-Card number is required."
+      : idCard.test(normaliseId(contact.idNumber))
+        ? undefined
+        : idCard.message;
+  const idValid = Boolean(idCard) && !idNumberError;
+
+  const contactValid =
+    emailValid &&
+    phoneValid &&
+    contact.address.trim().length >= 4 &&
+    contact.city.trim().length >= 2 &&
+    Boolean(contact.state) &&
+    pinValid &&
+    Boolean(contact.country) &&
+    contact.nationality.trim().length >= 2 &&
+    idValid;
+  // GSTIN only has to hold up when the traveller says they want one.
+  const gstValid = gstChoice === "No" || (gstin.number.trim().length === 15 && gstin.company.trim().length >= 2);
+  const step2Valid = paxValid && nomineeValid && gstValid && contactValid;
 
   /** Resize the passenger list to match the pax counts chosen in step 1. */
   const goToPassengers = () => {
@@ -506,10 +648,16 @@ export function BookingPage({
                               {c.available ? "Available" : "Not available"}
                             </span>
                           </span>
-                          <span className="block text-[12px] text-muted-foreground">{c.detail}</span>
                         </span>
-                        <span className="flex-none text-right text-[15px] font-semibold tabular-nums text-ink">
-                          {formatINR(c.price)}
+                        {/* No headline fare here, as on IRCTC. A category has no
+                            single price — what it costs depends on how many
+                            share the room, which the rates below spell out. The
+                            per-person single rate stands in as the opening fare. */}
+                        <span className="flex-none text-right">
+                          <span className="block text-[11px] text-muted-foreground">starting from</span>
+                          <span className="block text-[15px] font-semibold tabular-nums text-ink">
+                            {formatINR(occupancyRates(c.code).single)}
+                          </span>
                         </span>
                       </label>
                     );
@@ -595,13 +743,13 @@ export function BookingPage({
                       label={`Room ${i + 1}`}
                       value={value}
                       onChange={(v) => setRooms((r) => r.map((old, j) => (j === i ? v : old)))}
-                      options={[
-                        { value: "", label: "Select" },
-                        ...accommodationTypes.map((t) => ({
-                          value: t.id,
-                          label: `${t.label} (${t.fare(rates).toLocaleString("en-IN")}/-)`,
-                        })),
-                      ]}
+                      // The fare rides on its own line, so a long occupancy
+                      // label doesn't have to compete with a number.
+                      options={accommodationTypes.map((t) => ({
+                        value: t.id,
+                        label: t.label,
+                        hint: formatINR(t.fare(rates)),
+                      }))}
                     />
                   ))}
                 </div>
@@ -653,19 +801,28 @@ export function BookingPage({
                         )}
                       </div>
 
+                      {/* Same fields IRCTC prints across its passenger table:
+                          first/last name, age, gender, nationality, then the
+                          passport pair. */}
                       <div className="grid gap-3 sm:grid-cols-2">
-                        <div className="sm:col-span-2">
-                          <Field
-                            label="Full name (as per ID)"
-                            value={p.name}
-                            onChange={(v) => updatePax(i, { name: v })}
-                            placeholder="e.g. Rahul Sharma"
-                            autoComplete={i === 0 ? "name" : "off"}
-                            error={touched && p.name.trim().length < 2 ? "Enter the name as printed on the ID." : undefined}
-                          />
-                        </div>
                         <Field
-                          label="Age"
+                          label="First Name*"
+                          value={p.firstName}
+                          onChange={(v) => updatePax(i, { firstName: v })}
+                          placeholder="e.g. Rahul"
+                          autoComplete={i === 0 ? "given-name" : "off"}
+                          error={touched && p.firstName.trim().length < 2 ? "First name is required." : undefined}
+                        />
+                        <Field
+                          label="Last Name*"
+                          value={p.lastName}
+                          onChange={(v) => updatePax(i, { lastName: v })}
+                          placeholder="e.g. Sharma"
+                          autoComplete={i === 0 ? "family-name" : "off"}
+                          error={touched && p.lastName.trim().length < 1 ? "Last name is required." : undefined}
+                        />
+                        <Field
+                          label="Age*"
                           value={p.age}
                           onChange={(v) => updatePax(i, { age: v.replace(/\D/g, "").slice(0, 3) })}
                           inputMode="numeric"
@@ -673,15 +830,33 @@ export function BookingPage({
                           error={touched && !(Number(p.age) > 0) ? "Age is required." : undefined}
                         />
                         <Select
-                          label="Gender"
+                          label="Gender*"
                           value={p.gender}
                           onChange={(v) => updatePax(i, { gender: v })}
                           options={[
-                            { value: "", label: "Select" },
                             { value: "Male", label: "Male" },
                             { value: "Female", label: "Female" },
                             { value: "Other", label: "Other" },
                           ]}
+                          error={touched && !p.gender ? "Gender is required." : undefined}
+                        />
+                        <Field
+                          label="Nationality"
+                          value={p.nationality}
+                          onChange={(v) => updatePax(i, { nationality: v })}
+                          placeholder="Indian"
+                        />
+                        <Field
+                          label="Passport Number"
+                          value={p.passportNumber}
+                          onChange={(v) => updatePax(i, { passportNumber: v.toUpperCase() })}
+                          placeholder="If carrying one"
+                        />
+                        <Field
+                          label="Passport Expiry Date"
+                          type="date"
+                          value={p.passportExpiry}
+                          onChange={(v) => updatePax(i, { passportExpiry: v })}
                         />
                         {isRail && (
                           <div className="sm:col-span-2">
@@ -702,25 +877,88 @@ export function BookingPage({
                 </div>
               </div>
 
+              {/* Travel insurance rides with every IRCTC tour, so the nominee
+                  is collected here and every field is mandatory. */}
               <div className="rounded-3xl border bg-white p-6 shadow-sm">
-                <h2 className="font-display text-[18px] font-bold text-ink">Contact &amp; ID</h2>
+                <h2 className="font-display text-[18px] font-bold text-ink">Travel Insurance Nominee Details</h2>
+                <p className="mt-1 text-[13px] text-muted-foreground">
+                  The nominee on the policy issued against this booking.
+                </p>
+
+                <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                  <Field
+                    label="Nominee Name*"
+                    value={nominee.name}
+                    onChange={(v) => setNominee({ ...nominee, name: v })}
+                    placeholder="As per ID"
+                    error={touched && nominee.name.trim().length < 2 ? "Nominee name is required." : undefined}
+                  />
+                  <Field
+                    label="Relation with Passenger*"
+                    value={nominee.relation}
+                    onChange={(v) => setNominee({ ...nominee, relation: v.toUpperCase() })}
+                    placeholder="e.g. FATHER"
+                    error={touched && nominee.relation.trim().length < 2 ? "Relation is required." : undefined}
+                  />
+                  <Field
+                    label="Contact No*"
+                    type="tel"
+                    inputMode="numeric"
+                    maxLength={10}
+                    value={nominee.contact}
+                    onChange={(v) => setNominee({ ...nominee, contact: v.replace(/\D/g, "").slice(0, 10) })}
+                    placeholder="10-digit mobile"
+                    error={touched && !nomineePhoneValid ? "Enter a 10-digit number starting 6–9." : undefined}
+                  />
+                </div>
+              </div>
+
+              <div className="rounded-3xl border bg-white p-6 shadow-sm">
+                <h2 className="font-display text-[18px] font-bold text-ink">GST</h2>
+                <p className="mt-1 text-[13px] text-muted-foreground">
+                  Claiming input credit against this booking?
+                </p>
+
+                <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                  <Select
+                    label="GST*"
+                    value={gstChoice}
+                    onChange={setGstChoice}
+                    options={[
+                      { value: "No", label: "No" },
+                      { value: "Yes", label: "Yes" },
+                    ]}
+                  />
+                  {gstChoice === "Yes" && (
+                    <>
+                      <Field
+                        label="GSTIN*"
+                        value={gstin.number}
+                        onChange={(v) => setGstin({ ...gstin, number: v.toUpperCase().slice(0, 15) })}
+                        placeholder="15-character GSTIN"
+                        error={touched && gstin.number.trim().length !== 15 ? "Enter the 15-character GSTIN." : undefined}
+                      />
+                      <Field
+                        label="Company Name*"
+                        value={gstin.company}
+                        onChange={(v) => setGstin({ ...gstin, company: v })}
+                        placeholder="Registered name"
+                        error={touched && gstin.company.trim().length < 2 ? "Company name is required." : undefined}
+                      />
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className="rounded-3xl border bg-white p-6 shadow-sm">
+                <h2 className="font-display text-[18px] font-bold text-ink">Contact Details</h2>
                 <p className="mt-1 text-[13px] text-muted-foreground">
                   Your voucher goes here, and the lead passenger&apos;s ID is checked on board.
                 </p>
 
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   <Field
-                    label="Email address"
-                    type="email"
-                    inputMode="email"
-                    autoComplete="email"
-                    value={contact.email}
-                    onChange={(v) => setContact({ ...contact, email: v })}
-                    placeholder="you@email.com"
-                    error={touched && !emailValid ? "Enter a valid email address." : undefined}
-                  />
-                  <Field
-                    label="Mobile number"
+                    label="Mobile No.*"
                     type="tel"
                     inputMode="numeric"
                     autoComplete="tel"
@@ -730,18 +968,79 @@ export function BookingPage({
                     placeholder="10-digit mobile"
                     error={touched && !phoneValid ? "Enter a 10-digit number starting 6–9." : undefined}
                   />
-                  <Select
-                    label="ID proof type"
-                    value={contact.idType}
-                    onChange={(v) => setContact({ ...contact, idType: v })}
-                    options={idTypes.map((t) => ({ value: t, label: t }))}
+                  <Field
+                    label="Email*"
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    value={contact.email}
+                    onChange={(v) => setContact({ ...contact, email: v })}
+                    placeholder="you@email.com"
+                    error={touched && !emailValid ? "Enter a valid email address." : undefined}
                   />
                   <Field
-                    label="ID number"
+                    label="Address*"
+                    value={contact.address}
+                    onChange={(v) => setContact({ ...contact, address: v })}
+                    autoComplete="street-address"
+                    placeholder="House, street, area"
+                    error={touched && contact.address.trim().length < 4 ? "Address is required." : undefined}
+                  />
+                  <Field
+                    label="City*"
+                    value={contact.city}
+                    onChange={(v) => setContact({ ...contact, city: v })}
+                    autoComplete="address-level2"
+                    placeholder="City"
+                    error={touched && contact.city.trim().length < 2 ? "City is required." : undefined}
+                  />
+                  <Select
+                    label="State*"
+                    value={contact.state}
+                    onChange={(v) => setContact({ ...contact, state: v })}
+                    options={indianStates.map((s) => ({ value: s, label: s }))}
+                    error={touched && !contact.state ? "Select a state." : undefined}
+                  />
+                  <Field
+                    label="Pin Code*"
+                    value={contact.pin}
+                    onChange={(v) => setContact({ ...contact, pin: v.replace(/\D/g, "").slice(0, 6) })}
+                    inputMode="numeric"
+                    autoComplete="postal-code"
+                    maxLength={6}
+                    placeholder="6 digits"
+                    error={touched && !pinValid ? "Enter a 6-digit PIN code." : undefined}
+                  />
+                  <Select
+                    label="Country*"
+                    value={contact.country}
+                    onChange={(v) => setContact({ ...contact, country: v })}
+                    options={countries.map((c) => ({ value: c, label: c }))}
+                    error={touched && !contact.country ? "Select a country." : undefined}
+                  />
+                  <Field
+                    label="Nationality*"
+                    value={contact.nationality}
+                    onChange={(v) => setContact({ ...contact, nationality: v })}
+                    placeholder="Indian"
+                    error={touched && contact.nationality.trim().length < 2 ? "Nationality is required." : undefined}
+                  />
+                  <Select
+                    label="Id-Card Type*"
+                    value={contact.idType}
+                    onChange={(v) => setContact({ ...contact, idType: v })}
+                    options={idCardTypes.map((t) => ({ value: t.value, label: t.value }))}
+                    error={touched && !contact.idType ? "Choose the ID you will carry." : undefined}
+                  />
+                  <Field
+                    label="Id-Card No*"
                     value={contact.idNumber}
                     onChange={(v) => setContact({ ...contact, idNumber: v.toUpperCase() })}
-                    placeholder="As on the document"
-                    error={touched && contact.idNumber.trim().length < 4 ? "ID number is required." : undefined}
+                    placeholder={idCard ? idCard.hint : "Choose a type first"}
+                    // Held back until the field has been left alone once, so the
+                    // rule doesn't fire on the first keystroke of a valid entry.
+                    error={touched ? idNumberError : undefined}
+                    hint={idCard && !idNumberError ? idCard.hint : undefined}
                   />
                 </div>
               </div>
@@ -781,7 +1080,7 @@ export function BookingPage({
                   {pax.map((p, i) => (
                     <li key={i} className="flex items-center gap-3 rounded-xl bg-secondary/40 p-3">
                       <User size={15} className="flex-none text-muted-foreground" />
-                      <span className="flex-1 text-[14px] font-semibold text-ink">{p.name}</span>
+                      <span className="flex-1 text-[14px] font-semibold text-ink">{paxName(p)}</span>
                       <span className="text-[13px] tabular-nums text-muted-foreground">
                         {p.age} yrs · {p.gender}
                         {isRail && p.berth !== "No preference" ? ` · ${p.berth}` : ""}

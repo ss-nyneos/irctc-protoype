@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, type ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { View } from "@/types";
 
@@ -16,27 +16,65 @@ export function useRouter(): RouterState {
   return ctx;
 }
 
-function pathForView(view: View): string | null {
+/**
+ * Every view has a URL. This is what makes the browser's own Back button
+ * correct: one view = one history entry, so going back is always exactly one
+ * screen. Detail and booking used to be state-only, which meant walking
+ * world → detail → booking added no history at all and Back jumped out of the
+ * flow entirely.
+ */
+function pathForView(view: View): string {
   switch (view.name) {
     case "world":
-      return "/world";
+      return view.category ? `/world?category=${encodeURIComponent(view.category)}` : "/world";
     case "customise":
       return "/customise";
     case "madeforyou":
       return "/personal";
+    case "detail":
+      return `/package/${encodeURIComponent(view.id)}`;
+    case "booking": {
+      const q = new URLSearchParams();
+      if (view.classCode) q.set("class", view.classCode);
+      if (view.departure) q.set("departure", view.departure);
+      if (view.boarding) q.set("boarding", view.boarding);
+      if (view.travellers != null) q.set("pax", String(view.travellers));
+      const search = q.toString();
+      return `/package/${encodeURIComponent(view.id)}/book${search ? `?${search}` : ""}`;
+    }
+    case "preload":
+      return "/preload";
     // The shell's own home page lives at /landing; /home is the Design-1
     // landing, which belongs to react-router, not to this router.
     case "home":
-      return "/landing";
     default:
-      return null;
+      return "/landing";
   }
 }
 
-function viewForPath(path: string): View {
-  switch (path) {
+/** The inverse of pathForView — a reload or a Back lands here. */
+function viewForLocation(pathname: string, search: string): View {
+  const params = new URLSearchParams(search);
+
+  const booking = pathname.match(/^\/package\/([^/]+)\/book\/?$/);
+  if (booking) {
+    const pax = params.get("pax");
+    return {
+      name: "booking",
+      id: decodeURIComponent(booking[1]),
+      classCode: params.get("class") ?? undefined,
+      departure: params.get("departure") ?? undefined,
+      boarding: params.get("boarding") ?? undefined,
+      travellers: pax ? Number(pax) : undefined,
+    };
+  }
+
+  const detail = pathname.match(/^\/package\/([^/]+)\/?$/);
+  if (detail) return { name: "detail", id: decodeURIComponent(detail[1]) };
+
+  switch (pathname) {
     case "/world":
-      return { name: "world" };
+      return { name: "world", category: params.get("category") ?? undefined };
     case "/customise":
       return { name: "customise" };
     case "/personal":
@@ -49,73 +87,44 @@ function viewForPath(path: string): View {
   }
 }
 
-
-const shellPaths = new Set(["/world", "/personal", "/customise", "/landing", "/preload"]);
-
 /**
- * Lightweight client-only "router". This app is intentionally a single page
- * with view-switching handled in state (no full history/URL syncing), matching
- * the original prototype's navigation model — except for routes explicitly
- * mapped in pathForView/viewForPath above, which get a real URL.
+ * View state derived from the URL, so there is exactly one source of truth.
+ * The previous implementation mirrored the URL into React state and kept its
+ * own `stack` of visited views; the two drifted apart the moment a view had no
+ * path of its own, and `back()` pushed a *new* entry instead of unwinding, so
+ * the browser's Back went somewhere else entirely.
  */
 export function RouterProvider({ children }: { children: ReactNode }) {
-  const [view, setView] = useState<View>(() => viewForPath(window.location.pathname));
-  const stack = useRef<View[]>([]);
-  const { pathname } = useLocation();
+  const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const onPopState = () => {
-      // Leaving the shell entirely: let react-router unmount it as-is.
-      if (!shellPaths.has(window.location.pathname)) return;
-      setView(viewForPath(window.location.pathname));
-    };
-    window.addEventListener("popstate", onPopState);
-    return () => window.removeEventListener("popstate", onPopState);
-  }, []);
+  const view = useMemo(
+    () => viewForLocation(location.pathname, location.search),
+    [location.pathname, location.search],
+  );
 
-  
-  const firstLocation = useRef(true);
+  // A new screen starts at the top; Back restores the browser's own position.
   useEffect(() => {
-    if (firstLocation.current) {
-      firstLocation.current = false;
-      return;
-    }
-    if (!shellPaths.has(pathname)) return;
-    setView(viewForPath(pathname));
-  }, [pathname]);
+    if (location.key === "default") return;
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [location.key]);
 
   const go = useCallback(
     (next: View) => {
-      stack.current.push(view);
-      setView(next);
       const path = pathForView(next);
-      if (path && window.location.pathname !== path) {
-        window.history.pushState(null, "", path);
-      }
-      window.scrollTo({ top: 0, behavior: "instant" });
+      if (path !== location.pathname + location.search) navigate(path);
     },
-    [view],
+    [navigate, location.pathname, location.search],
   );
 
   const back = useCallback(() => {
-    // Nothing left to go back to inside the shell: hand off to the Design-1
-    // landing through react-router, so the layout swaps in one commit. Setting
-    // the view to "home" here instead would paint the shell's own home page for
-    // a frame first, which reads as a flash of the wrong page.
-    if (stack.current.length === 0) {
-      navigate("/home");
-      window.scrollTo({ top: 0, behavior: "instant" });
-      return;
-    }
-
-    const prev = stack.current.pop() ?? { name: "home" };
-    setView(prev);
-    const path = pathForView(prev);
-    if (path && window.location.pathname !== path) {
-      window.history.pushState(null, "", path);
-    }
-    window.scrollTo({ top: 0, behavior: "instant" });
+    // react-router stamps an index onto each history entry it creates. At 0
+    // there is nothing of ours behind us — the user deep-linked or arrived from
+    // another site — so going back would leave the app. Land on the Design-1
+    // home instead of stepping off.
+    const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0;
+    if (idx > 0) navigate(-1);
+    else navigate("/home", { replace: true });
   }, [navigate]);
 
   return <RouterContext.Provider value={{ view, go, back }}>{children}</RouterContext.Provider>;

@@ -41,7 +41,7 @@
 
   /* ---- Ink ---- */
   --black: #323232; /* headings */
-  --ink: #17191f; /* body text */
+  --ink: #323232; /* body text — one black across the site */
   --ink-soft: #565c68; /* secondary text */
   --ink-faint: #8b909b; /* meta / placeholder */
 

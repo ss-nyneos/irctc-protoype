@@ -19,22 +19,13 @@ interface PolicyPanelProps {
  * picks the renderer to match.
  */
 export function PolicyPanel({ sections, total, travellers, departure }: PolicyPanelProps) {
-  const [open, setOpen] = useState<number | null>(1);
+  // Booking & payment leads — it's the first thing a traveller needs.
+  const [open, setOpen] = useState<number | null>(0);
 
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-display text-[22px] font-bold text-ink">Terms &amp; policy</h2>
-        {/* <a
-          href="#"
-          onClick={(e) => e.preventDefault()}
-          className="inline-flex min-h-[44px] items-center gap-2 rounded-full border px-4 text-[13px] font-semibold text-navy transition hover:bg-secondary"
-        >
-          <Download size={14} /> Package PDF ({code})
-        </a> */}
-      </div>
-
-      <div className="mt-3 border-t">
+      {/* No rule on top: the section header above already draws one. */}
+      <div>
         {sections.map((section, i) => {
           const isOpen = open === i;
           return (

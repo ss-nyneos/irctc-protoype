@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { usePrefs } from '../context/Prefs.tsx'
 import { useUI } from '../context/UI.tsx'
 import { useRouter } from '@/router/RouterContext'
@@ -42,7 +42,6 @@ const packageLinks: {
 ]
 
 export default function NavBar() {
-  const navigate = useNavigate()
   const { go } = useRouter()
   const {
     t,
@@ -175,8 +174,8 @@ export default function NavBar() {
               onClick={() => {
                 setMenu(null)
                 setMobile(false)
+                // go() owns the URL now — navigating again would double the entry.
                 go({ name: 'madeforyou' })
-                navigate('/personal')
               }}
               aria-label={t('nav.myspace')}
             >
@@ -346,8 +345,8 @@ export default function NavBar() {
               type="button"
               onClick={() => {
                 setMobile(false)
+                // go() owns the URL now — navigating again would double the entry.
                 go({ name: 'madeforyou' })
-                navigate('/personal')
               }}
             >
               {t('nav.myspace')}

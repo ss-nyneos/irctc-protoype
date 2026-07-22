@@ -135,9 +135,9 @@ export function CustomScrollbar() {
           transition: "transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)" // Smooth flip animation
         }}
       >
-        {/* Custom train image indicator (increased size) */}
+        
         <img
-          src={theme === "dark" ? "/darkTrain.png" : "/scroll.png"}
+          src={theme === "dark" ? "/darkTrain-scroll.png" : "/scroll.png"}
           alt="Train scroll indicator"
           className="w-full h-full object-contain drop-shadow-md"
           draggable="false"

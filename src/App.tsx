@@ -241,8 +241,8 @@ function Shell() {
   const { view } = useRouter();
   const root = useRef<HTMLDivElement>(null);
   const hideFooter = view.name === "customise";
-  // Booking is a focused checkout flow — its own stepper replaces the site nav.
-  const hideNav = view.name === "booking";
+  // Focused flows that carry their own header instead of the site nav.
+  const hideNav = view.name === "booking" || view.name === "customise";
 
   return (
     <PrefsProvider>
@@ -284,11 +284,14 @@ export default function App() {
             <Route path="/packages" element={<Packages />} />
           </Route>
 
-          {/* In-app shell routes */}
+          {/* In-app shell routes. Every view the shell can show needs one, or
+              it has no history entry and the browser's Back skips past it. */}
           <Route path="/world" element={<Shell />} />
           <Route path="/personal" element={<Shell />} />
           <Route path="/customise" element={<Shell />} />
           <Route path="/landing" element={<Shell />} />
+          <Route path="/package/:id" element={<Shell />} />
+          <Route path="/package/:id/book" element={<Shell />} />
           <Route path="/preload" element={<PreloadRoute />} />
 
           <Route path="*" element={<Navigate to="/home" replace />} />

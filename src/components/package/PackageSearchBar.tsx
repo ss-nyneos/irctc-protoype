@@ -20,7 +20,14 @@ export type QuickToggle = {
 };
 
 
-function ComboField({ field }: { field: SearchField }) {
+
+const edgeRadius = {
+  first: "rounded-t-lg lg:rounded-l-lg lg:rounded-tr-none",
+  last: "rounded-b-lg lg:rounded-r-lg lg:rounded-bl-none",
+  middle: "",
+} as const;
+
+function ComboField({ field, edge }: { field: SearchField; edge: keyof typeof edgeRadius }) {
   const id = useId();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState<string | null>(null);
@@ -59,7 +66,8 @@ function ComboField({ field }: { field: SearchField }) {
 
   const openList = () => {
     setHighlight(Math.max(0, field.options.findIndex((o) => o.value === field.value)));
-    setQuery("");
+    
+    setQuery(null);
     setOpen(true);
   };
 
@@ -111,9 +119,15 @@ function ComboField({ field }: { field: SearchField }) {
         }}
         // No box of its own: the fields share one white container and are told
         // apart by the divider between them, so only focus draws an outline.
-        className={`flex h-full w-full cursor-text items-center gap-3 px-3.5 py-2.5 transition ${
-          open ? "bg-saffron/5 ring-2 ring-inset ring-saffron" : "hover:bg-black/[0.03]"
-        }`}
+        // transition-colors, not transition: `transition` animates every
+        // property, so the focus ring grew in as well and the field appeared to
+        // swell on click.
+        // rounded-lg matches the panel's own radius, so the open-state ring and
+        // tint follow the corner instead of drawing a square over it. Middle
+        // fields simply read as a rounded highlight.
+        className={`flex h-full w-full cursor-text items-center gap-3 px-3.5 py-2.5 transition-colors duration-150 ${
+          edgeRadius[edge]
+        } ${open ? "bg-saffron/5 ring-2 ring-inset ring-saffron" : "hover:bg-black/[0.03]"}`}
       >
         <field.icon size={17} className="shrink-0 text-brand" aria-hidden="true" />
 
@@ -143,17 +157,40 @@ function ComboField({ field }: { field: SearchField }) {
               setHighlight(0);
               if (!open) setOpen(true);
             }}
-            onFocus={() => !open && openList()}
+            // Select on focus so the first keystroke replaces the current
+            // choice rather than appending to it.
+            onFocus={(e) => {
+              if (!open) openList();
+              e.currentTarget.select();
+            }}
             onKeyDown={onKeyDown}
             className="w-full truncate bg-transparent font-display text-[14px] font-bold text-ink outline-none placeholder:text-ink/45"
           />
         </span>
 
-        <ChevronDown
-          size={15}
-          className={`shrink-0 text-muted-foreground transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-          aria-hidden="true"
-        />
+      
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label={open ? "Close options" : "Show options"}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (open) {
+              close();
+              inputRef.current?.blur();
+            } else {
+              inputRef.current?.focus();
+              openList();
+            }
+          }}
+          className="shrink-0 text-muted-foreground transition-colors hover:text-ink"
+        >
+          <ChevronDown
+            size={15}
+            className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+            aria-hidden="true"
+          />
+        </button>
       </div>
 
       {open && (
@@ -162,7 +199,7 @@ function ComboField({ field }: { field: SearchField }) {
           id={`${id}-list`}
           role="listbox"
           aria-labelledby={`${id}-label`}
-          className="absolute inset-x-0 top-[calc(100%+6px)] z-50 max-h-64 overflow-y-auto rounded-md border border-border bg-white py-1 shadow-[0_18px_40px_-14px_rgba(15,23,42,0.4)]"
+          className="absolute inset-x-0 top-[calc(100%+6px)] z-50 max-h-64 overflow-y-auto rounded-lg border border-border bg-white py-1 shadow-[0_18px_40px_-14px_rgba(15,23,42,0.4)]"
         >
           {visible.map((o, i) => {
             const isSelected = o.value === field.value;
@@ -223,18 +260,25 @@ export function PackageSearchBar({
         <div className="flex flex-col gap-3 lg:flex-row lg:items-stretch">
           {/* One panel, not four: the fields are divided by a hairline rather
               than floated apart, so the strip reads as a single control. */}
-          <div className="flex min-w-0 flex-1 flex-col divide-y divide-black/10 rounded-md bg-white shadow-sm lg:flex-row lg:divide-x lg:divide-y-0">
-            {fields.map((f) => (
-              <ComboField key={f.key} field={f} />
+          {/* No overflow-hidden here: the option lists are absolutely
+              positioned inside these fields, and clipping the panel cut them
+              off so a click appeared to do nothing. */}
+          <div className="flex min-w-0 flex-1 flex-col divide-y divide-black/10 rounded-lg bg-white shadow-sm lg:flex-row lg:divide-x lg:divide-y-0">
+            {fields.map((f, i) => (
+              <ComboField
+                key={f.key}
+                field={f}
+                edge={i === 0 ? "first" : i === fields.length - 1 ? "last" : "middle"}
+              />
             ))}
           </div>
 
           <button
             type="button"
             onClick={onSearch}
-            className="inline-flex flex-none items-center justify-center gap-2 rounded-md bg-saffron px-5 py-3 font-display text-[15px] font-bold text-white transition hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
+            className="inline-flex flex-none items-center justify-center gap-2 rounded-lg bg-saffron px-5 py-3 font-display text-[17px] font-bold text-white transition-[filter] hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
           >
-            <Search size={16} aria-hidden="true" />
+            <Search size={18} aria-hidden="true" />
             Search
           </button>
         </div>
@@ -250,7 +294,7 @@ export function PackageSearchBar({
                   type="checkbox"
                   checked={q.active}
                   onChange={q.onToggle}
-                  className="h-4 w-4 shrink-0 cursor-pointer rounded-sm accent-saffron"
+                  className="h-4 w-4 shrink-0 cursor-pointer rounded-none accent-saffron"
                 />
                 {q.label}
               </label>

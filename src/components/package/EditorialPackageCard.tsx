@@ -53,33 +53,34 @@ export function EditorialPackageCard({
       />
       {/* Carries the readability the caption panel used to provide itself. */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
-      <div className="absolute inset-x-5 top-5 flex items-start justify-end gap-2">
-        <div className="flex flex-col items-end gap-2">
-          {/* "Starting from" price, the only figure IRCTC prints on a row. */}
-          <span className="origin-top-right rounded-full bg-brand px-3.5 py-1.5 text-[15px] font-bold text-white shadow-lg shadow-brand/25 transition-transform duration-500 ease-out group-hover:scale-[1.08]">
-            {formatINR(pkg.price)}
-          </span>
+      <div className="absolute inset-x-5 top-5 flex items-start justify-between gap-2">
+        {/* Shortlist toggle: always a full labelled pill, never hover-only —
+            on touch there is no hover, so a bare icon reads as decoration.
+            Selected, the pill itself goes brand — the card keeps no frame. */}
+        {onCompare ? (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onCompare();
+            }}
+            type="button"
+            aria-pressed={comparing}
+            className={`inline-flex h-8 items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-[12px] font-bold shadow-md backdrop-blur-md transition-colors duration-300 ease-out ${
+              comparing ? "bg-brand text-white" : "bg-black/40 text-white hover:bg-brand"
+            }`}
+          >
+            {comparing ? <Check size={14} className="shrink-0" /> : <Scale size={14} className="shrink-0" />}
+            {comparing ? "Added" : "Compare"}
+          </button>
+        ) : (
+          /* Keeps the price hard right when there's nothing to compare. */
+          <span />
+        )}
 
-          {/* Shortlist toggle: always a full labelled pill, never hover-only —
-              on touch there is no hover, so a bare icon reads as decoration.
-              Selected, the pill itself goes brand — the card keeps no frame. */}
-          {onCompare && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onCompare();
-              }}
-              type="button"
-              aria-pressed={comparing}
-              className={`inline-flex h-8 items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-[12px] font-bold shadow-md backdrop-blur-md transition-colors duration-300 ease-out ${
-                comparing ? "bg-brand text-white" : "bg-black/40 text-white hover:bg-brand"
-              }`}
-            >
-              {comparing ? <Check size={14} className="shrink-0" /> : <Scale size={14} className="shrink-0" />}
-              {comparing ? "Added" : "Compare"}
-            </button>
-          )}
-        </div>
+        {/* "Starting from" price, the only figure IRCTC prints on a row. */}
+        <span className="origin-top-right rounded-full bg-brand px-3.5 py-1.5 text-[15px] font-bold text-white shadow-lg shadow-brand/25 transition-transform duration-500 ease-out group-hover:scale-[1.08]">
+          {formatINR(pkg.price)}
+        </span>
       </div>
 
       <div

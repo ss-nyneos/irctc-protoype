@@ -4,7 +4,6 @@ import type { TourPackage } from "@/types";
 import { useRouter } from "@/router/RouterContext";
 import { ImageWithFallback } from "@/components/common/ImageWithFallback";
 import { RatingBadge } from "@/components/common/RatingBadge";
-import { AccentBar } from "@/components/common/AccentBar";
 import { inclusionIcons } from "@/components/package/InclusionIcons";
 import { inclusionsOf, type InclusionKey } from "@/utils/inclusions";
 import { formatINR } from "@/utils/format";
@@ -123,27 +122,21 @@ export function CompareModal({ items, onClose }: CompareModalProps) {
         <tr>
           <td
             colSpan={items.length + 1}
-            className="sticky left-0 bg-secondary/60 px-3 py-2 font-display text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground"
+            className="sticky left-0 bg-secondary/50 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground"
           >
             {title}
           </td>
         </tr>
         {list.map((row) => {
-          // A differing row is the one worth reading — it earns a soft tint and
-          // a brand rule down the label. Labels stay full-contrast either way:
-          // a greyed label next to a green tick read as "missing", which it isn't.
+          // A differing row is the one worth reading, so it takes a soft tint —
+          // applied to the sticky label cell too, or the row reads half-painted.
           const highlight = differs(row);
+          const tint = highlight ? "bg-brand/[0.04]" : "bg-white";
           return (
-            <tr key={row.label} className={`border-t border-black/[0.06] ${highlight ? "bg-brand/[0.05]" : ""}`}>
-              <td
-                className={`sticky left-0 bg-white px-3 py-2.5 font-semibold text-ink ${
-                  highlight ? "shadow-[inset_2px_0_0_0_theme(colors.brand)]" : ""
-                }`}
-              >
-                {row.label}
-              </td>
+            <tr key={row.label} className="border-t border-black/[0.06]">
+              <td className={`sticky left-0 px-4 py-2.5 font-medium text-muted-foreground ${tint}`}>{row.label}</td>
               {items.map((p) => (
-                <td key={p.id} className="px-3 py-2.5 align-middle text-foreground">
+                <td key={p.id} className={`px-4 py-2.5 align-middle text-ink ${tint}`}>
                   {row.render(p)}
                 </td>
               ))}
@@ -155,49 +148,55 @@ export function CompareModal({ items, onClose }: CompareModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-0 md:items-center md:p-6"
+      /* Above the nav (.nav is z-index: 200) — a modal the header can overlap
+         isn't modal. */
+      className="fixed inset-0 z-[300] flex items-end justify-center bg-black/50 p-0 md:items-center md:p-6"
       onClick={onClose}
     >
       <div
-        className="max-h-[90vh] w-full max-w-4xl overflow-hidden rounded-t-lg bg-white md:rounded-lg"
+        className="max-h-[90vh] w-full max-w-4xl overflow-hidden rounded-t-2xl bg-white shadow-2xl md:rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between gap-3 border-b p-4">
-          <div className="flex items-center gap-2 font-display text-[18px] font-semibold text-ink">
-            <Scale size={18} /> Compare packages
+        <div className="flex items-center justify-between gap-3 border-b px-5 py-4">
+          <div className="flex items-center gap-2.5 font-display text-[17px] font-bold text-ink">
+            <Scale size={17} className="text-muted-foreground" /> Compare packages
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setDiffOnly((v) => !v)}
               type="button"
               aria-pressed={diffOnly}
-              className={`rounded-full px-3 py-1.5 text-[12px] font-bold transition ${
-                diffOnly ? "bg-ink text-white" : "bg-secondary text-ink hover:bg-secondary/70"
+              className={`h-9 rounded-lg border px-3 text-[12.5px] font-semibold transition ${
+                diffOnly ? "border-brand bg-brand text-white" : "text-ink hover:bg-secondary/60"
               }`}
             >
               Differences only
             </button>
-            <button onClick={onClose} type="button" className="rounded-full p-1.5 hover:bg-secondary">
-              <X size={18} />
+            <button
+              onClick={onClose}
+              type="button"
+              aria-label="Close"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border text-muted-foreground transition hover:bg-secondary/60 hover:text-ink"
+            >
+              <X size={17} />
             </button>
           </div>
         </div>
-        <AccentBar />
-        <div className="overflow-auto p-4" style={{ maxHeight: "72vh" }}>
+        <div className="slim-scrollbar overflow-auto p-4" style={{ maxHeight: "72vh" }}>
           <table className="w-full border-collapse text-[13.5px] leading-relaxed [font-variant-numeric:tabular-nums]">
             <thead>
               <tr>
-                <th className="sticky left-0 bg-white px-3 py-2 text-left" />
+                <th className="sticky left-0 bg-white px-4 py-2 text-left" />
                 {items.map((p) => (
-                  <th key={p.id} className="min-w-[180px] px-3 py-2 align-top">
+                  <th key={p.id} className="min-w-[180px] px-4 py-2 align-top">
                     <ImageWithFallback img={p.img} grad={p.grad} alt={p.name} className="mb-2.5 h-28 w-full rounded-lg" />
-                    <div className="font-display text-[14.5px] font-semibold leading-snug text-ink">{p.name}</div>
+                    <div className="text-[14.5px] font-bold leading-snug text-ink">{p.name}</div>
                     {winners[p.id] && (
-                      <div className="mt-1.5 flex flex-wrap gap-1">
+                      <div className="mt-2 flex flex-wrap gap-1">
                         {winners[p.id].map((w) => (
                           <span
                             key={w}
-                            className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10.5px] font-bold text-emerald-700 ring-1 ring-emerald-600/20"
+                            className="rounded-md bg-secondary px-2 py-0.5 text-[10.5px] font-semibold text-muted-foreground"
                           >
                             {w}
                           </span>
@@ -218,14 +217,14 @@ export function CompareModal({ items, onClose }: CompareModalProps) {
                   </td>
                 </tr>
               )}
-              <tr className="border-t">
-                <td className="sticky left-0 bg-white p-2" />
+              <tr className="border-t border-black/[0.06]">
+                <td className="sticky left-0 bg-white p-3" />
                 {items.map((p) => (
-                  <td key={p.id} className="p-2">
+                  <td key={p.id} className="p-3">
                     <button
                       onClick={() => go({ name: "detail", id: p.id })}
                       type="button"
-                      className="w-full rounded-lg bg-brand px-3 py-2 text-[12px] font-bold text-white hover:brightness-95"
+                      className="h-9 w-full rounded-lg bg-brand px-3 text-[12.5px] font-semibold text-white transition hover:brightness-95"
                     >
                       View &amp; book
                     </button>

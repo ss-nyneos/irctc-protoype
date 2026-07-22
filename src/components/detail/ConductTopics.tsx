@@ -24,9 +24,6 @@ export function ConductTopics({ topics }: { topics: PolicyTopic[] }) {
               }`}
             >
               {t.title}
-              <span className={`ml-1.5 tabular-nums ${isActive ? "text-white/60" : "text-muted-foreground"}`}>
-                {t.points.length}
-              </span>
             </button>
           );
         })}

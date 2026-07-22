@@ -1,24 +1,18 @@
 import { useMemo, useState, type CSSProperties } from "react";
 import {
   BedDouble,
-  BusFront,
   CalendarDays,
   Check,
   CircleAlert,
-  FileText,
   Heart,
-  Hotel,
   MapPin,
   MapPinned,
   Moon,
   Phone,
-  ReceiptText,
   Share2,
   Star,
-  Train,
   TrainFront,
   UsersRound,
-  Utensils,
   X,
 } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
@@ -40,40 +34,26 @@ import { buildFaqs } from "@/data/packageFaqs";
 import { nationalHelpline } from "@/data/offices";
 import { EditorialPackageCard, HOVER_GROW } from "@/components/package/EditorialPackageCard";
 
-/** IRCTC prints these as a bare icon row with no detail behind them. */
-const inclusionIcons = [
-  { key: "Rail", icon: Train, note: "AC 3 / AC 2 tier return journey" },
-  { key: "Transfers", icon: BusFront, note: "Shared AC vehicle as per group size" },
-  { key: "Hotel", icon: Hotel, note: "AC accommodation in Katra" },
-  { key: "Meals", icon: Utensils, note: "On-board and fixed-menu off-board catering" },
-  { key: "Sightseeing", icon: MapPinned, note: "Kand Kandoli and Raghunath ji temple" },
-  { key: "GST", icon: ReceiptText, note: "Goods and services tax included" },
-];
-
+/** IRCTC's published inclusions, verbatim. */
 const detailedInclusions = [
-  "Comfortable rail journey in AC 3 / AC 2 tier with return ticket.",
-  "02 nights in train and 01 night accommodation at hotel in Katra.",
-  "Arrival and departure transfer in AC vehicle on sharing basis as per group size.",
-  "On-board catering by Railways and off-board catering on fixed menu basis as per the itinerary.",
-  "AC accommodation in hotel.",
+  "Comfortable Rail Journey in AC 3 / AC 2 Tier (Return ticket).",
+  "02 Nights in train, 01 night accommodation at hotel in Katra.",
+  "Arrival / Departure transfer in AC vehicle on sharing basis as per group size.",
+  "On-board Catering by Railways and off-board catering on fixed menu basis as per the itinerary.",
+  "AC accommodation in Hotel.",
   "En-route sightseeing of Kand Kandoli Temple and Raghunath ji temple.",
   "GST.",
 ];
 
+/** IRCTC's published exclusions, verbatim. */
 const detailedExclusions = [
-  "Onboard extra meals during train journeys.",
-  "Portage at hotels or railway station, tips, insurance, mineral water, telephone charges, laundry and personal expenses.",
-  "Still / video camera fees, monument entrance fees and activities suggested in the itinerary, payable directly.",
-  "Aarti passes.",
-  "Line darshan passes.",
-  "Additional meals, en-route meals, sightseeing and activities other than those mentioned in the itinerary.",
+  "Onboard EXTRA meals during train journeys.",
+  "Any portage at hotels, railway station, tips, insurance, mineral water, telephone charges, laundry and all items of personal nature.",
+  "Any Still / Video Camera fees, entrance fees for monuments and any activities suggested in the itinerary are chargeable direct.",
+  "Aarti Passes.",
+  "Line Darshan passes.",
+  "Any additional meals / en route meals, sightseeing and activities other than those mentioned in the itinerary.",
   "Any service not specified in inclusions.",
-];
-
-const tourFacts = [
-  { label: "Frequency of tour", value: "Daily Ex NDLS", icon: CalendarDays },
-  { label: "Group capacity & class", value: "18 berths in 3AC and 12 berths in 2AC", icon: UsersRound },
-  { label: "Hotel stay included", value: "Taj Vivanta or similar, 7 km from Katra", icon: BedDouble },
 ];
 
 const importantInclusionNotes = [
@@ -143,6 +123,25 @@ export function DetailPage({ id }: { id: string }) {
   const hasBoarding = detail.boarding.length > 0;
 
   const faqs = useMemo(() => buildFaqs(pkg, detail), [pkg, detail]);
+
+  /* The three facts IRCTC prints above its inclusion list. Every value is read
+     off this package, so each tour shows its own. */
+  const tourFacts = useMemo(
+    () => [
+      { label: "Frequency of tour", value: pkg.departure, icon: CalendarDays },
+      {
+        label: "Categories & class",
+        value: detail.classes.map((c) => `${c.label} — ${c.detail}`).join(" · "),
+        icon: UsersRound,
+      },
+      {
+        label: "Stay included",
+        value: `${pkg.nights} ${pkg.nights === 1 ? "night" : "nights"} · ${pkg.travelMode}`,
+        icon: BedDouble,
+      },
+    ],
+    [pkg, detail],
+  );
 
   const sections = useMemo<Section[]>(
     () =>
@@ -249,7 +248,8 @@ export function DetailPage({ id }: { id: string }) {
             </span>
           </div>
 
-          <h1 className="heading-xl max-w-3xl text-balance leading-[1.06] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] md:text-[54px]">
+          {/* heading-xl carries the spec: Helvetica 700, 42px, -4% tracking. */}
+          <h1 className="heading-xl max-w-3xl text-balance text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]">
             {pkg.name}
           </h1>
 
@@ -330,59 +330,31 @@ export function DetailPage({ id }: { id: string }) {
             open={openSections.has("inclusions")}
             onToggle={() => toggleSection("inclusions")}
           >
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              {inclusionIcons.map((item) => (
-                <div
-                  key={item.key}
-                  className="group flex min-h-[96px] items-start gap-3 rounded-2xl border border-border bg-gradient-to-br from-white to-secondary/30 p-4 transition hover:border-brand/30 hover:shadow-sm"
-                >
-                  <span className="flex h-11 w-11 flex-none items-center justify-center rounded-2xl border border-brand/10 bg-white text-brand shadow-sm transition group-hover:bg-brand group-hover:text-white">
-                    <item.icon size={19} strokeWidth={1.9} />
-                  </span>
-                  <div className="min-w-0">
-                    <div className="text-[15px] font-bold text-ink">{item.key}</div>
-                    <div className="mt-1 text-[13px] leading-relaxed text-muted-foreground">{item.note}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 grid gap-3 md:grid-cols-3">
+            {/* Tour facts — read off this package, not hard-coded. */}
+            <div className="grid gap-3 md:grid-cols-3">
               {tourFacts.map((fact) => (
-                <div key={fact.label} className="flex min-h-[104px] items-start gap-3 rounded-2xl border bg-[#F8FAFF] p-4">
-                  <span className="mt-0.5 flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-white text-brand shadow-sm ring-1 ring-border">
-                    <fact.icon size={16} strokeWidth={1.9} />
-                  </span>
-                  <div className="min-w-0">
-                    <div className="text-[11.5px] font-bold uppercase tracking-wide text-muted-foreground">
-                      {fact.label}
-                    </div>
-                    <div className="mt-1.5 text-[13px] font-normal leading-relaxed text-muted-foreground">
-                      {fact.value}
-                    </div>
+                <div key={fact.label} className="rounded-2xl border bg-white p-5">
+                  <div className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-muted-foreground">
+                    <fact.icon size={15} className="flex-none text-brand" /> {fact.label}
                   </div>
+                  <div className="mt-2 text-[14px] leading-relaxed text-foreground/80">{fact.value}</div>
                 </div>
               ))}
             </div>
 
-            <div className="mt-7 overflow-hidden rounded-2xl border bg-white">
-              {/* One panel, split by a single rule — vertical when the two sit
-                  side by side, horizontal once they stack. */}
-              <div className="grid divide-y xl:grid-cols-[minmax(0,1fr)_minmax(320px,0.78fr)] xl:divide-x xl:divide-y-0">
+            {/* Inclusions and exclusions, exactly as IRCTC publishes them. One
+                panel split by a single rule — vertical side by side, horizontal
+                once they stack. */}
+            <div className="mt-4 overflow-hidden rounded-2xl border bg-white">
+              <div className="grid divide-y xl:grid-cols-2 xl:divide-x xl:divide-y-0">
                 <div className="p-5">
-                  <div className="mb-4">
-                    <div className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-emerald-700">
-                      <Check size={15} /> Official inclusions
-                    </div>
-                    <p className="mt-1 text-[13px] text-foreground/65">Services covered in the published package fare.</p>
+                  <div className="flex items-center gap-2 text-[12px] uppercase tracking-wide text-muted-foreground">
+                    <Check size={15} className="flex-none text-emerald-600" /> Inclusions
                   </div>
-
-                  <ul className="grid gap-2.5">
+                  <ul className="mt-4 space-y-2.5">
                     {detailedInclusions.map((item) => (
-                      <li key={item} className="flex items-start gap-3 text-[14px] leading-relaxed text-foreground/82">
-                        <span className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-emerald-600 text-white">
-                          <Check size={12} />
-                        </span>
+                      <li key={item} className="flex items-start gap-3 text-[15.5px] leading-relaxed text-foreground/80">
+                        <Check size={16} className="mt-1 flex-none text-emerald-600" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -390,16 +362,13 @@ export function DetailPage({ id }: { id: string }) {
                 </div>
 
                 <div className="p-5">
-                  <div className="mb-4 flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-muted-foreground">
-                    <X size={15} /> Exclusions
+                  <div className="flex items-center gap-2 text-[12px] uppercase tracking-wide text-muted-foreground">
+                    <X size={15} className="flex-none text-destructive" /> Exclusions
                   </div>
-
-                  <ul className="space-y-2.5">
+                  <ul className="mt-4 space-y-2.5">
                     {detailedExclusions.map((item) => (
-                      <li key={item} className="flex items-start gap-3 text-[13px] leading-relaxed text-foreground/72">
-                        <span className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-white text-muted-foreground ring-1 ring-border">
-                          <X size={12} />
-                        </span>
+                      <li key={item} className="flex items-start gap-3 text-[15.5px] leading-relaxed text-foreground/80">
+                        <X size={16} className="mt-1 flex-none text-destructive" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -408,56 +377,25 @@ export function DetailPage({ id }: { id: string }) {
               </div>
             </div>
 
-            <div className="mt-5 rounded-3xl border bg-white p-5">
-              <div className="mb-4 flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-muted-foreground">
-                <FileText size={15} className="text-brand" /> Package snapshot
+            {/* Amber on purpose — these are cautions, not part of the fare. */}
+            <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50/40 p-5">
+              <div className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-amber-800">
+                <CircleAlert size={15} className="flex-none" /> Important notes
               </div>
-              <div className="grid gap-5 md:grid-cols-2">
-                <div>
-                  <div className="mb-2 text-[13px] font-bold text-ink">Also listed as included</div>
-                  <ul className="space-y-2">
-                    {pkg.inclusions.map((item) => (
-                      <li key={item} className="flex items-start gap-2 text-[13px] leading-relaxed text-foreground/75">
-                        <Check size={14} className="mt-0.5 flex-none text-emerald-600" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <div className="mb-2 text-[13px] font-bold text-ink">Package exclusions summary</div>
-                  <ul className="space-y-2">
-                    {pkg.exclusions.map((item) => (
-                      <li key={item} className="flex items-start gap-2 text-[13px] leading-relaxed text-foreground/70">
-                        <X size={14} className="mt-0.5 flex-none text-muted-foreground" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-5 flex justify-center">
-              <div className="w-full max-w-[680px] rounded-3xl border border-amber-200 bg-amber-50/40 p-5">
-                <div className="mb-4 flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-amber-800">
-                  <CircleAlert size={15} /> Important notes
-                </div>
-                <ul className="max-h-[560px] space-y-3 overflow-y-auto pr-2 slim-scrollbar">
-                  {importantInclusionNotes.map((note) => (
-                    <li key={note} className="flex items-start gap-3 text-[13px] leading-relaxed text-foreground/78">
-                      <span className="mt-1 h-1.5 w-1.5 flex-none rounded-full bg-amber-600" />
-                      <span>{note}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <ul className="mt-4 max-h-[560px] space-y-2.5 overflow-y-auto pr-2 slim-scrollbar">
+                {importantInclusionNotes.map((note) => (
+                  <li key={note} className="flex items-start gap-3 text-[14px] leading-relaxed text-foreground/80">
+                    <span className="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-amber-600" />
+                    <span>{note}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </CollapsibleSection>
 
           <CollapsibleSection
             id="policy"
-            title="Terms"
+            title="Terms &amp; Policy"
             open={openSections.has("policy")}
             onToggle={() => toggleSection("policy")}
           >
@@ -477,13 +415,13 @@ export function DetailPage({ id }: { id: string }) {
             onToggle={() => toggleSection("contact")}
           >
             <div className="flex justify-end">
-              <a
+              {/* <a
                 href={`tel:${nationalHelpline.number}`}
                 className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-secondary/60 px-4 text-[13px] font-semibold text-navy transition hover:bg-secondary"
               >
                 <Phone size={14} className="text-brand" />
                 {nationalHelpline.label} · {nationalHelpline.number}
-              </a>
+              </a> */}
             </div>
 
             <div className="mt-5">

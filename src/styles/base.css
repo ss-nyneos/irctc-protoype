@@ -61,7 +61,7 @@
 
 :where(.design-1-root) button {
   background: none;
-  border: none;
+  border-width: 0;
   cursor: pointer;
 }
 

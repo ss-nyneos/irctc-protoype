@@ -4,9 +4,11 @@
 
 :root {
   --background: 0 0% 100%;
-  --foreground: 215 55% 12%;
+  /* #323232 — the one black used for type. HSL because Tailwind wraps these
+     in hsl(). Kept in step with --ink / --black in tokens.css. */
+  --foreground: 0 0% 20%;
   --card-hsl: 0 0% 100%;
-  --card-foreground-hsl: 215 55% 12%;
+  --card-foreground-hsl: 0 0% 20%;
   --primary: 218 82% 23%;
   --primary-foreground: 0 0% 100%;
   --secondary: 218 45% 95%;
@@ -270,6 +272,17 @@ h4,
 @keyframes routeFlow {
   to {
     stroke-dashoffset: var(--flow, -24);
+  }
+}
+
+@keyframes selectMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 

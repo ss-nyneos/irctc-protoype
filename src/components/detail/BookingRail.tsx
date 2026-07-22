@@ -1,6 +1,7 @@
 import { Calendar, Check, MapPin, Plane, ShieldCheck, Users } from "lucide-react";
 import type { BoardingPoint, CoachClass, TourPackage } from "@/types";
 import { formatINR } from "@/utils/format";
+import { SelectMenu } from "@/components/common/SelectMenu";
 
 export function BookingRail({
   pkg,
@@ -8,7 +9,6 @@ export function BookingRail({
   departures,
   boardingPoint,
   selectedClass,
-  onSelectClass,
   travellers,
   onTravellers,
   departure,
@@ -20,7 +20,6 @@ export function BookingRail({
   departures: string[];
   boardingPoint: BoardingPoint | null;
   selectedClass: CoachClass;
-  onSelectClass: (code: string) => void;
   travellers: number;
   onTravellers: (n: number) => void;
   departure: string;
@@ -60,67 +59,10 @@ export function BookingRail({
           </span>
         </div>
 
-        {/* Class-wise fares, up front rather than discovered at checkout. Kept
-            to one line each: three tall cards pushed travellers and dates off
-            the bottom of the rail, and the tier description only matters while
-            you're choosing — the selected one restates it below. */}
-        <fieldset className="mt-5">
-          <legend className="mb-2 text-[12px] font-bold uppercase tracking-wide text-muted-foreground">
-            Choose your class
-          </legend>
-          <div className="divide-y overflow-hidden rounded-2xl border">
-            {classes.map((c) => {
-              const isSelected = c.code === selectedClass.code && c.available;
-              const isTight = c.seatsLeft <= 6;
-              return (
-                <button
-                  key={c.code}
-                  type="button"
-                  onClick={() => onSelectClass(c.code)}
-                  disabled={!c.available}
-                  aria-pressed={isSelected}
-                  className={`flex w-full items-center gap-2.5 px-3 py-2.5 text-left transition ${
-                    !c.available
-                      ? "cursor-not-allowed bg-secondary/40 opacity-55"
-                      : isSelected
-                        ? "bg-brand/[0.06]"
-                        : "hover:bg-secondary/50"
-                  }`}
-                >
-                  <span
-                    className={`flex h-[18px] w-[18px] flex-none items-center justify-center rounded-full border-2 transition ${
-                      isSelected ? "border-brand bg-brand text-white" : "border-muted"
-                    }`}
-                  >
-                    {isSelected && <Check size={11} />}
-                  </span>
+        {/* No class picker here: category is chosen once, in Basic detail on
+            the booking form. Two places to pick it meant two sources of truth. */}
 
-                  <span className="flex min-w-0 flex-1 items-baseline gap-1.5">
-                    <span className={`text-[13.5px] font-bold ${isSelected ? "text-ink" : "text-foreground/80"}`}>
-                      {c.label}
-                    </span>
-                    <span className="flex-none text-[11px] font-bold text-muted-foreground">{c.code}</span>
-                  </span>
-
-                  <span className="flex-none text-right">
-                    <span className="block font-display text-[14px] font-bold tabular-nums text-ink">
-                      {formatINR(c.price)}
-                    </span>
-                    {c.available ? (
-                      <span className={`block text-[10.5px] font-semibold ${isTight ? "text-saffron" : "text-muted-foreground"}`}>
-                        {c.seatsLeft} left
-                      </span>
-                    ) : (
-                      <span className="block text-[10.5px] font-semibold text-destructive">Sold out</span>
-                    )}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </fieldset>
-
-        <div className="mt-4 flex items-center justify-between rounded-xl border p-3">
+        <div className="mt-5 flex items-center justify-between rounded-xl border p-3">
           <span className="inline-flex items-center gap-2 text-[14px] font-semibold text-ink">
             <Users size={16} /> Travellers
           </span>
@@ -149,18 +91,14 @@ export function BookingRail({
           <label htmlFor="departure" className="inline-flex items-center gap-2 text-[14px] font-semibold text-ink">
             <Calendar size={16} /> Departure
           </label>
-          <select
+          <SelectMenu
             id="departure"
+            bare
+            ariaLabel="Departure date"
             value={departure}
-            onChange={(e) => onDeparture(e.target.value)}
-            className="cursor-pointer bg-transparent py-2 text-right text-[13px] font-semibold text-ink outline-none"
-          >
-            {departures.map((d) => (
-              <option key={d} value={d}>
-                {d}
-              </option>
-            ))}
-          </select>
+            onChange={onDeparture}
+            options={departures.map((d) => ({ value: d, label: d }))}
+          />
         </div>
 
         {boardingPoint && (

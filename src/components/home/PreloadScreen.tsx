@@ -59,7 +59,8 @@ export function PreloadScreen({ to = "/home" }: { to?: string } = {}) {
         rafRef.current = requestAnimationFrame(tick);
       } else if (!doneRef.current) {
         doneRef.current = true;
-        navigate(to);
+      
+        navigate(to, { replace: true });
       }
     };
     rafRef.current = requestAnimationFrame(tick);
