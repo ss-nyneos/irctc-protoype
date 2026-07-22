@@ -241,3 +241,24 @@
     height: clamp(300px, 78vw, 360px);
   }
 }
+
+/* ============================================================
+   Dark theme — the mosaic tiles hardcode a white card + caption for
+   the light page (and .offers pins --navy locally, so the heading
+   stays dark navy). Both need an explicit black card and light type
+   here, or they glare white against the night page.
+   ============================================================ */
+[data-theme='dark'] .offer--tile,
+[data-theme='dark'] .offer--tile .offer__caption,
+/* the mosaic's own white ground shows through the 3px gaps and the angled
+   seams between the four frames — it has to go black too, or the card keeps
+   white diagonal lines running through it */
+[data-theme='dark'] .offer--tile .mosaic {
+  background: #000;
+}
+[data-theme='dark'] .offer__caption h3 {
+  color: #ffffff;
+}
+[data-theme='dark'] .offer__caption p {
+  color: rgba(255, 255, 255, 0.72);
+}
