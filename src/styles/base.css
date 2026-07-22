@@ -330,17 +330,17 @@ em,
   will-change: transform;
 }
 
-/* The hero pins while the rest of the page scrolls up over it. */
+/* Hero sits in normal flow; later sections push it up (no sticky pin —
+   sticky left a ghost video band / white gap near the page footer). */
 main > .hero {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 0;
 }
 main > section:not(.hero) {
   position: relative;
   z-index: 1;
 }
-/* the first band after the hero gets a lifted edge as it slides over */
+/* the first band after the hero gets a lifted edge */
 .services {
   box-shadow: 0 -24px 50px -24px rgba(10, 15, 30, 0.35);
 }

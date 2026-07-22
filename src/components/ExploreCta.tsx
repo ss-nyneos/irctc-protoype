@@ -41,8 +41,10 @@ export default function ExploreCta() {
   const { go } = useRouter()
 
   return (
-    /* margin-bottom gives breathing room before the footer */
-    <section className="explore relative isolate mb-[clamp(2.5rem,5vw,4.5rem)] overflow-hidden bg-paper pt-[var(--section-y)]">
+    /* padding (not margin) so the paper bg covers any stacked layers below;
+       the top uses the shared --section-y token so this section keeps the same
+       vertical rhythm as every other one */
+    <section className="explore relative isolate overflow-hidden bg-paper pb-[clamp(1.5rem,3vw,2.5rem)] pt-[var(--section-y)]">
       {/* night sky — a starlit gradient that only lights up in dark mode */}
       <div className="explore__night pointer-events-none absolute inset-0 z-0" aria-hidden="true" />
       <div className="wrap relative z-[3] text-center">
