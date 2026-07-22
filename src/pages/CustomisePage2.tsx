@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import {
     ArrowLeft,
     ArrowRight,
@@ -6,7 +6,6 @@ import {
     BedDouble,
     Bird,
     Bus,
-    CalendarDays,
     Camera,
     Car,
     Castle,
@@ -29,7 +28,6 @@ import {
     PartyPopper,
     Palmtree,
     Plane,
-    RefreshCw,
     Search,
     Ship,
     ShoppingBag,
@@ -48,8 +46,9 @@ import { useReveal } from "@/hooks/useReveal";
 import { useRouter } from "@/router/RouterContext";
 import { packages } from "@/data/packages";
 import type { BudgetBand, Experience, TourPackage, TravelMode } from "@/types";
-import { PackageCard } from "@/components/package/PackageCard";
+import { EditorialPackageCard, HOVER_GROW } from "@/components/package/EditorialPackageCard";
 import PriceRangeSlider from "@/components/customise/PriceRangeSlider";
+import TripPass from "@/components/customise/TripPass";
 import bgVideo from "@/assets/customise/25d82214-bbf9-4ec0-bfdd-deed85a779f5.mov";
 import imgFrom from "@/assets/customise/from.jpg";
 import imgVibes from "@/assets/customise/destination.jpeg";
@@ -555,6 +554,11 @@ const DURATION_NIGHTS: Record<Duration, number> = {
     "10+ Days": 10,
 };
 
+/** Results grid column count by viewport, mirroring `sm:grid-cols-2 lg:grid-cols-3`.
+ *  Cards are laid out row by row so a hovered card can steal width from the ones
+ *  beside it — that needs an explicit column count, not a wrapping grid. */
+const columnsFor = (w: number) => (w >= 1024 ? 3 : w >= 640 ? 2 : 1);
+
 export function CustomisePage() {
     const { back } = useRouter();
     const ref = useReveal();
@@ -568,12 +572,27 @@ export function CustomisePage() {
     const [step, setStep] = useState(0);
     const [exiting, setExiting] = useState(false);
     const [dir, setDir] = useState<1 | -1>(1); // 1 = forward, -1 = back — drives slide direction
+    // Results are laid out row by row so a hovered card can steal width from its
+    // neighbours — that needs an explicit column count, not a wrapping grid.
+    const [cols, setCols] = useState(() => (typeof window === "undefined" ? 3 : columnsFor(window.innerWidth)));
 
     // honour prefers-reduced-motion: a looping cinematic pan is exactly the kind of
     // background motion that setting exists to suppress
     useEffect(() => {
         if (prefersReducedMotion()) videoRef.current?.pause();
     }, []);
+
+    useEffect(() => {
+        const onResize = () => setCols(columnsFor(window.innerWidth));
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
+    }, []);
+
+    const resultRows = useMemo(() => {
+        const out: TourPackage[][] = [];
+        for (let i = 0; i < results.length; i += cols) out.push(results.slice(i, i + cols));
+        return out;
+    }, [results, cols]);
 
     // The intro: let the backdrop video breathe, then bring in the first card.
     useEffect(() => {
@@ -1224,7 +1243,7 @@ export function CustomisePage() {
                                         </div>
                                     </div>
 
-                                    <div className="-mx-1.5 flex min-h-0 flex-1 flex-col justify-center overflow-x-hidden overflow-y-auto px-1.5 py-5">
+                                    <div className="-mx-1.5 min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-1.5 py-5">
                                         {current.control}
                                     </div>
 
@@ -1258,21 +1277,74 @@ export function CustomisePage() {
 
                 {phase === "results" && (
                     <div className="reveal in space-y-8">
-                        <DoneHeader
-                            inputs={inputs}
-                            dateLabel={dateLabel}
-                            count={results.length}
-                            onStartOver={startOver}
+                        <TripPass
+                            from={inputs.from || "Anywhere"}
+                            to={inputs.vibes.join(", ") || "Anywhere"}
+                            caption="We've matched your preferences with our premium, verified itineraries."
+                            fields={[
+                                { label: "Vibes", value: inputs.vibes.join(", ") || "Any" },
+                                { label: "Travellers", value: String(inputs.travellers) },
+                                { label: "Group", value: inputs.groupType },
+                                { label: "Duration", value: inputs.duration || "Custom" },
+                                { label: "Travel dates", value: dateLabel || "Flexible" },
+                                { label: "Stay", value: inputs.accommodation },
+                                { label: "Transport", value: inputs.transports.join(", ") || "Any" },
+                                {
+                                    label: "Experiences",
+                                    value: inputs.experiences.join(", ") || "Open to all",
+                                },
+                                {
+                                    label: "Food budget",
+                                    value: `₹${Number(inputs.customBudget || 20000).toLocaleString("en-IN")}`,
+                                },
+                                {
+                                    label: "Cuisine",
+                                    value: inputs.cateringTypes.join(", ") || "Any",
+                                },
+                                {
+                                    label: "Trip budget",
+                                    value: `Up to ₹${ACCOMMODATION_MAXPRICE[inputs.accommodation].toLocaleString("en-IN")}`,
+                                },
+                                ...(inputs.notes.trim()
+                                    ? [{ label: "Notes", value: inputs.notes.trim() }]
+                                    : []),
+                            ]}
+                            whatsNext={[
+                                `${results.length} handpicked trips for you`,
+                                "Best prices & availability",
+                                "Real photos & verified stays",
+                            ]}
+                            ctaLabel="Show My Trips"
                             onShowTrips={() => gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                            onAdjust={startOver}
                         />
 
-                        <div
-                            ref={gridRef}
-                            className="mt-10 grid scroll-mt-6 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-12 lg:gap-y-14 xl:grid-cols-4"
-                        >
-                            {results.map((pkg) => (
-                                <div key={pkg.id} className="reveal in relative flex flex-col">
-                                    <PackageCard pkg={pkg} />
+                        {/* Hover-to-grow rows, as on the listing grid — the hovered card
+                            takes the width its neighbours give back, so each row's width
+                            never moves. */}
+                        <div ref={gridRef} className="mt-10 flex scroll-mt-6 flex-col gap-y-10 lg:gap-y-14">
+                            {resultRows.map((row, i) => (
+                                <div
+                                    key={i}
+                                    className="card-row flex flex-col gap-8 sm:flex-row lg:gap-12"
+                                    style={
+                                        {
+                                            "--cell-grow": 1 + HOVER_GROW,
+                                            "--cell-shrink": row.length > 1 ? 1 - HOVER_GROW / (row.length - 1) : 1,
+                                        } as CSSProperties
+                                    }
+                                >
+                                    {row.map((pkg) => (
+                                        <div key={pkg.id} className="card-cell min-w-0">
+                                            <div className="reveal in relative flex flex-col">
+                                                <EditorialPackageCard pkg={pkg} />
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {/* Keep a short final row aligned with the columns above it. */}
+                                    {Array.from({ length: cols - row.length }).map((_, k) => (
+                                        <div key={`spacer-${k}`} className="hidden basis-0 grow sm:block" />
+                                    ))}
                                 </div>
                             ))}
                         </div>
@@ -1602,108 +1674,6 @@ function DateRangeCalendar({
     );
 }
 
-/** The results banner — a "Done!" summary, an AI match-score ring and a what's-next list,
-    mirroring the reference's completion card. */
-function DoneHeader({
-    inputs,
-    dateLabel,
-    count,
-    onStartOver,
-    onShowTrips,
-}: {
-    inputs: TripInputs;
-    dateLabel: string;
-    count: number;
-    onStartOver: () => void;
-    onShowTrips: () => void;
-}) {
-    const summary: { icon: ReactNode; caption: string; value: string }[] = [
-        { icon: <MapPin size={14} />, caption: "From", value: inputs.from || "Anywhere" },
-        { icon: <Mountain size={14} />, caption: "To", value: inputs.vibes.join(", ") },
-        {
-            icon: <Users size={14} />,
-            caption: "Travellers",
-            value: `${inputs.travellers} · ${inputs.groupType}`,
-        },
-        { icon: <CalendarDays size={14} />, caption: "Duration", value: dateLabel || inputs.duration || "Flexible" },
-        { icon: <TrainFront size={14} />, caption: "By", value: inputs.transports.join(", ") },
-        { icon: <BedDouble size={14} />, caption: "Stay", value: inputs.accommodation },
-        { icon: <Sparkles size={14} />, caption: "Interests", value: inputs.experiences.slice(0, 3).join(", ") },
-    ];
-
-    return (
-        <div className="overflow-hidden rounded-3xl border border-white/75 bg-white/90 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] backdrop-blur-md">
-            <div className="grid lg:grid-cols-[1.7fr_1.3fr]">
-                {/* done + summary */}
-                <div className="p-6 md:p-7">
-                    <div className="flex items-center gap-2.5">
-                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-brand/15 text-brand">
-                            <PartyPopper size={20} />
-                        </span>
-                        <h2 className="font-display text-[20px] font-bold leading-tight text-ink md:text-[23px]">
-                            Done! We've got your perfect trip
-                        </h2>
-                    </div>
-                    <p className="mt-2 text-[13.5px] text-muted-foreground">
-                        We've matched your preferences with our premium, verified itineraries.
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                        {summary.map((s) => (
-                            <div
-                                key={s.caption}
-                                className="inline-flex items-center gap-2 rounded-xl border border-blue-100/50 bg-[#f4f8fe]/80 px-3.5 py-1.5 shadow-sm"
-                            >
-                                <span className="text-brand">{s.icon}</span>
-                                <span className="leading-tight">
-                                    <span className="block text-[9px] font-bold uppercase tracking-wide text-muted-foreground">
-                                        {s.caption}
-                                    </span>
-                                    <span className="block max-w-[160px] truncate text-[12.5px] font-bold text-ink">{s.value}</span>
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* what's next */}
-                <div className="border-t border-black/5 p-6 lg:border-l lg:border-t-0">
-                    <div className="text-[13px] font-bold text-ink">What's next?</div>
-                    <ul className="mt-3 space-y-2.5">
-                        {[
-                            `${count} handpicked trips for you`,
-                            "Best prices & availability",
-                            "Real photos & verified stays",
-                        ].map((item) => (
-                            <li key={item} className="flex items-center gap-2 text-[13px] font-semibold text-ink/80">
-                                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-500/15 text-green-600">
-                                    <Check size={12} />
-                                </span>
-                                {item}
-                            </li>
-                        ))}
-                    </ul>
-                    <div className="mt-5 flex flex-wrap items-center gap-2.5">
-                        <button
-                            onClick={onShowTrips}
-                            type="button"
-                            className="inline-flex items-center gap-2 rounded-2xl bg-brand px-5 py-3 text-[14px] font-bold text-white shadow-lg transition hover:brightness-95"
-                        >
-                            Show My Trips <ArrowRight size={16} />
-                        </button>
-                        <button
-                            onClick={onStartOver}
-                            type="button"
-                            className="inline-flex items-center gap-1.5 rounded-2xl border border-black/10 bg-white px-5 py-3 text-[14px] font-bold text-ink shadow-sm transition hover:bg-secondary"
-                        >
-                            <RefreshCw size={14} /> Adjust
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
 /** Circular AI-match-score gauge. */
 function ScoreRing({ value }: { value: number }) {
     const r = 34;
@@ -1737,38 +1707,11 @@ function ScoreRing({ value }: { value: number }) {
     the nose — used purely as the loader's mascot. */
 function VandeBharatTrain() {
     return (
-        <svg width="200" height="64" viewBox="0 0 200 64" fill="none" role="img" aria-label="Vande Bharat train">
-            {/* body */}
-            <path
-                d="M14 16 H150 C172 16 190 26 196 36 C190 44 176 48 150 48 H14 C8 48 4 44 4 38 V26 C4 20 8 16 14 16 Z"
-                fill="#ffffff"
-                stroke="#d7e0ec"
-                strokeWidth="1.4"
-            />
-            {/* passenger window band */}
-            <rect x="20" y="21" width="118" height="9" rx="3" fill="#14294c" />
-            {/* windshield */}
-            <path d="M150 21 C166 22 179 28 186 35 L168 35 C162 30 157 27 150 27 Z" fill="#14294c" />
-            {/* saffron stripe, sweeping down toward the nose */}
-            <path d="M4 32 H150 C171 32 187 37 196 42 L195 45 C186 41 169 43 150 43 H4 Z" fill="#F2662A" />
-            {/* door seam */}
-            <line x1="88" y1="17" x2="88" y2="47" stroke="#e2e8f0" strokeWidth="1" />
-            {/* headlight */}
-            <circle cx="189" cy="39" r="2.3" fill="#ffe9a8" />
-            {/* wheels */}
-            <g fill="#0e1f38">
-                <circle cx="42" cy="52" r="5.2" />
-                <circle cx="60" cy="52" r="5.2" />
-                <circle cx="118" cy="52" r="5.2" />
-                <circle cx="136" cy="52" r="5.2" />
-            </g>
-            <g fill="#8aa0bd">
-                <circle cx="42" cy="52" r="1.8" />
-                <circle cx="60" cy="52" r="1.8" />
-                <circle cx="118" cy="52" r="1.8" />
-                <circle cx="136" cy="52" r="1.8" />
-            </g>
-        </svg>
+        <img
+            src="/vandeBharat.png"
+            alt="Vande Bharat train"
+            className="h-[190px] w-[540px] object-contain object-bottom"
+        />
     );
 }
 
@@ -1781,12 +1724,12 @@ function VandeBharatLoader({ title, sub }: { title: string; sub: string }) {
             aria-live="polite"
             className="animate-fadeIn mx-auto flex min-h-[380px] max-w-3xl flex-col items-center justify-center rounded-3xl border border-white/20 bg-black/35 px-6 py-14 text-center shadow-[0_30px_70px_-24px_rgba(0,0,0,0.55)]"
         >
-            <div className="relative h-[92px] w-[280px]">
-                <div className="absolute bottom-4 left-0 right-0 h-[2px] rounded bg-white/25" />
-                <span className="vb-streak" style={{ top: 30 }} />
-                <span className="vb-streak" style={{ top: 44, animationDelay: "0.28s" }} />
-                <span className="vb-streak" style={{ top: 58, animationDelay: "0.56s" }} />
-                <div className="vb-bob absolute bottom-4 left-1/2">
+            <div className="relative h-[200px] w-[min(100%,560px)]">
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] rounded bg-white/25" />
+                <span className="vb-streak" style={{ top: 52 }} />
+                <span className="vb-streak" style={{ top: 86, animationDelay: "0.28s" }} />
+                <span className="vb-streak" style={{ top: 120, animationDelay: "0.56s" }} />
+                <div className="vb-bob absolute -bottom-1 left-1/2">
                     <VandeBharatTrain />
                 </div>
             </div>

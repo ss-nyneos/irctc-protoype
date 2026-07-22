@@ -257,6 +257,17 @@ export default function App() {
               "/" mounts it with the train preload overlaid on top, so the page
               is already rendered underneath as the overlay fades; the overlay
               then navigates to "/home", which is the same page without it. */}
+          {/* Preload intro screen — "/" */}
+          <Route path="/" element={<PreloadRoute />} />
+
+          {/* Main landing page — "/landing" */}
+          <Route path="/landing" element={<Shell />} />
+
+          {/* In-app shell routes (view switched via RouterContext) */}
+          <Route path="/personal" element={<Shell />} />
+          <Route path="/customise" element={<Shell />} />
+
+          {/* Design 1 pages */}
           <Route element={<Design1Layout />}>
             <Route
               path="/"

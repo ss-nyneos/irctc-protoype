@@ -1,14 +1,29 @@
-import { Bed, Bus, CarFront, Plane, ShieldCheck, TrainFront, UtensilsCrossed, type LucideIcon } from "lucide-react";
+import {
+  Bed,
+  Bus,
+  CarFront,
+  Landmark,
+  Plane,
+  ShieldCheck,
+  TrainFront,
+  UserCheck,
+  UtensilsCrossed,
+  type LucideIcon,
+} from "lucide-react";
 import type { TourPackage } from "@/types";
 import { inclusionsOf, type InclusionKey } from "@/utils/inclusions";
 
-const icons: Record<InclusionKey, LucideIcon> = {
+/** Shared with the compare table, which draws the same icons in a matrix. */
+export const inclusionIcons: Record<InclusionKey, LucideIcon> = {
   Train: TrainFront,
+  Air: Plane,
   Flight: Plane,
   Cab: CarFront,
   Bus: Bus,
   Hotel: Bed,
   Meal: UtensilsCrossed,
+  Guide: UserCheck,
+  Darshan: Landmark,
   Insurance: ShieldCheck,
 };
 
@@ -24,7 +39,7 @@ export function InclusionIcons({ pkg, tone = "dark", size = 14 }: InclusionIcons
   return (
     <div className={`flex flex-wrap items-center gap-x-3.5 gap-y-1.5 ${tone === "light" ? "text-white/85" : "text-foreground/70"}`}>
       {inclusionsOf(pkg).map((k) => {
-        const Icon = icons[k];
+        const Icon = inclusionIcons[k];
         return (
           <span key={k} className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold">
             <Icon size={size} className={tone === "light" ? "text-white/70" : "text-brand"} /> {k}

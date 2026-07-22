@@ -55,13 +55,13 @@ const PKG_ALIASES: [string, string][] = [
   ["kerala", "keralabackwaters"], ["munnar", "keralabackwaters"], ["alleppey", "keralabackwaters"], ["backwater", "keralabackwaters"],
   ["dakshin", "dakshinbharat"], ["balaji", "dakshinbharat"], ["tirupati", "dakshinbharat"], ["rameswaram", "dakshinbharat"],
   ["north east", "northeastsafari"], ["northeast", "northeastsafari"], ["kaziranga", "northeastsafari"], ["shillong", "northeastsafari"], ["meghalaya", "northeastsafari"],
-  ["maharajas", "maharajas"], ["maharaja", "maharajas"],
-  ["golden chariot", "goldenchariot"], ["golden", "goldenchariot"],
+  ["mysore", "mysorecoorg"], ["coorg", "mysorecoorg"], ["ooty", "mysorecoorg"],
+  ["odisha", "odishagolden"], ["puri", "odishagolden"], ["konark", "odishagolden"], ["bhubaneswar", "odishagolden"],
   ["andaman", "andaman"], ["havelock", "andaman"], ["port blair", "andaman"],
   ["jyotirlinga", "jyotirlinga"], ["shirdi", "jyotirlinga"], ["statue of unity", "jyotirlinga"],
   ["rajasthan", "rajasthan"], ["jaipur", "rajasthan"], ["jodhpur", "rajasthan"], ["udaipur", "rajasthan"],
   ["sri lanka", "srilanka"], ["srilanka", "srilanka"], ["colombo", "srilanka"], ["kandy", "srilanka"],
-  ["dubai", "dubai"], ["abu dhabi", "dubai"],
+  ["singapore", "singaporemalaysia"], ["malaysia", "singaporemalaysia"], ["kuala lumpur", "singaporemalaysia"],
 ];
 
 const NAV_VERB = /\b(open|go to|goto|take me|redirect|navigate|show me|view|see|book|reserve|visit)\b/;
@@ -311,7 +311,9 @@ export function DishaChatbot() {
       <button
         onClick={() => setOpen(true)}
         type="button"
-        className={`pulse-ring fixed bottom-5 right-5 z-40 flex items-center gap-2.5 rounded-full bg-brand py-3.5 pl-4 pr-5 text-left text-white shadow-2xl transition hover:brightness-95 ${
+       
+        style={{ bottom: "calc(1.25rem + var(--dock-offset, 0px))" }}
+        className={`pulse-ring fixed right-5 z-40 flex items-center gap-2.5 rounded-full bg-brand py-3.5 pl-4 pr-5 text-left text-white shadow-2xl transition-[bottom,filter] duration-300 hover:brightness-95 ${
           open ? "hidden" : ""
         }`}
       >

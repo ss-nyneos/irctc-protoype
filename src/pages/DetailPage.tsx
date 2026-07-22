@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import {
   ArrowLeft,
   Bus,
@@ -7,6 +7,7 @@ import {
   Hotel,
   MapPin,
   Moon,
+  Phone,
   Share2,
   ShieldCheck,
   Star,
@@ -28,6 +29,11 @@ import { ItineraryMap } from "@/components/detail/ItineraryMap";
 import { BookingRail } from "@/components/detail/BookingRail";
 import { PolicyPanel } from "@/components/detail/PolicyPanel";
 import { CallbackForm } from "@/components/detail/CallbackForm";
+import { FaqAccordion } from "@/components/detail/FaqAccordion";
+import { OfficeDirectory } from "@/components/detail/OfficeDirectory";
+import { buildFaqs } from "@/data/packageFaqs";
+import { nationalHelpline } from "@/data/offices";
+import { EditorialPackageCard, HOVER_GROW } from "@/components/package/EditorialPackageCard";
 
 /** IRCTC prints these as a bare icon row with no detail behind them. */
 const inclusionIcons = [
@@ -61,6 +67,8 @@ export function DetailPage({ id }: { id: string }) {
   const boardingPoint = detail.boarding.find((b) => b.code === boardingCode) ?? null;
   const hasBoarding = detail.boarding.length > 0;
 
+  const faqs = useMemo(() => buildFaqs(pkg, detail), [pkg, detail]);
+
   const sections = useMemo<Section[]>(
     () =>
       [
@@ -69,15 +77,21 @@ export function DetailPage({ id }: { id: string }) {
         hasBoarding ? { id: "boarding", label: "Boarding" } : null,
         { id: "inclusions", label: "Inclusions" },
         { id: "policy", label: "Terms" },
-        { id: "help", label: "Help" },
+        { id: "contact", label: "Contact us" },
       ].filter((s): s is Section => s !== null),
     [hasBoarding],
   );
 
-  const related = packages
-    .filter((p) => p.id !== pkg.id && p.category === pkg.category)
-    .concat(packages.filter((p) => p.id !== pkg.id))
-    .slice(0, 4);
+  // Same category first, then anything else to top the shelf up to four. The
+  // backfill repeats the whole catalogue, so it has to be de-duped by id —
+  // otherwise a same-category package shows up twice in the same row.
+  const related = useMemo(() => {
+    const picked = new Map<string, (typeof packages)[number]>();
+    for (const p of [...packages.filter((p) => p.category === pkg.category), ...packages]) {
+      if (p.id !== pkg.id && picked.size < 4) picked.set(p.id, p);
+    }
+    return [...picked.values()];
+  }, [pkg]);
 
   const gst = Math.round(
     (selectedClass.price * travellers + (addFlight ? pkg.flightAddon * travellers : 0)) * 0.05,
@@ -87,69 +101,80 @@ export function DetailPage({ id }: { id: string }) {
   return (
     <div ref={ref} className="min-h-screen pb-28 lg:pb-24">
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <div className="relative h-[46vh] min-h-[340px] w-full overflow-hidden">
-        <ImageWithFallback img={pkg.img} grad={pkg.grad} alt={pkg.name} className="h-full w-full" overlay={false} />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-black/40" />
+      <section className="relative isolate flex min-h-[80vh] w-full flex-col overflow-hidden bg-ink md:min-h-[88vh]">
+        {/* Wrapped rather than positioned directly: the component's own root is
+            `relative`, which outranks an `absolute` passed in via className. */}
+        <div className="absolute inset-0">
+          <ImageWithFallback
+            img={pkg.img}
+            grad={pkg.grad}
+            alt={pkg.name}
+            overlay={false}
+            width={1800}
+            className="h-full w-full scale-105 [&_img]:object-[center_25%]"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60" />
+        <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-b from-transparent via-black/45 to-black/75" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent to-[#0B2E6B]" />
 
-        <div className="absolute inset-x-0 top-0">
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-6">
+        <div className="relative z-20 mx-auto flex w-full max-w-[1600px] items-center justify-between px-4 pt-6 md:px-8">
+          <button
+            onClick={back}
+            type="button"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white/15 px-3.5 py-1.5 text-[13px] font-semibold text-white backdrop-blur transition hover:bg-white/25"
+          >
+            <ArrowLeft size={15} /> Back
+          </button>
+          <div className="flex gap-2">
             <button
-              onClick={back}
               type="button"
-              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full glass-dark px-4 text-[13px] font-semibold text-white"
+              aria-label="Save to wishlist"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition hover:bg-white/25"
             >
-              <ArrowLeft size={15} /> Back
+              <Heart size={16} />
             </button>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                aria-label="Save to wishlist"
-                className="flex h-11 w-11 items-center justify-center rounded-full glass-dark text-white"
-              >
-                <Heart size={16} />
-              </button>
-              <button
-                type="button"
-                aria-label="Share this package"
-                className="flex h-11 w-11 items-center justify-center rounded-full glass-dark text-white"
-              >
-                <Share2 size={16} />
-              </button>
-            </div>
+            <button
+              type="button"
+              aria-label="Share this package"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur transition hover:bg-white/25"
+            >
+              <Share2 size={16} />
+            </button>
           </div>
         </div>
 
-        <div className="absolute inset-x-0 bottom-0">
-          <div className="mx-auto max-w-7xl px-4 pb-6 md:px-6">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-white/90">
-                <MapPin size={12} /> {pkg.category} · {pkg.region}
-              </span>
-              {/* Package code as a chip — IRCTC bolts it into the title itself. */}
-              <span className="rounded-full glass-dark px-2 py-0.5 text-[11px] font-bold tracking-wide text-white/90">
-                {detail.code}
-              </span>
-            </div>
-            {/* Sentence case, not the ALL CAPS of the original. */}
-            <h1 className="heading-xl mt-3 max-w-3xl text-balance text-white">{pkg.name}</h1>
-            <div className="mt-2 flex flex-wrap items-center gap-4 text-white/90">
-              <span className="inline-flex items-center gap-1 text-[13px] font-semibold">
-                <Star size={13} fill="#F26B21" stroke="none" /> {pkg.rating.toFixed(1)} ·{" "}
-                {pkg.reviews.toLocaleString("en-IN")} reviews
-              </span>
-              <span className="inline-flex items-center gap-1 text-[13px] font-semibold">
-                <Moon size={14} /> {pkg.nights}N / {pkg.days}D
-              </span>
-              <span className="inline-flex items-center gap-1 text-[13px] font-semibold">
-                <MapPin size={14} /> From {pkg.from}
-              </span>
-              <span className="inline-flex items-center gap-1 text-[13px] font-semibold">
-                <TrainFront size={14} /> {pkg.travelMode}
-              </span>
-            </div>
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-end px-4 pb-[8vh] pt-12 text-center">
+          <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/20 px-3.5 py-1.5 text-[11.5px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-md">
+              <MapPin size={13} /> {pkg.category} · {pkg.region}
+            </span>
+            <span className="rounded-full border border-white/25 bg-white/20 px-3 py-1.5 text-[11.5px] font-bold tracking-wide text-white backdrop-blur-md">
+              {detail.code}
+            </span>
+          </div>
+
+          <h1 className="heading-xl max-w-3xl text-balance leading-[1.06] text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] md:text-[54px]">
+            {pkg.name}
+          </h1>
+
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-white/90 drop-shadow-[0_1px_12px_rgba(0,0,0,0.5)]">
+            <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold">
+              <Star size={13} fill="#F26B21" stroke="none" /> {pkg.rating.toFixed(1)} ·{" "}
+              {pkg.reviews.toLocaleString("en-IN")} reviews
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold">
+              <Moon size={14} /> {pkg.nights}N / {pkg.days}D
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold">
+              <MapPin size={14} /> From {pkg.from}
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold">
+              <TrainFront size={14} /> {pkg.travelMode}
+            </span>
           </div>
         </div>
-      </div>
+      </section>
 
       <AccentBar />
       <SectionNav sections={sections} />
@@ -158,14 +183,7 @@ export function DetailPage({ id }: { id: string }) {
         <div className="min-w-0">
           {/* ── Overview ───────────────────────────────────────── */}
           <section id="overview" className="scroll-mt-[132px]">
-            {/* Printed once — the original repeats it verbatim in the tab below.
-                Held to ~65 characters a line, which is where prose stays readable. */}
             <p className="reveal max-w-[65ch] text-[17px] leading-relaxed text-foreground/85">{pkg.blurb}</p>
-
-            {/* No stat row here: duration, travel mode and departure city are
-                already in the hero two hundred pixels up, and the classes are
-                priced in the fare rail alongside. Repeating them was most of
-                what made this column read as noise. */}
 
             <ul className="reveal mt-6 grid gap-x-6 gap-y-3 sm:grid-cols-2">
               {pkg.highlights.map((h) => (
@@ -203,7 +221,6 @@ export function DetailPage({ id }: { id: string }) {
                   </span>
                   <div className="min-w-0">
                     <div className="text-[14px] font-bold text-ink">{item.key}</div>
-                    {/* The original stops at the icon; the detail is the useful half. */}
                     <div className="text-[12px] leading-snug text-muted-foreground">{item.note}</div>
                   </div>
                 </div>
@@ -242,20 +259,47 @@ export function DetailPage({ id }: { id: string }) {
 
           {/* ── Terms ──────────────────────────────────────────── */}
           <section id="policy" className="reveal mt-14 scroll-mt-[132px]">
-            <PolicyPanel sections={detail.policy} code={detail.code} />
+            <PolicyPanel
+              sections={detail.policy}
+              code={detail.code}
+              total={total}
+              travellers={travellers}
+              departure={departure}
+            />
           </section>
 
-          {/* ── Help ───────────────────────────────────────────── */}
-          <section id="help" className="reveal mt-14 scroll-mt-[132px]">
-            <CallbackForm packageName={pkg.name} code={detail.code} />
+          {/* ── Contact us ─────────────────────────────────────── */}
+          <section id="contact" className="mt-14 scroll-mt-[132px]">
+            <div className="reveal flex flex-wrap items-end justify-between gap-3">
+              <h2 className="font-display text-[22px] font-bold text-ink">Contact us</h2>
+              <a
+                href={`tel:${nationalHelpline.number}`}
+                className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-secondary/60 px-4 text-[13px] font-semibold text-navy transition hover:bg-secondary"
+              >
+                <Phone size={14} className="text-brand" />
+                {nationalHelpline.label} · {nationalHelpline.number}
+              </a>
+            </div>
+
+            <div className="reveal mt-5">
+              <OfficeDirectory pkg={pkg} boarding={detail.boarding} />
+            </div>
+
+            <div className="reveal mt-8">
+              <CallbackForm packageName={pkg.name} code={detail.code} />
+            </div>
+
+            <div className="reveal mt-8">
+              <h3 className="font-display text-[17px] font-bold text-ink">Frequently asked questions</h3>
+              <div className="mt-3">
+                <FaqAccordion faqs={faqs} />
+              </div>
+            </div>
           </section>
         </div>
 
-        {/* ── Fare rail ────────────────────────────────────────── */}
-        {/* Capped to the space below the sticky header and scrolled internally:
-            pinned at top-[128px] with no height limit, anything past the fold —
-            the flight add-on, the book button — simply could not be reached. */}
-        <div className="hidden lg:sticky lg:top-[128px] lg:block lg:max-h-[calc(100vh-152px)] lg:self-start lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
+        
+        <div className="slim-scrollbar hidden lg:sticky lg:top-[128px] lg:block lg:max-h-[calc(100vh-152px)] lg:self-start lg:overflow-y-auto lg:pr-2">
           <BookingRail
             pkg={pkg}
             classes={detail.classes}
@@ -314,25 +358,24 @@ export function DetailPage({ id }: { id: string }) {
       {/* ── Related ──────────────────────────────────────────── */}
       <div className="mx-auto max-w-7xl px-4 md:px-6">
         <h2 className="reveal font-display text-[22px] font-bold text-ink">You might also like</h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+        {/* Hover-to-grow row, as on the listing grid — what one cell takes the
+            others give back, so the row's total width never moves. */}
+        <div
+          className="card-row mt-4 flex flex-col gap-4 sm:flex-row"
+          style={
+            {
+              "--cell-grow": 1 + HOVER_GROW,
+              "--cell-shrink": related.length > 1 ? 1 - HOVER_GROW / (related.length - 1) : 1,
+            } as CSSProperties
+          }
+        >
           {related.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => go({ name: "detail", id: p.id })}
-              type="button"
-              className="reveal group overflow-hidden rounded-2xl border bg-white text-left shadow-sm transition hover:shadow-lg"
-            >
-              <ImageWithFallback img={p.img} grad={p.grad} alt={p.name} className="h-28" />
-              <div className="p-3">
-                <div className="line-clamp-1 font-display text-[14px] font-semibold leading-tight text-ink">{p.name}</div>
-                <div className="mt-1 flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1 text-[12px]">
-                    <Star size={11} fill="#F26B21" stroke="none" /> {p.rating.toFixed(1)}
-                  </span>
-                  <span className="font-bold tabular-nums text-ink">{formatINR(p.price)}</span>
-                </div>
+            <div key={p.id} className="card-cell min-w-0">
+              <div className="reveal">
+                <EditorialPackageCard pkg={p} compact />
               </div>
-            </button>
+            </div>
           ))}
         </div>
       </div>

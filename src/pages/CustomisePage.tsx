@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -43,7 +43,7 @@ import { useReveal } from "@/hooks/useReveal";
 import { useRouter } from "@/router/RouterContext";
 import { packages } from "@/data/packages";
 import type { BudgetBand, Experience, TourPackage, TravelMode } from "@/types";
-import { PackageCard } from "@/components/package/PackageCard";
+import { EditorialPackageCard, HOVER_GROW } from "@/components/package/EditorialPackageCard";
 import bgVideo from "@/assets/customise/25d82214-bbf9-4ec0-bfdd-deed85a779f5.mov";
 import imgFrom from "@/assets/customise/from.jpg";
 import imgVibes from "@/assets/customise/destination.jpeg";
@@ -64,6 +64,11 @@ import imgFestival from "@/assets/customise/festival.png";
 // Drop pilgrimage.* / wildlife.* into assets/customise and swap these two imports.
 import imgPilgrimage from "@/assets/cta/varanasi1.jpg";
 import imgWildlife from "@/assets/hero/kerala-tea-gardens.jpg";
+
+/** Results grid column count by viewport, mirroring `sm:grid-cols-2 lg:grid-cols-3`.
+ *  Cards are laid out row by row so a hovered card can steal width from the ones
+ *  beside it — that needs an explicit column count, not a wrapping grid. */
+const columnsFor = (w: number) => (w >= 1024 ? 3 : w >= 640 ? 2 : 1);
 
 const fromCities = [...new Set(packages.map((p) => p.from))];
 const POPULAR_CITIES = ["New Delhi", "Mumbai", "Bengaluru", "Ahmedabad", "Kolkata", "Chennai"];
@@ -335,12 +340,27 @@ export function CustomisePage() {
   const [step, setStep] = useState(0);
   const [exiting, setExiting] = useState(false);
   const [dir, setDir] = useState<1 | -1>(1); // 1 = forward, -1 = back — drives slide direction
+  // Results are laid out row by row so a hovered card can steal width from its
+  // neighbours — that needs an explicit column count, not a wrapping grid.
+  const [cols, setCols] = useState(() => (typeof window === "undefined" ? 3 : columnsFor(window.innerWidth)));
 
   // honour prefers-reduced-motion: a looping cinematic pan is exactly the kind of
   // background motion that setting exists to suppress
   useEffect(() => {
     if (prefersReducedMotion()) videoRef.current?.pause();
   }, []);
+
+  useEffect(() => {
+    const onResize = () => setCols(columnsFor(window.innerWidth));
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const resultRows = useMemo(() => {
+    const out: TourPackage[][] = [];
+    for (let i = 0; i < results.length; i += cols) out.push(results.slice(i, i + cols));
+    return out;
+  }, [results, cols]);
 
   // The intro: let the backdrop video breathe, then bring in the first card.
   useEffect(() => {
@@ -835,13 +855,31 @@ export function CustomisePage() {
               onShowTrips={() => gridRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
             />
 
-            <div
-              ref={gridRef}
-              className="mt-10 grid scroll-mt-6 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-12 lg:gap-y-14"
-            >
-              {results.map((pkg) => (
-                <div key={pkg.id} className="reveal in relative flex flex-col">
-                  <PackageCard pkg={pkg} />
+            {/* Hover-to-grow rows, as on the listing grid — the hovered card takes
+                the width its neighbours give back, so each row's width never moves. */}
+            <div ref={gridRef} className="mt-10 flex scroll-mt-6 flex-col gap-y-10 lg:gap-y-14">
+              {resultRows.map((row, i) => (
+                <div
+                  key={i}
+                  className="card-row flex flex-col gap-8 sm:flex-row lg:gap-12"
+                  style={
+                    {
+                      "--cell-grow": 1 + HOVER_GROW,
+                      "--cell-shrink": row.length > 1 ? 1 - HOVER_GROW / (row.length - 1) : 1,
+                    } as CSSProperties
+                  }
+                >
+                  {row.map((pkg) => (
+                    <div key={pkg.id} className="card-cell min-w-0">
+                      <div className="reveal in relative flex flex-col">
+                        <EditorialPackageCard pkg={pkg} />
+                      </div>
+                    </div>
+                  ))}
+                  {/* Keep a short final row aligned with the columns above it. */}
+                  {Array.from({ length: cols - row.length }).map((_, k) => (
+                    <div key={`spacer-${k}`} className="hidden basis-0 grow sm:block" />
+                  ))}
                 </div>
               ))}
             </div>
@@ -1277,38 +1315,11 @@ function ScoreRing({ value }: { value: number }) {
     the nose — used purely as the loader's mascot. */
 function VandeBharatTrain() {
   return (
-    <svg width="200" height="64" viewBox="0 0 200 64" fill="none" role="img" aria-label="Vande Bharat train">
-      {/* body */}
-      <path
-        d="M14 16 H150 C172 16 190 26 196 36 C190 44 176 48 150 48 H14 C8 48 4 44 4 38 V26 C4 20 8 16 14 16 Z"
-        fill="#ffffff"
-        stroke="#d7e0ec"
-        strokeWidth="1.4"
-      />
-      {/* passenger window band */}
-      <rect x="20" y="21" width="118" height="9" rx="3" fill="#14294c" />
-      {/* windshield */}
-      <path d="M150 21 C166 22 179 28 186 35 L168 35 C162 30 157 27 150 27 Z" fill="#14294c" />
-      {/* saffron stripe, sweeping down toward the nose */}
-      <path d="M4 32 H150 C171 32 187 37 196 42 L195 45 C186 41 169 43 150 43 H4 Z" fill="#F2662A" />
-      {/* door seam */}
-      <line x1="88" y1="17" x2="88" y2="47" stroke="#e2e8f0" strokeWidth="1" />
-      {/* headlight */}
-      <circle cx="189" cy="39" r="2.3" fill="#ffe9a8" />
-      {/* wheels */}
-      <g fill="#0e1f38">
-        <circle cx="42" cy="52" r="5.2" />
-        <circle cx="60" cy="52" r="5.2" />
-        <circle cx="118" cy="52" r="5.2" />
-        <circle cx="136" cy="52" r="5.2" />
-      </g>
-      <g fill="#8aa0bd">
-        <circle cx="42" cy="52" r="1.8" />
-        <circle cx="60" cy="52" r="1.8" />
-        <circle cx="118" cy="52" r="1.8" />
-        <circle cx="136" cy="52" r="1.8" />
-      </g>
-    </svg>
+    <img
+      src="/vandeBharat.png"
+      alt="Vande Bharat train"
+      className="w-[200px] h-[64px] object-contain"
+    />
   );
 }
 

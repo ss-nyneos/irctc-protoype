@@ -1,13 +1,24 @@
 import { useState } from "react";
 import { ChevronDown, Download, FileText } from "lucide-react";
 import type { PolicySection } from "@/types";
+import { CancellationLadder } from "@/components/detail/CancellationLadder";
+import { ConductTopics } from "@/components/detail/ConductTopics";
+
+interface PolicyPanelProps {
+  sections: PolicySection[];
+  code: string;
+  /** Booking value the cancellation ladder prices its rungs against. */
+  total: number;
+  travellers: number;
+  departure: string;
+}
 
 /**
- * Terms as an accordion instead of a tab. The first block is open because
- * cancellation terms are the one thing people genuinely go looking for, and
- * behind a tab they read as something being hidden.
+ * Terms as an accordion instead of a tab. Each section brings its own shape —
+ * a bullet list, a refund ladder or a set of conduct topics — and the panel
+ * picks the renderer to match.
  */
-export function PolicyPanel({ sections, code }: { sections: PolicySection[]; code: string }) {
+export function PolicyPanel({ sections, code, total, travellers, departure }: PolicyPanelProps) {
   const [open, setOpen] = useState<number | null>(1);
 
   return (
@@ -35,25 +46,47 @@ export function PolicyPanel({ sections, code }: { sections: PolicySection[]; cod
                   aria-expanded={isOpen}
                   className="flex min-h-[56px] w-full items-center gap-3 rounded-xl px-2 text-left transition hover:bg-secondary/40"
                 >
-                  <FileText size={15} className={`flex-none transition-colors ${isOpen ? "text-brand" : "text-muted-foreground"}`} />
+                  <FileText
+                    size={15}
+                    className={`flex-none transition-colors ${isOpen ? "text-brand" : "text-muted-foreground"}`}
+                  />
                   <span className={`flex-1 font-semibold transition-colors ${isOpen ? "text-ink" : "text-foreground/75"}`}>
                     {section.title}
                   </span>
                   <ChevronDown
                     size={18}
-                    className={`flex-none text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`}
+                    className={`flex-none text-muted-foreground transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
                   />
                 </button>
               </h3>
+
               {isOpen && (
-                <ul className="animate-tileIn space-y-2 px-2 pb-4 pl-[34px]">
-                  {section.points.map((point) => (
-                    <li key={point} className="flex items-start gap-2.5 text-[13px] leading-relaxed text-foreground/75">
-                      <span className="mt-[7px] h-1.5 w-1.5 flex-none rounded-full bg-brand/50" />
-                      {point}
-                    </li>
-                  ))}
-                </ul>
+                <div className="animate-tileIn px-2 pb-5 pl-[34px]">
+                  {section.bands && (
+                    <CancellationLadder
+                      bands={section.bands}
+                      total={total}
+                      travellers={travellers}
+                      departure={departure}
+                    />
+                  )}
+
+                  {section.topics && <ConductTopics topics={section.topics} />}
+
+                  {section.points && (
+                    <ul className="space-y-2">
+                      {section.points.map((point) => (
+                        <li
+                          key={point}
+                          className="flex items-start gap-2.5 text-[13px] leading-relaxed text-foreground/75"
+                        >
+                          <span className="mt-[7px] h-1.5 w-1.5 flex-none rounded-full bg-brand/50" />
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               )}
             </div>
           );
