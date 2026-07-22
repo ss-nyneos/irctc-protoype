@@ -7,7 +7,7 @@
   left: 0;
   right: 0;
   z-index: 200;
-  padding: 18px var(--gutter) 0;
+  padding: 48px var(--gutter) 0;
   pointer-events: none;
   transform: translateY(0);
   transition: transform 0.35s var(--ease);

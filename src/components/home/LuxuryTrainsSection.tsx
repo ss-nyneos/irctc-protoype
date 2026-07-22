@@ -519,7 +519,12 @@ export function TrainCarousel() {
 export function LuxuryTrainsSection() {
   const ref = useReveal();
   return (
-    <section className="relative overflow-hidden py-28 md:py-36">
+    // data-skip-gsap-reveal: Design1Layout GSAP also targets .reveal; leave
+    // entrance to useReveal so this section works on both Home and HomePage.
+    <section
+      data-skip-gsap-reveal
+      className="relative overflow-hidden bg-white py-28 md:py-36"
+    >
       <div className="relative mx-auto max-w-7xl px-4 md:px-6" ref={ref}>
         <div className="reveal reveal-rise flex flex-wrap items-end justify-between gap-4">
           <div>

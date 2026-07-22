@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { useRouter } from '@/router/RouterContext'
 import { Pin } from './Icons.tsx'
 import skyline from '../assets/explore/skyline.svg'
 import skylineReflection from '../assets/explore/skyline-reflection.svg'
@@ -36,9 +37,12 @@ const pill =
   '[&_svg]:flex-none [&_svg]:text-[1.25rem] [&_svg]:text-[#f2751f]'
 
 export default function ExploreCta() {
+  const navigate = useNavigate()
+  const { go } = useRouter()
+
   return (
-    /* margin-bottom gives breathing room before the footer */
-    <section className="relative isolate mb-[clamp(2.5rem,5vw,4.5rem)] overflow-hidden bg-paper pt-[clamp(6.5rem,11vw,10.5rem)]">
+    /* padding (not margin) so the paper bg covers any stacked layers below */
+    <section className="relative isolate overflow-hidden bg-paper pb-[clamp(1.5rem,3vw,2.5rem)] pt-[clamp(6.5rem,11vw,10.5rem)]">
       <div className="wrap relative z-[3] text-center">
         <h2 className="h2 [&_span]:text-blue">
           Ready To Explore The <span>World?</span>
@@ -47,8 +51,12 @@ export default function ExploreCta() {
           Start your next adventure today — find hidden gems, plan your trip, and
           make memories that last a lifetime.
         </p>
-        <Link
-          to="/packages"
+        <button
+          type="button"
+          onClick={() => {
+            go({ name: 'customise' })
+            navigate('/customise')
+          }}
           className="mt-[clamp(1.6rem,3vw,2.4rem)] inline-block rounded-[14px] bg-blue px-[2.4rem]
                      py-[1.05rem] text-[1.05rem] font-bold text-white
                      shadow-[0_16px_34px_-14px_rgba(36,117,238,0.85)]
@@ -56,7 +64,7 @@ export default function ExploreCta() {
                      hover:-translate-y-0.5 hover:bg-blue-deep"
         >
           Book Ticket
-        </Link>
+        </button>
       </div>
 
       {/* floating destination cards */}

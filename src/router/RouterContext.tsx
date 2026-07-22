@@ -24,7 +24,7 @@ function pathForView(view: View): string {
       return "/personal";
     case "home":
     default:
-      return "/landing";
+      return "/home";
   }
 }
 
@@ -34,6 +34,7 @@ function viewForPath(path: string): View {
       return { name: "customise" };
     case "/personal":
       return { name: "madeforyou" };
+    case "/home":
     case "/landing":
     case "/":
     default:
