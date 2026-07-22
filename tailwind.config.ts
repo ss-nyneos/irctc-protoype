@@ -18,7 +18,7 @@ export default {
       fontSize: {
         nav: ["16px", { lineHeight: "154%", letterSpacing: "0em", fontWeight: "500" }],
         svc: ["16px", { lineHeight: "100%", letterSpacing: "-0.04em", fontWeight: "500" }],
-        faq: ["22px", { lineHeight: "32px", letterSpacing: "0em", fontWeight: "700" }],
+        faq: ["20px", { lineHeight: "32px", letterSpacing: "0em", fontWeight: "700" }],
         tile: ["22.62px", { lineHeight: "100%", letterSpacing: "0em", fontWeight: "400" }],
         script: ["114.73px", { lineHeight: "100%", letterSpacing: "0em", fontWeight: "400" }],
         "script-sm": ["43.85px", { lineHeight: "100%", letterSpacing: "0em", fontWeight: "400" }],

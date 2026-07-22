@@ -525,7 +525,10 @@ export function LuxuryTrainsSection() {
       data-skip-gsap-reveal
       className="relative overflow-hidden bg-white py-28 md:py-36"
     >
-      <div className="relative mx-auto max-w-7xl px-4 md:px-6" ref={ref}>
+      {/* same container system as Destinations above it: .wrap (1440px cap,
+          fluid --gutter side padding) instead of a hardcoded max-w-7xl/px-4 —
+          that's why this section read narrower and more tightly margined */}
+      <div className="relative wrap" ref={ref}>
         <div className="reveal reveal-rise flex flex-wrap items-end justify-between gap-4">
           <div>
             {/* <div className="mb-2 flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-azure">

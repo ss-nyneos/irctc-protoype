@@ -1,4 +1,5 @@
 import Hero from '../components/Hero.tsx'
+import TripGenieStrip from '../components/TripGenieStrip.tsx'
 import Services from '../components/Services.tsx'
 import Offers from '../components/Offers.tsx'
 import Stats from '../components/Stats.tsx'
@@ -24,6 +25,7 @@ export default function Home() {
     <main>
       <CustomScrollbar />
       <Hero />
+      <TripGenieStrip />
       <Services />
 
       <Offers />

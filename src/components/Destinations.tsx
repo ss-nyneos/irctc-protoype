@@ -4,9 +4,15 @@ import { Pin } from './Icons.tsx'
 
 const card =
   'arch absolute top-0 left-1/2 h-full w-[clamp(240px,74vw,320px)] bg-paper-2 shadow-float ' +
-  'border border-white/25 ' +
   'transition-[transform,opacity,filter] duration-700 ease-brand ' +
   'min-[641px]:w-[clamp(280px,34vw,430px)]'
+
+/* Each card carries a thin gradient border in its own photo's colours (see
+   .grad-ring + the `grad` tuples in content.ts). The active card shows it at
+   full strength as the highlight; the receding ones keep theirs dialled back
+   so the rail still reads as one system. Deliberately light — no heavy glow. */
+const ring =
+  'grad-ring pointer-events-none absolute inset-0 z-[3] transition-opacity duration-500 ease-brand'
 
 /* Glass surface over the photograph: a diagonal specular sheen plus an inset
    rim light, so the card reads as a pane of glass rather than a bare image.
@@ -24,9 +30,13 @@ const glass =
    bright frame; the text shadows do the rest. */
 const panel =
   'absolute inset-x-[0.9rem] bottom-[0.9rem] z-[2] rounded-[22px] px-[0.85rem] pt-[1.1rem] pb-[1.2rem] ' +
-  'border border-white/30 bg-[rgba(10,16,30,0.22)] ' +
-  'shadow-[inset_0_1.5px_0_rgba(255,255,255,0.4)] ' +
+  'border border-white/45 bg-[rgba(8,14,28,0.52)] ' +
+  'shadow-[inset_0_1.5px_0_rgba(255,255,255,0.45),0_12px_34px_-14px_rgba(0,0,0,0.6)] ' +
   'transition-[opacity,transform] duration-500 ease-brand delay-150'
+
+/* Flat black wash on every receding card, so the active one reads as
+   lifted by contrast rather than by brightness alone. */
+const dim = 'pointer-events-none absolute inset-0 z-[1] bg-black/40 transition-opacity duration-500 ease-brand'
 
 const ROTATE_MS = 4000
 
@@ -65,7 +75,7 @@ export default function Destinations() {
     return {
       transform: `translateX(calc(-50% + ${shiftX}%)) scale(${scale}) rotateY(${rotate}deg)`,
       zIndex: 10 - abs,
-      opacity: abs === 0 ? 1 : abs === 1 ? 0.95 : 0.6,
+      opacity: abs === 0 ? 1 : abs === 1 ? 1 : 0.88,
       filter: abs === 0 ? 'none' : `brightness(${1 - abs * 0.22})`,
     }
   }
@@ -74,17 +84,21 @@ export default function Destinations() {
     <section className="section overflow-hidden bg-paper" id="destinations">
       <div className="wrap">
         <div className="mb-[clamp(2.4rem,5vw,3.6rem)] text-center [&_.h2]:mx-auto [&_.h2]:max-w-[18ch]">
-          <h2 className="h2">The best-kept secrets of <span>India</span></h2>
+          <h2 className="h2">Treasures Of <span>India</span></h2>
         </div>
 
-        <div
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-          onFocusCapture={() => setPaused(true)}
-          onBlurCapture={() => setPaused(false)}
-          className="relative h-[clamp(360px,46vw,500px)] [perspective:1600px] [transform-style:preserve-3d]"
-        >
-          {destinations.map((d, i) => {
+        <div className="relative">
+          {/* grey gradient pool that grounds the rail (see .treasure-stage);
+              sits behind the cards, bleeding a little past the rail top/bottom */}
+          <span aria-hidden="true" className="treasure-stage pointer-events-none absolute inset-x-0 -inset-y-10" />
+          <div
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+            onFocusCapture={() => setPaused(true)}
+            onBlurCapture={() => setPaused(false)}
+            className="relative h-[clamp(360px,46vw,500px)] [perspective:1600px] [transform-style:preserve-3d]"
+          >
+            {destinations.map((d, i) => {
             const isActive = offsetOf(i) === 0
             return (
               <button
@@ -108,6 +122,18 @@ export default function Destinations() {
                 <span
                   aria-hidden="true"
                   className={`${glass} ${isActive ? 'opacity-60' : 'opacity-100'}`}
+                />
+                {/* darkens every receding card so the active one pops by contrast */}
+                <span
+                  aria-hidden="true"
+                  className={`${dim} ${isActive ? 'opacity-0' : 'opacity-100'}`}
+                />
+                {/* gradient border in this card's own colours; full strength on
+                    the active card, dialled back on the receding ones */}
+                <span
+                  aria-hidden="true"
+                  style={{ ['--g1']: d.grad[0], ['--g2']: d.grad[1] } as CSSProperties}
+                  className={`${ring} ${isActive ? 'opacity-100' : 'opacity-50'}`}
                 />
                 {/* vertical label on the receding cards */}
                 <span
@@ -136,6 +162,7 @@ export default function Destinations() {
               </button>
             )
           })}
+          </div>
         </div>
 
         <div className="mt-[clamp(2rem,4vw,3rem)] flex items-center justify-center">

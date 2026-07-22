@@ -67,7 +67,7 @@ export default function ExploreCta() {
                      transition-[background,transform] duration-250 ease-brand
                      hover:-translate-y-0.5 hover:bg-blue-deep"
         >
-          Book Ticket
+          Book Now
         </button>
       </div>
 

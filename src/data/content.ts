@@ -67,6 +67,8 @@ export interface Destination {
   state: string
   kind: string
   img: string
+  /** [light, deep] stops for the card's gradient border, lifted from the photo */
+  grad: [string, string]
 }
 
 export interface Train {
@@ -88,6 +90,7 @@ export interface Pilgrimage {
   name: string
   place: string
   img: string
+  accent: string // border colour lifted from the photo's own dominant tone
 }
 
 export interface Faq {
@@ -107,7 +110,7 @@ export const contact = {
   landline: '080-4464 7998',
   landlineAlt: '080-3573 4998',
   email: 'tourism@irctc.com',
-  address: ['Statesman House, Barakhamba Road', 'New Delhi 110001, India'],
+  address: ['4th Floor, Tower-D, World Trade Center, Nauroji Nagar, New Delhi, Delhi - 110029, India'],
 } as const
 
 export const nav: NavItem[] = [
@@ -358,13 +361,13 @@ export const experiences: Experience[] = [
 ]
 
 export const destinations: Destination[] = [
-  { id: 'kashmir', name: 'Srinagar', state: 'Jammu & Kashmir', kind: 'Dal Lake · Shikara', img: '/img/kashmir-hd.jpg' },
-  { id: 'kerala', name: 'Alleppey', state: 'Kerala', kind: 'Backwaters · Houseboat', img: '/img/kerala-backwaters.jpg' },
-  { id: 'ladakh', name: 'Leh', state: 'Ladakh', kind: 'High Desert · Monastery', img: '/img/ladakh.jpg' },
-  { id: 'jaipur', name: 'Jaipur', state: 'Rajasthan', kind: 'Pink City · Forts', img: '/img/jaipur-hd.jpg' },
-  { id: 'varanasi', name: 'Varanasi', state: 'Uttar Pradesh', kind: 'Ghats · Ganga', img: '/img/varanasi-hd.jpg' },
-  { id: 'andaman', name: 'Havelock', state: 'Andaman & Nicobar', kind: 'Coral · White Sand', img: '/img/havelock-hd.jpg' },
-  { id: 'rishikesh', name: 'Rishikesh', state: 'Uttarakhand', kind: 'Himalaya · Ganga', img: '/img/rishikesh-hd.jpg' },
+  { id: 'kashmir', name: 'Srinagar', state: 'Jammu & Kashmir', kind: 'Dal Lake · Shikara', img: '/img/kashmir-hd.jpg', grad: ['#8fb8ff', '#2f66c8'] }, // snow + Dal Lake blue
+  { id: 'kerala', name: 'Alleppey', state: 'Kerala', kind: 'Backwaters · Houseboat', img: '/img/kerala-backwaters.jpg', grad: ['#8fd15a', '#2c7a3a'] }, // palm-green backwaters
+  { id: 'ladakh', name: 'Leh', state: 'Ladakh', kind: 'High Desert · Monastery', img: '/img/ladakh.jpg', grad: ['#a9d2ff', '#3b82d6'] }, // deep alpine-sky blue
+  { id: 'jaipur', name: 'Jaipur', state: 'Rajasthan', kind: 'Pink City · Forts', img: '/img/jaipur-hd.jpg', grad: ['#f3b64e', '#bd5f1c'] }, // golden sandstone
+  { id: 'varanasi', name: 'Varanasi', state: 'Uttar Pradesh', kind: 'Ghats · Ganga', img: '/img/varanasi-hd.jpg', grad: ['#e8c07a', '#a9742f'] }, // hazy sepia ghats
+  { id: 'andaman', name: 'Havelock', state: 'Andaman & Nicobar', kind: 'Coral · White Sand', img: '/img/havelock-hd.jpg', grad: ['#63d8cf', '#178a9e'] }, // turquoise sea
+  { id: 'rishikesh', name: 'Rishikesh', state: 'Uttarakhand', kind: 'Himalaya · Ganga', img: '/img/rishikesh-hd.jpg', grad: ['#ef9a72', '#b25438'] }, // coral temple / terracotta
 ]
 
 /* The four luxury tourist trains, with their carriage liveries */
@@ -408,10 +411,10 @@ export const trains: Train[] = [
 ]
 
 export const pilgrimage: Pilgrimage[] = [
-  { id: 'kashi', name: 'Kashi Vishwanath', place: 'Varanasi', img: kashiImg },
-  { id: 'golden-temple', name: 'Harmandir Sahib', place: 'Amritsar', img: '/img/harmandir-sahib.webp' },
-  { id: 'meenakshi', name: 'Meenakshi Amman', place: 'Madurai', img: '/img/meenakshi-amman.webp' },
-  { id: 'tirupati', name: 'Sri Venkateswara', place: 'Tirupati', img: venkateshwaraImg },
+  { id: 'kashi', name: 'Kashi Vishwanath', place: 'Varanasi', img: kashiImg, accent: '#c9932e' }, // dusk-gold spire
+  { id: 'golden-temple', name: 'Harmandir Sahib', place: 'Amritsar', img: '/img/harmandir-sahib.webp', accent: '#d9a441' }, // golden temple + reflection
+  { id: 'meenakshi', name: 'Meenakshi Amman', place: 'Madurai', img: '/img/meenakshi-amman.webp', accent: '#d9527a' }, // painted pink/coral gopuram
+  { id: 'tirupati', name: 'Sri Venkateswara', place: 'Tirupati', img: venkateshwaraImg, accent: '#3f7a4f' }, // forested hillside behind the white gopuram
 ]
 
 export const ecosystem: string[] = [
@@ -450,11 +453,6 @@ export const faqs: Faq[] = [
     q: 'Can I book international tour packages too?',
     a: 'Yes. Switch to International in the search strip. Itineraries cover Europe, Nepal, Sri Lanka, Thailand, Singapore–Malaysia, Vietnam, Japan and the UAE, all through the same secure IRCTC checkout.',
     img: '/img/ladakh.jpg',
-  },
-  {
-    q: 'How does part payment work?',
-    a: 'On bookings above ₹50,000 you can pay a share now and the balance at least 30 days before departure. Air packages split 30/70 and all others 25/75. See the full terms from the Part Payment link in the header.',
-    img: '/img/train-interior.jpg',
   },
 ]
 

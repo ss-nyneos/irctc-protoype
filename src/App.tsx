@@ -2,7 +2,6 @@ import { useRef } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation, Outlet } from "react-router-dom";
 import { RouterProvider, useRouter } from "@/router/RouterContext";
 import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { DishaChatbot } from "@/components/chatbot/DishaChatbot";
 import { HomePage } from "@/pages/HomePage";
 import { WorldPage } from "@/pages/WorldPage";
@@ -258,7 +257,12 @@ function Shell() {
           <main className="flex-1">
             <CurrentPage />
           </main>
-          {!hideFooter && <Footer />}
+          {!hideFooter && (
+            <>
+              <FooterD1 />
+              <FooterStrip />
+            </>
+          )}
           <DishaChatbot />
           <ModalRoot />
         </div>
