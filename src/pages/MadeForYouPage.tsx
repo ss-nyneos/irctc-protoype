@@ -1,11 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, type CSSProperties } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
 import { useRouter } from "@/router/RouterContext";
 import { getSuggestions } from "@/data/mockProfile";
 import { DragGallery } from "@/components/common/DragGallery";
 import { TravelPhotoDiary } from "@/components/common/TravelPhotoDiary";
-import { EditorialPackageCard } from "@/components/package/EditorialPackageCard";
+import { EditorialPackageCard, HOVER_GROW } from "@/components/package/EditorialPackageCard";
 
 export function MadeForYouPage() {
   const { back } = useRouter();
@@ -36,10 +36,22 @@ export function MadeForYouPage() {
           Picked for your travel style
         </h2>
 
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Hover-to-grow row, as on the listing grid — the hovered card takes the
+            width the others give back, so the row's total width never moves. */}
+        <div
+          className="card-row mt-6 flex flex-col gap-5 sm:flex-row"
+          style={
+            {
+              "--cell-grow": 1 + HOVER_GROW,
+              "--cell-shrink": recommended.length > 1 ? 1 - HOVER_GROW / (recommended.length - 1) : 1,
+            } as CSSProperties
+          }
+        >
           {recommended.map((pkg) => (
-            <div key={pkg.id} className="reveal relative">
-              <EditorialPackageCard pkg={pkg} compact />
+            <div key={pkg.id} className="card-cell min-w-0">
+              <div className="reveal relative">
+                <EditorialPackageCard pkg={pkg} compact />
+              </div>
             </div>
           ))}
         </div>

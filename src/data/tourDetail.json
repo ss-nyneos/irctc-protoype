@@ -1,0 +1,3737 @@
+[
+  {
+    "code": "NDR01",
+    "name": "MATA VAISHNODEVI EX DELHI (WEEKDAY)",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Delhi",
+    "destination": "Jammu / Katra",
+    "departure": "Weekday",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 6990
+  },
+  {
+    "code": "EHH140",
+    "name": "MAGICAL ANDAMAN HOLIDAY GOLD",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Port Blair",
+    "destination": "Port Blair / Neil / Havelock",
+    "departure": "Everyday",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 26200
+  },
+  {
+    "code": "SMH109",
+    "name": "RAMESHWARAM ONE DAY TRIP",
+    "nights": 0,
+    "days": 1,
+    "durationLabel": "1 Day",
+    "origin": "Madurai",
+    "destination": "Rameshwaram",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Insurance"
+    ],
+    "price": 2350
+  },
+  {
+    "code": "SMH108",
+    "name": "CHENNAI - KANCHIPURAM - MAHABALIPURAM",
+    "nights": 0,
+    "days": 1,
+    "durationLabel": "1 Day",
+    "origin": "Chennai",
+    "destination": "Kanchipuram",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Insurance"
+    ],
+    "price": 1800
+  },
+  {
+    "code": "SHH008",
+    "name": "BIDAR HERITAGE WITH HYDERABAD & RAMOJI EXPERIENCE",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Hyderabad",
+    "destination": "Hyderabad / Bidar",
+    "departure": "All Days (Except Friday)",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 10260
+  },
+  {
+    "code": "SHH10",
+    "name": "HYDERABAD, NAGARJUNA SAGAR & RAMOJI FILM CITY TOUR",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Hyderabad",
+    "destination": "Hyderabad / Nagarjuna Sagar",
+    "departure": "All Days (Except Thursday & Friday)",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 13830
+  },
+  {
+    "code": "EHH139",
+    "name": "BEAUTIFUL GANGTOK",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Bagdogra / New Jalpaiguri",
+    "destination": "Gangtok",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 14650
+  },
+  {
+    "code": "SEH048",
+    "name": "KERALAM LUSH GREEN HILLS",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Kochi",
+    "destination": "Munnar / Thekkady / Kumarakom / Alleppey",
+    "departure": "Every day",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 14460
+  },
+  {
+    "code": "SMH110",
+    "name": "CULTURAL AND HERITAGE EXPLORATION",
+    "nights": 1,
+    "days": 2,
+    "durationLabel": "1 Night/2 Days",
+    "origin": "Chennai",
+    "destination": "Puducherry / Mahabalipuram",
+    "departure": "Mon to Wed",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Insurance"
+    ],
+    "price": 6350
+  },
+  {
+    "code": "SHH007",
+    "name": "UNESCO RAMAPPA & RAMOJI FILM CITY TOUR",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Hyderabad",
+    "destination": "Hyderabad / Warangal",
+    "departure": "All Days (Except Friday)",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 10760
+  },
+  {
+    "code": "WMR164",
+    "name": "PRAYAGRAJ & VARANASI EX CSMT",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Mumbai",
+    "destination": "Prayagraj / Varanasi",
+    "departure": "Every Monday",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Train",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 13099
+  },
+  {
+    "code": "SHH009",
+    "name": "YADADRI & CHILKUR BALAJI DARSHAN WITH RAMOJI",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Hyderabad / Yadadri",
+    "destination": "Secunderabad / Hyderabad",
+    "departure": "All Days (Except Friday)",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 12860
+  },
+  {
+    "code": "SEH046",
+    "name": "ESSENCE OF KERALAM",
+    "nights": 7,
+    "days": 8,
+    "durationLabel": "7 Nights/8 Days",
+    "origin": "Kochi",
+    "destination": "Munnar / Thekkady / Trivandrum / Kanyakumari / Kochi / Kumarakom",
+    "departure": "Every Day",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 31665
+  },
+  {
+    "code": "SEH047",
+    "name": "MESMERIZING KERALAM",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Kochi",
+    "destination": "Munnar / Thekkady / Trivandrum / Kochi / Alleppey / Kumarakom",
+    "departure": "Every Day",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 26185
+  },
+  {
+    "code": "SEH049",
+    "name": "KERALAM GODS OWN COUNTRY",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Kochi",
+    "destination": "Kochi / Munnar / Thekkady",
+    "departure": "Every Day",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 13350
+  },
+  {
+    "code": "SHH12",
+    "name": "ADVENTURE HYDERABAD: WONDERLA & RAMOJI TOUR",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Hyderabad",
+    "destination": "Hyderabad",
+    "departure": "All Days (Except Friday)",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 12050
+  },
+  {
+    "code": "SEH051",
+    "name": "EXPLORE OOTY",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Coimbatore",
+    "destination": "Coimbatore / Ooty",
+    "departure": "Every Day",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 13260
+  },
+  {
+    "code": "SHH11",
+    "name": "DIVINE BASARA & HYDERABAD CULTURAL EXPERIENCE WITH RAMOJI",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Hyderabad",
+    "destination": "Hyderabad / Basara",
+    "departure": "All Days (Except Friday)",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 10760
+  },
+  {
+    "code": "WMR164A",
+    "name": "PRAYAGRAJ & AYODHYA EX CSMT",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Dadar / Thane / Kalyan / Nasik Road / Mumbai",
+    "destination": "Prayagraj / Ayodhya",
+    "departure": "Every Monday",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Train",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 13399
+  },
+  {
+    "code": "SHH006",
+    "name": "HYDERABAD CULTURE & CINEMA EXPERIENCE",
+    "nights": 1,
+    "days": 2,
+    "durationLabel": "1 Night/2 Days",
+    "origin": "Hyderabad",
+    "destination": "Hyderabad",
+    "departure": "All Days (Except Friday)",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 5310
+  },
+  {
+    "code": "EHH121",
+    "name": "SIKKIM SILVER",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Bagdogra / New Jalpaiguri",
+    "destination": "Darjeeling / Gangtok / Kalimpong",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 18610
+  },
+  {
+    "code": "EHH96",
+    "name": "FAMILY ANDAMAN HOLIDAYS-GOLD",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Port Blair",
+    "destination": "Havelock / Neil / Port Blair",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 25000
+  },
+  {
+    "code": "SMH54",
+    "name": "KANYAKUMARI - RAMESWARAM - MADURAI HOLIDAY PACKAGE",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Kanyakumari",
+    "destination": "Kanyakumari / Madurai / Rameswaram",
+    "departure": "Every Monday, Tuesday & Wednesday",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 9230
+  },
+  {
+    "code": "SHH004",
+    "name": "SPIRITUAL TELANGANA WITH SRISAILAM",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Hyderabad",
+    "destination": "Hyderabad / Srisailam / Yadadri",
+    "departure": "All Days (Except Friday)",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 15430
+  },
+  {
+    "code": "SHH003",
+    "name": "SPIRITUAL TELANGANA",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Hyderabad",
+    "destination": "Hyderabad / Yadadri",
+    "departure": "All Days (Except Friday)",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 9150
+  },
+  {
+    "code": "SEH035",
+    "name": "AMAZING KERALAM",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Kochi",
+    "destination": "Kochi / Munnar / Alleppey / Kumarakom",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 17010
+  },
+  {
+    "code": "EHH125",
+    "name": "THRILLING ANDAMAN HOLIDAY GOLD",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Port Blair",
+    "destination": "Havelock / Neil / Port Blair",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 29700
+  },
+  {
+    "code": "EHH124",
+    "name": "SIKKIM PLATINUM",
+    "nights": 7,
+    "days": 8,
+    "durationLabel": "7 Nights/8 Days",
+    "origin": "Bagdogra / New Jalpaiguri",
+    "destination": "Darjeeling / Gangtok / Kalimpong / Pelling",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 25160
+  },
+  {
+    "code": "SEH020",
+    "name": "ENCHANTING MUNNAR",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Kochi",
+    "destination": "Cochin / Munnar",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 9300
+  },
+  {
+    "code": "SCBH12",
+    "name": "VIZAG BLISS",
+    "nights": 1,
+    "days": 2,
+    "durationLabel": "1 Night/2 Days",
+    "origin": "Visakhapatnam",
+    "destination": "Simhachalam",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 4200
+  },
+  {
+    "code": "EHH98",
+    "name": "ROMANTIC ANDAMAN HOLIDAYS-GOLD",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Port Blair",
+    "destination": "Havelock / Neil / Port Blair",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 34300
+  },
+  {
+    "code": "SMH18",
+    "name": "KODAIKANAL ECONOMY PACKAGE",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Madurai",
+    "destination": "Kodaikanal / Madurai",
+    "departure": "Every Monday, Tuesday & Wednesday",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Meal"
+    ],
+    "price": 8850
+  },
+  {
+    "code": "SCBH14",
+    "name": "VIZAG RETREAT",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Visakhapatnam",
+    "destination": "Arakku / Simhachalam / Visakhapatnam",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 8060
+  },
+  {
+    "code": "EHH102",
+    "name": "EVERGREEN DARJEELING HOLIDAY PACKAGE",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "New Jalpaiguri / Bagdogra",
+    "destination": "Darjeeling",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 9810
+  },
+  {
+    "code": "WMR171",
+    "name": "TIRUPATI BALAJI PACKAGE EX-MUMBAI",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Kalyan / Lokmanya Tilak (T) / Mumbai / Pune / Solapur / Thane",
+    "destination": "Mumbai / Tirupati",
+    "departure": "Every Day",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 8850
+  },
+  {
+    "code": "SEH028",
+    "name": "MISTY MUNNAR WITH HOUSEBOAT STAY",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Kochi",
+    "destination": "Kumarakom / Munnar / Kochi",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 14650
+  },
+  {
+    "code": "EHH97",
+    "name": "EXOTIC ANDAMAN HOLIDAYS - GOLD",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Port Blair",
+    "destination": "Havelock / Port Blair",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 22100
+  },
+  {
+    "code": "SCBR09",
+    "name": "VISAKHAPATNAM - ARAKU RAIL CUM ROAD PACKAGE",
+    "nights": 0,
+    "days": 1,
+    "durationLabel": "1 Day",
+    "origin": "Visakhapatnam",
+    "destination": "Arakku",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Train",
+      "Bus",
+      "Meal"
+    ],
+    "price": 2330
+  },
+  {
+    "code": "EHH123",
+    "name": "SIKKIM DIAMOND",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Bagdogra / New Jalpaiguri",
+    "destination": "Darjeeling / Gangtok / Pelling",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 20250
+  },
+  {
+    "code": "SEH039",
+    "name": "EXOTIC KERALAM WITH HOUSEBOAT STAY",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Trivandrum",
+    "destination": "Kochi / Kovalam / Kumarakom / Munnar / Thekkady",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 18925
+  },
+  {
+    "code": "SHH005",
+    "name": "TASTE OF TELANGANA",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Hyderabad",
+    "destination": "Hyderabad / Yadadri",
+    "departure": "All Days (Except Friday)",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 12720
+  },
+  {
+    "code": "SHH002",
+    "name": "HIGHLIGHTS OF HYDERABAD WITH SRISAILAM",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Hyderabad",
+    "destination": "Hyderabad / Srisailam",
+    "departure": "All Days (Except Friday)",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 15000
+  },
+  {
+    "code": "SHH001",
+    "name": "HIGHLIGHTS OF HYDERABAD",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Hyderabad",
+    "destination": "Hyderabad",
+    "departure": "All Days (Except Friday)",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 9020
+  },
+  {
+    "code": "NJH076",
+    "name": "JAIPUR-AJMER-PUSHKAR- JODHPUR - JAISALMER-BIKANER -JAIPUR",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Jaipur",
+    "destination": "Ajmer / Bikaner / Jaipur / Jaisalmer / Jodhpur / Pushkar",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Insurance"
+    ],
+    "price": 19400
+  },
+  {
+    "code": "NJH075",
+    "name": "JAIPUR-JODHPUR-JAISALMER-BIKANER-JAIPUR",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Jaipur",
+    "destination": "Bikaner / Jaipur / Jaisalmer / Jodhpur",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 17900
+  },
+  {
+    "code": "NJH091",
+    "name": "JODHPUR JAISALMER EX JODHPUR",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Jodhpur",
+    "destination": "Jaisalmer",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 12890
+  },
+  {
+    "code": "NJH084",
+    "name": "JAIPUR - MEHANDIPUR BALAJI - JAIPUR",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Jaipur",
+    "destination": "Jaipur / Mehandipur Balaji",
+    "departure": "Every Day",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 6660
+  },
+  {
+    "code": "NJH081",
+    "name": "UDAIPUR",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Udaipur",
+    "destination": "Udaipur",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 7960
+  },
+  {
+    "code": "NJH079",
+    "name": "JAIPUR-BIKANER-JAISALMER-JODHPUR-MOUNT ABU-UDAIPUR-PUSHKAR-JAIPUR",
+    "nights": 10,
+    "days": 11,
+    "durationLabel": "10 Nights/11 Days",
+    "origin": "Jaipur",
+    "destination": "Bikaner / Jaipur / Jaisalmer / Jodhpur / Mount Abu / Pushkar / Udaipur",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel"
+    ],
+    "price": 32530
+  },
+  {
+    "code": "NJH088",
+    "name": "JAIPUR - AJMER - PUSHKAR - JAIPUR",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Jaipur",
+    "destination": "Ajmer / Jaipur / Pushkar",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 8830
+  },
+  {
+    "code": "NJH080",
+    "name": "JODHPUR-JAISALMER-BIKANER-JODHPUR",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Jodhpur",
+    "destination": "Bikaner / Jaisalmer / Jodhpur",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 12700
+  },
+  {
+    "code": "NJH074",
+    "name": "JAIPUR - AJMER - PUSHKAR - UDAIPUR - JAIPUR",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Jaipur",
+    "destination": "Ajmer / Jaipur / Pushkar / Udaipur",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 11990
+  },
+  {
+    "code": "NJH085",
+    "name": "JAISALMER - THE DESERT ADVENTURE",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Jaisalmer",
+    "destination": "Jaisalmer",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 8960
+  },
+  {
+    "code": "NJH078",
+    "name": "JAIPUR-UDAIPUR-JODHPUR-AJMER-PUSHKAR-JAIPUR",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Jaipur",
+    "destination": "Ajmer / Jaipur / Jodhpur / Pushkar / Udaipur",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 15990
+  },
+  {
+    "code": "NJH089",
+    "name": "JAIPUR - RANTHAMBORE - JAIPUR",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Jaipur",
+    "destination": "Jaipur / Ranthambore",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 7690
+  },
+  {
+    "code": "NJH083",
+    "name": "JAIPUR-SALASAR BALAJI-JAIPUR",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Jaipur",
+    "destination": "Jaipur / Salasar Balaji",
+    "departure": "Every Day",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 6420
+  },
+  {
+    "code": "NJH082",
+    "name": "JAIPUR-KHATUSHYAMJI, JEEN MATAJI-JAIPUR",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Jaipur",
+    "destination": "Jaipur / Jeen Mataji / Khatushyamji",
+    "departure": "Every Day",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 6660
+  },
+  {
+    "code": "NJH090",
+    "name": "JAIPUR-BIKANER-JAISALMER-JODHPUR-UDAIPUR-PUSHKAR-JAIPUR",
+    "nights": 9,
+    "days": 10,
+    "durationLabel": "9 Nights/10 Days",
+    "origin": "Jaipur",
+    "destination": "Ajmer / Bikaner / Jaipur / Jaisalmer / Jodhpur / Udaipur",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 26420
+  },
+  {
+    "code": "NJH077",
+    "name": "JAIPUR - PUSHKAR - MOUNT ABU - UDAIPUR - JODHPUR - JAIPUR",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Jaipur",
+    "destination": "Jaipur / Jodhpur / Mount Abu / Pushkar / Udaipur",
+    "departure": "Daily",
+    "nextDeparture": "27-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 19780
+  },
+  {
+    "code": "SHR094",
+    "name": "ULTIMATE OOTY EX HYDERABAD",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Guntur Jn / Hyderabad / Nalgonda / Secunderabad / Tenali Jn",
+    "destination": "Coonoor / Ooty",
+    "departure": "Every Tuesday",
+    "nextDeparture": "28-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 13190
+  },
+  {
+    "code": "SCBSR19",
+    "name": "GOLDEN TRIANGLE OF ODISHA TOUR",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Durg / Bhilai Pwr Hs / Raipur / Mahasamund / Bagbahara / Titlagarh / Puri",
+    "destination": "Puri / Konark / Chilika / Bhubaneswar",
+    "departure": "Every Tuesday",
+    "nextDeparture": "28-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 18120
+  },
+  {
+    "code": "SCBSR20",
+    "name": "SHIV NARSIMHA YATRA",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Bilaspur / Raipur",
+    "destination": "Hyderabad / Srisailam",
+    "departure": "Every Tuesday",
+    "nextDeparture": "28-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 17520
+  },
+  {
+    "code": "SCBSR23",
+    "name": "SHRI RAMOJI YATRA",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Bilaspur / Raipur",
+    "destination": "Hyderabad / Srisailam / Ramoji Film City",
+    "departure": "Every Tuesday",
+    "nextDeparture": "28-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 17090
+  },
+  {
+    "code": "SHR085",
+    "name": "COASTAL KARNATAKA",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Hyderabad",
+    "destination": "Murudeshwara / Sringeri / Udupi",
+    "departure": "Every Tuesday",
+    "nextDeparture": "28-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 15970
+  },
+  {
+    "code": "NCA13",
+    "name": "INCREDIBLE LADAKH WITH IRCTC LTC APPROVED",
+    "nights": 7,
+    "days": 8,
+    "durationLabel": "7 Nights/8 Days",
+    "origin": "Chandigarh",
+    "destination": "Ladakh / Leh / Nubra / Pangong",
+    "departure": "28.07.2026",
+    "nextDeparture": "28-JUL-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 37070
+  },
+  {
+    "code": "SHR092",
+    "name": "KERALA HILLS & WATERS",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Guntur Jn / Hyderabad / Nalgonda / Secunderabad / Tenali Jn",
+    "destination": "Alleppey / Munnar",
+    "departure": "Every Tuesday",
+    "nextDeparture": "28-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 14040
+  },
+  {
+    "code": "SCBA56",
+    "name": "LEH - LADAKH WITH TURTUK EX BHUBANESWAR",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Bhubaneswar",
+    "destination": "Ladakh / Leh / Turtuk",
+    "departure": "26.06.2026 & 19.08.2026",
+    "nextDeparture": "28-JUL-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 52405
+  },
+  {
+    "code": "SHR009",
+    "name": "SAI SANNIDHI EX HYDERABAD",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Basar / Hyderabad / Kamareddi / Nizamabad / Secunderabad",
+    "destination": "Shirdi",
+    "departure": "Every Wednesday",
+    "nextDeparture": "29-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab"
+    ],
+    "price": 6690
+  },
+  {
+    "code": "SBA32A",
+    "name": "HOLY AYODHYA WITH GAYA KASHI & PRAYAGRAJ EX BENGALURU",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Bengaluru / Bangalore",
+    "destination": "Gaya / Varanasi / Ayodhya / Prayagraj",
+    "departure": "29.07.2026 & 12.08.2026",
+    "nextDeparture": "29-JUL-26",
+    "inclusions": [
+      "Air",
+      "Hotel",
+      "Insurance"
+    ],
+    "price": 31900
+  },
+  {
+    "code": "NDR011",
+    "name": "MAHAKALESHWAR-OMKARESHWAR JYOTIRLINGA DARSHAN",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Delhi",
+    "destination": "Indore / Mahakaleshwar / Omkareshwar",
+    "departure": "Every Wednesday",
+    "nextDeparture": "29-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 16015
+  },
+  {
+    "code": "SHR097A",
+    "name": "MAHAKAL MAHA DARSHAN",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Hyderabad",
+    "destination": "Bhopal",
+    "departure": "Every Wednesday",
+    "nextDeparture": "29-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 16960
+  },
+  {
+    "code": "EGH044",
+    "name": "DIVYA MAA KAMAKHYA DARSHAN TOUR EX-GUWAHATI",
+    "nights": 1,
+    "days": 2,
+    "durationLabel": "1 Night/2 Days",
+    "origin": "Guwahati",
+    "destination": "Kamakhya",
+    "departure": "Daily",
+    "nextDeparture": "29-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 2550
+  },
+  {
+    "code": "SHR066",
+    "name": "SUNDAR SAURASHTRA",
+    "nights": 7,
+    "days": 8,
+    "durationLabel": "7 Nights/8 Days",
+    "origin": "Hyderabad / Kalyan / Pune / Secunderabad / Solapur",
+    "destination": "Vadodara / Ahmedabad / Dwarka / Somnath",
+    "departure": "Every Wednesday",
+    "nextDeparture": "29-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 27050
+  },
+  {
+    "code": "WMR129",
+    "name": "TIRUPATI WITH KOLHAPUR MAHALAXMI",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Kalyan / Lokmanya Tilak (T) / Mumbai / Pune / Solapur / Thane",
+    "destination": "Tirupati / Kolhapur",
+    "departure": "Every Wednesday",
+    "nextDeparture": "29-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 11900
+  },
+  {
+    "code": "SHR087",
+    "name": "KOFFEE WITH KARNATAKA",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Hyderabad",
+    "destination": "Coorg / Mysore",
+    "departure": "Every Wednesday",
+    "nextDeparture": "29-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 15660
+  },
+  {
+    "code": "SMR007",
+    "name": "CHENNAI-OOTY-MUDUMALAI-CHENNAI",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Chennai / Erode / Katpadi",
+    "destination": "Coonoor / Ooty",
+    "departure": "Every Thursday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Bus",
+      "Hotel",
+      "Insurance"
+    ],
+    "price": 10200
+  },
+  {
+    "code": "SER053",
+    "name": "MADURAI RAMESWARAM RTP PACKAGE",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Guruvayur / Ernakulam / Thrissur",
+    "destination": "Rameshwaram / Madurai",
+    "departure": "Every Thursday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 11750
+  },
+  {
+    "code": "NLA166",
+    "name": "HAMPI–BADAMI HERITAGE ODYSSEY",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Lucknow",
+    "destination": "Hubballi / Hampi / Hospet",
+    "departure": "30.07.2026",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 40600
+  },
+  {
+    "code": "SHR027",
+    "name": "JEWEL OF EAST COAST",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Hyderabad",
+    "destination": "Visakhapatnam / Arakku",
+    "departure": "Every Thursday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 10890
+  },
+  {
+    "code": "SER052",
+    "name": "MANGALORE OOTY RTP PACKAGE",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Mangalore",
+    "destination": "Ooty",
+    "departure": "Every Thursday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 11660
+  },
+  {
+    "code": "SMR078",
+    "name": "DIVINE KANYAKUMARI-TRIVANDRUM",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Chennai / Tambaram / Tiruchirapalli / Villupuram / Dindigul / Madurai Jn / Nagercoil",
+    "destination": "Kanyakumari / Trivandrum",
+    "departure": "Every Thursday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Insurance"
+    ],
+    "price": 8860
+  },
+  {
+    "code": "NLR022",
+    "name": "MATA VAISHNO DEVI EX VARANASI",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Lucknow / Shahjahanpur / Sultanpur / Varanasi / Jaunpur Jn / Moradabad",
+    "destination": "Jammu / Katra",
+    "departure": "Every Thursday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 11540
+  },
+  {
+    "code": "NLR033",
+    "name": "NAINITAL-THE CITY OF LAKE",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Lucknow",
+    "destination": "Nainital",
+    "departure": "Every Thursday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 11780
+  },
+  {
+    "code": "SBR034",
+    "name": "BANGALORE - KANYAKUMARI - RAMESWARAM - MADURAI",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Bangalore / Nagercoil",
+    "destination": "Kanniyakumari / Rameshwaram / Madurai",
+    "departure": "Every Thursday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Insurance"
+    ],
+    "price": 12240
+  },
+  {
+    "code": "WMR127B",
+    "name": "SPLENDID HYDERABAD WITH RAMOJI EX MUMBAI",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Chhatrapati Shivaji Maharaj Terminus / Mumbai / Pune / Solapur",
+    "destination": "Hyderabad / Mumbai",
+    "departure": "Every Thursday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 13975
+  },
+  {
+    "code": "SMR072",
+    "name": "CHENNAI KODAIKANAL PACKAGE",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Chengallpattu Jn / Chennai Egmore / Tambaram",
+    "destination": "Kodaikanal",
+    "departure": "Every Thursday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Meal"
+    ],
+    "price": 10400
+  },
+  {
+    "code": "SMR012",
+    "name": "CHENNAI MYSORE COORG PACKAGE",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Chennai",
+    "destination": "Mysore / Coorg",
+    "departure": "Every Thursday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Insurance"
+    ],
+    "price": 9650
+  },
+  {
+    "code": "WMR174",
+    "name": "SHIRDI WITH SHANI SHINGNAPUR EX MUMBAI",
+    "nights": 1,
+    "days": 2,
+    "durationLabel": "1 Night/2 Days",
+    "origin": "Mumbai",
+    "destination": "Shani Shingnapur / Shirdi",
+    "departure": "Thursday, Friday & Saturday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 7000
+  },
+  {
+    "code": "WMR173",
+    "name": "SHIRDI WITH CHHATRAPATI SAMBHAJINAGAR EX MUMBAI",
+    "nights": 1,
+    "days": 2,
+    "durationLabel": "1 Night/2 Days",
+    "origin": "Mumbai",
+    "destination": "Shirdi / Chhatrapati Sambhajinagar",
+    "departure": "Thursday, Friday & Saturday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 7499
+  },
+  {
+    "code": "WMR127",
+    "name": "HYDERABAD WITH SRISAILAM EX MUMBAI",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Chhatrapati Shivaji Maharaj Terminus / Mumbai / Pune / Solapur",
+    "destination": "Hyderabad / Srisailam",
+    "departure": "Every Thursday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 15575
+  },
+  {
+    "code": "SMR023",
+    "name": "KANYAKUMARI-TIRUCHENDUR-RAMESWARAM-MADURAI",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Chengallpattu Jn / Chennai / Madurai / Tambaram",
+    "destination": "Kanyakumari / Tiruchendur / Rameshwaram / Madurai",
+    "departure": "Every Thursday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Insurance"
+    ],
+    "price": 12000
+  },
+  {
+    "code": "WMR144",
+    "name": "OMKARESHWAR MAHAKALESHWAR EX PUNE",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Kalyan / Mumbai / Pune / Surat / Vasai Road",
+    "destination": "Indore / Maheshwar / Omkareshwar / Ujjain",
+    "departure": "Every Thursday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 19400
+  },
+  {
+    "code": "SMR008",
+    "name": "CHENNAI-NMR-OOTY-MUDUMALAI-CHENNAI",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Chennai / Coimbatore / Erode / Katpadi / Salem",
+    "destination": "Coonoor / Mettupalayam / Ooty",
+    "departure": "Every Thursday",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Insurance"
+    ],
+    "price": 11900
+  },
+  {
+    "code": "SMA38",
+    "name": "DIVINE TRAILS & SACRED TALES",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Chennai",
+    "destination": "Ayodhya / Bodhgaya / Varanasi",
+    "departure": "11.08.2026 & 09.09.2026",
+    "nextDeparture": "30-JUL-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 40100
+  },
+  {
+    "code": "NDA07",
+    "name": "SOUTH INDIA DIVINE TOUR PACKAGE EX DELHI",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Delhi",
+    "destination": "Madurai / Rameshwaram / Kanyakumari / Thiruvananthapuram",
+    "departure": "31.07.2026",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 50760
+  },
+  {
+    "code": "WMR163",
+    "name": "PRAYAGRAJ, AYODHYA & VARANASI EX MUMBAI",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Mumbai",
+    "destination": "Prayagraj / Ayodhya / Varanasi",
+    "departure": "Every Friday",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 25555
+  },
+  {
+    "code": "NZBG80",
+    "name": "DAKSHIN BHARAT YATRA",
+    "nights": 11,
+    "days": 12,
+    "durationLabel": "11 Nights/12 Days",
+    "origin": "Gorakhpur / Mankapur / Ayodhya Cantt / Sultanpur / Pratapgarh / Prayagraj Sangam / Raebarelli / Lucknow / Kanpur Central / Orai / Virangana Lakshmibai / Lalitpur",
+    "destination": "Tirumala / Rameshwaram / Madurai / Kanyakumari / Srisailam",
+    "departure": "31.07.2026",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 23560
+  },
+  {
+    "code": "SHR050",
+    "name": "HOLY UTTAR PRADESH",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Hyderabad",
+    "destination": "Varanasi / Ayodhya / Prayagraj",
+    "departure": "Every Sunday",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 18170
+  },
+  {
+    "code": "WAR022",
+    "name": "BLISSFUL MYSORE COORG & OOTY TOUR",
+    "nights": 8,
+    "days": 9,
+    "durationLabel": "8 Nights/9 Days",
+    "origin": "Rajkot / Surendranagar / Viramgam Jn / Ahmedabad / Nadiad Jn / Anand / Vadodara / Bharuch / Surat / Valsad / Vapi / Vasai Road / Kalyan / Pune",
+    "destination": "Mysore / Ooty / Coorg / Coimbatore",
+    "departure": "Every Friday",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 32300
+  },
+  {
+    "code": "NDR012",
+    "name": "RAM LALLA DARSHAN AYODHYA",
+    "nights": 1,
+    "days": 2,
+    "durationLabel": "1 Night/2 Days",
+    "origin": "Delhi",
+    "destination": "Ayodhya",
+    "departure": "Every Friday and Saturday",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 9700
+  },
+  {
+    "code": "SHR105",
+    "name": "MARVELS OF MAHARASHTRA",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Hyderabad",
+    "destination": "Ajanta / Aurangabad / Ellora",
+    "departure": "Every Friday",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 9200
+  },
+  {
+    "code": "WMA88",
+    "name": "SHRAVAN SPECIAL RAMESHWARAM MADURAI PACKAGE",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Mumbai",
+    "destination": "Madurai / Rameshwaram",
+    "departure": "31.07.2026,14.08.2026 & 21.08.2026",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 26000
+  },
+  {
+    "code": "SHR106",
+    "name": "COASTAL CHARM OF TAMIL NADU",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Hyderabad",
+    "destination": "Puducherry / Mahabalipuram / Chidambaram",
+    "departure": "Every Friday",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 11260
+  },
+  {
+    "code": "SCBSR18",
+    "name": "THE JEWEL OF THE EAST COAST",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Korba / Bilaspur / Raipur / Bagbahara / Titlagarh / Mahasamund",
+    "destination": "Visakhapatnam / Arakku",
+    "departure": "Every Friday",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 12950
+  },
+  {
+    "code": "SER055",
+    "name": "NORTH KERALA TEMPLE RAIL TOUR PACKAGE BY VANDE BHARAT",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Trivandrum",
+    "destination": "Kasargod / Kannur",
+    "departure": "Every Friday",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 11900
+  },
+  {
+    "code": "EHH138",
+    "name": "SUNDARBANS DISCOVER OF MANGROVES",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Kolkata",
+    "destination": "Sunderban",
+    "departure": "Daily",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 11650
+  },
+  {
+    "code": "SMR107",
+    "name": "WEEKEND DIVINE RETREAT",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Chennai",
+    "destination": "Madurai",
+    "departure": "Every Friday",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Insurance"
+    ],
+    "price": 13250
+  },
+  {
+    "code": "WMR173A",
+    "name": "SHIRDI SHANI SHINGNAPUR WITH NASHIK",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Mumbai",
+    "destination": "Shirdi / Shani Shingnapur / Nasik",
+    "departure": "Every Friday",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 12250
+  },
+  {
+    "code": "WMR161",
+    "name": "DWARKA SOMNATH EX MUMBAI",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Andheri / Borivali / Mumbai / Mumbai Central Main / Palghar",
+    "destination": "Dwarka / Somnath",
+    "departure": "Every Friday",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 20100
+  },
+  {
+    "code": "SHR008",
+    "name": "SAI SHIVAM",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Basar / Hyderabad / Kamareddi / Nizamabad / Secunderabad",
+    "destination": "Nashik / Shirdi",
+    "departure": "Every Friday",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 7550
+  },
+  {
+    "code": "WMR159",
+    "name": "STATUE OF UNITY",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Mumbai",
+    "destination": "Kevadia",
+    "departure": "Every Friday",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 10000
+  },
+  {
+    "code": "NLR030",
+    "name": "BLISSFUL HIMANCHAL WITH CHANDIGARH-SHIMLA-KUFRI EX LUCKNOW",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Lucknow",
+    "destination": "Chandigarh / Kufri / Shimla",
+    "departure": "Every Friday",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 15880
+  },
+  {
+    "code": "SHR029",
+    "name": "GODAVARI TEMPLE TOUR",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Hyderabad",
+    "destination": "Annavaram / Konaseema",
+    "departure": "Every Friday",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 5670
+  },
+  {
+    "code": "NDR01W",
+    "name": "MATA VAISHNODEVI EX DELHI (WEEK-END)",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Delhi",
+    "destination": "Jammu / Katra",
+    "departure": "Every Friday & Saturday",
+    "nextDeparture": "31-JUL-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 8420
+  },
+  {
+    "code": "EGH05",
+    "name": "ESSENCE OF MEGHALAYA GROUP PACKAGE EX-GUWAHATI",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Guwahati",
+    "destination": "Cherrapunjee / Dawki / Mawlynnong / Shillong",
+    "departure": "Every Saturday",
+    "nextDeparture": "01-AUG-26",
+    "inclusions": [
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 32970
+  },
+  {
+    "code": "WBH42",
+    "name": "MALWA RETREAT",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Bhopal",
+    "destination": "Bhopal / Maheshwar / Indore",
+    "departure": "Daily",
+    "nextDeparture": "01-AUG-26",
+    "inclusions": [
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 27800
+  },
+  {
+    "code": "NLA164",
+    "name": "KHUSHBOO GUJARAT KI",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Lucknow",
+    "destination": "Rajkot / Somnath / Porbandar / Diu / Dwarka",
+    "departure": "01.08.2026",
+    "nextDeparture": "01-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 47200
+  },
+  {
+    "code": "EHH133",
+    "name": "SCENIC ANDAMAN WITH DINNER CRUISE",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Port Blair",
+    "destination": "Port Blair / Havelock / Neil",
+    "departure": "Everyday",
+    "nextDeparture": "01-AUG-26",
+    "inclusions": [
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 31400
+  },
+  {
+    "code": "SCZBG64",
+    "name": "AYODHYA - KASHI PUNYA KSHETRA YATRA",
+    "nights": 9,
+    "days": 10,
+    "durationLabel": "9 Nights/10 Days",
+    "origin": "Secunderabad / Hyderabad / Charlapalli / Kazipet / Warangal / Khammam / Vijayawada / Gudivada Jn / Bhimavaram / Tanuku / Nidadavolu Jn / Rajahmundry / Samalkot Jn / Tuni / Duvvada / Pendurti / Vizianagram Jn",
+    "destination": "Puri / Konark / Gaya / Varanasi / Ayodhya / Prayagraj",
+    "departure": "04.08.2026",
+    "nextDeparture": "04-AUG-26",
+    "inclusions": [
+      "Train",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 16500
+  },
+  {
+    "code": "NLA171",
+    "name": "MAGICAL LADAKH WITH IRCTC",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Lucknow",
+    "destination": "Leh / Sham Vally / Nubra / Turtuk / Pangong",
+    "departure": "06.08.2026",
+    "nextDeparture": "06-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 54300
+  },
+  {
+    "code": "SCBR15",
+    "name": "DISCOVER THE SPIRITUALITY OF WESTERN ODISHA EX BHUBANESWAR",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Bhubaneswar",
+    "destination": "Bhubaneswar / Sambalpur",
+    "departure": "Every Thursday",
+    "nextDeparture": "06-AUG-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 10255
+  },
+  {
+    "code": "EGH038",
+    "name": "ARUNACHAL - GATEWAY TO SERENITY EX GUWAHATI",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Guwahati",
+    "destination": "Bomdila / Dirang / Tawang / Tezpur",
+    "departure": "Every Friday",
+    "nextDeparture": "07-AUG-26",
+    "inclusions": [
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 33780
+  },
+  {
+    "code": "SHR107",
+    "name": "ARUNACHALA MOKSHA YATRA",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Hyderabad",
+    "destination": "Kanchipuram / Arunachalam",
+    "departure": "Every Friday",
+    "nextDeparture": "07-AUG-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 14740
+  },
+  {
+    "code": "SCBA46",
+    "name": "SHRINES OF GUJARAT WITH STATUE OF UNITY EX BHUBANESWAR",
+    "nights": 9,
+    "days": 10,
+    "durationLabel": "9 Nights/10 Days",
+    "origin": "Bhubaneswar",
+    "destination": "Ahmedabad / Dwarka / Somnath / Diu",
+    "departure": "08.08.2026",
+    "nextDeparture": "08-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 53115
+  },
+  {
+    "code": "NLA168",
+    "name": "DILKASH HYDERABAD WITH MALLIKARJUNA JYOTIRLINGA",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Lucknow",
+    "destination": "Statue Of Equality / Hyderabad / Mallikarjun / Ramoji Film City",
+    "departure": "08.08.2026",
+    "nextDeparture": "08-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 40900
+  },
+  {
+    "code": "NJA24",
+    "name": "SOUTH INDIA WITH KERALA",
+    "nights": 7,
+    "days": 8,
+    "durationLabel": "7 Nights/8 Days",
+    "origin": "Jaipur",
+    "destination": "Madurai / Rameshwaram / Kanyakumari / Trivandrum / Kumarakom / Munnar / Kochi",
+    "departure": "10.08.2026 & 16.09.2026",
+    "nextDeparture": "10-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 44140
+  },
+  {
+    "code": "SMA39",
+    "name": "GAYA-VARANASI-PRAYAGRAJ-AYODHYA EX TRICHY",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Trichy",
+    "destination": "Allahabad / Ayodhya / Bodhgaya / Gaya / Varanasi",
+    "departure": "11.08.2026",
+    "nextDeparture": "11-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 36120
+  },
+  {
+    "code": "WZBG72",
+    "name": "SAPT JYOTIRLINGA SHRAVAN SPECIAL YATRA",
+    "nights": 13,
+    "days": 14,
+    "durationLabel": "13 Nights/14 Days",
+    "origin": "Solapur / Kurduvadi / Daund / Pune / Lonavala / Karjat / Kalyan / Vasai Road / Vapi / Surat",
+    "destination": "Dwarka / Veraval / Ujjain / Nasik / Chhatrapati Sambhajinagar / Markapur",
+    "departure": "11.08.2026",
+    "nextDeparture": "11-AUG-26",
+    "inclusions": [
+      "Train",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 24050
+  },
+  {
+    "code": "NLA167",
+    "name": "DIVYA DAKSHIN DARSHAN",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Lucknow",
+    "destination": "Madurai / Rameshwaram / Kanyakumari / Trivandrum",
+    "departure": "11.08.2026",
+    "nextDeparture": "11-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 61600
+  },
+  {
+    "code": "SMR050",
+    "name": "CHENNAI-SHIRDI PACKAGE",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Chennai / Jolarpettai / Katpadi",
+    "destination": "Shirdi",
+    "departure": "Every Wednesday",
+    "nextDeparture": "12-AUG-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Insurance"
+    ],
+    "price": 3600
+  },
+  {
+    "code": "WBO052",
+    "name": "AMAZING THAILAND",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Bhopal / Indore",
+    "destination": "Bangkok / Pattaya",
+    "departure": "12.08.2026",
+    "nextDeparture": "12-AUG-26",
+    "inclusions": [
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 34500
+  },
+  {
+    "code": "WMR191",
+    "name": "AMRITSAR DHARAMSHALA DALHOUSIE EX MUMBAI",
+    "nights": 8,
+    "days": 9,
+    "durationLabel": "8 Nights/9 Days",
+    "origin": "Mumbai",
+    "destination": "Amritsar / Dharamshala / Dalhousie",
+    "departure": "Every Wednesday",
+    "nextDeparture": "12-AUG-26",
+    "inclusions": [
+      "Train",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 33475
+  },
+  {
+    "code": "WMR162",
+    "name": "SPIRITUAL AMRITSAR EX MUMBAI",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Mumbai",
+    "destination": "Amritsar",
+    "departure": "Every Wednesday",
+    "nextDeparture": "12-AUG-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 15400
+  },
+  {
+    "code": "SEH030",
+    "name": "RAVISHING KERALAM WITH HOUSEBOAT STAY",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Kochi",
+    "destination": "Kochi / Kumarakom / Munnar / Kochi / Kumarakom / Munnar / Thekkady",
+    "departure": "Daily",
+    "nextDeparture": "12-AUG-26",
+    "inclusions": [
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 21300
+  },
+  {
+    "code": "WMA62",
+    "name": "HYDERABAD WITH SRISAILAM",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Mumbai",
+    "destination": "Hyderabad",
+    "departure": "13.08.2026 & 03.09.2026",
+    "nextDeparture": "13-AUG-26",
+    "inclusions": [
+      "Air",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 27500
+  },
+  {
+    "code": "NDO37",
+    "name": "SERENE SRI LANKA",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Delhi",
+    "destination": "Negombo / Kandy / Nuwara Eliya / Colombo",
+    "departure": "13.08.2026",
+    "nextDeparture": "13-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 71600
+  },
+  {
+    "code": "SHA41",
+    "name": "LEH WITH TURTUK EX HYDERABAD",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Hyderabad",
+    "destination": "Ladakh / Leh",
+    "departure": "13.08.2026",
+    "nextDeparture": "13-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 48730
+  },
+  {
+    "code": "WMR176",
+    "name": "SCENIC HIMACHAL EX-MUMBAI",
+    "nights": 7,
+    "days": 8,
+    "durationLabel": "7 Nights/8 Days",
+    "origin": "Mumbai",
+    "destination": "Chandigarh / Manali / Shimla",
+    "departure": "Every Thursday",
+    "nextDeparture": "13-AUG-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 28900
+  },
+  {
+    "code": "SBO1",
+    "name": "BEST OF SINGAPORE MALAYSIA EX BENGALURU",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Bangalore / Bengaluru",
+    "destination": "Malaysia / Singapore",
+    "departure": "14.08.2026",
+    "nextDeparture": "14-AUG-26",
+    "inclusions": [
+      "Air",
+      "Hotel",
+      "Meal",
+      "Insurance",
+      "Darshan"
+    ],
+    "price": 147500
+  },
+  {
+    "code": "SCBA69",
+    "name": "SHRINES OF GUJARAT WITH STATUE OF UNITY EX VISAKHAPATNAM",
+    "nights": 9,
+    "days": 10,
+    "durationLabel": "9 Nights/10 Days",
+    "origin": "Visakhapatnam",
+    "destination": "Ahmedabad / Dwarka / Bet Dwarka / Nageshwar / Somnath / Gir / Statue Of Unity",
+    "departure": "14.08.2026",
+    "nextDeparture": "14-AUG-26",
+    "inclusions": [
+      "Air",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 54840
+  },
+  {
+    "code": "WMO048A",
+    "name": "MESMERIZING SINGAPORE & MALAYSIA",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Mumbai",
+    "destination": "Singapore / Kuala Lumpur",
+    "departure": "14.08.2026",
+    "nextDeparture": "14-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 132600
+  },
+  {
+    "code": "NLO49",
+    "name": "BALI SPECIAL EX LUCKNOW",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Lucknow",
+    "destination": "Bali",
+    "departure": "14.08.2026",
+    "nextDeparture": "14-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 102100
+  },
+  {
+    "code": "SHO1",
+    "name": "MAGICAL MALAYSIA WITH SINGAPORE SENSATION",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Hyderabad",
+    "destination": "Kuala Lumpur / Singapore",
+    "departure": "14.08.2026",
+    "nextDeparture": "14-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 148500
+  },
+  {
+    "code": "SMO29",
+    "name": "SINGAPORE AND MALAYSIA WITH UNIVERSAL STUDIOS EX CHENNAI INDEPENDENCE DAY SPECIAL",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Chennai",
+    "destination": "Singapore / Malaysia",
+    "departure": "14.08.2026",
+    "nextDeparture": "14-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 155450
+  },
+  {
+    "code": "WMR175",
+    "name": "MATA VAISHNODEVI EX-MUMBAI",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Mumbai",
+    "destination": "Katra",
+    "departure": "Every Sunday",
+    "nextDeparture": "16-AUG-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 12500
+  },
+  {
+    "code": "NZBG81",
+    "name": "04 JYOTIRLINGA YATRA WITH STATUE OF UNITY",
+    "nights": 9,
+    "days": 10,
+    "durationLabel": "9 Nights/10 Days",
+    "origin": "Gorakhpur / Manakpur / Ayodhya Cantt / Sultanpur / Pratapgarh / Prayagraj / Raebarelli / Kanpur / Orai / Lucknow / Virangana Lakshmibai / Lalitpur",
+    "destination": "Mahakaleshwar / Omkareshwar / Dwarka / Nageshwar / Somnath / Statue Of Unity",
+    "departure": "17.08.2026",
+    "nextDeparture": "17-AUG-26",
+    "inclusions": [
+      "Train",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 18380
+  },
+  {
+    "code": "SMA28",
+    "name": "BEST OF LADAKH EX. CHENNAI (LTC SPECIAL)",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Chennai",
+    "destination": "Ladakh / Leh / Pangong",
+    "departure": "18.08.2026",
+    "nextDeparture": "18-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 44100
+  },
+  {
+    "code": "NLA172",
+    "name": "MAJESTIC SOUTHERN- MYSORE TO COIMBATORE",
+    "nights": 7,
+    "days": 8,
+    "durationLabel": "7 Nights/8 Days",
+    "origin": "Lucknow",
+    "destination": "Mysore / Coorg / Ooty / Coimbatore",
+    "departure": "19.08.2026",
+    "nextDeparture": "19-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 49800
+  },
+  {
+    "code": "SMA18",
+    "name": "CHARDHAM YATRA BY FLIGHT EX CHENNAI",
+    "nights": 12,
+    "days": 13,
+    "durationLabel": "12 Nights/13 Days",
+    "origin": "Chennai",
+    "destination": "Badrinath / Gangotri / Kedarnath / Yamunotri",
+    "departure": "20.08.2026",
+    "nextDeparture": "20-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 62200
+  },
+  {
+    "code": "WBA103",
+    "name": "HYDERABAD MALLIKARJUN WITH RAMOJI EX INDORE",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Indore",
+    "destination": "Hyderabad / Mallikarjuna Swamy / Ramoji Film City",
+    "departure": "20.08.2026",
+    "nextDeparture": "20-AUG-26",
+    "inclusions": [
+      "Air",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 27500
+  },
+  {
+    "code": "NLR032",
+    "name": "BLESSING OF SAI DHAM EX LUCKNOW",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Lucknow / Kanpur Central",
+    "destination": "Shirdi",
+    "departure": "Every Thursday",
+    "nextDeparture": "20-AUG-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 14910
+  },
+  {
+    "code": "NCA01",
+    "name": "JEWELS OF KASHMIR EX CHANDIGARH",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Chandigarh",
+    "destination": "Gulmarg / Pahalgam / Sonmarg / Srinagar",
+    "departure": "21.08.2026",
+    "nextDeparture": "21-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 22960
+  },
+  {
+    "code": "SEA13",
+    "name": "KASHMIR-HEAVEN ON EARTH EX KOCHI",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Kochi",
+    "destination": "Gulmarg / Pahalgam / Sonmarg / Srinagar",
+    "departure": "22.08.2026",
+    "nextDeparture": "22-AUG-26",
+    "inclusions": [
+      "Air",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 53850
+  },
+  {
+    "code": "SZBG42",
+    "name": "ONAM VACATION SPECIAL TOUR GOLDEN TRIANGLE WITH AHMEDABAD",
+    "nights": 11,
+    "days": 12,
+    "durationLabel": "11 Nights/12 Days",
+    "origin": "Trivandrum / Kollam / Chengannur / Kottayam / Ernakulam / Thrissur / Shoranur Jn / Kozhikode / Kannur / Mangalore",
+    "destination": "Ahmedabad / Ekta Nagar / Delhi / Agra / Jaipur",
+    "departure": "22.08.2026",
+    "nextDeparture": "22-AUG-26",
+    "inclusions": [
+      "Train",
+      "Bus",
+      "Meal",
+      "Guide"
+    ],
+    "price": 21190
+  },
+  {
+    "code": "SCBO12",
+    "name": "NOSTALGIC NEPAL EX BHUBANESWAR",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Bhubaneswar",
+    "destination": "Lumbini / Pokhara / Kathmandu / Janakpur",
+    "departure": "27.06.2026",
+    "nextDeparture": "24-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 60710
+  },
+  {
+    "code": "SHA03",
+    "name": "GOA DELIGHT",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Hyderabad",
+    "destination": "Goa",
+    "departure": "26.08.2026 & 09.09.2026",
+    "nextDeparture": "26-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 21000
+  },
+  {
+    "code": "SBA38",
+    "name": "JANNAT E KASHMIR WITH VAISHNO DEVI EX BENGALURU",
+    "nights": 7,
+    "days": 8,
+    "durationLabel": "7 Nights/8 Days",
+    "origin": "Bangalore / Bengaluru",
+    "destination": "Vaishno Devi / Srinagar / Sonmarg / Gulmarg / Pahalgam",
+    "departure": "26.08.2026",
+    "nextDeparture": "26-AUG-26",
+    "inclusions": [
+      "Air",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 41500
+  },
+  {
+    "code": "SMO69",
+    "name": "THE DIVINE NEPAL WITH MUKTINATH",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Chennai",
+    "destination": "Nepal / Kathmandu / Pokhara / Mukthinath",
+    "departure": "26.08.2026",
+    "nextDeparture": "26-AUG-26",
+    "inclusions": [
+      "Air",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 75500
+  },
+  {
+    "code": "SHA15",
+    "name": "MADHYA PRADESH MAHA DARSHAN",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Hyderabad",
+    "destination": "Maheshwar / Omkareshwar / Ujjain / Indore",
+    "departure": "26.08.2026",
+    "nextDeparture": "26-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 30350
+  },
+  {
+    "code": "NDA12",
+    "name": "DISCOVER LADAKH WITH IRCTC- LTC APPROVED",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Delhi",
+    "destination": "Leh / Sham Vally / Nubra / Turtuk / Pangong",
+    "departure": "Weekly",
+    "nextDeparture": "26-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 40500
+  },
+  {
+    "code": "SEA02",
+    "name": "AMAZING HYDERABAD EX-KOCHI",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Kochi",
+    "destination": "Hyderabad",
+    "departure": "27.08.2026",
+    "nextDeparture": "27-AUG-26",
+    "inclusions": [
+      "Air",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 26250
+  },
+  {
+    "code": "SEA67",
+    "name": "HOLY KASHI, GAYA AND PRAYAGRAJ WITH AYODHYA DARSHAN FLIGHT PACKAGE EX TRIVANDRUM",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Trivandrum",
+    "destination": "Varanasi / Gaya / Prayagraj / Ayodhya",
+    "departure": "27.08.2026",
+    "nextDeparture": "27-AUG-26",
+    "inclusions": [
+      "Air",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 34150
+  },
+  {
+    "code": "SEA49",
+    "name": "HOLY KASHI WITH AYODHYA DARSHAN EX MANGALORE",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Mangalore",
+    "destination": "Varanasi / Prayagraj / Ayodhya",
+    "departure": "27.08.2026",
+    "nextDeparture": "27-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 31000
+  },
+  {
+    "code": "SEA48",
+    "name": "HOLY KASHI, GAYA AND PRAYAGRAJ WITH AYODHYA DARSHAN EX KOCHI",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Kochi",
+    "destination": "Ayodhya / Kashi / Prayagraj / Bodhgaya",
+    "departure": "28.08.2026",
+    "nextDeparture": "27-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 37200
+  },
+  {
+    "code": "SEA43",
+    "name": "AMAZING HYDERABAD EX KOZHIKODE",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Kozhikode",
+    "destination": "Hyderabad",
+    "departure": "27.08.2026",
+    "nextDeparture": "27-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 26250
+  },
+  {
+    "code": "EGA008",
+    "name": "KASHMIR-THE PARADISE ON EARTH EX GAU",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Guwahati",
+    "destination": "Srinagar / Sonmarg / Gulmarg / Pahalgam",
+    "departure": "28-Aug-2026",
+    "nextDeparture": "28-AUG-26",
+    "inclusions": [],
+    "price": 34000
+  },
+  {
+    "code": "SCBA58",
+    "name": "RAM LALA DARSHAN WITH KASHI SANGAM PACKAGE EX BHUBANESWAR",
+    "nights": 4,
+    "days": 5,
+    "durationLabel": "4 Nights/5 Days",
+    "origin": "Bhubaneswar",
+    "destination": "Varanasi / Ayodhya / Lucknow",
+    "departure": "28.08.2026",
+    "nextDeparture": "28-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 35310
+  },
+  {
+    "code": "EGA020",
+    "name": "KASHMIR – THE PARADISE ON EARTH EX IXB",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Bagdogra",
+    "destination": "Pahalgam / Sonmarg / Srinagar / Gulmarg",
+    "departure": "28-08-2026",
+    "nextDeparture": "28-AUG-26",
+    "inclusions": [
+      "Air",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 33800
+  },
+  {
+    "code": "WMA65",
+    "name": "SHRAVAN SPECIAL DWARKA SOMNATH JYOTIRLINGA AIR PACKAGE",
+    "nights": 3,
+    "days": 4,
+    "durationLabel": "3 Nights/4 Days",
+    "origin": "Mumbai",
+    "destination": "Dwarka / Somnath",
+    "departure": "28.08.2026 & 03.09.2026",
+    "nextDeparture": "28-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 27400
+  },
+  {
+    "code": "SEA14",
+    "name": "KASHMIR-HEAVEN ON EARTH EX COIMBATORE",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Coimbatore",
+    "destination": "Gulmarg / Pahalgam / Sonmarg / Srinagar",
+    "departure": "29.08.2026",
+    "nextDeparture": "29-AUG-26",
+    "inclusions": [
+      "Air",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 51500
+  },
+  {
+    "code": "EHR150",
+    "name": "03 JYOTIRLINGA WITH SHIRDI RAIL TOUR",
+    "nights": 8,
+    "days": 9,
+    "durationLabel": "8 Nights/9 Days",
+    "origin": "Kolkata",
+    "destination": "Shirdi / Shani Shingnapur / Grishneshwar / Trimbakeshwar / Bhimashankar / Ellora",
+    "departure": "Every Saturday",
+    "nextDeparture": "29-AUG-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 30050
+  },
+  {
+    "code": "WZBG74",
+    "name": "PANCH MAHATIRTH DARSHAN YATRA - JAGANNATH PURI, KAMAKHYA, GAYA, KASHI & AYODHYA",
+    "nights": 12,
+    "days": 13,
+    "durationLabel": "12 Nights/13 Days",
+    "origin": "Rajkot / Surendranagar / Viramgam Jn / Sabarmati Jn / Nadiad Jn / Anand / Chhayapuri / Godhra Jn / Dahod / Ratlam / Ujjain / Sant Hirdaram Nagar",
+    "destination": "Puri / Guwahati / Gaya / Varanasi / Ayodhya",
+    "departure": "29.08.2026",
+    "nextDeparture": "29-AUG-26",
+    "inclusions": [
+      "Train",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 24200
+  },
+  {
+    "code": "EHR148",
+    "name": "MP WILDLIFE & HERITAGE RAIL TOUR",
+    "nights": 8,
+    "days": 9,
+    "durationLabel": "8 Nights/9 Days",
+    "origin": "Kolkata",
+    "destination": "Bandhavgarh / Khajuraho / Jabalpur",
+    "departure": "Every Saturday",
+    "nextDeparture": "29-AUG-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 33700
+  },
+  {
+    "code": "EHR151",
+    "name": "HIMALAYAN TRANQUILLITY RAIL TOUR",
+    "nights": 7,
+    "days": 8,
+    "durationLabel": "7 Nights/8 Days",
+    "origin": "Kolkata",
+    "destination": "Kalimpong / Gangtok / Darjeeling",
+    "departure": "Every Sunday",
+    "nextDeparture": "30-AUG-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 31450
+  },
+  {
+    "code": "EHR152",
+    "name": "MAJESTIC NORTHEAST WITH KAMAKHYA DARSHAN RAIL TOUR",
+    "nights": 7,
+    "days": 8,
+    "durationLabel": "7 Nights/8 Days",
+    "origin": "Kolkata",
+    "destination": "Kamakhya / Kaziranga / Shillong / Cherrapunjee",
+    "departure": "Every Sunday",
+    "nextDeparture": "30-AUG-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 30750
+  },
+  {
+    "code": "NLA163",
+    "name": "HEART OF MP- BHOPAL-PACHMARHI ESCAPE",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Lucknow",
+    "destination": "Bhopal / Panchmarhi",
+    "departure": "31.08.2026",
+    "nextDeparture": "31-AUG-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 38500
+  },
+  {
+    "code": "WMA51",
+    "name": "ENTHRALLING ODISHA- JANMASHTAMI SPECIAL",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Mumbai",
+    "destination": "Bhubaneswar / Puri / Konark / Chilika",
+    "departure": "01.09.2026 & 17.10.2026",
+    "nextDeparture": "01-SEP-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 41700
+  },
+  {
+    "code": "EZBG32",
+    "name": "JYOTIRLINGA DARSHAN WITH SHIRDI SAI DARSHAN & ELLORA CAVES",
+    "nights": 8,
+    "days": 9,
+    "durationLabel": "8 Nights/9 Days",
+    "origin": "Raxaul",
+    "destination": "Ujjain / Mahakaleshwar / Omkareshwar / Shirdi / Nasik / Triambakeshwar / Chhatrapati Sambhajinagar / Grishneshwar / Ellora",
+    "departure": "01.09.2026",
+    "nextDeparture": "01-SEP-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 18160
+  },
+  {
+    "code": "WMA92",
+    "name": "SHRAVAN SPECIAL KASHI VISHWANATH AND BAIDYANATH JYOTIRLINGA EX MUMBAI",
+    "nights": 2,
+    "days": 3,
+    "durationLabel": "2 Nights/3 Days",
+    "origin": "Mumbai",
+    "destination": "Varanasi / Deoghar",
+    "departure": "01.09.2026 & 08.09.2026",
+    "nextDeparture": "01-SEP-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 29500
+  },
+  {
+    "code": "WMO018A",
+    "name": "MYSTICAL NEPAL PACKAGE EX- MUMBAI",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Mumbai",
+    "destination": "Nepal",
+    "departure": "01.09.2026",
+    "nextDeparture": "01-SEP-26",
+    "inclusions": [
+      "Air",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 55200
+  },
+  {
+    "code": "NDH24",
+    "name": "CHARDHAM YATRA EX DELHI",
+    "nights": 11,
+    "days": 12,
+    "durationLabel": "11 Nights/12 Days",
+    "origin": "Delhi",
+    "destination": "Badrinath / Gangotri / Kedarnath / Yamunotri",
+    "departure": "24.06.2026, 01.09.2026, 12.09.2026, 24.09.2026, 01.10.2026 & 15.10.2026",
+    "nextDeparture": "01-SEP-26",
+    "inclusions": [
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 57000
+  },
+  {
+    "code": "NDH25",
+    "name": "CHARDHAM YATRA EX HARIDWAR",
+    "nights": 10,
+    "days": 11,
+    "durationLabel": "10 Nights/11 Days",
+    "origin": "Haridwar",
+    "destination": "Badrinath / Gangotri / Kedarnath / Yamunotri",
+    "departure": "25.06.2026, 02.09.2026, 13.09.2026, 25.09.2026, 02.10.2026 & 16.10.2026",
+    "nextDeparture": "02-SEP-26",
+    "inclusions": [
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 53000
+  },
+  {
+    "code": "SHA57",
+    "name": "GANGA GAYA SANGAM YATRA",
+    "nights": 7,
+    "days": 8,
+    "durationLabel": "7 Nights/8 Days",
+    "origin": "Hyderabad",
+    "destination": "Gaya / Varanasi / Ayodhya",
+    "departure": "22.07.2026 & 02.09.2026",
+    "nextDeparture": "02-SEP-26",
+    "inclusions": [
+      "Air",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 38850
+  },
+  {
+    "code": "SEA68",
+    "name": "CHARDHAM YATRA EX KOZHIKODE",
+    "nights": 12,
+    "days": 13,
+    "durationLabel": "12 Nights/13 Days",
+    "origin": "Kozhikode",
+    "destination": "Kedarnath / Badrinath / Yamunotri / Gangotri",
+    "departure": "02.09.2026",
+    "nextDeparture": "02-SEP-26",
+    "inclusions": [
+      "Air",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 67300
+  },
+  {
+    "code": "SEA47",
+    "name": "CHAR DHAM YATRA EX COIMBATORE",
+    "nights": 12,
+    "days": 13,
+    "durationLabel": "12 Nights/13 Days",
+    "origin": "Coimbatore",
+    "destination": "Badrinath / Gangotri / Kedarnath / Yamunotri",
+    "departure": "02.09.2026",
+    "nextDeparture": "02-SEP-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 67650
+  },
+  {
+    "code": "CDBG41",
+    "name": "DEV DARSHAN YATRA- 3 DHAM & 11 JYOTIRLINGA",
+    "nights": 17,
+    "days": 18,
+    "durationLabel": "17 Nights/18 Days",
+    "origin": "Delhi Safdarjung / Ghaziabad / Aligarh / Tundla / Etawah / Kanpur / Prayagraj",
+    "destination": "Varanasi / Jasidih / Puri / Markapur / Rameshwaram / Pune / Aurangabad / Nasik / Dwarka / Somnath / Ujjain / Khandwa",
+    "departure": "03.09.2026",
+    "nextDeparture": "03-SEP-26",
+    "inclusions": [
+      "Train",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 146545
+  },
+  {
+    "code": "NDH26",
+    "name": "DO DHAM YATRA EX DELHI",
+    "nights": 7,
+    "days": 8,
+    "durationLabel": "7 Nights/8 Days",
+    "origin": "Delhi",
+    "destination": "Badrinath / Kedarnath",
+    "departure": "22.06.2026, 04.09.2026, 15.09.2026, 22.09.2026, 08.10.2026 & 22.10.2026",
+    "nextDeparture": "04-SEP-26",
+    "inclusions": [
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 35000
+  },
+  {
+    "code": "EPA018",
+    "name": "JANNAT-E-KASHMIR",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Patna",
+    "destination": "Srinagar / Sonmarg / Pahalgam / Gulmarg",
+    "departure": "04.09.2026",
+    "nextDeparture": "04-SEP-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 33360
+  },
+  {
+    "code": "SCBA27A",
+    "name": "LTC APPROVED KASHMIR PACKAGE EX - BHUBANESWAR",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Bhubaneswar",
+    "destination": "Gulmarg / Pahalgam / Sonmarg / Srinagar",
+    "departure": "04.09.2026",
+    "nextDeparture": "04-SEP-26",
+    "inclusions": [
+      "Air",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 42745
+  },
+  {
+    "code": "NDH27",
+    "name": "DO DHAM YATRA EX HARIDWAR",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Haridwar",
+    "destination": "Badrinath / Kedarnath",
+    "departure": "22.06.2026, 04.09.2026, 15.09.2026, 22.09.2026, 08.10.2026 & 22.10.2026025, 23.05.2025, 05.06.2025, 16.06.2025, 23.06.2025, 09.09.2025 & 23.09.2025",
+    "nextDeparture": "05-SEP-26",
+    "inclusions": [
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 31000
+  },
+  {
+    "code": "EHR149",
+    "name": "UJJAIN-OMKARESWAR SPIRITUAL RAIL TOUR",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Kolkata",
+    "destination": "Mahabaleshwar / Omkareshwar / Indore",
+    "departure": "Every Saturday",
+    "nextDeparture": "05-SEP-26",
+    "inclusions": [
+      "Train",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 17000
+  },
+  {
+    "code": "EGA027",
+    "name": "ENCHANTING LADAKH – GROUP TOUR BY AIR EX-GUWAHATI",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Guwahati",
+    "destination": "Leh / Nubra / Pangong / Sham Vally / Turtuk",
+    "departure": "05-09-2026",
+    "nextDeparture": "05-SEP-26",
+    "inclusions": [
+      "Air",
+      "Cab",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 50630
+  },
+  {
+    "code": "NDO36",
+    "name": "JAPAN EX DELHI",
+    "nights": 8,
+    "days": 9,
+    "durationLabel": "8 Nights/9 Days",
+    "origin": "Delhi",
+    "destination": "Japan",
+    "departure": "06.09.2026",
+    "nextDeparture": "06-SEP-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 345999
+  },
+  {
+    "code": "SZBG43",
+    "name": "KASHI TIRTHA YATRA",
+    "nights": 8,
+    "days": 9,
+    "durationLabel": "8 Nights/9 Days",
+    "origin": "Tirunelveli / Virudhunagar / Madurai / Dindigul / Tiruchirapalli / Villupuram / Chengalpattu / Tambaram / Chennai Egmore / Gudur Jn / Vijayawada",
+    "destination": "Gaya / Varanasi / Ayodhya / Prayagraj",
+    "departure": "09.09.2026",
+    "nextDeparture": "09-SEP-26",
+    "inclusions": [
+      "Train",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 16900
+  },
+  {
+    "code": "SCBA64",
+    "name": "CHARISMATIC KERALA EX BHUBANESWAR",
+    "nights": 6,
+    "days": 7,
+    "durationLabel": "6 Nights/7 Days",
+    "origin": "Bhubaneswar",
+    "destination": "Kochi / Munnar / Thekkady / Kumarakom / Trivandrum",
+    "departure": "09.09.2026",
+    "nextDeparture": "09-SEP-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Insurance"
+    ],
+    "price": 46210
+  },
+  {
+    "code": "SMA48",
+    "name": "KASHMIR HEAVEN ON EARTH EX TRICHY",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Trichy",
+    "destination": "Gulmarg / Pahalgam / Sonmarg / Srinagar",
+    "departure": "11.09.2026",
+    "nextDeparture": "11-SEP-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 36050
+  },
+  {
+    "code": "WBO047A",
+    "name": "COMBODIA & VIETNAM ESCAPE – ANGKOR WAT TO HA LONG BAY",
+    "nights": 10,
+    "days": 11,
+    "durationLabel": "10 Nights/11 Days",
+    "origin": "Indore",
+    "destination": "Cambodia / Vietnam",
+    "departure": "11.09.2026",
+    "nextDeparture": "11-SEP-26",
+    "inclusions": [
+      "Air",
+      "Cab",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 179400
+  },
+  {
+    "code": "SMA24",
+    "name": "KASHMIR HEAVEN ON EARTH EX CHENNAI",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Chennai",
+    "destination": "Gulmarg / Pahalgam / Sonmarg",
+    "departure": "11.09.2026",
+    "nextDeparture": "11-SEP-26",
+    "inclusions": [
+      "Air",
+      "Cab",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 36500
+  },
+  {
+    "code": "SCBA49",
+    "name": "AMAZING ANDAMAN EX – BHUBANESWAR",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Bhubaneswar",
+    "destination": "Havelock / Port Blair",
+    "departure": "12.09.2026",
+    "nextDeparture": "12-SEP-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Guide",
+      "Insurance"
+    ],
+    "price": 48635
+  },
+  {
+    "code": "SEA70",
+    "name": "ASTONISHING ARUNACHAL EX COIMBATORE",
+    "nights": 8,
+    "days": 9,
+    "durationLabel": "8 Nights/9 Days",
+    "origin": "Coimbatore",
+    "destination": "Guwahati / Tezpur / Dirang / Tawang",
+    "departure": "12.09.2026",
+    "nextDeparture": "12-SEP-26",
+    "inclusions": [
+      "Air",
+      "Hotel",
+      "Meal"
+    ],
+    "price": 61150
+  },
+  {
+    "code": "SEA55",
+    "name": "KASHMIR HEAVEN ON EARTH EX MANGALORE",
+    "nights": 5,
+    "days": 6,
+    "durationLabel": "5 Nights/6 Days",
+    "origin": "Mangalore",
+    "destination": "Srinagar / Pahalgam / Sonmarg / Gulmarg",
+    "departure": "12.09.2026",
+    "nextDeparture": "12-SEP-26",
+    "inclusions": [
+      "Air",
+      "Hotel",
+      "Meal",
+      "Guide"
+    ],
+    "price": 51200
+  },
+  {
+    "code": "NLA169",
+    "name": "AWESOME ARUNACHAL -TAWANG SPECIAL",
+    "nights": 8,
+    "days": 9,
+    "durationLabel": "8 Nights/9 Days",
+    "origin": "Lucknow",
+    "destination": "Tezpur / Dirang / Tawang / Kaziranga / Guwahati",
+    "departure": "12.09.2026",
+    "nextDeparture": "12-SEP-26",
+    "inclusions": [
+      "Air",
+      "Bus",
+      "Hotel",
+      "Meal",
+      "Insurance"
+    ],
+    "price": 66200
+  }
+]

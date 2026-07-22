@@ -1,24 +1,31 @@
-import type { TourPackage } from "@/types";
+import type { IrctcListing, TourPackage, TravelMode } from "@/types";
+import type { InclusionKey } from "@/utils/inclusions";
+import listings from "@/data/tourDetail.json";
 import charDhamImg from "@/assets/cta/char-dham.png";
 import dakshinBharatImg from "@/assets/cta/south-yatra.webp";
 import kashmirImg from "@/assets/cta/kashmir.jpg";
 import maharajasExpressImg from "@/assets/trains/maharajas-express.jpg";
 import goldenChariotImg from "@/assets/trains/golden-chariot.jpg";
 
-export const packages: TourPackage[] = [
+/**
+ * Everything about a package that IRCTC does *not* publish on its listing row —
+ * the photograph, the writing, the day-by-day plan. The name, code, duration,
+ * origin, destination, departure and fare are deliberately absent: those come
+ * from `tourDetail.json`, which is scraped from the live site and is the only
+ * source of truth for them. `code` is the join key between the two.
+ */
+type EditorialPackage = Omit<
+  TourPackage,
+  "name" | "region" | "from" | "nights" | "days" | "durationLabel" | "departure" | "nextDeparture" | "inclusionKeys" | "price" | "travelMode"
+>;
+
+const editorial: EditorialPackage[] = [
   {
     id: "chardham",
-    name: "Char Dham Yatra by Heli & Road",
+    code: "SEA47",
     category: "Pilgrimage",
-    region: "Uttarakhand",
-    from: "Dehradun",
-    nights: 9,
-    days: 10,
-    price: 28900,
-    oldPrice: 34500,
     rating: 4.8,
     reviews: 2140,
-    travelMode: "Rail + Road",
     climate: "Cool",
     budgetBand: "Comfort",
     experience: ["spiritual", "family", "nature"],
@@ -59,17 +66,10 @@ export const packages: TourPackage[] = [
   },
   {
     id: "keralabackwaters",
-    name: "Amazing Kerala — Kochi · Munnar · Alleppey",
+    code: "SEH035",
     category: "Hills",
-    region: "Kerala",
-    from: "Kochi",
-    nights: 4,
-    days: 5,
-    price: 21740,
-    oldPrice: 25900,
     rating: 4.7,
     reviews: 1685,
-    travelMode: "Rail + Road",
     climate: "Tropical",
     budgetBand: "Comfort",
     experience: ["honeymoon", "nature", "family"],
@@ -105,17 +105,10 @@ export const packages: TourPackage[] = [
   },
   {
     id: "dakshinbharat",
-    name: "Dakshin Bharat Yatra with Balaji Darshan",
+    code: "NZBG80",
     category: "Bharat Gaurav",
-    region: "South India",
-    from: "Delhi",
-    nights: 10,
-    days: 11,
-    price: 18420,
-    oldPrice: 21500,
     rating: 4.6,
     reviews: 3320,
-    travelMode: "Train",
     climate: "Warm",
     budgetBand: "Value",
     experience: ["spiritual", "culture", "family"],
@@ -153,17 +146,10 @@ export const packages: TourPackage[] = [
   },
   {
     id: "northeastsafari",
-    name: "North East Safari — Shillong · Kaziranga",
+    code: "EHR152",
     category: "Wildlife",
-    region: "North East",
-    from: "Kolkata",
-    nights: 7,
-    days: 8,
-    price: 26850,
-    oldPrice: 31200,
     rating: 4.7,
     reviews: 940,
-    travelMode: "Air",
     climate: "Moderate",
     budgetBand: "Premium",
     experience: ["adventure", "nature", "family"],
@@ -193,18 +179,11 @@ export const packages: TourPackage[] = [
     flightAddon: 5600,
   },
   {
-    id: "maharajas",
-    name: "Maharajas' Express — Heritage of India",
-    category: "Luxury Train",
-    region: "Rajasthan Circuit",
-    from: "Mumbai",
-    nights: 6,
-    days: 7,
-    price: 512000,
-    oldPrice: 560000,
+    id: "mysorecoorg",
+    code: "WAR022",
+    category: "Hills",
     rating: 4.9,
     reviews: 410,
-    travelMode: "Luxury Train",
     climate: "Warm",
     budgetBand: "Luxury",
     experience: ["luxury", "culture", "honeymoon"],
@@ -241,17 +220,11 @@ export const packages: TourPackage[] = [
     flightAddon: 0,
   },
   {
-    id: "goldenchariot",
-    name: "Golden Chariot — Pride of the South",
-    category: "Luxury Train",
-    region: "Karnataka & Goa",
-    from: "Bengaluru",
-    nights: 5,
-    days: 6,
-    price: 342000,
+    id: "odishagolden",
+    code: "SCBSR19",
+    category: "Heritage",
     rating: 4.8,
     reviews: 260,
-    travelMode: "Luxury Train",
     climate: "Warm",
     budgetBand: "Luxury",
     experience: ["luxury", "culture", "nature"],
@@ -276,17 +249,10 @@ export const packages: TourPackage[] = [
   },
   {
     id: "andaman",
-    name: "Andaman Escape — Port Blair · Havelock",
+    code: "EHH140",
     category: "Beach",
-    region: "Andaman Islands",
-    from: "Chennai",
-    nights: 5,
-    days: 6,
-    price: 38900,
-    oldPrice: 45000,
     rating: 4.6,
     reviews: 1220,
-    travelMode: "Air",
     climate: "Tropical",
     budgetBand: "Premium",
     experience: ["honeymoon", "adventure", "nature"],
@@ -311,17 +277,10 @@ export const packages: TourPackage[] = [
   },
   {
     id: "kashmir",
-    name: "Kashmir Paradise — Srinagar · Gulmarg · Pahalgam",
+    code: "NCA01",
     category: "Hills",
-    region: "Jammu & Kashmir",
-    from: "Delhi",
-    nights: 5,
-    days: 6,
-    price: 32400,
-    oldPrice: 38000,
     rating: 4.8,
     reviews: 2760,
-    travelMode: "Air",
     climate: "Cool",
     budgetBand: "Comfort",
     experience: ["honeymoon", "family", "nature"],
@@ -346,17 +305,10 @@ export const packages: TourPackage[] = [
   },
   {
     id: "srilanka",
-    name: "Sri Lanka Highlights — Colombo · Kandy · Bentota",
+    code: "NDO37",
     category: "International",
-    region: "Sri Lanka",
-    from: "Chennai",
-    nights: 5,
-    days: 6,
-    price: 58900,
-    oldPrice: 66000,
     rating: 4.6,
     reviews: 780,
-    travelMode: "Air",
     climate: "Tropical",
     budgetBand: "Premium",
     experience: ["honeymoon", "culture", "nature"],
@@ -381,17 +333,10 @@ export const packages: TourPackage[] = [
   },
   {
     id: "jyotirlinga",
-    name: "Jyotirlinga Yatra with Shirdi & Statue of Unity",
+    code: "NZBG81",
     category: "Pilgrimage",
-    region: "Maharashtra & Gujarat",
-    from: "Mumbai",
-    nights: 6,
-    days: 7,
-    price: 15900,
-    oldPrice: 18500,
     rating: 4.7,
     reviews: 2010,
-    travelMode: "Rail + Road",
     climate: "Warm",
     budgetBand: "Value",
     experience: ["spiritual", "family"],
@@ -415,17 +360,10 @@ export const packages: TourPackage[] = [
   },
   {
     id: "rajasthan",
-    name: "Royal Rajasthan — Jaipur · Jodhpur · Udaipur",
+    code: "NJH078",
     category: "Heritage",
-    region: "Rajasthan",
-    from: "Delhi",
-    nights: 6,
-    days: 7,
-    price: 34700,
-    oldPrice: 39900,
     rating: 4.7,
     reviews: 1890,
-    travelMode: "Rail + Road",
     climate: "Warm",
     budgetBand: "Premium",
     experience: ["culture", "family", "honeymoon"],
@@ -448,18 +386,11 @@ export const packages: TourPackage[] = [
     flightAddon: 4100,
   },
   {
-    id: "dubai",
-    name: "Dazzling Dubai — City · Desert · Abu Dhabi",
+    id: "singaporemalaysia",
+    code: "WMO048A",
     category: "International",
-    region: "United Arab Emirates",
-    from: "Delhi",
-    nights: 4,
-    days: 5,
-    price: 74900,
-    oldPrice: 84000,
     rating: 4.5,
     reviews: 1450,
-    travelMode: "Air",
     climate: "Warm",
     budgetBand: "Premium",
     experience: ["family", "luxury", "adventure"],
@@ -482,6 +413,45 @@ export const packages: TourPackage[] = [
     flightAddon: 0,
   },
 ];
+
+const byCode = new Map((listings as IrctcListing[]).map((l) => [l.code, l]));
+
+/**
+ * What IRCTC's own listing implies about how you travel: a flight leg makes it
+ * an air package, a train leg with road transfers is the classic "Rail + Road",
+ * and a package with neither is joined at the destination city by road.
+ */
+function travelModeOf(inclusions: InclusionKey[]): TravelMode {
+  if (inclusions.includes("Air")) return "Air";
+  if (inclusions.includes("Train")) {
+    return inclusions.includes("Cab") || inclusions.includes("Bus") ? "Rail + Road" : "Train";
+  }
+  return "Road";
+}
+
+/**
+ * The catalogue: editorial content with the live IRCTC row laid over the top.
+ * Merged rather than hand-transcribed so a fare or a code on a card can only
+ * ever be what the site printed.
+ */
+export const packages: TourPackage[] = editorial.map((e) => {
+  const listing = byCode.get(e.code);
+  if (!listing) throw new Error(`No IRCTC listing for package code "${e.code}" (${e.id})`);
+  return {
+    ...e,
+    name: listing.name,
+    from: listing.origin,
+    region: listing.destination,
+    nights: listing.nights,
+    days: listing.days,
+    durationLabel: listing.durationLabel,
+    departure: listing.departure,
+    nextDeparture: listing.nextDeparture,
+    inclusionKeys: listing.inclusions,
+    price: listing.price,
+    travelMode: travelModeOf(listing.inclusions),
+  };
+});
 
 export const getPackageById = (id: string): TourPackage | undefined =>
   packages.find((p) => p.id === id);
