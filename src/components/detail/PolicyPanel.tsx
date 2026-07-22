@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, Download, FileText } from "lucide-react";
+import { ChevronDown, FileText } from "lucide-react";
 import type { PolicySection } from "@/types";
 import { CancellationLadder } from "@/components/detail/CancellationLadder";
 import { ConductTopics } from "@/components/detail/ConductTopics";
@@ -18,20 +18,20 @@ interface PolicyPanelProps {
  * a bullet list, a refund ladder or a set of conduct topics — and the panel
  * picks the renderer to match.
  */
-export function PolicyPanel({ sections, code, total, travellers, departure }: PolicyPanelProps) {
+export function PolicyPanel({ sections, total, travellers, departure }: PolicyPanelProps) {
   const [open, setOpen] = useState<number | null>(1);
 
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="font-display text-[22px] font-bold text-ink">Terms &amp; policy</h2>
-        <a
+        {/* <a
           href="#"
           onClick={(e) => e.preventDefault()}
           className="inline-flex min-h-[44px] items-center gap-2 rounded-full border px-4 text-[13px] font-semibold text-navy transition hover:bg-secondary"
         >
           <Download size={14} /> Package PDF ({code})
-        </a>
+        </a> */}
       </div>
 
       <div className="mt-3 border-t">

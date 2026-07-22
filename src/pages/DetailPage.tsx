@@ -1,18 +1,24 @@
 import { useMemo, useState, type CSSProperties } from "react";
 import {
   ArrowLeft,
-  Bus,
+  BedDouble,
+  BusFront,
+  CalendarDays,
   Check,
+  CircleAlert,
+  FileText,
   Heart,
   Hotel,
   MapPin,
+  MapPinned,
   Moon,
   Phone,
+  ReceiptText,
   Share2,
-  ShieldCheck,
   Star,
+  Train,
   TrainFront,
-  UserCheck,
+  UsersRound,
   Utensils,
   X,
 } from "lucide-react";
@@ -24,11 +30,11 @@ import { formatINR } from "@/utils/format";
 import { ImageWithFallback } from "@/components/common/ImageWithFallback";
 import { AccentBar } from "@/components/common/AccentBar";
 import { SectionNav, type Section } from "@/components/detail/SectionNav";
+import { CollapsibleSection } from "@/components/detail/CollapsibleSection";
 import { BoardingPanel } from "@/components/detail/BoardingPanel";
 import { ItineraryMap } from "@/components/detail/ItineraryMap";
 import { BookingRail } from "@/components/detail/BookingRail";
 import { PolicyPanel } from "@/components/detail/PolicyPanel";
-import { CallbackForm } from "@/components/detail/CallbackForm";
 import { FaqAccordion } from "@/components/detail/FaqAccordion";
 import { OfficeDirectory } from "@/components/detail/OfficeDirectory";
 import { buildFaqs } from "@/data/packageFaqs";
@@ -37,12 +43,58 @@ import { EditorialPackageCard, HOVER_GROW } from "@/components/package/Editorial
 
 /** IRCTC prints these as a bare icon row with no detail behind them. */
 const inclusionIcons = [
-  { key: "Train", icon: TrainFront, note: "Reserved berths, both ways" },
-  { key: "Bus", icon: Bus, note: "AC coach for sightseeing" },
-  { key: "Hotel", icon: Hotel, note: "Twin sharing, en-suite" },
-  { key: "Meal", icon: Utensils, note: "Breakfast & dinner daily" },
-  { key: "Guide", icon: UserCheck, note: "Tour escort throughout" },
-  { key: "Insurance", icon: ShieldCheck, note: "Cover for every traveller" },
+  { key: "Rail", icon: Train, note: "AC 3 / AC 2 tier return journey" },
+  { key: "Transfers", icon: BusFront, note: "Shared AC vehicle as per group size" },
+  { key: "Hotel", icon: Hotel, note: "AC accommodation in Katra" },
+  { key: "Meals", icon: Utensils, note: "On-board and fixed-menu off-board catering" },
+  { key: "Sightseeing", icon: MapPinned, note: "Kand Kandoli and Raghunath ji temple" },
+  { key: "GST", icon: ReceiptText, note: "Goods and services tax included" },
+];
+
+const detailedInclusions = [
+  "Comfortable rail journey in AC 3 / AC 2 tier with return ticket.",
+  "02 nights in train and 01 night accommodation at hotel in Katra.",
+  "Arrival and departure transfer in AC vehicle on sharing basis as per group size.",
+  "On-board catering by Railways and off-board catering on fixed menu basis as per the itinerary.",
+  "AC accommodation in hotel.",
+  "En-route sightseeing of Kand Kandoli Temple and Raghunath ji temple.",
+  "GST.",
+];
+
+const detailedExclusions = [
+  "Onboard extra meals during train journeys.",
+  "Portage at hotels or railway station, tips, insurance, mineral water, telephone charges, laundry and personal expenses.",
+  "Still / video camera fees, monument entrance fees and activities suggested in the itinerary, payable directly.",
+  "Aarti passes.",
+  "Line darshan passes.",
+  "Additional meals, en-route meals, sightseeing and activities other than those mentioned in the itinerary.",
+  "Any service not specified in inclusions.",
+];
+
+const tourFacts = [
+  { label: "Frequency of tour", value: "Daily Ex NDLS", icon: CalendarDays },
+  { label: "Group capacity & class", value: "18 berths in 3AC and 12 berths in 2AC", icon: UsersRound },
+  { label: "Hotel stay included", value: "Taj Vivanta or similar, 7 km from Katra", icon: BedDouble },
+];
+
+const importantInclusionNotes = [
+  "There are limited double-bedded rooms at the hotel. Most guests are accommodated in twin-bed rooms. Double-bed requests may be made at reception during check-in and are subject to availability.",
+  "Passengers will be dropped approximately 02 km away from Raghunathji Temple because buses are not permitted up to the temple premises. Guests need to arrange local transport on their own.",
+  "Lower berths are at the discretion of Indian Railways.",
+  "Sightseeing not mentioned in the itinerary shall be chargeable on direct payment basis.",
+  "It is mandatory to carry the identity proof provided at booking. Other passengers must carry a valid photo ID during the package tour. Valid IDs include Aadhaar, Voter ID, Passport, Driving Licence and Student ID cards with photo issued by School / College. As per Jammu & Kashmir state directions, ID proof without residence address will not be entertained.",
+  "Hotel check-in and check-out time is 12 noon. Early check-in or late check-out may be provided when possible, but under unavoidable circumstances hotel policy will apply.",
+  "IRCTC reserves the right to cancel the tour programme at any point due to exigencies beyond its control. In such an event, IRCTC's maximum liability is limited to the package amount paid by the guest.",
+  "The package price is as on the date of booking. If input costs such as railway fare or other expenses beyond IRCTC's control increase, guests are liable to pay the additional amount before commencement of journey.",
+  "IRCTC reserves the right to change the itinerary due to unavoidable circumstances including bad weather, train delays or cancellations. IRCTC will make best alternative arrangements, and guests are liable to pay any additional costs for such arrangements. IRCTC is not responsible for loss of sightseeing or visits to planned sites.",
+  "IRCTC does not guarantee darshan at shrines, places of interest or monuments mentioned in the itinerary.",
+  "Seat allocation in trains is random, and IRCTC will not entertain preferential seat allocation requests.",
+  "All passengers need to carry a valid photo ID during the tour. Valid photo IDs include Aadhaar, Voter ID, Passport, Driving Licence, PAN Card, credit cards with photo, cards issued by Central / State Government and student ID cards with photo issued by School / College.",
+  "Please carry post-paid mobile phones, as pre-paid mobiles do not function in Jammu & Kashmir.",
+  "While in hotel, follow house rules. If you wish to use the swimming pool, carry your own swimming costume.",
+  "Tour is subject to operation if minimum booking of 2 passengers on twin / single fare is received.",
+  "Train timings, hotel rules, opening and closing hours at monuments, museums, parks, gardens, shrines and sites may change. IRCTC does not take responsibility for such changes, and there will be no refund for unutilized services.",
+  "Travellers must strictly follow the tour programme. No refund is given if a traveller fails to join at commencement, joins later, leaves before completion or does not use any service. Travellers may be asked to leave immediately if their behaviour causes distress, annoyance, risk or damage to co-travellers, company property or others.",
 ];
 
 export function DetailPage({ id }: { id: string }) {
@@ -57,10 +109,34 @@ export function DetailPage({ id }: { id: string }) {
   );
   const [travellers, setTravellers] = useState(2);
   const [departure, setDeparture] = useState(detail.departures[0]);
-  const [addFlight, setAddFlight] = useState(false);
-  // Always a day open — the itinerary train is always parked at some station.
-  const [openDay, setOpenDay] = useState(0);
+  // Nothing open to start: the map shows the whole route, and picking a pin or a
+  // label is what opens a day. -1 means "no day selected".
+  const [openDay, setOpenDay] = useState(-1);
   const [boardingCode, setBoardingCode] = useState(detail.boarding[0]?.code ?? "");
+
+  // Which sections are expanded. Each toggles on its own — opening one never
+  // closes another, and they can all be closed at once. Overview leads open.
+  const [openSections, setOpenSections] = useState<Set<string>>(() => new Set(["overview"]));
+  const toggleSection = (sid: string) =>
+    setOpenSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(sid)) next.delete(sid);
+      else next.add(sid);
+      return next;
+    });
+  // Sidebar click mirrors the section header: it opens a closed section and
+  // collapses an open one, then keeps the reader anchored to that block.
+  const toggleAndScroll = (sid: string) => {
+    setOpenSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(sid)) next.delete(sid);
+      else next.add(sid);
+      return next;
+    });
+    requestAnimationFrame(() =>
+      document.getElementById(sid)?.scrollIntoView({ behavior: "smooth", block: "start" }),
+    );
+  };
 
   const selectedClass =
     detail.classes.find((c) => c.code === classCode) ?? detail.classes.find((c) => c.available) ?? detail.classes[0];
@@ -74,7 +150,7 @@ export function DetailPage({ id }: { id: string }) {
       [
         { id: "overview", label: "Overview" },
         { id: "itinerary", label: "Itinerary" },
-        hasBoarding ? { id: "boarding", label: "Boarding" } : null,
+        // hasBoarding ? { id: "boarding", label: "Boarding" } : null,
         { id: "inclusions", label: "Inclusions" },
         { id: "policy", label: "Terms" },
         { id: "contact", label: "Contact us" },
@@ -93,10 +169,35 @@ export function DetailPage({ id }: { id: string }) {
     return [...picked.values()];
   }, [pkg]);
 
-  const gst = Math.round(
-    (selectedClass.price * travellers + (addFlight ? pkg.flightAddon * travellers : 0)) * 0.05,
+  const gst = Math.round(selectedClass.price * travellers * 0.05);
+  const total = selectedClass.price * travellers + gst;
+
+  // The pricing rail is shown twice — sticky beside the content on desktop, and
+  // inline below it on narrow screens — so it's built once here.
+  const rail = (
+    <BookingRail
+      pkg={pkg}
+      classes={detail.classes}
+      departures={detail.departures}
+      boardingPoint={boardingPoint}
+      selectedClass={selectedClass}
+      onSelectClass={setClassCode}
+      travellers={travellers}
+      onTravellers={setTravellers}
+      departure={departure}
+      onDeparture={setDeparture}
+      onBook={() =>
+        go({
+          name: "booking",
+          id: pkg.id,
+          classCode: selectedClass.code,
+          departure,
+          boarding: boardingCode || undefined,
+          travellers,
+        })
+      }
+    />
   );
-  const total = selectedClass.price * travellers + (addFlight ? pkg.flightAddon * travellers : 0) + gst;
 
   return (
     <div ref={ref} className="min-h-screen pb-28 lg:pb-24">
@@ -145,12 +246,14 @@ export function DetailPage({ id }: { id: string }) {
         </div>
 
         <div className="relative z-10 flex flex-1 flex-col items-center justify-end px-4 pb-[8vh] pt-12 text-center">
+          {/* Two short, evenly weighted pills — the long route list used to run
+              the row off the width, so it moves to the meta line below. */}
           <div className="mb-4 flex flex-wrap items-center justify-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/20 px-3.5 py-1.5 text-[11.5px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-md">
-              <MapPin size={13} /> {pkg.category} · {pkg.region}
-            </span>
-            <span className="rounded-full border border-white/25 bg-white/20 px-3 py-1.5 text-[11.5px] font-bold tracking-wide text-white backdrop-blur-md">
-              {detail.code}
+            {/* <span className="inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-black/25 px-3.5 py-1.5 text-[12.5px] font-semibold text-white backdrop-blur-md">
+              <MapPin size={13} className="opacity-80" /> {pkg.category}
+            </span> */}
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-black/25 px-3.5 py-1.5 text-[12.5px] font-semibold text-white backdrop-blur-md">
+              <Moon size={13} className="opacity-80" /> {pkg.nights} Nights / {pkg.days} Days
             </span>
           </div>
 
@@ -164,7 +267,7 @@ export function DetailPage({ id }: { id: string }) {
               {pkg.reviews.toLocaleString("en-IN")} reviews
             </span>
             <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold">
-              <Moon size={14} /> {pkg.nights}N / {pkg.days}D
+              <MapPinned size={14} /> {pkg.region}
             </span>
             <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold">
               <MapPin size={14} /> From {pkg.from}
@@ -177,15 +280,27 @@ export function DetailPage({ id }: { id: string }) {
       </section>
 
       <AccentBar />
-      <SectionNav sections={sections} />
 
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 md:px-6 lg:grid-cols-[1.7fr_1fr]">
-        <div className="min-w-0">
-          {/* ── Overview ───────────────────────────────────────── */}
-          <section id="overview" className="scroll-mt-[132px]">
-            <p className="reveal max-w-[65ch] text-[17px] leading-relaxed text-foreground/85">{pkg.blurb}</p>
+      {/* Sidebar · content · pricing — three lanes, generously spaced. */}
+      <div className="mx-auto grid max-w-[1460px] gap-7 px-4 py-9 md:px-6 lg:grid-cols-[232px_minmax(0,1fr)_396px] lg:gap-9">
+        {/* ── Left: always-visible section rail ─────────────────── */}
+        <aside className="hidden lg:block">
+          <div className="sticky top-[84px]">
+            <SectionNav sections={sections} onNavigate={toggleAndScroll} />
+          </div>
+        </aside>
 
-            <ul className="reveal mt-6 grid gap-x-6 gap-y-3 sm:grid-cols-2">
+        {/* ── Middle: collapsible sections ──────────────────────── */}
+        <div className="min-w-0 space-y-4">
+          <CollapsibleSection
+            id="overview"
+            title="Overview"
+            open={openSections.has("overview")}
+            onToggle={() => toggleSection("overview")}
+          >
+            <p className="max-w-[65ch] text-[16px] leading-relaxed text-foreground/85">{pkg.blurb}</p>
+
+            <ul className="mt-6 grid gap-x-6 gap-y-3 sm:grid-cols-2">
               {pkg.highlights.map((h) => (
                 <li key={h} className="flex items-start gap-2.5">
                   <span className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
@@ -195,70 +310,163 @@ export function DetailPage({ id }: { id: string }) {
                 </li>
               ))}
             </ul>
-          </section>
+          </CollapsibleSection>
 
-          {/* ── Itinerary ──────────────────────────────────────── */}
-          <section id="itinerary" className="reveal mt-14 scroll-mt-[132px]">
+          <CollapsibleSection
+            id="itinerary"
+            title="Itinerary"
+            open={openSections.has("itinerary")}
+            onToggle={() => toggleSection("itinerary")}
+          >
             <ItineraryMap days={pkg.itinerary} active={openDay} onActive={setOpenDay} />
-          </section>
+          </CollapsibleSection>
 
-          {/* ── Boarding ───────────────────────────────────────── */}
-          {hasBoarding && (
-            <section id="boarding" className="reveal mt-14 scroll-mt-[132px]">
+          {/* {hasBoarding && (
+            <CollapsibleSection
+              id="boarding"
+              title="Boarding"
+              open={openSections.has("boarding")}
+              onToggle={() => toggleSection("boarding")}
+            >
               <BoardingPanel points={detail.boarding} selected={boardingCode} onSelect={setBoardingCode} />
-            </section>
-          )}
+            </CollapsibleSection>
+          )} */}
 
-          {/* ── Inclusions ─────────────────────────────────────── */}
-          <section id="inclusions" className="reveal mt-14 scroll-mt-[132px]">
-            <h2 className="font-display text-[22px] font-bold text-ink">What the fare covers</h2>
-
-            <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
+          <CollapsibleSection
+            id="inclusions"
+            title="Inclusions"
+            open={openSections.has("inclusions")}
+            onToggle={() => toggleSection("inclusions")}
+          >
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               {inclusionIcons.map((item) => (
-                <div key={item.key} className="flex items-start gap-3">
-                  <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-brand/10 text-brand">
-                    <item.icon size={18} />
+                <div
+                  key={item.key}
+                  className="group flex min-h-[96px] items-start gap-3 rounded-2xl border border-border bg-gradient-to-br from-white to-secondary/30 p-4 transition hover:border-brand/30 hover:shadow-sm"
+                >
+                  <span className="flex h-11 w-11 flex-none items-center justify-center rounded-2xl border border-brand/10 bg-white text-brand shadow-sm transition group-hover:bg-brand group-hover:text-white">
+                    <item.icon size={19} strokeWidth={1.9} />
                   </span>
                   <div className="min-w-0">
-                    <div className="text-[14px] font-bold text-ink">{item.key}</div>
-                    <div className="text-[12px] leading-snug text-muted-foreground">{item.note}</div>
+                    <div className="text-[15px] font-bold text-ink">{item.key}</div>
+                    <div className="mt-1 text-[13px] leading-relaxed text-muted-foreground">{item.note}</div>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="mt-7 grid gap-x-8 gap-y-6 border-t pt-6 sm:grid-cols-2">
-              <div>
-                <div className="mb-3 flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-emerald-700">
-                  <Check size={14} /> Included
+            <div className="mt-6 grid gap-3 md:grid-cols-3">
+              {tourFacts.map((fact) => (
+                <div key={fact.label} className="flex min-h-[104px] items-start gap-3 rounded-2xl border bg-[#F8FAFF] p-4">
+                  <span className="mt-0.5 flex h-9 w-9 flex-none items-center justify-center rounded-xl bg-white text-brand shadow-sm ring-1 ring-border">
+                    <fact.icon size={16} strokeWidth={1.9} />
+                  </span>
+                  <div className="min-w-0">
+                    <div className="text-[11.5px] font-bold uppercase tracking-wide text-muted-foreground">
+                      {fact.label}
+                    </div>
+                    <div className="mt-1.5 text-[13px] font-normal leading-relaxed text-muted-foreground">
+                      {fact.value}
+                    </div>
+                  </div>
                 </div>
-                <ul className="space-y-2">
-                  {pkg.inclusions.map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-[13px] leading-relaxed text-foreground/80">
-                      <Check size={14} className="mt-0.5 flex-none text-emerald-600" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
+              ))}
+            </div>
+
+            <div className="mt-7 rounded-3xl border bg-white p-5">
+              <div className="grid gap-5 border-t pt-6 xl:grid-cols-[minmax(0,1fr)_minmax(320px,0.78fr)]">
+                <div className="rounded-2xl border border-emerald-100 bg-emerald-50/35 p-4">
+                  <div className="mb-4">
+                    <div className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-emerald-700">
+                      <Check size={15} /> Official inclusions
+                    </div>
+                    <p className="mt-1 text-[13px] text-foreground/65">Services covered in the published package fare.</p>
+                  </div>
+
+                  <ul className="grid gap-2.5">
+                    {detailedInclusions.map((item) => (
+                      <li key={item} className="flex items-start gap-3 rounded-2xl bg-white/75 p-3 text-[14px] leading-relaxed text-foreground/82">
+                        <span className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-emerald-600 text-white">
+                          <Check size={12} />
+                        </span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="rounded-2xl border bg-secondary/20 p-4">
+                  <div className="mb-4 flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-muted-foreground">
+                    <X size={15} /> Exclusions
+                  </div>
+
+                  <ul className="space-y-2.5">
+                    {detailedExclusions.map((item) => (
+                      <li key={item} className="flex items-start gap-3 text-[13px] leading-relaxed text-foreground/72">
+                        <span className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-white text-muted-foreground ring-1 ring-border">
+                          <X size={12} />
+                        </span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-              <div>
-                <div className="mb-3 flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-muted-foreground">
-                  <X size={14} /> Not included
+            </div>
+
+            <div className="mt-5 rounded-3xl border bg-white p-5">
+              <div className="mb-4 flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-muted-foreground">
+                <FileText size={15} className="text-brand" /> Package snapshot
+              </div>
+              <div className="grid gap-5 md:grid-cols-2">
+                <div>
+                  <div className="mb-2 text-[13px] font-bold text-ink">Also listed as included</div>
+                  <ul className="space-y-2">
+                    {pkg.inclusions.map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-[13px] leading-relaxed text-foreground/75">
+                        <Check size={14} className="mt-0.5 flex-none text-emerald-600" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="space-y-2">
-                  {pkg.exclusions.map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-[13px] leading-relaxed text-foreground/70">
-                      <X size={14} className="mt-0.5 flex-none text-muted-foreground" />
-                      {item}
+                <div>
+                  <div className="mb-2 text-[13px] font-bold text-ink">Package exclusions summary</div>
+                  <ul className="space-y-2">
+                    {pkg.exclusions.map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-[13px] leading-relaxed text-foreground/70">
+                        <X size={14} className="mt-0.5 flex-none text-muted-foreground" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-5 flex justify-center">
+              <div className="w-full max-w-[680px] rounded-3xl border border-amber-200 bg-amber-50/40 p-5">
+                <div className="mb-4 flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-amber-800">
+                  <CircleAlert size={15} /> Important notes
+                </div>
+                <ul className="max-h-[560px] space-y-3 overflow-y-auto pr-2 slim-scrollbar">
+                  {importantInclusionNotes.map((note) => (
+                    <li key={note} className="flex items-start gap-3 text-[13px] leading-relaxed text-foreground/78">
+                      <span className="mt-1 h-1.5 w-1.5 flex-none rounded-full bg-amber-600" />
+                      <span>{note}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             </div>
-          </section>
+          </CollapsibleSection>
 
-          {/* ── Terms ──────────────────────────────────────────── */}
-          <section id="policy" className="reveal mt-14 scroll-mt-[132px]">
+          <CollapsibleSection
+            id="policy"
+            title="Terms"
+            open={openSections.has("policy")}
+            onToggle={() => toggleSection("policy")}
+          >
             <PolicyPanel
               sections={detail.policy}
               code={detail.code}
@@ -266,12 +474,15 @@ export function DetailPage({ id }: { id: string }) {
               travellers={travellers}
               departure={departure}
             />
-          </section>
+          </CollapsibleSection>
 
-          {/* ── Contact us ─────────────────────────────────────── */}
-          <section id="contact" className="mt-14 scroll-mt-[132px]">
-            <div className="reveal flex flex-wrap items-end justify-between gap-3">
-              <h2 className="font-display text-[22px] font-bold text-ink">Contact us</h2>
+          <CollapsibleSection
+            id="contact"
+            title="Contact us"
+            open={openSections.has("contact")}
+            onToggle={() => toggleSection("contact")}
+          >
+            <div className="flex justify-end">
               <a
                 href={`tel:${nationalHelpline.number}`}
                 className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-secondary/60 px-4 text-[13px] font-semibold text-navy transition hover:bg-secondary"
@@ -281,79 +492,28 @@ export function DetailPage({ id }: { id: string }) {
               </a>
             </div>
 
-            <div className="reveal mt-5">
+            <div className="mt-5">
               <OfficeDirectory pkg={pkg} boarding={detail.boarding} />
             </div>
 
-            <div className="reveal mt-8">
-              <CallbackForm packageName={pkg.name} code={detail.code} />
-            </div>
-
-            <div className="reveal mt-8">
+            <div className="mt-8">
               <h3 className="font-display text-[17px] font-bold text-ink">Frequently asked questions</h3>
               <div className="mt-3">
                 <FaqAccordion faqs={faqs} />
               </div>
             </div>
-          </section>
+          </CollapsibleSection>
         </div>
 
-        
-        <div className="slim-scrollbar hidden lg:sticky lg:top-[128px] lg:block lg:max-h-[calc(100vh-152px)] lg:self-start lg:overflow-y-auto lg:pr-2">
-          <BookingRail
-            pkg={pkg}
-            classes={detail.classes}
-            departures={detail.departures}
-            boardingPoint={boardingPoint}
-            selectedClass={selectedClass}
-            onSelectClass={setClassCode}
-            travellers={travellers}
-            onTravellers={setTravellers}
-            departure={departure}
-            onDeparture={setDeparture}
-            addFlight={addFlight}
-            onAddFlight={setAddFlight}
-            onBook={() =>
-              go({
-                name: "booking",
-                id: pkg.id,
-                classCode: selectedClass.code,
-                departure,
-                boarding: boardingCode || undefined,
-                travellers,
-              })
-            }
-          />
-        </div>
-
-        {/* On narrow screens the rail can't stick, so it runs inline instead. */}
-        <div className="lg:hidden">
-          <BookingRail
-            pkg={pkg}
-            classes={detail.classes}
-            departures={detail.departures}
-            boardingPoint={boardingPoint}
-            selectedClass={selectedClass}
-            onSelectClass={setClassCode}
-            travellers={travellers}
-            onTravellers={setTravellers}
-            departure={departure}
-            onDeparture={setDeparture}
-            addFlight={addFlight}
-            onAddFlight={setAddFlight}
-            onBook={() =>
-              go({
-                name: "booking",
-                id: pkg.id,
-                classCode: selectedClass.code,
-                departure,
-                boarding: boardingCode || undefined,
-                travellers,
-              })
-            }
-          />
+        {/* ── Right: pricing rail (sticky on desktop) ───────────── */}
+        {/* The rail fits the viewport on its own, so it just sticks — no inner scroll. */}
+        <div className="hidden lg:sticky lg:top-[84px] lg:block lg:self-start">
+          {rail}
         </div>
       </div>
+
+      {/* On narrow screens the rail can't stick, so it runs inline instead. */}
+      <div className="mx-auto max-w-7xl px-4 pb-8 md:px-6 lg:hidden">{rail}</div>
 
       {/* ── Related ──────────────────────────────────────────── */}
       <div className="mx-auto max-w-7xl px-4 md:px-6">

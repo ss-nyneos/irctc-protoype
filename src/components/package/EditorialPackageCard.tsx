@@ -41,9 +41,7 @@ export function EditorialPackageCard({
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && go({ name: "detail", id: pkg.id })}
-      className={`group relative w-full cursor-pointer overflow-hidden rounded-2xl border-[6px] text-left shadow-md ring-1 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_28px_60px_-20px_rgba(15,23,42,0.45)] ${height} ${
-        comparing ? "border-brand ring-brand/40" : "border-white ring-black/5"
-      }`}
+      className={`group relative w-full cursor-pointer overflow-hidden rounded-2xl text-left shadow-md transition-all duration-500 hover:-translate-y-1.5 ${height}`}
     >
       <ImageWithFallback
         img={pkg.img}
@@ -55,9 +53,6 @@ export function EditorialPackageCard({
       />
       {/* Carries the readability the caption panel used to provide itself. */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10" />
-      {/* Hairline highlight so the white frame reads as part of the photo. */}
-      <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/25" />
-
       <div className="absolute inset-x-5 top-5 flex items-start justify-end gap-2">
         <div className="flex flex-col items-end gap-2">
           {/* "Starting from" price, the only figure IRCTC prints on a row. */}
@@ -67,8 +62,7 @@ export function EditorialPackageCard({
 
           {/* Shortlist toggle: always a full labelled pill, never hover-only —
               on touch there is no hover, so a bare icon reads as decoration.
-              Selected, the whole card takes a brand frame too, so the state
-              reads from a distance. */}
+              Selected, the pill itself goes brand — the card keeps no frame. */}
           {onCompare && (
             <button
               onClick={(e) => {
@@ -96,9 +90,12 @@ export function EditorialPackageCard({
           compact ? "px-4 py-3" : "px-5 py-4"
         }`}
       >
+        {/* Card title spec (World + Detail): Helvetica semibold 17.23px, always
+            white over the photo. Featured tiles (Home only) keep their larger
+            display size. */}
         <h3
-          className={`line-clamp-2 font-display font-semibold leading-snug text-white ${
-            featured ? "text-[26px]" : compact ? "text-[16px]" : "text-[20px]"
+          className={`line-clamp-2 font-semibold leading-snug text-[#FFFFFF] [font-family:Helvetica,Arial,sans-serif] ${
+            featured ? "font-display text-[26px]" : "text-[17.23px]"
           }`}
         >
           {pkg.name}

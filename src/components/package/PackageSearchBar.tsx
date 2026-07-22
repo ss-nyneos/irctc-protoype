@@ -19,20 +19,7 @@ export type QuickToggle = {
   onToggle: () => void;
 };
 
-/**
- * A searchable select — type to narrow, arrow to pick.
- *
- * Two earlier attempts are worth recording. A native <select> cannot work here:
- * browsers draw the option list themselves, so no CSS reaches it and the popup
- * arrives with square corners, its own highlight colour and its own metrics
- * against rounded brand-blue fields. A plain custom listbox fixed the looks but
- * still made you hunt a long list of cities by eye. So the trigger is a text
- * input: it shows the current choice at rest, and filters as soon as you type.
- *
- * `query === null` means "not searching, show the selection". An empty string
- * means "searching, but nothing typed yet" — which is why the two are distinct
- * rather than one falsy check.
- */
+
 function ComboField({ field }: { field: SearchField }) {
   const id = useId();
   const [open, setOpen] = useState(false);

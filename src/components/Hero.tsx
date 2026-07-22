@@ -7,10 +7,10 @@ export default function Hero() {
   const [where, setWhere] = useState('')
   const navigate = useNavigate()
 
+
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
-    const q = where.trim()
-    navigate(q ? `/packages?q=${encodeURIComponent(q)}` : '/packages')
+    navigate('/world')
     window.scrollTo({ top: 0 })
   }
 
