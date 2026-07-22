@@ -523,7 +523,7 @@ export function LuxuryTrainsSection() {
     // entrance to useReveal so this section works on both Home and HomePage.
     <section
       data-skip-gsap-reveal
-      className="relative overflow-hidden bg-white py-28 md:py-36"
+      className="relative overflow-hidden bg-paper py-28 md:py-36"
     >
       {/* same container system as Destinations above it: .wrap (1440px cap,
           fluid --gutter side padding) instead of a hardcoded max-w-7xl/px-4 —

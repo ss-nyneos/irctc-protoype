@@ -98,6 +98,13 @@
   /* ---- Motion ---- */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ---- Vande Bharat scroll-morph (light) ---- */
+  --vb-bg: #f5f6f7;      /* cool steel-white surface */
+  --vb-ink: #0e1b2b;     /* near-navy headline + body */
+  --vb-muted: #5b6672;   /* secondary text */
+  --vb-accent: #e8532e;  /* VB saffron-orange (kept in both themes) */
+  --vb-rail: #8fa0b2;    /* dividers */
 }
 
 /* ============================================================
@@ -129,5 +136,12 @@
   --shadow-lg: 0 30px 70px -24px rgba(0, 0, 0, 0.8),
     0 10px 30px -18px rgba(0, 0, 0, 0.6);
   --shadow-float: 0 40px 90px -34px rgba(0, 0, 0, 0.85);
+
+  /* ---- Vande Bharat scroll-morph (dark) — flips to night ---- */
+  --vb-bg: #0a0d18;      /* matches --paper dark, blends with the page */
+  --vb-ink: #e9ebf1;     /* light headline + body */
+  --vb-muted: #a3aabb;   /* secondary text */
+  --vb-rail: #3a4556;    /* dividers */
+  /* --vb-accent stays the VB orange */
 }
 
