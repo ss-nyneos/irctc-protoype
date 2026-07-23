@@ -293,7 +293,7 @@ export function WorldPage({ initialCategory, initialFromPlace }: { initialCatego
 
 
       <div className="bg-[linear-gradient(180deg,#f4eff1_0%,#ffffff_460px)]">
-        <div id="results" className="relative mx-auto max-w-[1600px] scroll-mt-4 px-4 pt-6 md:px-8 xl:px-12">
+        <div id="results" className="relative mx-auto max-w-[1400px] scroll-mt-4 px-4 pt-6 md:px-8 xl:px-12">
 
           {/* "Packages Originated from" banner */}
           {(initialFromPlace !== undefined || originQuery !== "") && (
@@ -508,7 +508,7 @@ export function WorldPage({ initialCategory, initialFromPlace }: { initialCatego
                     <ChevronRight size={16} />
                   </button>
 
-                  <span className="ml-3 text-[12px] text-muted-foreground">
+                  <span className="ml-3 text-[14px] text-[#323232]">
                     Page {page} of {totalPages}
                   </span>
                 </div>

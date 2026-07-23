@@ -194,16 +194,20 @@
 .hstrip__go {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
+  justify-content: center;
+  min-width: 105px;
+  gap: 0.4rem;
   flex: none;
   margin-left: 0.4rem;
-  padding: 0.75rem 1rem;
+  padding: 0.72rem 1.15rem;
   background: var(--blue);
   color: #fff;
   border-radius: 999px;
-  font-weight: 700;
-  font-size: 1rem;
-  transition: background 0.25s var(--ease), transform 0.25s var(--ease);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 154%;
+  letter-spacing: 0em;
+  transition: background 0.25s var(--ease);
 }
 
 .hstrip__go svg {
@@ -212,7 +216,6 @@
 
 .hstrip__go:hover {
   background: var(--blue-deep);
-  transform: translateY(-1px);
 }
 
 /* ---- Services strip (below hero, light) ---- */

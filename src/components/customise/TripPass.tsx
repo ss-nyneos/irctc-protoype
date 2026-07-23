@@ -68,7 +68,7 @@ export default function TripPass({
 
                 <div className="mb-1.5 flex items-center gap-[18px]">
                     <div className="min-w-0">
-                        <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">From</div>
+                        <div className="font-sans text-[16px] font-semibold text-[#323232]">From</div>
                         <div className="truncate font-display text-[30px] font-bold leading-[1.1] tracking-tight text-ink">{from}</div>
                     </div>
                     <div className="flex flex-1 items-center gap-2 text-saffron">
@@ -79,7 +79,7 @@ export default function TripPass({
                         <span className="h-[7px] w-[7px] rounded-full bg-saffron" />
                     </div>
                     <div className="min-w-0 text-right">
-                        <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">To</div>
+                        <div className="font-sans text-[16px] font-semibold text-[#323232]">To</div>
                         <div className="truncate font-display text-[30px] font-bold leading-[1.1] tracking-tight text-ink">{to}</div>
                     </div>
                 </div>
@@ -89,11 +89,11 @@ export default function TripPass({
                 <div className="grid grid-cols-2 gap-x-[18px] gap-y-[22px] sm:grid-cols-4">
                     {fields.map((f, i) => (
                         <div key={i} className="min-w-0">
-                            <div className="mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                            <div className="mb-1 font-sans text-[16px] font-semibold text-[#323232]">
                                 {f.label}
                             </div>
                             <div
-                                className={`break-words font-display text-[15px] font-bold tracking-tight text-ink ${
+                                className={`break-words font-sans text-[16px] font-semibold text-[#323232] ${
                                     f.code ? "font-mono tracking-[0.06em] tabular-nums" : ""
                                 }`}
                                 title={f.value}
@@ -113,14 +113,14 @@ export default function TripPass({
                    before:left-0 before:right-0 before:top-[-10px] before:h-5
                    md:before:bottom-0 md:before:left-[-10px] md:before:right-auto md:before:top-0 md:before:h-auto md:before:w-5"
             >
-                <h3 className="relative z-10 mb-4 font-display text-[15px] font-bold tracking-tight text-white">
+                <h3 className="relative z-10 mb-4 font-sans text-[16px] font-semibold text-[#FFFFFF]">
                     {whatsNextTitle}
                 </h3>
                 <div className="relative z-10 flex flex-col">
                     {whatsNext.map((item, i) => (
-                        <div key={i} className="mb-3 flex items-start gap-2.5 text-[13.5px] leading-snug text-white/90">
+                        <div key={i} className="mb-3 flex items-start gap-2.5 font-sans text-[16px] font-semibold leading-snug text-[#FFFFFF]">
                             <Check className="mt-px shrink-0 text-saffron" />
-                            <span className="text-white/90">{item}</span>
+                            <span className="text-[#FFFFFF]">{item}</span>
                         </div>
                     ))}
                 </div>
@@ -130,8 +130,8 @@ export default function TripPass({
                         <button
                             onClick={onAdjust}
                             type="button"
-                            className="w-full rounded-xl bg-white px-[18px] py-3.5 text-[15px] font-bold text-navy
-                         shadow-md transition hover:bg-white/90"
+                            className="w-full min-w-[105px] rounded-full bg-[#2475EE] px-[1.15rem] py-[0.72rem]
+                         text-[16px] font-medium leading-[154%] tracking-[0em] text-[#FFFFFF] transition hover:bg-[#1450B4]"
                         >
                             Adjust
                         </button>

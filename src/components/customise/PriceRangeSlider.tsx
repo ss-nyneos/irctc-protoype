@@ -121,7 +121,8 @@ const css = `
 .prs-card *, .prs-card *::before, .prs-card *::after { box-sizing: border-box; }
 
 .prs-head {
-  font-size: 18px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
   font-weight: 600;
   color: #1f2937;
 }

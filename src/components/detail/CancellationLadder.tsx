@@ -43,36 +43,50 @@ export function CancellationLadder({ bands, total, travellers, departure }: Canc
         </div>
       )}
 
-      <div className="overflow-hidden rounded-xl border">
-        <div className="flex items-center gap-3 border-b bg-secondary/40 px-3.5 py-2 text-[11.5px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-          <span className="flex-1">Cancelled before departure</span>
-          <span className="hidden w-24 text-right sm:block">Deduction</span>
-          <span className="w-28 text-right">You lose</span>
-        </div>
+      <div className="overflow-hidden rounded-xl border border-gray-200/90 bg-white shadow-sm">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-brand text-white text-[13px] font-bold uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3.5">Cancelled before departure</th>
+              <th scope="col" className="px-6 py-3.5">Deduction</th>
+              <th scope="col" className="px-6 py-3.5 text-right">You lose</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200/60 text-[14px]">
+            {bands.map((band, idx) => {
+              const isCurrent = current === band;
+              const amount = deductionFor(band, total, travellers);
+              const rowBg = isCurrent
+                ? "bg-brand/10 font-bold"
+                : idx % 2 === 1
+                ? "bg-[#EBF3FF]"
+                : "bg-white";
 
-        {bands.map((band) => {
-          const isCurrent = current === band;
-          const amount = deductionFor(band, total, travellers);
-          return (
-            <div
-              key={band.label}
-              className={`flex items-center gap-3 border-b px-3.5 py-3 text-[13.5px] transition-colors duration-300 last:border-b-0 ${
-                isCurrent ? "bg-brand/[0.07]" : ""
-              }`}
-            >
-              <span className={`flex-1 ${isCurrent ? "font-bold text-ink" : "font-medium text-foreground/80"}`}>
-                {band.label}
-                {isCurrent && <span className="ml-2 text-[11px] font-bold uppercase text-brand">You are here</span>}
-              </span>
-              <span className="hidden w-24 text-right font-semibold text-muted-foreground sm:block">
-                {band.flat !== undefined ? `${formatINR(band.flat)}/person` : `${band.percent}%`}
-              </span>
-              <span className={`w-28 text-right font-bold tabular-nums ${isCurrent ? "text-brand" : "text-ink"}`}>
-                {formatINR(amount)}
-              </span>
-            </div>
-          );
-        })}
+              return (
+                <tr key={band.label} className={`transition-colors ${rowBg}`}>
+                  <td className="px-6 py-4 font-semibold text-ink">
+                    <div className="flex items-center gap-2">
+                      <span>{band.label}</span>
+                      {isCurrent && (
+                        <span className="inline-flex items-center rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-bold text-white shadow-sm">
+                          You are here
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 font-medium text-foreground/80">
+                    {band.flat !== undefined ? `${formatINR(band.flat)} / person` : `${band.percent}%`}
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <span className="inline-flex items-center justify-center rounded-lg bg-brand px-4 py-1.5 text-[13px] font-bold tabular-nums text-white shadow-sm transition hover:brightness-95">
+                      {formatINR(amount)}
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
 
       <p className="mt-2.5 text-[12.5px] text-muted-foreground">

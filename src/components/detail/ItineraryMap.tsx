@@ -97,19 +97,19 @@ export function ItineraryMap({
     const maxY = Math.max(...ys);
     const routeW = Math.max(1, maxX - minX);
     const routeH = Math.max(1, maxY - minY);
-    const fitted = Math.min(
-      INDIA_VIEW.width / (routeW + ROUTE_PADDING * 2),
-      INDIA_VIEW.height / (routeH + ROUTE_PADDING * 2),
-    );
-    const k = Math.min(DEFAULT_ROUTE_ZOOM, Math.max(1.35, fitted));
+
+    const padding = 120;
+    const scaleX = INDIA_VIEW.width / (routeW + padding);
+    const scaleY = INDIA_VIEW.height / (routeH + padding);
+    const k = Math.min(5.0, Math.max(2.8, Math.min(scaleX, scaleY)));
+
     const cx = (minX + maxX) / 2;
     const cy = (minY + maxY) / 2;
 
-    return {
-      k,
-      x: Math.min(0, Math.max(INDIA_VIEW.width - INDIA_VIEW.width * k, INDIA_VIEW.width / 2 - cx * k)),
-      y: Math.min(0, Math.max(INDIA_VIEW.height - INDIA_VIEW.height * k, INDIA_VIEW.height / 2 - cy * k)),
-    };
+    const x = INDIA_VIEW.width / 2 - cx * k;
+    const y = INDIA_VIEW.height / 2 - cy * k;
+
+    return { k, x, y };
   }, [points]);
 
   const { zoom, frameRef, zoomIn, zoomOut, reset, handlers, project } = useMapZoom(
@@ -140,36 +140,35 @@ export function ItineraryMap({
     [points],
   );
 
-  // Which pin owns the open day.
-  const activeStop = stops.findIndex((s) => s.dayIndexes.includes(active));
+  // Which pin owns the open day (defaults to Day 1 / first stop).
+  const effectiveActive = active >= 0 ? active : 0;
+  const activeStopIndex = stops.findIndex((s) => s.dayIndexes.includes(effectiveActive));
+  const activeStop = activeStopIndex >= 0 ? activeStopIndex : 0;
 
   const select = useCallback((index: number) => onActive(index), [onActive]);
 
   // A single pin can't be a journey, and no pins means we can't place the trip.
   if (stops.length < 2) {
-    return <ItineraryRail days={days} active={active} onActive={onActive} />;
+    return <ItineraryRail days={days} active={effectiveActive} onActive={onActive} />;
   }
 
-  // `active` is -1 until a pin or a label is picked, so there may be no open day.
-  const day: ItineraryDay | undefined = days[active];
+  const day: ItineraryDay = days[effectiveActive] ?? days[0];
   const travelSeconds = Math.max(10, stops.length * 2.2);
   const k = zoom.k;
 
   /**
-   * Leaders and labels live above the zoom, in fixed frame coordinates: the
-   * column stays put and stays legible however far in you go, and zooming just
-   * spreads the pins out underneath it. Only the leader's pin end moves.
+   * Leaders and labels live above the zoom, in fixed frame coordinates.
+   * Only the leader line and label pill for the SELECTED DATE are rendered.
    */
   const overlay = (
     <>
-      {/* ── Leader lines ──────────────────────────────────── */}
+      {/* ── Leader line — ONLY for selected date ──────────────────── */}
       {stops.map((stop, i) => {
+        if (i !== activeStop) return null;
+
         const [px, py] = project(points[i][0], points[i][1]);
         const { x, y, onRight } = labels[i];
-        const isActive = i === activeStop;
         const dir = onRight ? -1 : 1;
-        // Elbowed, not straight: every label is entered horizontally, which
-        // keeps a fan of nine leaders from reading as a scribble.
         const elbow = x + dir * 30;
         const end = x + dir * 7;
         return (
@@ -177,20 +176,20 @@ export function ItineraryMap({
             key={`lead-${stop.from}`}
             d={`M${px},${py - PIN_STICK - PIN_HEAD} L${elbow},${y} L${end},${y}`}
             fill="none"
-            stroke={isActive ? "#2475EE" : "#93A0B5"}
-            strokeWidth={isActive ? 1.4 : 0.9}
+            stroke="#2475EE"
+            strokeWidth={1.6}
             strokeDasharray="2 3"
-            strokeOpacity={isActive ? 1 : 0.5}
+            strokeOpacity={1}
             className="itin-leader"
-            style={{ animationDelay: `${i * 60}ms` }}
           />
         );
       })}
 
-      {/* ── Labels ────────────────────────────────────────── */}
+      {/* ── Label pill — ONLY for selected date ────────────────────── */}
       {stops.map((stop, i) => {
+        if (i !== activeStop) return null;
+
         const { x, y, width, onRight } = labels[i];
-        const isActive = i === activeStop;
         const left = onRight ? x : x - width;
         const badgeX = onRight ? left + 14 + BADGE_R : left + width - 14 - BADGE_R;
         const textX = onRight ? left + 14 + BADGE_R * 2 + 10 : left + width - 14 - BADGE_R * 2 - 10;
@@ -199,8 +198,7 @@ export function ItineraryMap({
         return (
           <g
             key={`label-${stop.from}`}
-            className={`itin-label ${isActive ? "is-active" : ""}`}
-            style={{ animationDelay: `${i * 60 + 120}ms` }}
+            className="itin-label is-active"
             onClick={() => select(stop.dayIndexes[0])}
             role="button"
             aria-label={`Stop ${i + 1}, day ${stop.from}, ${stop.label}`}
@@ -211,23 +209,21 @@ export function ItineraryMap({
               width={width}
               height={PLATE_H}
               rx={PLATE_H / 2}
-              fill={isActive ? "#2475EE" : "#FFFFFF"}
-              stroke={isActive ? "#2475EE" : "#DDE4F0"}
+              fill="#2475EE"
+              stroke="#2475EE"
               strokeWidth={1}
               filter={`url(#${uid}-plate)`}
             />
 
-            {/* Sequence badge — the column is numbered 1..n in travel order,
-                so the reading order is the journey order. */}
-            <circle cx={badgeX} cy={y} r={BADGE_R} fill={isActive ? "#FFFFFF" : "#EDF3FF"} />
+            <circle cx={badgeX} cy={y} r={BADGE_R} fill="#FFFFFF" />
             <text x={badgeX} y={y + 4} textAnchor="middle" fontSize={11} fontWeight={800} fill="#2475EE">
               {i + 1}
             </text>
 
-            <text x={textX} y={y - 4} textAnchor={anchor} fontSize={10} fontWeight={700} letterSpacing={0.8} fill={isActive ? "#CFE0FF" : "#8B96A9"}>
+            <text x={textX} y={y - 4} textAnchor={anchor} fontSize={10} fontWeight={700} letterSpacing={0.8} fill="#CFE0FF">
               {captions[i]}
             </text>
-            <text x={textX} y={y + 12} textAnchor={anchor} fontSize={15} fontWeight={700} fill={isActive ? "#FFFFFF" : "#232B3A"}>
+            <text x={textX} y={y + 12} textAnchor={anchor} fontSize={15} fontWeight={700} fill="#FFFFFF">
               {stop.label}
             </text>
           </g>
@@ -245,208 +241,201 @@ export function ItineraryMap({
         </p>
       </div>
 
-      <div className="relative overflow-hidden rounded-[28px] border border-border bg-[#F8FAFF]">
-        <IndiaMap
-          containerRef={frameRef}
-          containerProps={{
-            ...handlers,
-            // Vertical page scrolling stays with the browser; the map only
-            // claims the gestures it was asked for.
-            style: { touchAction: "pan-y", cursor: k > 1 ? "grab" : "default" },
-          }}
-          transform={`translate(${zoom.x} ${zoom.y}) scale(${k})`}
-          zoom={k}
-          overlay={overlay}
-        >
-          <defs>
-            {/* Lit from the top-left, which is what sells the pin heads as beads
-                rather than flat dots. */}
-            <radialGradient id={`${uid}-head`} cx="34%" cy="28%" r="72%">
-              <stop offset="0%" stopColor="#7FB0FF" />
-              <stop offset="55%" stopColor="#2475EE" />
-              <stop offset="100%" stopColor="#123E82" />
-            </radialGradient>
-            <radialGradient id={`${uid}-headIdle`} cx="34%" cy="28%" r="72%">
-              <stop offset="0%" stopColor="#8C93A6" />
-              <stop offset="55%" stopColor="#3D4557" />
-              <stop offset="100%" stopColor="#161B26" />
-            </radialGradient>
-            <filter id={`${uid}-plate`} x="-12%" y="-40%" width="124%" height="180%">
-              <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#12224A" floodOpacity="0.14" />
-            </filter>
-          </defs>
+      <div className="grid gap-5 lg:grid-cols-12 lg:items-stretch">
+        {/* Left Column: Map section (wider, zoomed in) */}
+        <div className="relative h-[360px] overflow-hidden rounded-[24px] border border-border bg-[#F8FAFF] lg:col-span-8">
+          <IndiaMap
+            containerRef={frameRef}
+            containerProps={{
+              ...handlers,
+              // Vertical page scrolling stays with the browser; the map only
+              // claims the gestures it was asked for.
+              style: { touchAction: "pan-y", cursor: k > 1 ? "grab" : "default" },
+            }}
+            transform={`translate(${zoom.x} ${zoom.y}) scale(${k})`}
+            zoom={k}
+            overlay={overlay}
+          >
+            <defs>
+              {/* Lit from the top-left, which is what sells the pin heads as beads
+                  rather than flat dots. */}
+              <radialGradient id={`${uid}-head`} cx="34%" cy="28%" r="72%">
+                <stop offset="0%" stopColor="#7FB0FF" />
+                <stop offset="55%" stopColor="#2475EE" />
+                <stop offset="100%" stopColor="#123E82" />
+              </radialGradient>
+              <radialGradient id={`${uid}-headIdle`} cx="34%" cy="28%" r="72%">
+                <stop offset="0%" stopColor="#8C93A6" />
+                <stop offset="55%" stopColor="#3D4557" />
+                <stop offset="100%" stopColor="#161B26" />
+              </radialGradient>
+              <filter id={`${uid}-plate`} x="-12%" y="-40%" width="124%" height="180%">
+                <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#12224A" floodOpacity="0.14" />
+              </filter>
+            </defs>
 
-          {/* ── Route ─────────────────────────────────────────── */}
-          <path
-            d={routePath}
-            fill="none"
-            stroke="#2475EE"
-            strokeOpacity={0.22}
-            strokeWidth={2.4 / k}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          {/* The flowing dash reads as direction of travel. */}
-          <path
-            d={routePath}
-            fill="none"
-            stroke="#2475EE"
-            strokeOpacity={0.85}
-            strokeWidth={2.4 / k}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeDasharray={`${10 / k} ${14 / k}`}
-            className="route-flow"
-            style={{ ["--flow" as string]: `${-24 / k}` }}
-          />
+            {/* ── Route ─────────────────────────────────────────── */}
+            <path
+              d={routePath}
+              fill="none"
+              stroke="#2475EE"
+              strokeOpacity={0.22}
+              strokeWidth={2.4 / k}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            {/* The flowing dash reads as direction of travel. */}
+            <path
+              d={routePath}
+              fill="none"
+              stroke="#2475EE"
+              strokeOpacity={0.85}
+              strokeWidth={2.4 / k}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeDasharray={`${10 / k} ${14 / k}`}
+              className="route-flow"
+              style={{ ["--flow" as string]: `${-24 / k}` }}
+            />
 
-          {/* The marker running the line, on a loop. animateMotion owns the
-              outer transform, so the counter-scale has to go on a child. */}
-          <g>
-            <animateMotion dur={`${travelSeconds}s`} repeatCount="indefinite" path={routePath} rotate="auto" />
-            <g transform={`scale(${1 / k})`}>
-              <circle r={9} fill="#2475EE" fillOpacity={0.18} />
-              <path d="M-4,-4 L6,0 L-4,4 L-2,0 Z" fill="#2475EE" />
-            </g>
-          </g>
-
-          {/* ── Pins ──────────────────────────────────────────── */}
-          {stops.map((stop, i) => {
-            const [x, y] = points[i];
-            const isActive = i === activeStop;
-            const head = isActive ? PIN_HEAD + 2.5 : PIN_HEAD;
-            const stick = isActive ? PIN_STICK + 5 : PIN_STICK;
-            return (
-              // Counter-scaled: zooming spreads the pins apart without
-              // inflating them, which is the whole point of zooming a cluster.
-              <g key={`pin-${stop.from}`} transform={`translate(${x} ${y}) scale(${1 / k})`}>
-                <g
-                  className="itin-pin"
-                  style={{ animationDelay: `${i * 70}ms` }}
-                  onClick={() => select(stop.dayIndexes[0])}
-                  role="button"
-                  aria-label={`Stop ${i + 1}, day ${stop.from}, ${stop.label}`}
-                >
-                  {/* Invisible hit target: the pin itself is a thin stick and a
-                      small head, which is a hard thing to click. */}
-                  <circle cx={0} cy={-stick} r={head + 12} fill="transparent" />
-                  {/* Ground shadow — the pin stands on the map, not in it. */}
-                  <ellipse cx={0} cy={1} rx={head * 0.8} ry={head * 0.3} fill="#0B1B33" opacity={0.18} />
-                  <line
-                    x1={0}
-                    y1={0}
-                    x2={0}
-                    y2={-stick}
-                    stroke={isActive ? "#123E82" : "#22262F"}
-                    strokeWidth={1.6}
-                    strokeLinecap="round"
-                  />
-                  {isActive && (
-                    <circle cx={0} cy={-stick - head} r={head} fill="#2475EE" opacity={0.35}>
-                      <animate attributeName="r" values={`${head};${head * 2.4};${head}`} dur="2.2s" repeatCount="indefinite" />
-                      <animate attributeName="opacity" values="0.35;0;0.35" dur="2.2s" repeatCount="indefinite" />
-                    </circle>
-                  )}
-                  <circle cx={0} cy={-stick - head} r={head} fill={`url(#${uid}-${isActive ? "head" : "headIdle"})`} />
-                  {/* Specular dot — the last 10% of the three-dimensional read. */}
-                  <circle cx={-head * 0.3} cy={-stick - head - head * 0.35} r={head * 0.22} fill="#FFFFFF" opacity={0.75} />
-                </g>
+            {/* The marker running the line, on a loop. animateMotion owns the
+                outer transform, so the counter-scale has to go on a child. */}
+            <g>
+              <animateMotion dur={`${travelSeconds}s`} repeatCount="indefinite" path={routePath} rotate="auto" />
+              <g transform={`scale(${1 / k})`}>
+                <circle r={9} fill="#2475EE" fillOpacity={0.18} />
+                <path d="M-4,-4 L6,0 L-4,4 L-2,0 Z" fill="#2475EE" />
               </g>
-            );
-          })}
+            </g>
 
-        </IndiaMap>
+            {/* ── Pins ──────────────────────────────────────────── */}
+            {stops.map((stop, i) => {
+              const [x, y] = points[i];
+              const isActive = i === activeStop;
+              const head = isActive ? PIN_HEAD + 2.5 : PIN_HEAD;
+              const stick = isActive ? PIN_STICK + 5 : PIN_STICK;
+              return (
+                // Counter-scaled: zooming spreads the pins apart without
+                // inflating them, which is the whole point of zooming a cluster.
+                <g key={`pin-${stop.from}`} transform={`translate(${x} ${y}) scale(${1 / k})`}>
+                  <g
+                    className="itin-pin"
+                    style={{ animationDelay: `${i * 70}ms` }}
+                    onClick={() => select(stop.dayIndexes[0])}
+                    role="button"
+                    aria-label={`Stop ${i + 1}, day ${stop.from}, ${stop.label}`}
+                  >
+                    {/* Invisible hit target: the pin itself is a thin stick and a
+                        small head, which is a hard thing to click. */}
+                    <circle cx={0} cy={-stick} r={head + 12} fill="transparent" />
+                    {/* Ground shadow — the pin stands on the map, not in it. */}
+                    <ellipse cx={0} cy={1} rx={head * 0.8} ry={head * 0.3} fill="#0B1B33" opacity={0.18} />
+                    <line
+                      x1={0}
+                      y1={0}
+                      x2={0}
+                      y2={-stick}
+                      stroke={isActive ? "#123E82" : "#22262F"}
+                      strokeWidth={1.6}
+                      strokeLinecap="round"
+                    />
+                    {isActive && (
+                      <circle cx={0} cy={-stick - head} r={head} fill="#2475EE" opacity={0.35}>
+                        <animate attributeName="r" values={`${head};${head * 2.4};${head}`} dur="2.2s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0.35;0;0.35" dur="2.2s" repeatCount="indefinite" />
+                      </circle>
+                    )}
+                    <circle cx={0} cy={-stick - head} r={head} fill={`url(#${uid}-${isActive ? "head" : "headIdle"})`} />
+                    {/* Specular dot — the last 10% of the three-dimensional read. */}
+                    <circle cx={-head * 0.3} cy={-stick - head - head * 0.35} r={head * 0.22} fill="#FFFFFF" opacity={0.75} />
+                  </g>
+                </g>
+              );
+            })}
 
-        {/* ── Zoom controls ─────────────────────────────────── */}
-        <div className="absolute right-3 top-3 flex flex-col gap-1.5">
-          <button
-            type="button"
-            onClick={zoomIn}
-            disabled={k >= 8}
-            aria-label="Zoom in"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-white/90 text-ink shadow-sm backdrop-blur transition hover:bg-white hover:text-brand disabled:opacity-40"
-          >
-            <Plus size={15} />
-          </button>
-          <button
-            type="button"
-            onClick={zoomOut}
-            disabled={k <= 1}
-            aria-label="Zoom out"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-white/90 text-ink shadow-sm backdrop-blur transition hover:bg-white hover:text-brand disabled:opacity-40"
-          >
-            <Minus size={15} />
-          </button>
-          <button
-            type="button"
-            onClick={reset}
-            disabled={k <= 1}
-            aria-label="Reset zoom"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-white/90 text-ink shadow-sm backdrop-blur transition hover:bg-white hover:text-brand disabled:opacity-40"
-          >
-            <RotateCcw size={14} />
-          </button>
+          </IndiaMap>
+
+          {/* ── Zoom controls ─────────────────────────────────── */}
+          <div className="absolute right-3 top-3 flex flex-col gap-1.5">
+            <button
+              type="button"
+              onClick={zoomIn}
+              disabled={k >= 8}
+              aria-label="Zoom in"
+              className="flex h-8 w-8 items-center justify-center rounded-xl border border-border bg-white/90 text-ink shadow-sm backdrop-blur transition hover:bg-white hover:text-brand disabled:opacity-40"
+            >
+              <Plus size={14} />
+            </button>
+            <button
+              type="button"
+              onClick={zoomOut}
+              disabled={k <= 1}
+              aria-label="Zoom out"
+              className="flex h-8 w-8 items-center justify-center rounded-xl border border-border bg-white/90 text-ink shadow-sm backdrop-blur transition hover:bg-white hover:text-brand disabled:opacity-40"
+            >
+              <Minus size={14} />
+            </button>
+            <button
+              type="button"
+              onClick={reset}
+              disabled={k <= 1}
+              aria-label="Reset zoom"
+              className="flex h-8 w-8 items-center justify-center rounded-xl border border-border bg-white/90 text-ink shadow-sm backdrop-blur transition hover:bg-white hover:text-brand disabled:opacity-40"
+            >
+              <RotateCcw size={13} />
+            </button>
+          </div>
+
+          {/* Discoverability */}
+          <p className="pointer-events-none absolute bottom-3 left-4 text-[11px] font-medium text-muted-foreground/70">
+            {k > 1 ? `${k.toFixed(1)}× · drag to pan` : "Double-click or ctrl + scroll to zoom"}
+          </p>
         </div>
 
-        {/* Discoverability — the gestures aren't guessable, so they're printed. */}
-        <p className="pointer-events-none absolute bottom-3 left-4 text-[11px] font-medium text-muted-foreground/70">
-          {k > 1 ? `${k.toFixed(1)}× · drag to pan` : "Double-click or ctrl + scroll to zoom"}
-        </p>
-      </div>
+        {/* Right Column: Open day detail card (reduced width) */}
+        <div className="flex h-full min-w-0 flex-col lg:col-span-4">
+          <div className="flex h-full min-h-[360px] flex-col justify-between rounded-2xl border border-border bg-white p-6 shadow-sm">
+            <div key={active} className="min-w-0 flex-1 animate-tileIn">
+              {day ? (
+                <>
+                  <span className="text-[12px] font-bold uppercase tracking-wide text-brand">Day {day.day}</span>
+                  <h3 className="mt-1.5 font-display text-[19px] font-bold text-ink">{day.title}</h3>
+                  <p className="mt-3 text-[14px] leading-relaxed text-foreground/80">{day.detail}</p>
+                </>
+              ) : (
+                <p className="text-[14px] leading-relaxed text-muted-foreground">
+                  Pick a stop on the map to view day details.
+                </p>
+              )}
+            </div>
 
-      {/* ── The open day, in words ──────────────────────────── */}
-      <div className="mt-4 flex items-start gap-3 rounded-2xl border border-border bg-white p-4">
-        <div key={active} className="min-w-0 flex-1 animate-tileIn">
-          {day ? (
-            <>
-              <span className="text-[11px] font-bold uppercase tracking-wide text-brand">Day {day.day}</span>
-              <h3 className="mt-0.5 font-display text-[17px] font-bold text-ink">{day.title}</h3>
-              <p className="mt-1 text-[14px] leading-relaxed text-foreground/75">{day.detail}</p>
-            </>
-          ) : (
-            <p className="text-[14px] leading-relaxed text-muted-foreground">
-              Pick a pin on the map — or a stop from the list beside it — to open that day.
-            </p>
-          )}
+            <div className="mt-4 flex items-center justify-between border-t border-border/60 pt-4">
+              <span className="text-[13px] font-semibold text-muted-foreground">
+                {active >= 0 ? `Day ${active + 1} of ${days.length}` : ""}
+              </span>
+              <div className="flex flex-none gap-2">
+                <button
+                  type="button"
+                  onClick={() => select(Math.max(0, active - 1))}
+                  disabled={active <= 0}
+                  aria-label="Previous day"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-ink transition hover:bg-secondary/50 disabled:opacity-35"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => select(active < 0 ? 0 : Math.min(days.length - 1, active + 1))}
+                  disabled={active === days.length - 1}
+                  aria-label="Next day"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-ink transition hover:bg-secondary/50 disabled:opacity-35"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div className="flex flex-none gap-2">
-          <button
-            type="button"
-            onClick={() => select(Math.max(0, active - 1))}
-            disabled={active <= 0}
-            aria-label="Previous day"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-ink transition hover:bg-secondary/50 disabled:opacity-35"
-          >
-            <ChevronLeft size={16} />
-          </button>
-          <button
-            type="button"
-            onClick={() => select(active < 0 ? 0 : Math.min(days.length - 1, active + 1))}
-            disabled={active === days.length - 1}
-            aria-label="Next day"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-ink transition hover:bg-secondary/50 disabled:opacity-35"
-          >
-            <ChevronRight size={16} />
-          </button>
-        </div>
-      </div>
-
-      {/* Every day is reachable, including the ones that share a pin. */}
-      <div className="mt-3 flex flex-wrap gap-1.5">
-        {days.map((d, i) => (
-          <button
-            key={d.day}
-            type="button"
-            onClick={() => select(i)}
-            aria-current={i === active}
-            className={`min-h-[32px] rounded-full px-3 text-[12px] font-bold tabular-nums transition ${
-              i === active ? "bg-brand text-white" : "bg-secondary/60 text-muted-foreground hover:bg-secondary"
-            }`}
-          >
-            {d.day}
-          </button>
-        ))}
       </div>
     </div>
   );

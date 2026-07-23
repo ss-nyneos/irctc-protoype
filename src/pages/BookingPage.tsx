@@ -42,52 +42,52 @@ const accommodationTypes: Array<{
   children: number;
   fare: (r: OccupancyRates) => number;
 }> = [
-  { id: "a1", label: "1 Adult", adults: 1, children: 0, fare: (r) => r.single },
-  {
-    id: "a1cb",
-    label: "1 Adult + 1 Child with bed",
-    adults: 1,
-    children: 1,
-    fare: (r) => r.single + r.childWithBed,
-  },
-  {
-    id: "a1cn",
-    label: "1 Adult + 1 child WithOut Extra Bed",
-    adults: 1,
-    children: 1,
-    fare: (r) => r.single + r.childNoBed,
-  },
-  { id: "a2", label: "2 Adult", adults: 2, children: 0, fare: (r) => r.double * 2 },
-  {
-    id: "a2cb",
-    label: "2 Adult + 1 Child with bed",
-    adults: 2,
-    children: 1,
-    fare: (r) => r.double * 2 + r.childWithBed,
-  },
-  {
-    id: "a2cn",
-    label: "2 Adult + 1 Child without bed",
-    adults: 2,
-    children: 1,
-    fare: (r) => r.double * 2 + r.childNoBed,
-  },
-  {
-    id: "a2c2",
-    label: "2 Adult + 2 child One WithOut Extra Bed & Other With Bed",
-    adults: 2,
-    children: 2,
-    fare: (r) => r.double * 2 + r.childWithBed + r.childNoBed,
-  },
-  { id: "a3", label: "3 Adult", adults: 3, children: 0, fare: (r) => r.triple * 3 },
-  {
-    id: "a3cn",
-    label: "3 Adult+1 child WithOut Extra Bed",
-    adults: 3,
-    children: 1,
-    fare: (r) => r.triple * 3 + r.childNoBed,
-  },
-];
+    { id: "a1", label: "1 Adult", adults: 1, children: 0, fare: (r) => r.single },
+    {
+      id: "a1cb",
+      label: "1 Adult + 1 Child with bed",
+      adults: 1,
+      children: 1,
+      fare: (r) => r.single + r.childWithBed,
+    },
+    {
+      id: "a1cn",
+      label: "1 Adult + 1 child WithOut Extra Bed",
+      adults: 1,
+      children: 1,
+      fare: (r) => r.single + r.childNoBed,
+    },
+    { id: "a2", label: "2 Adult", adults: 2, children: 0, fare: (r) => r.double * 2 },
+    {
+      id: "a2cb",
+      label: "2 Adult + 1 Child with bed",
+      adults: 2,
+      children: 1,
+      fare: (r) => r.double * 2 + r.childWithBed,
+    },
+    {
+      id: "a2cn",
+      label: "2 Adult + 1 Child without bed",
+      adults: 2,
+      children: 1,
+      fare: (r) => r.double * 2 + r.childNoBed,
+    },
+    {
+      id: "a2c2",
+      label: "2 Adult + 2 child One WithOut Extra Bed & Other With Bed",
+      adults: 2,
+      children: 2,
+      fare: (r) => r.double * 2 + r.childWithBed + r.childNoBed,
+    },
+    { id: "a3", label: "3 Adult", adults: 3, children: 0, fare: (r) => r.triple * 3 },
+    {
+      id: "a3cn",
+      label: "3 Adult+1 child WithOut Extra Bed",
+      adults: 3,
+      children: 1,
+      fare: (r) => r.triple * 3 + r.childNoBed,
+    },
+  ];
 
 const indianStates = [
   "ANDAMAN AND NICOBAR ISLANDS", "ANDHRA PRADESH", "ARUNACHAL PRADESH", "ASSAM", "BIHAR", "CHANDIGARH",
@@ -241,9 +241,8 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
         aria-invalid={Boolean(error)}
         aria-describedby={error || hint ? `${id}-help` : undefined}
-        className={`h-12 w-full rounded-xl border bg-white px-3.5 text-[15px] text-ink outline-none transition focus:ring-2 ${
-          error ? "border-destructive focus:ring-destructive/20" : "focus:border-brand focus:ring-brand/20"
-        }`}
+        className={`h-12 w-full rounded-xl border bg-white px-3.5 text-[15px] text-ink outline-none transition focus:ring-2 ${error ? "border-destructive focus:ring-destructive/20" : "focus:border-brand focus:ring-brand/20"
+          }`}
       />
       {(error || hint) && (
         <p
@@ -530,9 +529,8 @@ export function BookingPage({
               <li key={label} className="flex items-center gap-2">
                 <span
                   aria-current={i === step ? "step" : undefined}
-                  className={`flex h-8 w-8 flex-none items-center justify-center rounded-full text-[13px] font-bold transition ${
-                    i < step ? "bg-emerald-500 text-white" : i === step ? "bg-brand text-white" : "bg-white/15 text-white/60"
-                  }`}
+                  className={`flex h-8 w-8 flex-none items-center justify-center rounded-full text-[13px] font-bold transition ${i < step ? "bg-emerald-500 text-white" : i === step ? "bg-brand text-white" : "bg-white/15 text-white/60"
+                    }`}
                 >
                   {i < step ? <Check size={15} /> : i + 1}
                 </span>
@@ -623,13 +621,12 @@ export function BookingPage({
                     return (
                       <label
                         key={c.code}
-                        className={`flex items-center gap-3 rounded-2xl border-2 p-3.5 transition ${
-                          !c.available
+                        className={`flex items-center gap-3 rounded-2xl border-2 p-3.5 transition ${!c.available
                             ? "cursor-not-allowed border-border bg-secondary/30 opacity-60"
                             : isSelected
                               ? "cursor-pointer border-brand bg-brand/[0.04]"
                               : "cursor-pointer border-border hover:border-brand/40"
-                        }`}
+                          }`}
                       >
                         <input
                           type="radio"
@@ -1129,9 +1126,8 @@ export function BookingPage({
                       <button
                         key={m}
                         type="button"
-                        className={`flex min-h-[48px] items-center justify-center gap-1.5 rounded-xl border text-[13px] font-semibold transition ${
-                          i === 0 ? "border-brand bg-brand/5 text-brand" : "hover:border-brand/40"
-                        }`}
+                        className={`flex min-h-[48px] items-center justify-center gap-1.5 rounded-xl border text-[13px] font-semibold transition ${i === 0 ? "border-brand bg-brand/5 text-brand" : "hover:border-brand/40"
+                          }`}
                       >
                         <CreditCard size={14} /> {m}
                       </button>
@@ -1304,14 +1300,12 @@ function PayOption({
       onClick={onClick}
       type="button"
       aria-pressed={active}
-      className={`flex w-full items-start gap-3 rounded-2xl border-2 p-4 text-left transition ${
-        active ? "border-brand bg-brand/[0.04]" : "border-border hover:border-brand/40"
-      }`}
+      className={`flex w-full items-start gap-3 rounded-2xl border-2 p-4 text-left transition ${active ? "border-brand bg-brand/[0.04]" : "border-border hover:border-brand/40"
+        }`}
     >
       <span
-        className={`mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full border-2 ${
-          active ? "border-brand bg-brand text-white" : "border-muted"
-        }`}
+        className={`mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full border-2 ${active ? "border-brand bg-brand text-white" : "border-muted"
+          }`}
       >
         {active && <Check size={11} />}
       </span>

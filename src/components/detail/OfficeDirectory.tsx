@@ -12,82 +12,84 @@ function OfficeCard({ office, home }: { office: TourismOffice; home: boolean }) 
 
   return (
     <div
-      className={`group flex flex-col rounded-2xl border bg-white p-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_40px_-24px_rgba(15,23,42,0.45)] ${
-        home ? "border-brand/40 ring-1 ring-brand/20" : ""
-      }`}
+      className={`group flex h-full flex-col justify-between rounded-2xl border border-[#B7B7B7] shadow-md bg-[#F2F7FA] p-5 md:p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${home ? " " : ""
+        }`}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <h4 className="font-display text-[16px] font-bold leading-tight text-ink">{office.city}</h4>
-          <p className="mt-0.5 text-[11.5px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-            {office.zone} zone
-          </p>
+      <div>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h4 className="font-display text-[17px] font-bold leading-tight text-ink">{office.city}</h4>
+            <p className="mt-1 text-[12px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+              {office.zone} zone
+            </p>
+          </div>
+          {/* The whole point of ranking these: say plainly which one is yours. */}
+          {home && (
+            <span className="flex-none rounded-full bg-brand/10 px-3 py-1 text-[12px] font-bold text-brand">
+              Your boarding city
+            </span>
+          )}
         </div>
-        {/* The whole point of ranking these: say plainly which one is yours. */}
-        {home && (
-          <span className="flex-none rounded-full bg-brand/10 px-2.5 py-1 text-[11px] font-bold text-brand">
-            Your boarding city
-          </span>
-        )}
-      </div>
 
-      <p className="mt-3 flex items-start gap-2 text-[13px] leading-relaxed text-foreground/70">
-        <MapPin size={14} className="mt-0.5 flex-none text-muted-foreground" />
-        {office.address}
-      </p>
+        <p className="mt-4 flex items-start gap-2.5 text-[14px] leading-relaxed text-foreground/80">
+          <MapPin size={16} className="mt-0.5 flex-none text-brand" />
+          {office.address}
+        </p>
 
-      <div className="mt-3 space-y-1.5">
-        <a
-          href={dial(primary)}
-          className="inline-flex items-center gap-2 text-[14px] font-bold tabular-nums text-navy transition-colors hover:text-brand"
-        >
-          <Phone size={14} className="flex-none text-brand" />
-          {primary}
-        </a>
-
-        {rest.length > 0 && (
-          <div
-            className={`grid transition-[grid-template-rows] duration-300 ease-out ${
-              showAll ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-            }`}
+        <div className="mt-4 space-y-2">
+          <a
+            href={dial(primary)}
+            className="inline-flex items-center gap-2 text-[14px] font-bold tabular-nums text-navy transition-colors hover:text-brand"
           >
-            <div className="overflow-hidden">
-              <div className="flex flex-col items-start gap-1 pl-[22px] pt-1">
-                {rest.map((phone) => (
-                  <a
-                    key={phone}
-                    href={dial(phone)}
-                    className="text-[13px] font-semibold tabular-nums text-foreground/70 transition-colors hover:text-brand"
-                  >
-                    {phone}
-                  </a>
-                ))}
+            <Phone size={15} className="flex-none text-brand" />
+            {primary}
+          </a>
+
+          {rest.length > 0 && (
+            <div
+              className={`grid transition-[grid-template-rows] duration-300 ease-out ${showAll ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                }`}
+            >
+              <div className="overflow-hidden">
+                <div className="flex flex-col items-start gap-1.5 pl-[23px] pt-1.5">
+                  {rest.map((phone) => (
+                    <a
+                      key={phone}
+                      href={dial(phone)}
+                      className="text-[14px] font-semibold tabular-nums text-foreground/80 transition-colors hover:text-brand"
+                    >
+                      {phone}
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
 
-      {office.emails.map((email) => (
-        <a
-          key={email}
-          href={`mailto:${email}`}
-          className="mt-1.5 inline-flex items-center gap-2 break-all text-[13px] text-foreground/70 transition-colors hover:text-brand"
-        >
-          <Mail size={14} className="flex-none text-muted-foreground" />
-          {email}
-        </a>
-      ))}
+        <div className="mt-3 space-y-1.5">
+          {office.emails.map((email) => (
+            <a
+              key={email}
+              href={`mailto:${email}`}
+              className="flex items-center gap-2 break-all text-[14px] text-foreground/80 transition-colors hover:text-brand"
+            >
+              <Mail size={15} className="flex-none text-muted-foreground" />
+              {email}
+            </a>
+          ))}
+        </div>
+      </div>
 
       {rest.length > 0 && (
         <button
           type="button"
           onClick={() => setShowAll(!showAll)}
           aria-expanded={showAll}
-          className="mt-3 inline-flex items-center gap-1 self-start text-[12.5px] font-semibold text-brand transition hover:underline"
+          className="mt-4 inline-flex items-center gap-1.5 self-start text-[13px] font-bold text-brand transition hover:underline"
         >
           {showAll ? "Fewer numbers" : `${rest.length} more ${rest.length === 1 ? "number" : "numbers"}`}
-          <ChevronDown size={13} className={`transition-transform duration-300 ${showAll ? "rotate-180" : ""}`} />
+          <ChevronDown size={14} className={`transition-transform duration-300 ${showAll ? "rotate-180" : ""}`} />
         </button>
       )}
     </div>
@@ -116,11 +118,11 @@ export function OfficeDirectory({ pkg, boarding }: { pkg: TourPackage; boarding:
         {pkg.name}.
       </p>
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+      <div className="mt-5 grid gap-4 sm:grid-cols-2 items-stretch">
         {visible.map((office, i) => (
           <div
             key={office.city}
-            className="animate-tileIn"
+            className="animate-tileIn h-full"
             // Cards land one after another rather than all at once, which is
             // what makes the expand read as a reveal instead of a repaint.
             style={{ animationDelay: `${Math.min(i, 6) * 45}ms` }}
