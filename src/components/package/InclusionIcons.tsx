@@ -41,7 +41,7 @@ export function InclusionIcons({ pkg, tone = "dark", size = 14 }: InclusionIcons
       {inclusionsOf(pkg).map((k) => {
         const Icon = inclusionIcons[k];
         return (
-          <span key={k} className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold">
+          <span key={k} className="inline-flex items-center gap-1.5 text-[14px] font-semibold">
             <Icon size={size} className={tone === "light" ? "text-white/70" : "text-brand"} /> {k}
           </span>
         );

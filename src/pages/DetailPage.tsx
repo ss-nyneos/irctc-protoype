@@ -35,6 +35,7 @@ import { buildFaqs } from "@/data/packageFaqs";
 import { nationalHelpline } from "@/data/offices";
 import { EditorialPackageCard, HOVER_GROW } from "@/components/package/EditorialPackageCard";
 import { InclusionIcons } from "@/components/package/InclusionIcons";
+import { downloadPackageDetails } from "@/utils/downloadDetails";
 
 /** IRCTC's published inclusions, verbatim. */
 const detailedInclusions = [
@@ -89,7 +90,7 @@ export function DetailPage({ id }: { id: string }) {
   );
   const [travellers] = useState(2);
   const [departure, setDeparture] = useState(detail.departures[0]);
-  const [openDay, setOpenDay] = useState(-1);
+  const [openDay, setOpenDay] = useState(0);
   const [boardingCode] = useState(detail.boarding[0]?.code ?? "");
 
   const [openSections, setOpenSections] = useState<Set<string>>(() => new Set(["overview"]));
@@ -162,7 +163,7 @@ export function DetailPage({ id }: { id: string }) {
   return (
     <div ref={ref} className="min-h-screen pb-28 lg:pb-24">
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative isolate flex min-h-[52vh] w-full flex-col overflow-hidden bg-ink">
+      <section className="relative isolate flex min-h-[68vh] md:min-h-[72vh] w-full flex-col overflow-hidden bg-ink">
         {/* Background image fills the section */}
         <div className="absolute inset-0">
           <ImageWithFallback
@@ -198,73 +199,72 @@ export function DetailPage({ id }: { id: string }) {
         </div>
 
         {/* Glass card overlay at bottom of hero — Liquid Glass treatment */}
-        <div className="relative z-10 mt-auto px-4 pb-5 md:px-8">
+        <div className="relative z-10 mt-auto px-4 pb-8 md:px-8 md:pb-10">
           <div className="mx-auto max-w-[1600px]">
             <div
-              className="overflow-hidden bg-black/40 rounded-2xl border border-white/30"
+              className="overflow-hidden bg-black/60 rounded-2xl border border-white/30"
               style={{
-                // background: "linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.09) 100%)",
                 backdropFilter: "blur(2px) saturate(1.8)",
                 WebkitBackdropFilter: "blur(24px) saturate(1.8)",
-                boxShadow: "0 20px 50px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 1px 0 rgba(255, 255, 255, 0.15)",
+                // boxShadow: "0 20px 50px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 1px 0 rgba(255, 255, 255, 0.15)",
               }}
             >
-              <div className="px-6 py-5">
+              <div className="px-8 py-7 md:px-10 md:py-8">
                 {/* Top row: name + duration + price */}
-                <div className="flex flex-wrap items-start justify-between gap-4">
+                <div className="flex flex-wrap items-start justify-between gap-6">
                   <div className="min-w-0 flex-1">
                     {/* Duration + category badges */}
-                    <div className="mb-3 flex flex-wrap gap-2">
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[12px] font-semibold text-white backdrop-blur-sm">
-                        <Moon size={11} className="opacity-75" /> {pkg.nights} Nights / {pkg.days} Days
+                    <div className="mb-4 flex flex-wrap gap-2.5">
+                      <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[14px] font-semibold text-white backdrop-blur-sm">
+                        <Moon size={13} className="opacity-80" /> {pkg.nights} Nights / {pkg.days} Days
                       </span>
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[12px] font-semibold text-white backdrop-blur-sm">
+                      {/* <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-[14px] font-semibold text-white backdrop-blur-sm">
                         {pkg.category}
-                      </span>
+                      </span> */}
                     </div>
 
                     {/* Package name */}
-                    <h1 className="!text-white text-[22px] font-bold leading-tight md:text-[28px]" style={{ fontFamily: "Helvetica, Arial, sans-serif", letterSpacing: "-0.02em" }}>
+                    <h1 className="!text-white text-[24px] font-bold leading-tight md:text-[30px]" style={{ fontFamily: "Helvetica, Arial, sans-serif", letterSpacing: "-0.02em" }}>
                       {pkg.name}
                     </h1>
 
                     {/* Route */}
-                    <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] font-semibold text-white/80">
+                    <div className="mt-2.5 flex flex-wrap items-center gap-x-3.5 gap-y-1.5 text-[14px] font-semibold text-white/90">
                       <span className="inline-flex items-center gap-1.5">
-                        <MapPin size={13} className="opacity-70" /> From {pkg.from}
+                        <MapPin size={15} className="opacity-80" /> From {pkg.from}
                       </span>
                       <span className="text-white/40">→</span>
                       <span className="inline-flex items-center gap-1.5">
-                        <MapPinned size={13} className="opacity-70" /> {pkg.region}
+                        <MapPinned size={15} className="opacity-80" /> {pkg.region}
                       </span>
-                      <span className="hidden h-3.5 w-px bg-white/30 sm:block" />
+                      <span className="hidden h-4 w-px bg-white/30 sm:block" />
                       <span className="inline-flex items-center gap-1.5">
-                        <Star size={12} fill="#F26B21" stroke="none" /> {pkg.rating.toFixed(1)} · {pkg.reviews.toLocaleString("en-IN")} reviews
+                        <Star size={14} fill="#F26B21" stroke="none" /> {pkg.rating.toFixed(1)} · {pkg.reviews.toLocaleString("en-IN")} reviews
                       </span>
-                      <span className="hidden h-3.5 w-px bg-white/30 sm:block" />
-                      <span className="inline-flex items-center gap-1.5">
-                        <TrainFront size={13} className="opacity-70" /> {pkg.travelMode}
-                      </span>
+                      {/* <span className="hidden h-4 w-px bg-white/30 sm:block" /> */}
+                      {/* <span className="inline-flex items-center gap-1.5">
+                        <TrainFront size={15} className="opacity-80" /> {pkg.travelMode}
+                      </span> */}
                     </div>
 
                     {/* Blurb (2-line clamp) */}
-                    <p className="mt-3 line-clamp-2 max-w-[70ch] text-[13px] leading-relaxed text-white/75">
+                    <p className="mt-4 line-clamp-2 max-w-[72ch] text-[14.5px] leading-relaxed text-white/80">
                       {pkg.blurb}
                     </p>
 
                     {/* Inclusions */}
-                    <div className="mt-3 border-t border-white/15 pt-3">
-                      <InclusionIcons pkg={pkg} tone="light" size={13} />
+                    <div className="mt-5 border-t border-white/20 pt-4">
+                      <InclusionIcons pkg={pkg} tone="light" size={15} />
                     </div>
                   </div>
 
                   {/* Price panel */}
                   <div className="shrink-0 text-right">
-                    <div className="text-[11px] font-medium text-white/55">Starting from</div>
-                    <div className="font-display text-[28px] font-bold tabular-nums text-white">
+                    <div className="text-[14px] font-medium text-white/70">Starting from</div>
+                    <div className="font-display text-[30px] font-bold tabular-nums text-white md:text-[34px]">
                       {formatINR(pkg.price)}
                     </div>
-                    <div className="text-[11px] text-white/55">per person</div>
+                    <div className="text-[14px] text-white/70">per person</div>
                   </div>
                 </div>
               </div>
@@ -298,7 +298,7 @@ export function DetailPage({ id }: { id: string }) {
             <ul className="mt-6 grid gap-x-6 gap-y-3 sm:grid-cols-2">
               {pkg.highlights.map((h) => (
                 <li key={h} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                  <span className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-emerald-500 text-white">
                     <Check size={12} />
                   </span>
                   <span className="text-[14px] font-medium leading-relaxed text-foreground/80">{h}</span>
@@ -322,6 +322,64 @@ export function DetailPage({ id }: { id: string }) {
             open={openSections.has("inclusions")}
             onToggle={() => toggleSection("inclusions")}
           >
+            {/* Category & Tariff Rates Table */}
+            <div className="mb-5 overflow-hidden rounded-xl border border-gray-200/90 bg-white shadow-sm">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-brand text-white text-[13px] font-bold uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3.5">Category / Class</th>
+                    <th scope="col" className="px-6 py-3.5">Accommodation & Stays</th>
+                    <th scope="col" className="px-6 py-3.5 text-right">Package Fare</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200/60 text-[14px]">
+                  {detail.classes.map((cls, idx) => (
+                    <tr key={cls.code} className={idx % 2 === 1 ? "bg-[#EBF3FF]" : "bg-white"}>
+                      <td className="px-6 py-4 font-bold text-ink">
+                        {cls.label} ({cls.code})
+                      </td>
+                      <td className="px-6 py-4 font-medium text-foreground/80">
+                        {cls.detail}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <span className="inline-flex items-center justify-center rounded-lg bg-brand px-4 py-1.5 text-[13px] font-bold tabular-nums text-white shadow-sm">
+                          {formatINR(cls.price)}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Boarding Chain Table if available */}
+            {hasBoarding && (
+              <div className="mb-5 overflow-hidden rounded-xl border border-gray-200/90 bg-white shadow-sm">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-brand text-white text-[13px] font-bold uppercase tracking-wider">
+                      <th scope="col" className="px-6 py-3.5">Boarding Station</th>
+                      <th scope="col" className="px-6 py-3.5">Station Code</th>
+                      <th scope="col" className="px-6 py-3.5 text-right">Timings</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200/60 text-[14px]">
+                    {detail.boarding.map((point, idx) => (
+                      <tr key={point.code} className={idx % 2 === 1 ? "bg-[#EBF3FF]" : "bg-white"}>
+                        <td className="px-6 py-3.5 font-bold text-ink">{point.station}</td>
+                        <td className="px-6 py-3.5 font-medium text-foreground/80">{point.code}</td>
+                        <td className="px-6 py-3.5 text-right">
+                          <span className="inline-flex items-center justify-center rounded-lg bg-brand px-3 py-1 text-[12px] font-bold text-white shadow-sm">
+                            {point.dep ? `Dep ${point.dep}` : point.arr ? `Arr ${point.arr}` : "Halt"}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
             {/* Tour facts */}
             <div className="grid gap-3 md:grid-cols-3">
               {tourFacts.map((fact) => (
@@ -455,7 +513,10 @@ export function DetailPage({ id }: { id: string }) {
             {/* Download Details */}
             <button
               type="button"
-              onClick={() => window.print()}
+              onClick={() => {
+                setOpenSections(new Set(["overview", "itinerary", "inclusions", "policy", "contact"]));
+                downloadPackageDetails(pkg, detail, detailedInclusions, detailedExclusions, importantInclusionNotes);
+              }}
               className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-2xl border-2 border-brand/30 bg-white px-5 py-3.5 text-[15px] font-bold text-brand transition hover:bg-brand/5"
             >
               {/* <Download size={17} /> */}
@@ -512,7 +573,10 @@ export function DetailPage({ id }: { id: string }) {
           </button>
           <button
             type="button"
-            onClick={() => window.print()}
+            onClick={() => {
+              setOpenSections(new Set(["overview", "itinerary", "inclusions", "policy", "contact"]));
+              downloadPackageDetails(pkg, detail, detailedInclusions, detailedExclusions, importantInclusionNotes);
+            }}
             className="flex min-h-[48px] flex-none items-center gap-2 justify-center rounded-2xl border-2 border-brand px-4 text-[15px] font-bold text-brand transition hover:bg-brand/5"
           >
             <Download size={16} />

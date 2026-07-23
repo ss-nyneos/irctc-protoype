@@ -88,7 +88,7 @@ export function SectionNav({
 
                 {/* Section title */}
                 <span
-                  className={`text-[16px] font-semibold transition-colors duration-200 ${isActive
+                  className={`text-[16px] font-medium transition-colors duration-200 ${isActive
                     ? "text-brand"
                     : "text-gray-400 group-hover:text-brand dark:text-gray-500"
                     }`}
