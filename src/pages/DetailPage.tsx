@@ -202,11 +202,11 @@ export function DetailPage({ id }: { id: string }) {
         <div className="relative z-10 mt-auto px-4 pb-5 md:px-8">
           <div className="mx-auto max-w-[1600px]">
             <div
-              className="overflow-hidden rounded-2xl border border-white/20"
+              className="overflow-hidden rounded-2xl border border-white/20 shadow-2xl"
               style={{
-                background: "rgba(8, 20, 55, 0.62)",
-                backdropFilter: "blur(20px) saturate(1.4)",
-                WebkitBackdropFilter: "blur(20px) saturate(1.4)",
+                background: "rgba(10, 20, 48, 0.32)",
+                backdropFilter: "blur(14px) saturate(1.2)",
+                WebkitBackdropFilter: "blur(14px) saturate(1.2)",
               }}
             >
               <div className="px-6 py-5">
@@ -273,7 +273,7 @@ export function DetailPage({ id }: { id: string }) {
         </div>
       </section>
 
-      <AccentBar />
+      {/* <AccentBar /> */}
 
       {/* ── Main content: sidebar · sections · action buttons ── */}
       <div className="mx-auto grid max-w-[1460px] gap-7 px-4 py-9 md:px-6 lg:grid-cols-[200px_minmax(0,1fr)_180px] lg:gap-9">
@@ -286,7 +286,7 @@ export function DetailPage({ id }: { id: string }) {
         </aside>
 
         {/* ── Middle: collapsible content sections ──────────── */}
-        <div className="min-w-0 space-y-4">
+        <div className="min-w-0 border-t border-gray-200/80">
           <CollapsibleSection
             id="overview"
             title="Overview"
@@ -462,9 +462,9 @@ export function DetailPage({ id }: { id: string }) {
               Download Details
             </button>
 
-            <p className="text-center text-[12px] text-muted-foreground">
+            {/* <p className="text-center text-[12px] text-muted-foreground">
               Secure government payment · Part-pay 25% today
-            </p>
+            </p> */}
           </div>
         </div>
       </div>

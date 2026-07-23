@@ -1,11 +1,4 @@
 import { useEffect, useState } from "react";
-import {
-  BookOpen,
-  CircleAlert,
-  FileText,
-  MessageCircle,
-  LayoutList,
-} from "lucide-react";
 
 export interface Section {
   id: string;
@@ -14,14 +7,6 @@ export interface Section {
 
 /** Site header height — what a section must clear when scrolled to. */
 const NAV_OFFSET = 88;
-
-const sectionIcons: Record<string, typeof BookOpen> = {
-  overview: BookOpen,
-  itinerary: LayoutList,
-  inclusions: FileText,
-  policy: CircleAlert,
-  contact: MessageCircle,
-};
 
 function useScrollSpy(ids: string[]): string {
   const [active, setActive] = useState(ids[0]);
@@ -55,9 +40,9 @@ function useScrollSpy(ids: string[]): string {
 }
 
 /**
- * Pill-style vertical section navigation for the detail page.
- * Active item: solid brand-blue fill + white text with left accent stripe.
- * Hover: light brand tint.
+ * Line-and-number section navigation.
+ * Active item: brand blue line, brand blue index, brand blue semibold title.
+ * Inactive items: gray line, gray index, gray semibold title (highlighting on hover).
  */
 export function SectionNav({
   sections,
@@ -69,36 +54,47 @@ export function SectionNav({
   const active = useScrollSpy(sections.map((s) => s.id));
 
   return (
-    <nav aria-label="Package sections">
-      <ul className="space-y-1">
-        {sections.map((s) => {
+    <nav aria-label="Package sections" className="py-2">
+      <ul className="space-y-4">
+        {sections.map((s, idx) => {
           const isActive = active === s.id;
-          const Icon = sectionIcons[s.id] ?? BookOpen;
+          const num = String(idx + 1).padStart(2, "0");
+
           return (
             <li key={s.id}>
               <button
                 type="button"
                 onClick={() => onNavigate(s.id)}
                 aria-current={isActive ? "location" : undefined}
-                className={`group relative flex w-full items-center gap-3 overflow-hidden rounded-xl px-3.5 py-3 text-left text-[14px] font-bold transition-all duration-200 ${
-                  isActive
-                    ? "bg-brand text-white shadow-md shadow-brand/25"
-                    : "text-muted-foreground hover:bg-brand/10 hover:text-ink"
-                }`}
+                className="group flex w-full items-center gap-3.5 py-1 text-left transition-all duration-200"
               >
-                {/* Left accent stripe */}
+                {/* Horizontal line indicator */}
                 <span
-                  className={`absolute left-0 top-2 bottom-2 w-[3px] rounded-full transition-all duration-200 ${
-                    isActive ? "bg-white/50 opacity-100" : "opacity-0"
-                  }`}
+                  className={`h-[2px] rounded-full transition-all duration-300 ease-out ${isActive
+                    ? "w-10 bg-brand"
+                    : "w-6 bg-gray-400 group-hover:w-10 group-hover:bg-brand dark:bg-gray-600"
+                    }`}
                 />
-                <Icon
-                  size={16}
-                  className={`shrink-0 transition-colors duration-200 ${
-                    isActive ? "text-white" : "text-brand/70 group-hover:text-brand"
-                  }`}
-                />
-                <span className="truncate">{s.label}</span>
+
+                {/* 2-digit index */}
+                <span
+                  className={` text-[14px] font-semibold tabular-nums transition-colors duration-200 ${isActive
+                    ? "text-brand"
+                    : "text-gray-400 group-hover:text-brand dark:text-gray-500"
+                    }`}
+                >
+                  {num}
+                </span>
+
+                {/* Section title */}
+                <span
+                  className={`text-[16px] font-semibold transition-colors duration-200 ${isActive
+                    ? "text-brand"
+                    : "text-gray-400 group-hover:text-brand dark:text-gray-500"
+                    }`}
+                >
+                  {s.label}
+                </span>
               </button>
             </li>
           );

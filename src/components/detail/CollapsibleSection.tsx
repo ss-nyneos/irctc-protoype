@@ -27,17 +27,17 @@ export function CollapsibleSection({
           type="button"
           onClick={onToggle}
           aria-expanded={open}
-          className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left transition hover:bg-secondary/40"
+          className="flex bg-brand text-white w-full items-center justify-between gap-3 px-5 py-4 text-left transition"
         >
-          <span className="font-display text-[18px] font-bold text-ink">{title}</span>
+          <span className="text-[22px] font-medium">{title}</span>
           <ChevronDown
             size={20}
-            className={`flex-none text-muted-foreground transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+            className={`flex-none  transition-transform duration-300 ${open ? "rotate-180" : ""}`}
           />
         </button>
       </h2>
 
-      {open && <div className="animate-tileIn border-t px-5 py-5 md:px-6">{children}</div>}
+      {open && <div className="animate-tileIn border-t border-x border-x-gray-300  px-5 py-5 md:px-6">{children}</div>}
     </section>
   );
 }
