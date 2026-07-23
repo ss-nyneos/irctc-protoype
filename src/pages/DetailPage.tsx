@@ -530,27 +530,47 @@ export function DetailPage({ id }: { id: string }) {
         </div>
       </div>
 
-      {/* ── Related packages ──────────────────────────────── */}
-      <div className="mx-auto max-w-7xl px-4 md:px-6">
-        <h2 className="reveal font-display text-[22px] font-bold text-ink">You Might Also Like</h2>
+      {/* ── Related packages: aligned to the middle content column ────── */}
+      <div className="mx-auto grid max-w-[1460px] gap-7 px-4 pb-10 md:px-6 lg:grid-cols-[200px_minmax(0,1fr)_180px] lg:gap-9">
+        {/* spacer under the section nav */}
+        <div className="hidden lg:block" aria-hidden />
 
-        <div
-          className="card-row mt-4 flex flex-col gap-4 sm:flex-row"
-          style={
-            {
-              "--cell-grow": 1 + HOVER_GROW,
-              "--cell-shrink": related.length > 1 ? 1 - HOVER_GROW / (related.length - 1) : 1,
-            } as CSSProperties
-          }
-        >
-          {related.map((p) => (
-            <div key={p.id} className="card-cell min-w-0">
-              <div className="reveal">
-                <EditorialPackageCard pkg={p} compact />
-              </div>
-            </div>
-          ))}
+        <div className="min-w-0">
+          <h2 className="reveal font-display text-[28px] font-bold uppercase text-ink">
+            You Might Also <span className="text-blue">Like</span>
+          </h2>
+
+          {/* Rows of two: keeps 2 per row while the flex card-row preserves the
+              hover expand/shrink animation between a card and its neighbour. */}
+          <div className="mt-4 flex flex-col gap-4">
+            {Array.from({ length: Math.ceil(related.length / 2) }, (_, r) => {
+              const rowCards = related.slice(r * 2, r * 2 + 2);
+              return (
+                <div
+                  key={r}
+                  className="card-row flex flex-col gap-4 sm:flex-row"
+                  style={
+                    {
+                      "--cell-grow": 1 + HOVER_GROW,
+                      "--cell-shrink": rowCards.length > 1 ? 1 - HOVER_GROW / (rowCards.length - 1) : 1,
+                    } as CSSProperties
+                  }
+                >
+                  {rowCards.map((p) => (
+                    <div key={p.id} className="card-cell min-w-0">
+                      <div className="reveal">
+                        <EditorialPackageCard pkg={p} compact heightClass="h-[290px]" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
         </div>
+
+        {/* spacer under the booking rail */}
+        <div className="hidden lg:block" aria-hidden />
       </div>
 
       {/* ── Mobile book bar ────────────────────────────────── */}

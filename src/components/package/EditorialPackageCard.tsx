@@ -15,6 +15,8 @@ interface EditorialPackageCardProps {
   featured?: boolean;
   /** Shorter frame, for the recent-packages shelf. */
   compact?: boolean;
+  /** Override the frame height, e.g. "h-[300px]". Falls back to the size preset. */
+  heightClass?: string;
   /** Shown top-right under the price when the card can be compared. */
   comparing?: boolean;
   onCompare?: () => void;
@@ -28,12 +30,13 @@ export function EditorialPackageCard({
   pkg,
   featured = false,
   compact = false,
+  heightClass,
   comparing = false,
   onCompare,
 }: EditorialPackageCardProps) {
   const { go } = useRouter();
   const detail = getPackageDetail(pkg);
-  const height = featured ? "h-[470px]" : compact ? "h-[330px]" : "h-[410px]";
+  const height = heightClass ?? (featured ? "h-[470px]" : compact ? "h-[330px]" : "h-[410px]");
 
   return (
     <div
