@@ -6,7 +6,8 @@
   --navy-2: #2a5aa0;
   --gold: #e8b93c;
   background: var(--paper);
-  padding-block: var(--section-y);
+  padding-top: clamp(1rem, 2.5vw, 2.2rem);
+  padding-bottom: var(--section-y);
 }
 
 /* ---- header ---- */
