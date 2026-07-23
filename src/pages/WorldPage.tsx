@@ -293,7 +293,7 @@ export function WorldPage({ initialCategory, initialFromPlace }: { initialCatego
 
 
       <div className="bg-[linear-gradient(180deg,#f4eff1_0%,#ffffff_460px)]">
-        <div id="results" className="relative mx-auto max-w-[1400px] scroll-mt-4 px-4 pt-6 md:px-8 xl:px-12">
+        <div id="results" className="relative mx-auto max-w-[1600px] scroll-mt-4 px-4 pt-6 md:px-8 xl:px-12">
 
           {/* "Packages Originated from" banner */}
           {(initialFromPlace !== undefined || originQuery !== "") && (
@@ -373,7 +373,7 @@ export function WorldPage({ initialCategory, initialFromPlace }: { initialCatego
           <div className="mt-5 flex flex-col items-start gap-6 lg:flex-row lg:gap-8">
             {/* Collapsible filter sidebar */}
             <aside
-              className={`no-scrollbar shrink-0 transition-all duration-300 ease-out lg:sticky lg:top-[92px] lg:max-h-[calc(100vh-110px)] lg:overflow-y-auto lg:pb-4 ${filterCollapsed ? "lg:w-[48px]" : "w-full lg:w-[22%] lg:min-w-[248px]"
+              className={`no-scrollbar shrink-0 transition-all duration-300 ease-out lg:sticky lg:top-[40px] lg:max-h-[calc(100vh-110px)] lg:overflow-y-auto lg:pb-4 ${filterCollapsed ? "lg:w-[48px]" : "w-full lg:w-[22%] lg:min-w-[248px]"
                 }`}
             >
               {/* Collapse toggle button (desktop only) */}

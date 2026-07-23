@@ -520,9 +520,9 @@ export function BookingPage({
           <button
             onClick={back}
             type="button"
-            className="mb-3 inline-flex min-h-[44px] items-center gap-1.5 text-[13px] font-semibold text-white/80 hover:text-white"
+            className="absolute left-4 top-4 z-20 inline-flex items-center gap-1.5 rounded-full bg-black/30 px-3.5 py-2 text-[14px] font-semibold text-[#FFFFFF] backdrop-blur-sm transition hover:bg-black/45 md:left-6 md:top-6"
           >
-            <ArrowLeft size={15} /> Back to package
+            <ArrowLeft size={16} /> Back
           </button>
           <ol className="flex items-center justify-center gap-2">
             {steps.map((label, i) => (
@@ -622,10 +622,10 @@ export function BookingPage({
                       <label
                         key={c.code}
                         className={`flex items-center gap-3 rounded-2xl border-2 p-3.5 transition ${!c.available
-                            ? "cursor-not-allowed border-border bg-secondary/30 opacity-60"
-                            : isSelected
-                              ? "cursor-pointer border-brand bg-brand/[0.04]"
-                              : "cursor-pointer border-border hover:border-brand/40"
+                          ? "cursor-not-allowed border-border bg-secondary/30 opacity-60"
+                          : isSelected
+                            ? "cursor-pointer border-brand bg-brand/[0.04]"
+                            : "cursor-pointer border-border hover:border-brand/40"
                           }`}
                       >
                         <input

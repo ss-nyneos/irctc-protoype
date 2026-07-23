@@ -1,4 +1,4 @@
-import { useCallback, useId, useMemo } from "react";
+import { useCallback, useEffect, useId, useMemo } from "react";
 import { ChevronLeft, ChevronRight, Minus, Plus, RotateCcw } from "lucide-react";
 import { IndiaMap } from "@/components/common/IndiaMap";
 import { ItineraryRail } from "@/components/detail/ItineraryRail";
@@ -17,62 +17,7 @@ const LABEL_EDGE = 40;
 const LABEL_INSET = 238;
 const PLATE_H = 42;
 const BADGE_R = 11;
-const ROUTE_PADDING = 160;
-const DEFAULT_ROUTE_ZOOM = 2.8;
 
-/**
- * SVG has no text metrics before paint, so plate widths are estimated. Helvetica
- * bold sits near 0.58em average; the caption is letter-spaced on top of that.
- * Erring wide is free — an oversized plate just has more padding.
- */
-function textWidth(text: string, size: number, tracking = 0) {
-  return text.length * size * 0.58 + text.length * tracking;
-}
-
-interface PlacedLabel {
-  /** Leader-side edge of the plate. */
-  x: number;
-  y: number;
-  width: number;
-  onRight: boolean;
-}
-
-/**
- * Lay the labels out as a numbered column, in day order, top to bottom.
- *
- * Pins cluster — a Char Dham circuit is ten days inside two degrees of latitude
- * — so a label can't sit next to its pin. It goes in a column on whichever side
- * of the map is emptier, at a fixed pitch that never lets two plates touch, and
- * critically *in sequence*: reading the column downwards is reading the trip in
- * order, whatever knot the pins themselves make.
- */
-function placeLabels(points: Array<[number, number]>, widths: number[]): PlacedLabel[] {
-  const { width, height } = INDIA_VIEW;
-  const meanX = points.reduce((sum, p) => sum + p[0], 0) / (points.length || 1);
-
-  // Put the column opposite the pins, where the map is empty.
-  const onRight = meanX <= width / 2;
-  const x = onRight ? width - LABEL_INSET : LABEL_INSET;
-
-  // Even pitch, tightened only if a long trip would otherwise run off the edge.
-  const room = height - LABEL_EDGE * 2 - PLATE_H;
-  const gap = Math.min(LABEL_GAP, room / Math.max(1, points.length - 1));
-  const start = (height - gap * (points.length - 1)) / 2;
-
-  return points.map((_, i) => ({ x, y: start + i * gap, width: widths[i], onRight }));
-}
-
-/**
- * The itinerary drawn on the map of India.
- *
- * Each halt is a pin, the halts are strung together in travel order, and a
- * marker runs the line on a loop — so the shape of the trip (how far north, how
- * much doubling back) reads before a single word does. Picking a pin or a label
- * opens that day underneath.
- *
- * Overseas packages have nothing to pin on an India outline, so those fall back
- * to the vertical rail rather than showing an empty map.
- */
 export function ItineraryMap({
   days,
   active,
@@ -86,8 +31,8 @@ export function ItineraryMap({
 
   const stops = useMemo(() => resolveStops(days), [days]);
   const points = useMemo(() => stops.map((s) => projectPoint(s.coordinates)), [stops]);
-  const initialZoom = useMemo(() => {
-    if (points.length < 2) return { k: 1, x: 0, y: 0 };
+  const clusterBounds = useMemo(() => {
+    if (points.length === 0) return { cx: 400, cy: 430, k: 2.8 };
 
     const xs = points.map((p) => p[0]);
     const ys = points.map((p) => p[1]);
@@ -95,44 +40,35 @@ export function ItineraryMap({
     const maxX = Math.max(...xs);
     const minY = Math.min(...ys);
     const maxY = Math.max(...ys);
-    const routeW = Math.max(1, maxX - minX);
-    const routeH = Math.max(1, maxY - minY);
 
-    const padding = 120;
-    const scaleX = INDIA_VIEW.width / (routeW + padding);
-    const scaleY = INDIA_VIEW.height / (routeH + padding);
-    const k = Math.min(5.0, Math.max(2.8, Math.min(scaleX, scaleY)));
+    // Center of cluster including pill offset on right side
+    const cx = (minX + maxX + 65) / 2;
+    const cy = (minY + maxY - 25) / 2;
 
-    const cx = (minX + maxX) / 2;
-    const cy = (minY + maxY) / 2;
+    const routeW = Math.max(1, maxX - minX + 160);
+    const routeH = Math.max(1, maxY - minY + 100);
 
+    const scaleX = INDIA_VIEW.width / routeW;
+    const scaleY = INDIA_VIEW.height / routeH;
+    const k = Math.min(2.8, Math.max(2.2, Math.min(scaleX, scaleY)));
+
+    return { cx, cy, k };
+  }, [points]);
+
+  const initialZoom = useMemo(() => {
+    const { cx, cy, k } = clusterBounds;
     const x = INDIA_VIEW.width / 2 - cx * k;
     const y = INDIA_VIEW.height / 2 - cy * k;
 
     return { k, x, y };
-  }, [points]);
+  }, [clusterBounds]);
 
-  const { zoom, frameRef, zoomIn, zoomOut, reset, handlers, project } = useMapZoom(
+  const { zoom, frameRef, zoomIn, zoomOut, reset, zoomToPoint, handlers, project } = useMapZoom(
     INDIA_VIEW.width,
     INDIA_VIEW.height,
     8,
     initialZoom,
   );
-
-  const captions = useMemo(
-    () => stops.map((s) => (s.from === s.to ? `DAY ${s.from}` : `DAY ${s.from}–${s.to}`)),
-    [stops],
-  );
-
-  const labels = useMemo(() => {
-    const widths = stops.map((stop, i) =>
-      Math.max(
-        BADGE_R * 2 + 16 + textWidth(captions[i], 10, 0.8),
-        BADGE_R * 2 + 16 + textWidth(stop.label, 15),
-      ) + 16,
-    );
-    return placeLabels(points, widths);
-  }, [stops, points, captions]);
 
   /** The travel line, as an SVG path through every halt in order. */
   const routePath = useMemo(
@@ -147,6 +83,12 @@ export function ItineraryMap({
 
   const select = useCallback((index: number) => onActive(index), [onActive]);
 
+  // Keep cluster + active pill centered in map frame with equal padding
+  useEffect(() => {
+    const { cx, cy, k } = clusterBounds;
+    zoomToPoint(cx, cy, k);
+  }, [clusterBounds, zoomToPoint]);
+
   // A single pin can't be a journey, and no pins means we can't place the trip.
   if (stops.length < 2) {
     return <ItineraryRail days={days} active={effectiveActive} onActive={onActive} />;
@@ -159,73 +101,71 @@ export function ItineraryMap({
   /**
    * Leaders and labels live above the zoom, in fixed frame coordinates.
    * Only the leader line and label pill for the SELECTED DATE are rendered.
+   * Pill sits on the RIGHT horizontal side with text ONLY (no badge, no DAY count).
    */
   const overlay = (
     <>
-      {/* ── Leader line — ONLY for selected date ──────────────────── */}
       {stops.map((stop, i) => {
         if (i !== activeStop) return null;
 
         const [px, py] = project(points[i][0], points[i][1]);
-        const { x, y, onRight } = labels[i];
-        const dir = onRight ? -1 : 1;
-        const elbow = x + dir * 30;
-        const end = x + dir * 7;
-        return (
-          <path
-            key={`lead-${stop.from}`}
-            d={`M${px},${py - PIN_STICK - PIN_HEAD} L${elbow},${y} L${end},${y}`}
-            fill="none"
-            stroke="#2475EE"
-            strokeWidth={1.6}
-            strokeDasharray="2 3"
-            strokeOpacity={1}
-            className="itin-leader"
-          />
-        );
-      })}
+        const headY = py - (PIN_STICK + PIN_HEAD);
 
-      {/* ── Label pill — ONLY for selected date ────────────────────── */}
-      {stops.map((stop, i) => {
-        if (i !== activeStop) return null;
+        const plateH = 36;
+        const plateW = Math.max(100, stop.label.length * 10 + 28);
+        const gap = 120;
 
-        const { x, y, width, onRight } = labels[i];
-        const left = onRight ? x : x - width;
-        const badgeX = onRight ? left + 14 + BADGE_R : left + width - 14 - BADGE_R;
-        const textX = onRight ? left + 14 + BADGE_R * 2 + 10 : left + width - 14 - BADGE_R * 2 - 10;
-        const anchor = onRight ? "start" : "end";
+        // Position pill on RIGHT horizontal side of pin
+        let left = px + gap;
+        let lineTargetX = left;
+
+        // Fallback to left side only if placing on right overflows right container edge
+        if (left + plateW > INDIA_VIEW.width - 20) {
+          left = Math.max(20, px - gap - plateW);
+          lineTargetX = left + plateW;
+        }
 
         return (
-          <g
-            key={`label-${stop.from}`}
-            className="itin-label is-active"
-            onClick={() => select(stop.dayIndexes[0])}
-            role="button"
-            aria-label={`Stop ${i + 1}, day ${stop.from}, ${stop.label}`}
-          >
-            <rect
-              x={left}
-              y={y - PLATE_H / 2}
-              width={width}
-              height={PLATE_H}
-              rx={PLATE_H / 2}
-              fill="#2475EE"
+          <g key={`active-callout-${stop.from}`}>
+            {/* Leader line directly to pin head */}
+            <path
+              d={`M${px},${headY} L${lineTargetX},${headY}`}
+              fill="none"
               stroke="#2475EE"
-              strokeWidth={1}
-              filter={`url(#${uid}-plate)`}
+              strokeWidth={1.8}
+              strokeDasharray="3 3"
+              className="itin-leader"
             />
 
-            <circle cx={badgeX} cy={y} r={BADGE_R} fill="#FFFFFF" />
-            <text x={badgeX} y={y + 4} textAnchor="middle" fontSize={11} fontWeight={800} fill="#2475EE">
-              {i + 1}
-            </text>
-
-            <text x={textX} y={y - 4} textAnchor={anchor} fontSize={10} fontWeight={700} letterSpacing={0.8} fill="#CFE0FF">
-              {captions[i]}
-            </text>
-            <text x={textX} y={y + 12} textAnchor={anchor} fontSize={15} fontWeight={700} fill="#FFFFFF">
-              {stop.label}
-            </text>
+            {/* Pill with text ONLY (no 1 or DAY count) */}
+            <g
+              className="itin-label is-active cursor-pointer"
+              onClick={() => select(stop.dayIndexes[0])}
+              role="button"
+              aria-label={stop.label}
+            >
+              <rect
+                x={left}
+                y={headY - plateH / 2}
+                width={plateW}
+                height={plateH}
+                rx={plateH / 2}
+                fill="#2475EE"
+                stroke="#2475EE"
+                strokeWidth={1}
+                filter={`url(#${uid}-plate)`}
+              />
+              <text
+                x={left + plateW / 2}
+                y={headY + 4.5}
+                textAnchor="middle"
+                fontSize={14}
+                fontWeight={700}
+                fill="#FFFFFF"
+              >
+                {stop.label}
+              </text>
+            </g>
           </g>
         );
       })}

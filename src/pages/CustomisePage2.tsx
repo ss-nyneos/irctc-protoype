@@ -17,6 +17,7 @@ import {
     Car,
     Castle,
     Check,
+    ChevronDown,
     ChevronLeft,
     ChevronRight,
     Compass,
@@ -35,6 +36,7 @@ import {
     Palmtree,
     Plane,
     Search,
+    Send,
     Ship,
     ShoppingBag,
     Snowflake,
@@ -45,6 +47,7 @@ import {
     Utensils,
     Wallet,
     Waves,
+    X,
 } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
 import { useRouter } from "@/router/RouterContext";
@@ -664,7 +667,7 @@ function TrackProgress({
                     alt=""
                     aria-hidden="true"
                     style={{ left: `${at(step)}%` }}
-                    className={`absolute bottom-[10px] z-10 h-[34px] w-auto -translate-x-1/2 -scale-x-100 drop-shadow-[0_6px_8px_rgba(0,0,0,0.22)] sm:h-[42px] md:h-[48px] ${exiting ? "" : "transition-[left] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"}`}
+                    className={`absolute bottom-[10px] z-10 h-[56px] w-auto -translate-x-1/2 -scale-x-100 drop-shadow-[0_6px_8px_rgba(0,0,0,0.22)] sm:h-[42px] md:h-[48px] ${exiting ? "" : "transition-[left] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"}`}
                 />
             </div>
 
@@ -682,13 +685,12 @@ function TrackProgress({
                             aria-current={state === "active" ? "step" : undefined}
                             onClick={() => canJump && onJump(i)}
                             style={{ left: `${at(i)}%`, top: "50%" }}
-                            className={`absolute flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white text-[12px] font-bold shadow-md transition sm:h-9 sm:w-9 sm:text-[13px] ${
-                                state === "active"
-                                    ? "z-20 scale-110 bg-[#2475EE] text-white shadow-[#2475EE]/40"
-                                    : state === "done"
-                                      ? "z-20 cursor-pointer bg-[#2475EE] text-white hover:brightness-110"
-                                      : "cursor-not-allowed bg-[#c9d4e2] text-white/90"
-                            }`}
+                            className={`absolute flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-[12px] font-bold shadow-md transition sm:h-9 sm:w-9 sm:text-[13px] ${state === "active"
+                                ? "z-20 scale-110 bg-[#2475EE] text-white"
+                                : state === "done"
+                                    ? "z-20 cursor-pointer bg-[#2475EE] text-white hover:brightness-110"
+                                    : "cursor-not-allowed bg-[#c9d4e2] text-white/90"
+                                }`}
                         >
                             {String(i + 1).padStart(2, "0")}
                         </button>
@@ -853,7 +855,7 @@ export function CustomisePage() {
     const orderedExperiences = useMemo(() => {
         const wantedExp = new Set(inputs.vibes.flatMap((v) => VIBE_EXP[v] ?? []));
         const recommended = EXPERIENCES.filter((e) => (EXPERIENCE_EXP[e.key] ?? []).some((exp) => wantedExp.has(exp)));
-        
+
         let list = recommended.slice(0, 8);
         if (list.length === 0) {
             list = EXPERIENCES.slice(0, 8);
@@ -1102,9 +1104,8 @@ export function CustomisePage() {
                                 className="group flex flex-col items-center gap-3.5"
                             >
                                 <span
-                                    className={`flex h-[130px] w-[130px] items-center justify-center rounded-full transition ${
-                                        active ? "scale-105" : "group-hover:scale-105"
-                                    }`}
+                                    className={`flex h-[130px] w-[130px] items-center justify-center rounded-full transition ${active ? "scale-105" : "group-hover:scale-105"
+                                        }`}
                                 >
                                     <img src={p.img} alt="" aria-hidden="true" className="h-[110px] w-[110px] object-contain" />
                                 </span>
@@ -1164,11 +1165,10 @@ export function CustomisePage() {
                                             aria-pressed={active}
                                             aria-label={o}
                                             onClick={() => set("groupType", o as GroupType)}
-                                            className={`m-[0.4%] rounded-xl transition ${
-                                                active
-                                                    ? "ring-[3px] ring-inset ring-[#2475EE]"
-                                                    : "ring-0 ring-inset ring-white/0 hover:bg-white/10"
-                                            }`}
+                                            className={`m-[0.4%] rounded-xl transition ${active
+                                                ? "ring-[3px] ring-inset ring-[#2475EE]"
+                                                : "ring-0 ring-inset ring-white/0"
+                                                }`}
                                         />
                                     );
                                 })}
@@ -1262,30 +1262,28 @@ export function CustomisePage() {
             image: imgBudget,
             control: (
                 <div className="grid gap-8 lg:grid-cols-[1.15fr_1fr] lg:items-start">
-                    <div className="rounded-2xl border border-[#323232]/12 bg-white p-6 shadow-sm">
-                        <div className="border-b border-[#323232]/10 pb-4 text-[15px] font-bold text-[#323232]">Price</div>
-                        <div className="pt-6">
-                            <PriceRangeSlider
-                                label="Trip Budget"
-                                value={Number(inputs.customBudget) || 20000}
-                                onChange={(v) => {
-                                    set("customBudget", String(v));
-                                    set("cateringCost", "Custom");
-                                    set("cateringTypes", [budgetStyleFor(v)]);
-                                }}
-                                min={1000}
-                                max={1000000}
-                                step={1000}
-                            />
-                        </div>
+                    <div>
+                        <PriceRangeSlider
+                            label="Trip Budget"
+                            value={Number(inputs.customBudget) || 20000}
+                            onChange={(v) => {
+                                set("customBudget", String(v));
+                                set("cateringCost", "Custom");
+                                set("cateringTypes", [budgetStyleFor(v)]);
+                            }}
+                            min={1000}
+                            max={1000000}
+                            step={1000}
+                        />
                     </div>
                     <div>
-                        <div className="mb-5 font-helvetica text-[16px] font-semibold text-muted-foreground">Budget Style</div>
+                        <div className="mb-3 font-helvetica text-[16px] font-semibold text-muted-foreground">Budget Style</div>
                         <OptionImageCards
                             options={BUDGET_STYLES}
                             selected={inputs.cateringTypes}
                             onSelect={(k) => set("cateringTypes", [k])}
                             gridCols="grid-cols-2 gap-3"
+                            cardHeight="h-28 sm:h-32"
                         />
                     </div>
                 </div>
@@ -1304,6 +1302,7 @@ export function CustomisePage() {
                 <NotesChatControl
                     notes={inputs.notes}
                     onNotesChange={(v) => set("notes", v)}
+                    onSend={findTours}
                 />
             ),
         },
@@ -1353,20 +1352,26 @@ export function CustomisePage() {
                 fixed negative margin so it overlaps a predictable slice of the photo
                 regardless of the ticket's own (responsive) height. */}
             {phase === "results" && (
-                <>
-                    <div className="relative h-[60vh] max-h-[620px] min-h-[420px] w-full overflow-hidden">
-                        <img src={resultsBackground} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
-                        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/45 to-transparent" />
-                        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-transparent to-[#FFFFFF]" />
-                        <button
-                            onClick={back}
-                            type="button"
-                            className="absolute left-4 top-4 z-20 inline-flex items-center gap-1.5 rounded-full bg-black/30 px-3.5 py-2 text-[14px] font-semibold text-[#FFFFFF] backdrop-blur-sm transition hover:bg-black/45 md:left-6 md:top-6"
-                        >
-                            <ArrowLeft size={16} /> Back
-                        </button>
+                <div className="relative w-full pb-4">
+                    {/* Background photo header */}
+                    <div className="absolute inset-0 z-0 h-[420px] w-full overflow-hidden">
+                        <img src={resultsBackground} alt="" aria-hidden="true" className="h-full w-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-[#FFFFFF]" />
                     </div>
-                    <div className="relative z-10 -mt-24 mx-auto max-w-[1600px] px-4 md:-mt-28 md:px-6">
+
+                    <div className="relative z-10 mx-auto max-w-7xl px-4 pt-4 md:px-6 md:pt-6">
+                        {/* Top bar with Back button */}
+                        <div className="mb-4 flex items-center justify-between">
+                            <button
+                                onClick={back}
+                                type="button"
+                                className="inline-flex items-center gap-1.5 rounded-full bg-black/40 px-4 py-2 text-[14px] font-semibold text-[#FFFFFF] backdrop-blur-md transition hover:bg-black/60"
+                            >
+                                <ArrowLeft size={16} /> Back
+                            </button>
+                        </div>
+
+                        {/* TripPass ticket card directly at top */}
                         <TripPass
                             from={inputs.from || "Anywhere"}
                             to={inputs.vibes.join(", ") || "Anywhere"}
@@ -1403,33 +1408,19 @@ export function CustomisePage() {
                             onAdjust={startOver}
                         />
                     </div>
-                </>
+                </div>
             )}
 
             <div className="relative z-10">
-                <div className={`relative mx-auto px-4 md:px-6 ${phase === "questions" ? "pt-3" : "pb-8 pt-10"} ${phase === "results" ? "max-w-[1600px] !pt-10 md:!pt-12" : phase === "questions" ? "max-w-7xl" : "max-w-5xl"}`}>
-                    {/* Back nav only shows outside the wizard — during the questions phase it
-                        ate into the card's headroom, so the card is dropped straight in instead.
-                        Results has its own floating Back over the hero photo instead. */}
-                    {phase !== "questions" && phase !== "results" && (
-                        <button
-                            onClick={back}
-                            type="button"
-                            className="mb-4 inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#FFFFFF]/80 transition hover:text-[#FFFFFF]"
-                        >
-                            <ArrowLeft size={16} /> Back
-                        </button>
-                    )}
-                    {/* the page heading only shows outside the wizard — during the questions
-                        phase the cards are pushed up to take its place. On results it now
-                        follows the ticket instead of leading the page. */}
+                <div className={`relative mx-auto pt-20 px-4 md:px-6 max-w-7xl ${phase === "results" ? "" : ""}`}>
                     {phase !== "questions" && (
                         <>
                             <h1
-                                className={`heading-xl ${phase === "results" ? "" : "!text-[#FFFFFF] drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]"
+                                className={`font-helvetica font-bold text-[28px] ${phase === "results" ? "text-[#323232]" : "!text-[#FFFFFF] drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]"
                                     }`}
+                                style={{ fontSize: "28px", fontWeight: 700 }}
                             >
-                                Built around your <span className="accent">trip.</span>
+                                Built Around Your <span className="text-[#2475EE]">Trip.</span>
                             </h1>
                             {phase !== "results" && (
                                 <p className="mt-2.5 max-w-xl text-[16.5px] text-[#FFFFFF]/85">
@@ -1441,15 +1432,15 @@ export function CustomisePage() {
                 </div>
             </div>
 
-            <div className={`relative z-10 mx-auto px-4 md:px-6 ${phase === "results" ? "max-w-[1600px]" : phase === "questions" ? "max-w-7xl" : "max-w-5xl"}`}>
+            <div className={`relative z-10 mx-auto px-4 md:px-6 max-w-7xl`}>
                 {/* intro — the backdrop video plays solo, a soft hint promises what's coming */}
                 {phase === "intro" && (
                     <div className="animate-fadeIn mx-auto flex min-h-[380px] max-w-3xl flex-col items-center justify-center text-center">
                         <div className="inline-flex items-center gap-2.5 rounded-full border border-[#FFFFFF]/25 bg-black/30 px-5 py-2.5">
-                            <span className="relative flex h-2.5 w-2.5">
+                            {/* <span className="relative flex h-2.5 w-2.5">
                                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#FFFFFF]/80" />
                                 <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#FFFFFF]" />
-                            </span>
+                            </span> */}
                             <span className="text-[13px] font-bold uppercase tracking-wide text-[#FFFFFF]/85">Setting up your trip planner</span>
                         </div>
                         <p className="mt-4 text-[14px] text-[#FFFFFF]/70">Your questions are on their way…</p>
@@ -1462,8 +1453,18 @@ export function CustomisePage() {
                         <div key={step} className={`${cardAnim} mx-auto w-full max-w-7xl`}>
                             {/* clean white card; the train-track header sits on top and the
                   question content fills the body below */}
-                            <div className="relative flex flex-col w-full overflow-hidden rounded-3xl border border-black/[0.06] bg-white shadow-[0_30px_70px_-24px_rgba(0,0,0,0.55)] md:h-[700px]">
+                            <div className="relative flex flex-col w-full top-8 overflow-hidden rounded-3xl border border-black/[0.06] bg-white shadow-[0_30px_70px_-24px_rgba(0,0,0,0.55)] md:h-[700px]">
                                 <div className="pointer-events-none absolute inset-0 z-30 rounded-3xl ring-1 ring-inset ring-black/[0.04]" />
+
+                                {/* Circular Close Cross Button */}
+                                <button
+                                    type="button"
+                                    onClick={back}
+                                    aria-label="Close customizer"
+                                    className="absolute right-4 top-4 z-40 flex h-9 w-9 items-center justify-center rounded-full bg-[#F58626] text-[#FFFFFF] shadow-md transition hover:scale-105"
+                                >
+                                    <X size={18} />
+                                </button>
 
                                 {/* train-track progress header — the loco slides along the rail to the
                                     current step; numbered stops jump back to any answered question */}
@@ -1471,7 +1472,7 @@ export function CustomisePage() {
 
                                 <div className="relative z-10 flex min-h-0 flex-1 flex-col p-4 md:px-10 md:py-4">
                                     {/* title + back/continue on one aligned row */}
-                                    <div className="flex items-start justify-between gap-4">
+                                    <div className="flex items-center justify-between gap-4">
                                         {current.key !== "date" ? (
                                             <div>
                                                 <h2 className="heading-xl" style={{ fontSize: "28px", fontWeight: 600 }}>{current.title}</h2>
@@ -1538,11 +1539,11 @@ export function CustomisePage() {
                         {/* Hover-to-grow rows, as on the listing grid — the hovered card
                             takes the width its neighbours give back, so each row's width
                             never moves. */}
-                        <div ref={gridRef} className="mt-10 flex scroll-mt-6 flex-col gap-y-10 lg:gap-y-14">
+                        <div ref={gridRef} className="mt-10 flex scroll-mt-6 flex-col gap-y-6">
                             {resultRows.map((row, i) => (
                                 <div
                                     key={i}
-                                    className="card-row flex flex-col gap-8 sm:flex-row lg:gap-12"
+                                    className="card-row flex flex-col gap-6 sm:flex-row"
                                     style={
                                         {
                                             "--cell-grow": 1 + HOVER_GROW,
@@ -1564,6 +1565,20 @@ export function CustomisePage() {
                                 </div>
                             ))}
                         </div>
+
+                        {/* Didn't like our suggestions banner */}
+                        <div className="pt-24 flex flex-col items-center justify-center text-center gap-4 ">
+                            <h3 className="font-helvetica text-[28px] font-bold text-[#323232]">
+                                Didn't like our <span className="text-[#2475EE]">suggestions?</span>
+                            </h3>
+                            <button
+                                type="button"
+                                onClick={startOver}
+                                className="inline-flex items-center justify-center rounded-full bg-[#2475EE] px-8 py-3 text-[15.5px] font-bold text-[#FFFFFF] shadow-md transition hover:bg-[#1450B4] hover:scale-105"
+                            >
+                                View other tours
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>
@@ -1575,15 +1590,26 @@ export function CustomisePage() {
  *  right-aligned AskDISHA chats — typing dots → "Namaste" → 2nd typing dots → follow-up,
  *  then the large reply box below. Avatars share a fixed column so bubbles
  *  and the input share one clean right edge. */
+interface ChatMessage {
+    id: string;
+    sender: "disha" | "user";
+    text: string;
+}
+
 function NotesChatControl({
     notes,
     onNotesChange,
+    onSend,
 }: {
     notes: string;
-    onNotesChange: (value: string) => void;
+    onNotesChange: (notes: string) => void;
+    onSend?: () => void;
 }) {
     /** typing → namaste → typing2 → ready */
     const [phase, setPhase] = useState<"typing" | "namaste" | "typing2" | "ready">("typing");
+    const [messages, setMessages] = useState<ChatMessage[]>([]);
+    const [isBotTyping, setIsBotTyping] = useState(false);
+    const chatEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         // 1s + 45ms + 30ms = 1075ms → first chat "Namaste"
@@ -1600,8 +1626,44 @@ function NotesChatControl({
         };
     }, []);
 
+    useEffect(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages, isBotTyping, phase]);
+
+    const handleSend = () => {
+        const text = notes.trim();
+        if (!text) return;
+
+        // Add user message to thread
+        const userMsg: ChatMessage = { id: String(Date.now()), sender: "user", text };
+        setMessages((prev) => [...prev, userMsg]);
+        onNotesChange("");
+
+        // Show AskDISHA typing indicator
+        setIsBotTyping(true);
+
+        setTimeout(() => {
+            let replyText = "Got it! Your preferences have been saved and added to your trip plan. 🌟";
+            const lower = text.toLowerCase();
+            if (lower.includes("veg") || lower.includes("food") || lower.includes("meal") || lower.includes("dinner") || lower.includes("jain")) {
+                replyText = "Noted! Special dietary preferences (pure vegetarian meals) will be arranged for your journey. 🥗";
+            } else if (lower.includes("window") || lower.includes("seat") || lower.includes("berth") || lower.includes("train") || lower.includes("lower")) {
+                replyText = "Window seats / preferred berth allocation has been flagged for your train booking! 🚆";
+            } else if (lower.includes("hotel") || lower.includes("room") || lower.includes("stay") || lower.includes("bed") || lower.includes("ac")) {
+                replyText = "Understood! Special room & accommodation preferences have been recorded. 🏨";
+            } else if (lower.includes("hi") || lower.includes("hello") || lower.includes("hey")) {
+                replyText = "Hello! Feel free to share any extra requests for your trip. 😊";
+            }
+
+            setMessages((prev) => [...prev, { id: String(Date.now() + 1), sender: "disha", text: replyText }]);
+            setIsBotTyping(false);
+        }, 1100);
+    };
+
     const bubble =
         "rounded-2xl rounded-br-md border border-[#323232]/8 bg-[#FFFFFF] px-4 py-3 text-left text-[14.5px] font-medium leading-relaxed text-[#323232] shadow-sm";
+    const userBubble =
+        "rounded-2xl rounded-bl-md bg-[#2475EE] px-4 py-3 text-left text-[14.5px] font-medium leading-relaxed text-[#FFFFFF] shadow-sm";
 
     const TypingDots = () => (
         <div className={`flex items-center gap-1.5 ${bubble}`} aria-label="Disha is typing">
@@ -1620,7 +1682,7 @@ function NotesChatControl({
     return (
         <div className="flex w-full flex-col gap-5">
             {/* shared full-width column: bubble | avatar — matches input width */}
-            <div className="flex w-full flex-col gap-3">
+            <div className="flex max-h-[260px] w-full flex-col gap-3 overflow-y-auto pr-1">
                 {/* chat 1 — typing, then Namaste */}
                 <div className="grid w-full grid-cols-[minmax(0,1fr)_2.75rem] items-center gap-2.5">
                     <div className="flex justify-end">
@@ -1659,23 +1721,81 @@ function NotesChatControl({
                         />
                     </div>
                 )}
+
+                {/* Interactive messages thread */}
+                {messages.map((m) =>
+                    m.sender === "user" ? (
+                        <div key={m.id} className="animate-fadeIn flex w-full justify-start pl-2">
+                            <div className={`max-w-[min(100%,26rem)] ${userBubble}`}>
+                                {m.text}
+                            </div>
+                        </div>
+                    ) : (
+                        <div key={m.id} className="animate-fadeIn grid w-full grid-cols-[minmax(0,1fr)_2.75rem] items-center gap-2.5">
+                            <div className="flex justify-end">
+                                <div className={`max-w-[min(100%,28rem)] ${bubble}`}>
+                                    {m.text}
+                                </div>
+                            </div>
+                            <img
+                                src={imgAskDisha}
+                                alt=""
+                                aria-hidden="true"
+                                className="h-11 w-11 rounded-full object-cover shadow-sm ring-2 ring-[#FFFFFF]"
+                            />
+                        </div>
+                    )
+                )}
+
+                {/* AskDISHA typing indicator for user replies */}
+                {isBotTyping && (
+                    <div className="animate-fadeIn grid w-full grid-cols-[minmax(0,1fr)_2.75rem] items-center gap-2.5">
+                        <div className="flex justify-end">
+                            <TypingDots />
+                        </div>
+                        <img
+                            src={imgAskDisha}
+                            alt=""
+                            aria-hidden="true"
+                            className="h-11 w-11 rounded-full object-cover shadow-sm ring-2 ring-[#FFFFFF]"
+                        />
+                    </div>
+                )}
+                <div ref={chatEndRef} />
             </div>
 
-            {/* large reply box — same width as the chat grid above */}
+            {/* large reply box — with interactive send */}
             {phase === "ready" && (
                 <div className="animate-fadeIn relative w-full">
                     <textarea
                         value={notes}
                         maxLength={120}
                         onChange={(e) => onNotesChange(e.target.value)}
-                        rows={6}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                                e.preventDefault();
+                                handleSend();
+                            }
+                        }}
+                        rows={5}
                         autoFocus
                         placeholder="Type your reply…"
-                        className="min-h-[160px] w-full resize-none !rounded-xl border bg-[#FFFFFF] p-4 pb-8 text-[15.5px] font-medium text-[#323232] outline-none focus:border-[#2475EE]"
+                        className="min-h-[140px] w-full resize-none !rounded-xl border bg-[#FFFFFF] p-4 pb-12 text-[15.5px] font-medium text-[#323232] outline-none focus:border-[#2475EE]"
                     />
-                    <span className="pointer-events-none absolute bottom-3 right-3.5 text-[12px] text-muted-foreground">
-                        {notes.length}/120
-                    </span>
+                    <div className="absolute bottom-3 right-3 flex items-center gap-3">
+                        <span className="text-[12px] text-muted-foreground">
+                            {notes.length}/120
+                        </span>
+                        <button
+                            type="button"
+                            onClick={handleSend}
+                            disabled={!notes.trim() || isBotTyping}
+                            aria-label="Send message"
+                            className="flex h-9 w-9 items-center justify-center rounded-full bg-[#2475EE] text-[#FFFFFF] shadow-md transition hover:bg-[#1450B4] hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
+                        >
+                            <Send size={16} className="translate-x-[0.5px]" />
+                        </button>
+                    </div>
                 </div>
             )}
         </div>
@@ -1752,6 +1872,8 @@ function OptionImageCards({
     gridCols = "grid-cols-2 gap-3 sm:grid-cols-3",
     blockedReasons,
     highlightedKeys,
+    cardHeight = "h-44",
+    hideBlocked = true,
 }: {
     options: Option[];
     selected: string[];
@@ -1761,10 +1883,14 @@ function OptionImageCards({
     /** Keys to flag as recommended given earlier answers (e.g. a stay style that fits
      *  the destination vibe picked earlier) — shown with a saffron ring. */
     highlightedKeys?: string[];
+    cardHeight?: string;
+    hideBlocked?: boolean;
 }) {
+    const visibleOptions = options.filter((o) => !hideBlocked || !blockedReasons?.[o.key]);
+
     return (
         <div className={`grid ${gridCols}`}>
-            {options.map((o) => {
+            {visibleOptions.map((o) => {
                 const active = selected.includes(o.key);
                 const blocked = blockedReasons?.[o.key];
                 const highlighted = !active && !blocked && highlightedKeys?.includes(o.key);
@@ -1775,15 +1901,14 @@ function OptionImageCards({
                         aria-pressed={active}
                         disabled={!!blocked}
                         onClick={() => onSelect(o.key)}
-                        className={`group relative h-44 overflow-hidden rounded-2xl text-left shadow-sm transition duration-200 ${
-                            blocked
-                                ? "cursor-not-allowed opacity-50 grayscale"
-                                : active
-                                  ? "shadow-xl ring-2 ring-[#2475EE]"
-                                  : highlighted
+                        className={`group relative ${cardHeight} overflow-hidden rounded-2xl text-left shadow-sm transition duration-200 ${blocked
+                            ? "cursor-not-allowed opacity-50 grayscale"
+                            : active
+                                ? "shadow-xl ring-2 ring-[#2475EE]"
+                                : highlighted
                                     ? "shadow-md ring-2 ring-[#2475EE]/45"
                                     : "ring-1 ring-[#323232]/10 hover:ring-[#323232]/20"
-                        }`}
+                            }`}
                     >
                         {o.image && (
                             <img
@@ -1855,10 +1980,10 @@ function Pills({
                         aria-pressed={active}
                         onClick={() => onSelect(o.key)}
                         className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[13.5px] font-semibold transition ${active
-                                ? "border-[#2475EE] bg-[#2475EE]/10 text-[#2475EE]"
-                                : suggested
-                                  ? "border-[#2475EE]/30 bg-[#2475EE]/[0.04] text-[#323232] hover:bg-[#2475EE]/10"
-                                  : "bg-[#FFFFFF] text-[#323232] hover:bg-secondary"
+                            ? "border-[#2475EE] bg-[#2475EE]/10 text-[#2475EE]"
+                            : suggested
+                                ? "border-[#2475EE]/30 bg-[#2475EE]/[0.04] text-[#323232] hover:bg-[#2475EE]/10"
+                                : "bg-[#FFFFFF] text-[#323232] hover:bg-secondary"
                             }`}
                     >
                         {active && showCheck ? <Check size={13} /> : o.icon}
@@ -1866,6 +1991,71 @@ function Pills({
                     </button>
                 );
             })}
+        </div>
+    );
+}
+
+function CustomDropdown<T extends string | number>({
+    value,
+    options,
+    onChange,
+}: {
+    value: T;
+    options: { value: T; label: string }[];
+    onChange: (val: T) => void;
+}) {
+    const [open, setOpen] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+                setOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const selectedOption = options.find((o) => o.value === value);
+    const displayLabel = selectedOption?.label ?? String(value);
+
+    return (
+        <div ref={containerRef} className="relative inline-block text-left">
+            <button
+                type="button"
+                onClick={() => setOpen(!open)}
+                className={`inline-flex items-center gap-1 rounded-xl bg-slate-100/90 px-3 py-1 text-[15px] font-bold text-[#323232] transition hover:bg-slate-200/80 focus:outline-none ${open ? "ring-2 ring-[#2475EE]/30 bg-slate-200/90" : ""
+                    }`}
+            >
+                <span>{displayLabel}</span>
+                <ChevronDown size={14} className={`text-[#2475EE] transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+            </button>
+
+            {open && (
+                <div className="animate-fadeIn absolute left-1/2 -translate-x-1/2 z-50 mt-1 max-h-52 min-w-[130px] overflow-y-auto rounded-2xl border border-gray-100 bg-white p-1.5 shadow-xl ring-1 ring-black/5 focus:outline-none slim-scrollbar">
+                    {options.map((opt) => {
+                        const isSelected = opt.value === value;
+                        return (
+                            <button
+                                key={String(opt.value)}
+                                type="button"
+                                onClick={() => {
+                                    onChange(opt.value);
+                                    setOpen(false);
+                                }}
+                                className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-[14px] font-semibold transition ${isSelected
+                                    ? "bg-[#2475EE]/10 text-[#2475EE]"
+                                    : "text-[#323232] hover:bg-secondary/80"
+                                    }`}
+                            >
+                                <span>{opt.label}</span>
+                                {isSelected && <Check size={14} className="text-[#2475EE]" />}
+                            </button>
+                        );
+                    })}
+                </div>
+            )}
         </div>
     );
 }
@@ -1892,30 +2082,11 @@ function DateRangeCalendar({
     const y = view.getFullYear();
     const m = view.getMonth();
 
-    // In JavaScript getDay() returns: 0 for Sunday, 1 for Monday, ..., 6 for Saturday.
-    // If we want Monday to be the first column (index 0) and Sunday the last (index 6):
     const rawDay = new Date(y, m, 1).getDay();
     const firstWeekday = rawDay === 0 ? 6 : rawDay - 1;
 
     const daysInMonth = new Date(y, m + 1, 0).getDate();
     const yearOptions = Array.from({ length: 6 }, (_, i) => today.getFullYear() + i);
-
-    // <select> auto-sizes to its widest *option* (e.g. "September"), not the selected
-    // value, which left a permanent gap after short months like "July". Measuring the
-    // selected label in a hidden twin span and applying that as an explicit width makes
-    // the box hug the visible text instead.
-    const monthMeasureRef = useRef<HTMLSpanElement>(null);
-    const yearMeasureRef = useRef<HTMLSpanElement>(null);
-    const [monthWidth, setMonthWidth] = useState<number>();
-    const [yearWidth, setYearWidth] = useState<number>();
-    const monthName = MONTH_NAMES[m];
-
-    useLayoutEffect(() => {
-        if (monthMeasureRef.current) setMonthWidth(monthMeasureRef.current.offsetWidth + 2);
-    }, [monthName]);
-    useLayoutEffect(() => {
-        if (yearMeasureRef.current) setYearWidth(yearMeasureRef.current.offsetWidth + 2);
-    }, [y]);
 
     const pick = (day: number) => {
         const d = new Date(y, m, day);
@@ -1946,48 +2117,20 @@ function DateRangeCalendar({
                 >
                     <ChevronLeft size={18} strokeWidth={2.5} />
                 </button>
-                <div className="flex items-center font-display text-[17px] font-bold text-[#323232]">
-                    {/* Hidden twins, same font, used only to measure each select's true text width. */}
-                    <span ref={monthMeasureRef} className="invisible absolute whitespace-nowrap font-display text-[17px] font-bold">
-                        {monthName}
-                    </span>
-                    <span ref={yearMeasureRef} className="invisible absolute whitespace-nowrap font-display text-[17px] font-bold">
-                        {y}
-                    </span>
 
-                    <div className="inline-flex items-center gap-0.5">
-                        <select
-                            aria-label="Month"
-                            value={m}
-                            onChange={(e) => setView(new Date(y, Number(e.target.value), 1))}
-                            style={monthWidth ? { width: monthWidth } : undefined}
-                            className="cursor-pointer appearance-none border-0 bg-transparent p-0 font-display text-[17px] font-bold text-[#323232] focus:outline-none"
-                        >
-                            {MONTH_NAMES.map((name, idx) => (
-                                <option key={name} value={idx}>
-                                    {name}
-                                </option>
-                            ))}
-                        </select>
-                        <span className="pointer-events-none translate-y-[0.5px] text-[10px] text-[#2475EE]">▼</span>
-                    </div>
-                    <div className="ml-1.5 inline-flex items-center gap-0.5">
-                        <select
-                            aria-label="Year"
-                            value={y}
-                            onChange={(e) => setView(new Date(Number(e.target.value), m, 1))}
-                            style={yearWidth ? { width: yearWidth } : undefined}
-                            className="cursor-pointer appearance-none border-0 bg-transparent p-0 font-display text-[17px] font-bold text-[#323232] focus:outline-none"
-                        >
-                            {yearOptions.map((yr) => (
-                                <option key={yr} value={yr}>
-                                    {yr}
-                                </option>
-                            ))}
-                        </select>
-                        <span className="pointer-events-none translate-y-[0.5px] text-[10px] text-[#2475EE]">▼</span>
-                    </div>
+                <div className="flex items-center gap-2">
+                    <CustomDropdown
+                        value={m}
+                        options={MONTH_NAMES.map((name, idx) => ({ value: idx, label: name }))}
+                        onChange={(newM) => setView(new Date(y, newM, 1))}
+                    />
+                    <CustomDropdown
+                        value={y}
+                        options={yearOptions.map((yr) => ({ value: yr, label: String(yr) }))}
+                        onChange={(newY) => setView(new Date(newY, m, 1))}
+                    />
                 </div>
+
                 <button
                     type="button"
                     onClick={() => setView(new Date(y, m + 1, 1))}
@@ -2020,29 +2163,27 @@ function DateRangeCalendar({
                     return (
                         <div
                             key={dISO}
-                            className={`h-8 w-full flex justify-center items-center ${
-                                inRange
-                                    ? "bg-[#2475EE]/10 text-[#2475EE]"
-                                    : isStart && end
-                                        ? "bg-gradient-to-r from-transparent to-brand/10 rounded-l-full"
-                                        : isEnd && start
-                                            ? "bg-gradient-to-l from-transparent to-brand/10 rounded-r-full"
-                                            : ""
-                            }`}
+                            className={`h-8 w-full flex justify-center items-center ${inRange
+                                ? "bg-[#2475EE]/10 text-[#2475EE]"
+                                : isStart && end
+                                    ? "bg-gradient-to-r from-transparent to-brand/10 rounded-l-full"
+                                    : isEnd && start
+                                        ? "bg-gradient-to-l from-transparent to-brand/10 rounded-r-full"
+                                        : ""
+                                }`}
                         >
                             <button
                                 type="button"
                                 disabled={past}
                                 onClick={() => pick(day)}
-                                className={`flex h-8 w-8 items-center justify-center text-[13px] font-bold transition ${
-                                    past
-                                        ? "text-muted-foreground/35 cursor-not-allowed"
-                                        : isEdge
-                                            ? "bg-[#2475EE] text-[#FFFFFF] rounded-full shadow-md"
-                                            : inRange
-                                                ? "text-[#2475EE] hover:bg-[#2475EE]/20 rounded-none"
-                                                : "text-[#323232] hover:bg-secondary rounded-full"
-                                }`}
+                                className={`flex h-8 w-8 items-center justify-center text-[13px] font-bold transition ${past
+                                    ? "text-muted-foreground/35 cursor-not-allowed"
+                                    : isEdge
+                                        ? "bg-[#2475EE] text-[#FFFFFF] rounded-full shadow-md"
+                                        : inRange
+                                            ? "text-[#2475EE] hover:bg-[#2475EE]/20 rounded-none"
+                                            : "text-[#323232] hover:bg-secondary rounded-full"
+                                    }`}
                             >
                                 {day}
                             </button>

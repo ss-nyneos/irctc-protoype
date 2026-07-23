@@ -53,7 +53,7 @@ export function MadeForYouPage() {
 
         <div className="mx-auto max-w-7xl px-3 pt-16 sm:px-4 md:px-5 lg:px-6">
           <h2 className="heading-xl reveal mt-16" style={{ fontSize: "28px" }}>
-            YOU MIGHT ALSO <span className="accent">LIKE</span>
+            You Might Also <span className="accent">Like</span>
           </h2>
 
           {/* Two cards per row; a third wraps below. Each row is its own

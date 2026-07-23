@@ -89,11 +89,11 @@ export default function TripPass({
                 <div className="grid grid-cols-2 gap-x-[18px] gap-y-[22px] sm:grid-cols-4">
                     {fields.map((f, i) => (
                         <div key={i} className="min-w-0">
-                            <div className="mb-1 font-sans text-[16px] font-semibold text-[#323232]">
+                            <div className="mb-1 font-sans text-[14px] font-semibold text-[#565C68]">
                                 {f.label}
                             </div>
                             <div
-                                className={`break-words font-sans text-[16px] font-semibold text-[#323232] ${
+                                className={`break-words font-sans text-[16px] font-bold text-[#2475EE] ${
                                     f.code ? "font-mono tracking-[0.06em] tabular-nums" : ""
                                 }`}
                                 title={f.value}

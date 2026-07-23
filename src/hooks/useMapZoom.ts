@@ -70,6 +70,20 @@ export function useMapZoom(width: number, height: number, maxZoom = 8, initial: 
   const zoomOut = useCallback(() => zoomAt(1 / 1.6, width / 2, height / 2), [zoomAt, width, height]);
   const reset = useCallback(() => setZoom(clamp(initial)), [clamp, initial]);
 
+  const zoomToPoint = useCallback(
+    (x: number, y: number, targetK?: number) => {
+      setZoom((current) => {
+        const k = targetK ?? current.k;
+        return clamp({
+          k,
+          x: width / 2 - x * k,
+          y: height / 2 - y * k,
+        });
+      });
+    },
+    [width, height, clamp],
+  );
+
   useEffect(() => {
     setZoom(clamp(initial));
   }, [clamp, initial]);
@@ -126,6 +140,7 @@ export function useMapZoom(width: number, height: number, maxZoom = 8, initial: 
     zoomIn,
     zoomOut,
     reset,
+    zoomToPoint,
     /** Spread onto the same element. */
     handlers: {
       onPointerDown,
