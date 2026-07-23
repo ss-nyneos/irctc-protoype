@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Send, Sparkles, X } from "lucide-react";
 import { useRouter } from "@/router/RouterContext";
+import { useUI } from "@/context/UI";
 import dishaIcon from "@/assets/graphic/askdisha-2.png";
 import { DISHA_EVENT } from "@/components/layout/Header";
 import { packages, getPackageById } from "@/data/packages";
