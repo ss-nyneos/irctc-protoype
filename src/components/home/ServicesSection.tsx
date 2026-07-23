@@ -15,11 +15,11 @@ import {
   IRCTC_GOLDEN_CHARIOT,
 } from "@/data/services";
 
-import imgFlights from "@/assets/irctc_services_assets/svc-flights.png";
-import imgHotels from "@/assets/irctc_services_assets/svc-hotels.jpg";
-import imgBus from "@/assets/irctc_services_assets/svc-bus.png";
+import imgFlights from "@/assets/irctc_services_assets/svc-flights.jpg";
+import imgHotels from "@/assets/irctc_services_assets/svc-hotels.webp";
+import imgBus from "@/assets/irctc_services_assets/svc-bus.webp";
 import imgRetiring from "@/assets/irctc_services_assets/svc-retiring-room.jpeg";
-import imgLounge from "@/assets/irctc_services_assets/svc-lounge.webp";
+import imgLounge from "@/assets/irctc_services_assets/svc-lounge.png";
 import imgBharat from "@/assets/irctc_services_assets/svc-bharat-gaurav.webp";
 import imgBuddhist from "@/assets/irctc_services_assets/svc-buddhist-train.jpg";
 import imgHeli from "@/assets/irctc_services_assets/svc-heli-yatra.webp";

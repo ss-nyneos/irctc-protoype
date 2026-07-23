@@ -57,10 +57,10 @@ import imgTransport from "@/assets/customise/transport.webp";
 import imgExperience from "@/assets/customise/experience.jpg";
 import imgBudget from "@/assets/customise/budget.webp";
 import imgNotes from "@/assets/customise/budget.webp";
-import imgBudgetFriendly from "@/assets/irctc_services_assets/svc-retiring-room.jpg";
-import imgBudgetBalance from "@/assets/irctc_services_assets/svc-hotels.jpg";
+import imgBudgetFriendly from "@/assets/irctc_services_assets/svc-retiring-room.jpeg";
+import imgBudgetBalance from "@/assets/irctc_services_assets/svc-hotels.webp";
 import imgBudgetLuxury from "@/assets/irctc_services_assets/svc-maharajas.jpg";
-import imgBudgetComfortable from "@/assets/irctc_services_assets/svc-lounge.webp";
+import imgBudgetComfortable from "@/assets/irctc_services_assets/svc-lounge.png";
 // "Where do you want to go?" vibe artwork
 import imgHills from "@/assets/customise/hills.png";
 import imgBeaches from "@/assets/customise/beaches.webp";
