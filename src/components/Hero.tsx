@@ -51,7 +51,7 @@ export default function Hero() {
       <video
         ref={videoRef}
         className="hero__img"
-        style={isDark ? { transform: 'scale(1.2)' } : undefined}
+        style={isDark ? { transform: 'scale(1.3)' } : undefined}
         src={isDark ? rainVideo : heroVideo}
         poster="/img/taj-dawn.jpg"
         autoPlay
