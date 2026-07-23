@@ -27,7 +27,7 @@ export function CollapsibleSection({
           type="button"
           onClick={onToggle}
           aria-expanded={open}
-          className="flex bg-brand text-white w-full items-center justify-between gap-3 px-5 py-4 text-left transition"
+          className="flex bg-brand/90 text-white w-full items-center justify-between gap-3 px-5 py-4 text-left transition"
         >
           <span className="text-[22px] font-medium">{title}</span>
           <ChevronDown

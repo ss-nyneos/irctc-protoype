@@ -174,9 +174,8 @@ export function DetailPage({ id }: { id: string }) {
             className="h-full w-full scale-105 [&_img]:object-[center_25%]"
           />
         </div>
-        {/* Gradients for readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/70" />
-        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent via-black/50 to-black/85" />
+        {/* Soft gradient overlay for contrast while keeping image bright */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/30" />
 
         {/* Top bar: wishlist + share */}
         <div className="relative z-20 mx-auto flex w-full max-w-[1600px] items-center justify-end px-4 pt-6 md:px-8">
@@ -198,15 +197,16 @@ export function DetailPage({ id }: { id: string }) {
           </div>
         </div>
 
-        {/* Glass card overlay at bottom of hero */}
+        {/* Glass card overlay at bottom of hero — Liquid Glass treatment */}
         <div className="relative z-10 mt-auto px-4 pb-5 md:px-8">
           <div className="mx-auto max-w-[1600px]">
             <div
-              className="overflow-hidden rounded-2xl border border-white/20 shadow-2xl"
+              className="overflow-hidden bg-black/40 rounded-2xl border border-white/30"
               style={{
-                background: "rgba(10, 20, 48, 0.32)",
-                backdropFilter: "blur(14px) saturate(1.2)",
-                WebkitBackdropFilter: "blur(14px) saturate(1.2)",
+                // background: "linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.09) 100%)",
+                backdropFilter: "blur(2px) saturate(1.8)",
+                WebkitBackdropFilter: "blur(24px) saturate(1.8)",
+                boxShadow: "0 20px 50px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 1px 0 rgba(255, 255, 255, 0.15)",
               }}
             >
               <div className="px-6 py-5">
