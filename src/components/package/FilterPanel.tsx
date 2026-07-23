@@ -53,7 +53,7 @@ export function FilterPanel({
   return (
     <div className="flex flex-col gap-4">
       <section className="rounded-2xl border border-[#DADADB] bg-white/60 p-5 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.25)] ring-1 ring-inset ring-white/60 backdrop-blur-xl">
-        <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-brand">Price range</div>
+        <div className="text-[14px] font-bold uppercase tracking-[0.12em] text-brand">Price range</div>
 
         <div className="relative mt-8 pb-1">
           <div
@@ -91,11 +91,11 @@ export function FilterPanel({
 
       <section className="overflow-hidden rounded-2xl border border-[#DADADB] bg-white/60 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.25)] ring-1 ring-inset ring-white/60 backdrop-blur-xl">
         <header className="flex items-center justify-between border-b border-white/70 px-5 py-4">
-          <span className="inline-flex items-center gap-2 text-[15px] font-bold text-ink">
+          <span className="inline-flex items-center gap-2 text-[16px] font-semibold text-ink">
             <SlidersHorizontal size={16} className="text-brand" /> Refine results
           </span>
           {activeFilterCount > 0 && (
-            <button onClick={onClear} type="button" className="text-[12px] font-bold text-brand transition hover:underline">
+            <button onClick={onClear} type="button" className="text-[12px] font-medium text-brand transition hover:underline">
               Clear all ({activeFilterCount})
             </button>
           )}
@@ -117,15 +117,14 @@ export function FilterPanel({
                   onClick={() => toggleSection(s.key)}
                   type="button"
                   aria-expanded={isOpen}
-                  className={`flex w-full items-center justify-between gap-2 px-5 py-3.5 text-left transition ${
-                    isOpen ? "bg-white/50" : "hover:bg-white/40"
-                  }`}
+                  className={`flex w-full items-center justify-between gap-2 px-5 py-3.5 text-left transition ${isOpen ? "bg-white/50" : "hover:bg-white/40"
+                    }`}
                 >
                   <span className="inline-flex min-w-0 items-center gap-2.5">
                     <s.icon size={16} className="shrink-0 text-brand" />
-                    <span className="truncate text-[13.5px] font-bold text-ink">{s.title}</span>
+                    <span className="truncate text-[16px] font-bold text-ink">{s.title}</span>
                     {chosen > 0 && !isOpen && (
-                      <span className="shrink-0 rounded-full bg-brand/10 px-1.5 py-0.5 text-[11px] font-bold text-brand">
+                      <span className="shrink-0 rounded-full bg-brand px-1.5 py-0 text-[12px] font-bold text-white">
                         {chosen}
                       </span>
                     )}
@@ -141,9 +140,8 @@ export function FilterPanel({
                 </button>
 
                 <div
-                  className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
-                    isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-                  }`}
+                  className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                    }`}
                 >
                   <div className="overflow-hidden">
                     {searchable && (
@@ -167,20 +165,17 @@ export function FilterPanel({
                           className="group/opt flex items-center gap-2 rounded-lg py-1.5 text-left transition"
                         >
                           <span
-                            className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center border-2 transition-all duration-200 ${
-                              s.single ? "rounded-full" : "rounded-md"
-                            } ${
-                              o.active
+                            className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center border-2 transition-all duration-200 ${s.single ? "rounded-full" : "rounded-md"
+                              } ${o.active
                                 ? "border-brand bg-brand text-white"
                                 : "border-border bg-white/70 text-transparent group-hover/opt:border-brand/60"
-                            }`}
+                              }`}
                           >
                             <Check size={12} strokeWidth={3.5} />
                           </span>
                           <span
-                            className={`truncate text-[13px] transition-colors ${
-                              o.active ? "font-bold text-ink" : "font-medium text-foreground/75 group-hover/opt:text-ink"
-                            }`}
+                            className={`truncate text-[13px] transition-colors ${o.active ? "font-bold text-ink" : "font-medium text-foreground/75 group-hover/opt:text-ink"
+                              }`}
                           >
                             {o.label}
                           </span>

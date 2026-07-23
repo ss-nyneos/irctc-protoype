@@ -1,20 +1,28 @@
 import { useEffect, useState } from "react";
+import {
+  BookOpen,
+  CircleAlert,
+  FileText,
+  MessageCircle,
+  LayoutList,
+} from "lucide-react";
 
 export interface Section {
   id: string;
   label: string;
 }
 
-/** Site header height — what a section must clear when scrolled to. Sections
- *  carry a matching `scroll-mt-[88px]`. */
+/** Site header height — what a section must clear when scrolled to. */
 const NAV_OFFSET = 88;
 
-/**
- * Tracks which section the reader is in. Position-based rather than an
- * IntersectionObserver: with a sticky header the question is "which heading did
- * I last scroll past", which reads more truly off the scroll position than off
- * intersection ratios. Throttled to one read per frame.
- */
+const sectionIcons: Record<string, typeof BookOpen> = {
+  overview: BookOpen,
+  itinerary: LayoutList,
+  inclusions: FileText,
+  policy: CircleAlert,
+  contact: MessageCircle,
+};
+
 function useScrollSpy(ids: string[]): string {
   const [active, setActive] = useState(ids[0]);
 
@@ -47,9 +55,9 @@ function useScrollSpy(ids: string[]): string {
 }
 
 /**
- * Always-visible section rail down the left of the detail page. Each item jumps
- * to its section and opens it (`onNavigate`), and the item for whichever section
- * you're scrolled into is highlighted.
+ * Pill-style vertical section navigation for the detail page.
+ * Active item: solid brand-blue fill + white text with left accent stripe.
+ * Hover: light brand tint.
  */
 export function SectionNav({
   sections,
@@ -61,21 +69,36 @@ export function SectionNav({
   const active = useScrollSpy(sections.map((s) => s.id));
 
   return (
-    <nav aria-label="Package sections" className="px-1">
-      <ul className="space-y-1.5">
+    <nav aria-label="Package sections">
+      <ul className="space-y-1">
         {sections.map((s) => {
           const isActive = active === s.id;
+          const Icon = sectionIcons[s.id] ?? BookOpen;
           return (
             <li key={s.id}>
               <button
                 type="button"
                 onClick={() => onNavigate(s.id)}
                 aria-current={isActive ? "location" : undefined}
-                className={`flex min-h-[54px] w-full origin-left items-center gap-3 px-2 py-3 text-left text-[16px] font-bold transition-[color,transform] duration-200 ${
-                  isActive ? "scale-[1.14] text-brand" : "text-muted-foreground hover:text-ink"
+                className={`group relative flex w-full items-center gap-3 overflow-hidden rounded-xl px-3.5 py-3 text-left text-[14px] font-bold transition-all duration-200 ${
+                  isActive
+                    ? "bg-brand text-white shadow-md shadow-brand/25"
+                    : "text-muted-foreground hover:bg-brand/10 hover:text-ink"
                 }`}
               >
-                {s.label}
+                {/* Left accent stripe */}
+                <span
+                  className={`absolute left-0 top-2 bottom-2 w-[3px] rounded-full transition-all duration-200 ${
+                    isActive ? "bg-white/50 opacity-100" : "opacity-0"
+                  }`}
+                />
+                <Icon
+                  size={16}
+                  className={`shrink-0 transition-colors duration-200 ${
+                    isActive ? "text-white" : "text-brand/70 group-hover:text-brand"
+                  }`}
+                />
+                <span className="truncate">{s.label}</span>
               </button>
             </li>
           );

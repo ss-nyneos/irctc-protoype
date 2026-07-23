@@ -66,7 +66,7 @@ function ComboField({ field, edge }: { field: SearchField; edge: keyof typeof ed
 
   const openList = () => {
     setHighlight(Math.max(0, field.options.findIndex((o) => o.value === field.value)));
-    
+
     setQuery(null);
     setOpen(true);
   };
@@ -125,9 +125,8 @@ function ComboField({ field, edge }: { field: SearchField; edge: keyof typeof ed
         // rounded-lg matches the panel's own radius, so the open-state ring and
         // tint follow the corner instead of drawing a square over it. Middle
         // fields simply read as a rounded highlight.
-        className={`flex h-full w-full cursor-text items-center gap-3 px-3.5 py-2.5 transition-colors duration-150 ${
-          edgeRadius[edge]
-        } ${open ? "bg-saffron/5 ring-2 ring-inset ring-saffron" : "hover:bg-black/[0.03]"}`}
+        className={`flex h-full w-full cursor-text items-center gap-3 px-3.5 py-2.5 transition-colors duration-150 ${edgeRadius[edge]
+          } ${open ? "bg-saffron/5 ring-2 ring-inset ring-saffron" : "hover:bg-black/[0.03]"}`}
       >
         <field.icon size={17} className="shrink-0 text-brand" aria-hidden="true" />
 
@@ -168,7 +167,7 @@ function ComboField({ field, edge }: { field: SearchField; edge: keyof typeof ed
           />
         </span>
 
-      
+
         <button
           type="button"
           tabIndex={-1}
@@ -214,9 +213,8 @@ function ComboField({ field, edge }: { field: SearchField; edge: keyof typeof ed
                 // mousedown fires before the outside-click handler can close us.
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => choose(i)}
-                className={`flex cursor-pointer items-center justify-between gap-3 px-3.5 py-2 text-[14px] transition-colors ${
-                  i === highlight ? "bg-secondary" : "bg-white"
-                } ${isSelected ? "font-bold text-navy" : "font-medium text-ink"}`}
+                className={`flex cursor-pointer items-center justify-between gap-3 px-3.5 py-2 text-[14px] transition-colors ${i === highlight ? "bg-secondary" : "bg-white"
+                  } ${isSelected ? "font-bold text-navy" : "font-medium text-ink"}`}
               >
                 <span className="truncate">{o.label}</span>
                 {isSelected && <Check size={14} className="shrink-0 text-brand" aria-hidden="true" />}

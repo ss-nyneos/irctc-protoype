@@ -197,7 +197,7 @@ export interface PackageDetail {
 export type View =
   | { name: "preload" }
   | { name: "home" }
-  | { name: "world"; category?: string }
+  | { name: "world"; category?: string; fromPlace?: string }
   | { name: "customise" }
   | { name: "madeforyou" }
   | { name: "detail"; id: string }

@@ -38,8 +38,8 @@ export function MadeForYouPage() {
   return (
     <div
       ref={ref}
-      className="min-h-screen bg-[#FFFFFF] pb-20 text-[#323232]"
-      style={{ paddingBottom: "calc(6rem + var(--dock-offset, 0px))" }}
+      className="min-h-screen bg-[#FFFFFF] pb-12 text-[#323232]"
+    // style={{ paddingBottom: "calc(6rem + var(--dock-offset, 0px))" }}
     >
       {/* Gallery pins in place; content below scrolls up and covers it. */}
       <div className="sticky top-0 z-0 h-[72vh] min-h-[480px] w-full bg-[#FFFFFF]">
@@ -63,11 +63,10 @@ export function MadeForYouPage() {
             {recommendedRows.map((row, r) => (
               <div
                 key={r}
-                className={`card-row flex flex-col gap-5 sm:flex-row ${
-                  row.length === 1
-                    ? "sm:w-[calc(50%-0.625rem)] sm:transition-[width] sm:duration-500 sm:ease-[cubic-bezier(0.22,1,0.36,1)] sm:hover:w-[calc(63%-0.625rem)]"
-                    : ""
-                }`}
+                className={`card-row flex flex-col gap-5 sm:flex-row ${row.length === 1
+                  ? "sm:w-[calc(50%-0.625rem)] sm:transition-[width] sm:duration-500 sm:ease-[cubic-bezier(0.22,1,0.36,1)] sm:hover:w-[calc(63%-0.625rem)]"
+                  : ""
+                  }`}
                 style={
                   {
                     "--cell-grow": 1 + HOVER_GROW,

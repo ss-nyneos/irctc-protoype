@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useState } from "react";
 import { Calendar, MapPin, Search, Users } from "lucide-react";
 import { useRouter } from "@/router/RouterContext";
 import { destinations } from "@/data/destinations";
@@ -6,6 +7,15 @@ import { HeroVideo } from "./HeroVideo";
 
 export function HeroSection() {
   const { go } = useRouter();
+  const [selectedPlace, setSelectedPlace] = useState("Explore destinations");
+
+  const handleExplore = () => {
+    const isDefault = selectedPlace === "Explore destinations";
+    go({
+      name: "world",
+      ...(isDefault ? {} : { fromPlace: selectedPlace }),
+    });
+  };
 
   return (
     <section className="relative flex min-h-[92dvh] flex-col overflow-hidden md:min-h-[94vh]">
@@ -33,7 +43,11 @@ export function HeroSection() {
         <div className="mt-8 w-full max-w-3xl overflow-hidden rounded-full bg-white/25 p-1.5 shadow-2xl ring-1 ring-white/40 backdrop-blur-xl backdrop-saturate-150">
           <div className="flex flex-col divide-y divide-white/25 md:flex-row md:items-stretch md:divide-x md:divide-y-0">
             <SearchField icon={<MapPin size={16} />} label="Where to?">
-              <select className="w-full bg-transparent text-[14px] font-bold text-white outline-none">
+              <select
+                className="w-full bg-transparent text-[14px] font-bold text-white outline-none"
+                value={selectedPlace}
+                onChange={(e) => setSelectedPlace(e.target.value)}
+              >
                 <option className="text-navy">Explore destinations</option>
                 {destinations.map((d) => (
                   <option key={d.name} className="text-navy">{d.name}</option>
@@ -57,7 +71,7 @@ export function HeroSection() {
               </select>
             </SearchField>
             <button
-              onClick={() => go({ name: "world" })}
+              onClick={handleExplore}
               type="button"
               className="m-1 flex items-center justify-center gap-2 rounded-full bg-brand px-6 py-3.5 text-[15px] font-bold text-white shadow-lg transition hover:brightness-110 md:m-1.5"
             >

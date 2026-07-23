@@ -25,8 +25,13 @@ export function useRouter(): RouterState {
  */
 function pathForView(view: View): string {
   switch (view.name) {
-    case "world":
-      return view.category ? `/world?category=${encodeURIComponent(view.category)}` : "/world";
+    case "world": {
+      const q = new URLSearchParams();
+      if (view.category) q.set("category", view.category);
+      if (view.fromPlace) q.set("from", view.fromPlace);
+      const qs = q.toString();
+      return qs ? `/world?${qs}` : "/world";
+    }
     case "customise":
       return "/customise";
     case "madeforyou":
@@ -74,7 +79,11 @@ function viewForLocation(pathname: string, search: string): View {
 
   switch (pathname) {
     case "/world":
-      return { name: "world", category: params.get("category") ?? undefined };
+      return {
+        name: "world",
+        category: params.get("category") ?? undefined,
+        fromPlace: params.get("from") ?? undefined,
+      };
     case "/customise":
       return { name: "customise" };
     case "/personal":

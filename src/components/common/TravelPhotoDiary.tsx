@@ -166,7 +166,7 @@ export function TravelPhotoDiary() {
                   <h3 className="mt-4 font-display text-[34px] font-bold leading-none tracking-[-0.04em] text-[#323232]">
                     <TripName title={trip.title} />
                   </h3>
-                  <p className="mt-2 text-[17px] text-muted-foreground">
+                  <p className="mt-2 text-[16px] text-medium text-muted-foreground">
                     {trip.region} · {trip.category}
                   </p>
                 </div>

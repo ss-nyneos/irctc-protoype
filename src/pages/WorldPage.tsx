@@ -2,13 +2,18 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import {
   ArrowUpDown,
   CalendarDays,
+  ChevronLeft,
+  ChevronRight,
   HandHelping,
   Headset,
   LayoutGrid,
   MapPin,
   Navigation,
   Rows3,
+  Search,
   ShieldCheck,
+  SlidersHorizontal,
+  SmilePlus,
   Sparkles,
   Sun,
   Ticket,
@@ -18,14 +23,9 @@ import {
 import { useReveal } from "@/hooks/useReveal";
 import { packages, getPackageById } from "@/data/packages";
 import type { BudgetBand, Climate, Experience, TourPackage } from "@/types";
-// import { DestinationMarquee } from "@/components/common/DestinationMarquee";
-// import { AiPickBanner } from "@/components/home/AiPickBanner";
 import { EditorialPackageCard, HOVER_GROW } from "@/components/package/EditorialPackageCard";
 import { PackageListRow } from "@/components/package/PackageListRow";
-import { RecentPackagesDrawer } from "@/components/package/RecentPackagesDrawer";
 import { FilterPanel, type FilterSection } from "@/components/package/FilterPanel";
-import { PackageSearchBar, type SearchField } from "@/components/package/PackageSearchBar";
-import heroScene from "@/hero_scene.jpg";
 import { CompareModal } from "@/components/package/CompareModal";
 import { CompareTray, COMPARE_MAX } from "@/components/package/CompareTray";
 
@@ -34,9 +34,7 @@ const sortOptions = ["Recommended", "Price: Low to High", "Price: High to Low", 
 type SortOption = (typeof sortOptions)[number];
 
 const regions = [...new Set(packages.map((p) => p.region))].sort();
-/** Cities a package can be joined from — the "from" half of the search strip. */
 const departureCities = [...new Set(packages.map((p) => p.from))].sort();
-/** Anything the search strip leaves unset. Not a real value, so it never filters. */
 const ANY = "Any";
 const budgetBands: BudgetBand[] = ["Value", "Comfort", "Premium", "Luxury"];
 const climates: Climate[] = ["Cool", "Moderate", "Warm", "Tropical"];
@@ -52,23 +50,15 @@ const experienceOptions: { k: Experience; label: string }[] = [
 const durationOptions = ["Any", "3–5 days", "6–8 days", "9+ days"] as const;
 type Duration = (typeof durationOptions)[number];
 
-/** Stands in for a visit history until one is stored. */
-const recentPackages = packages.slice(0, 3);
-
-/** Two-up once there's room — the filter panel takes 30% of the row. */
 const columnsFor = (w: number) => (w >= 640 ? 2 : 1);
 
-/** Slider bounds, rounded out to the nearest ₹500 either side of the catalogue. */
 const PRICE_MIN = Math.floor(Math.min(...packages.map((p) => p.price)) / 500) * 500;
 const PRICE_MAX = Math.ceil(Math.max(...packages.map((p) => p.price)) / 500) * 500;
-/** Opens mid-track rather than pinned to either end, so the control reads as
- *  adjustable at a glance. */
 const PRICE_DEFAULT = Math.round((PRICE_MIN + PRICE_MAX) / 2 / 500) * 500;
 
-/** Fractional saving vs. the struck-through price — used to rank "best value". */
-// const discountPct = (p: TourPackage) => (p.oldPrice ? (p.oldPrice - p.price) / p.oldPrice : 0);
+const ITEMS_PER_PAGE = 8;
 
-export function WorldPage({ initialCategory }: { initialCategory?: string }) {
+export function WorldPage({ initialCategory, initialFromPlace }: { initialCategory?: string; initialFromPlace?: string }) {
   const ref = useReveal();
   const [category, setCategory] = useState(initialCategory ?? "All");
   const [fromCity, setFromCity] = useState(ANY);
@@ -82,32 +72,14 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
   const [view, setView] = useState<"gallery" | "list">("gallery");
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [showCompare, setShowCompare] = useState(false);
+  const [filterCollapsed, setFilterCollapsed] = useState(false);
 
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const [showRecent, setShowRecent] = useState(true);
+  // "Packages Originated from" banner
+  const [originPlace, setOriginPlace] = useState(initialFromPlace ?? "");
+  const [originQuery, setOriginQuery] = useState(initialFromPlace ?? "");
 
-  useEffect(() => {
-    const heading = headingRef.current;
-    if (!heading) return;
-    let frame = 0;
-    const measure = () => {
-      frame = 0;
-      // Hidden once the headline has risen past the fixed nav.
-      const navHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--nav-h")) || 110;
-      setShowRecent(heading.getBoundingClientRect().top > navHeight);
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(measure);
-    };
-    measure();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (frame) cancelAnimationFrame(frame);
-    };
-  }, []);
+  // Pagination
+  const [page, setPage] = useState(1);
 
   const toggle = <T,>(list: T[], setList: (v: T[]) => void, value: T) =>
     setList(list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
@@ -135,7 +107,6 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
 
   const filtered = useMemo(() => {
     let list = packages.filter((p) => {
-      // "Domestic" is a scope (everything not abroad), the rest match the package category directly
       if (category === "Domestic") {
         if (p.category === "International") return false;
       } else if (category !== "All" && p.category !== category) {
@@ -150,63 +121,29 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
       if (duration === "3–5 days" && p.days > 5) return false;
       if (duration === "6–8 days" && (p.days < 6 || p.days > 8)) return false;
       if (duration === "9+ days" && p.days < 9) return false;
+      // Origin place search
+      if (originPlace) {
+        const q = originPlace.toLowerCase();
+        if (!p.from.toLowerCase().includes(q) && !p.region.toLowerCase().includes(q) && !p.name.toLowerCase().includes(q)) return false;
+      }
       return true;
     });
     if (sort === "Price: Low to High") list = [...list].sort((a, b) => a.price - b.price);
     if (sort === "Price: High to Low") list = [...list].sort((a, b) => b.price - a.price);
     if (sort === "Top rated") list = [...list].sort((a, b) => b.rating - a.rating);
     return list;
-  }, [category, sort, selRegions, selBands, selClimates, selExperiences, duration, maxPrice, fromCity]);
+  }, [category, sort, selRegions, selBands, selClimates, selExperiences, duration, maxPrice, fromCity, originPlace]);
 
-  // The AI pick must come from what's actually on screen. Keep the curated default
-  // when it matches the active filters; otherwise surface the best-value package in
-  // the results (top rating, then biggest saving). Null → no matches, hide the banner.
-  // const aiPick = useMemo(() => {
-  //   if (filtered.length === 0) return null;
-  //   return (
-  //     filtered.find((p) => p.id === "dakshinbharat") ??
-  //     [...filtered].sort((a, b) => b.rating - a.rating || discountPct(b) - discountPct(a))[0]
-  //   );
-  // }, [filtered]);
+  // Reset to page 1 when filters change
+  useEffect(() => { setPage(1); }, [filtered.length]);
 
-  /**
-   * The search strip drives the same state the filter panel does. Region and
-   * comfort are multi-select there but single-select here, so the strip reads
-   * the first choice and writes either one value or none — no second source of
-   * truth, and a pick made in either place shows up in both.
-   */
-  const searchFields: SearchField[] = [
-    {
-      key: "from",
-      label: "Leaving from",
-      icon: Navigation,
-      value: fromCity,
-      options: [{ value: ANY, label: "Any city" }, ...departureCities.map((c) => ({ value: c, label: c }))],
-      onChange: setFromCity,
-    },
-    {
-      key: "region",
-      label: "Going to",
-      icon: MapPin,
-      value: selRegions[0] ?? ANY,
-      options: [{ value: ANY, label: "Anywhere" }, ...regions.map((r) => ({ value: r, label: r }))],
-      onChange: (v) => setSelRegions(v === ANY ? [] : [v]),
-    },
-    {
-      key: "duration",
-      label: "Trip length",
-      icon: CalendarDays,
-      value: duration,
-      options: durationOptions.map((d) => ({ value: d, label: d === "Any" ? "Any length" : d })),
-      onChange: (v) => setDuration(v as Duration),
-    },
-  ];
+  const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
+  const pagedFiltered = useMemo(() => {
+    const start = (page - 1) * ITEMS_PER_PAGE;
+    return filtered.slice(start, start + ITEMS_PER_PAGE);
+  }, [filtered, page]);
 
-  const quickToggles = (["family", "honeymoon", "adventure"] as Experience[]).map((k) => ({
-    label: experienceOptions.find((o) => o.k === k)!.label,
-    active: selExperiences.includes(k),
-    onToggle: () => toggle(selExperiences, setSelExperiences, k),
-  }));
+
 
   const filterSections: FilterSection[] = [
     {
@@ -238,7 +175,7 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
     {
       key: "experience",
       title: "Good for",
-      icon: Sparkles,
+      icon: SmilePlus,
       options: experienceOptions.map((e) => ({
         label: e.label,
         active: selExperiences.includes(e.k),
@@ -271,8 +208,6 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
     ...(duration !== "Any" ? [{ label: duration, onRemove: () => setDuration("Any") }] : []),
   ];
 
-  // Cards are laid out row by row so a hovered card can steal width from the
-  // ones beside it — that needs an explicit column count, not a wrapping grid.
   const [cols, setCols] = useState(() => (typeof window === "undefined" ? 3 : columnsFor(window.innerWidth)));
   useEffect(() => {
     const onResize = () => setCols(columnsFor(window.innerWidth));
@@ -282,9 +217,9 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
 
   const rows = useMemo(() => {
     const out: TourPackage[][] = [];
-    for (let i = 0; i < filtered.length; i += cols) out.push(filtered.slice(i, i + cols));
+    for (let i = 0; i < pagedFiltered.length; i += cols) out.push(pagedFiltered.slice(i, i + cols));
     return out;
-  }, [filtered, cols]);
+  }, [pagedFiltered, cols]);
 
   const toggleCompare = (id: string) =>
     setCompareIds((prev) =>
@@ -293,196 +228,269 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
 
   const compareItems = compareIds.map((id) => getPackageById(id)!).filter(Boolean);
 
+  // Pagination helper
+  const getPaginationRange = () => {
+    const delta = 2;
+    const range: (number | "…")[] = [];
+    const left = Math.max(2, page - delta);
+    const right = Math.min(totalPages - 1, page + delta);
+
+    range.push(1);
+    if (left > 2) range.push("…");
+    for (let i = left; i <= right; i++) range.push(i);
+    if (right < totalPages - 1) range.push("…");
+    if (totalPages > 1) range.push(totalPages);
+    return range;
+  };
+
   return (
-    // The dock overlays the page, so the tail of the results needs to clear it.
     <div ref={ref} className="min-h-screen" style={{ paddingBottom: "calc(6rem + var(--dock-offset, 0px))" }}>
-      {/* <DestinationMarquee className="pt-8" /> */}
-      {/* min-h rather than a fixed height: the recent-packages shelf lives inside
-          the hero now, so the section has to be able to grow when it unfolds. */}
-      <section className="relative isolate flex min-h-[80vh] w-full flex-col overflow-hidden bg-ink md:min-h-[88vh]">
-        {/* Anchored to the top of the frame: at 35% the crop ate the sky and the
-            domes, so the picture sits down and it's the reflection at the foot
-            that gets cut instead. */}
-        <img src={heroScene} alt="" className="absolute inset-0 h-full w-full scale-105 object-cover object-top" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60" />
-        {/* Two passes at the foot: a deep shadow that weights the bottom of the
-            photo, then the navy the search strip is painted in, so the image
-            sinks into the next band instead of butting against it. */}
-        <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-b from-transparent via-black/45 to-black/75" />
-        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent to-[#0B2E6B]" />
+      {/* ── Hero: 60vh gradient (no photo) ── */}
+      <section className="relative isolate flex min-h-[60vh] w-full flex-col overflow-hidden"
+        style={{ background: "linear-gradient(135deg, #0b2562 0%, #0d3080 35%, #1554b0 65%, #0f3d92 100%)" }}
+      >
+        {/* Subtle pattern overlay */}
+        <div className="absolute inset-0 opacity-[0.07]"
+          style={{ backgroundImage: "radial-gradient(circle at 20% 30%, rgba(255,255,255,0.5) 1px, transparent 1px), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.5) 1px, transparent 1px)", backgroundSize: "40px 40px" }}
+        />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-[#0B2E6B]" />
 
-        {/* Back and the shelf share one line: last-viewed packages sit at the
-            top of the page, so a returning traveller can pick up where they
-            left off without scrolling past the headline. */}
-        {/* Back is taken out of the flow so the shelf centres on the hero
-            itself rather than on whatever room the button leaves beside it. */}
-        {/* The pill navbar is fixed, so the shelf has to start below it or the
-            pill sits straight on top of the Recent cards. */}
-        <div
-          className="relative z-20 mx-auto w-full max-w-[1600px] px-4 md:px-8"
-          style={{ paddingTop: "calc(var(--nav-h, 110px) + 1.5rem)" }}
-        >
-          {/* The shelf greets you on arrival and steps aside once you've read
-              far enough to reach the headline — pointer-events go with it so a
-              faded shelf can't swallow clicks. */}
-          <div
-            aria-hidden={!showRecent}
-            className={`reveal mx-auto w-full px-16 transition-all duration-500 ease-out md:px-24 ${
-              showRecent ? "opacity-100" : "pointer-events-none -translate-y-3 opacity-0"
-            }`}
-          >
-            <RecentPackagesDrawer packages={recentPackages} />
-          </div>
-        </div>
-
-        {/* Nothing here is clickable, and it covers the whole hero — without
-            this it sits over the Back button and eats the click. Centred in
-            whatever room the shelf leaves. */}
-       
-        <div className="pointer-events-none relative z-10 flex flex-1 flex-col items-center justify-end px-4 pb-[8vh] pt-12 text-center">
-          {/* heading-xl carries the spec: Helvetica 700, 42px, -4% tracking. */}
-          <h1
-            ref={headingRef}
-            className="heading-xl max-w-3xl !text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]"
-          >
+        <div className="pointer-events-none relative z-10 flex flex-1 flex-col items-center justify-end px-4 pb-[6vh] pt-12 text-center">
+          <h1 className="heading-xl max-w-3xl !text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]">
             Explore &amp; Compare Packages
           </h1>
-          {/* Balanced and given room: at max-w-xl the last two words dropped to a
-              line of their own, which is what made the stack look crowded. */}
           <p className="mt-4 max-w-2xl text-balance text-[16px] font-medium leading-relaxed text-white/85 drop-shadow-[0_1px_12px_rgba(0,0,0,0.5)]">
             Hand-picked journeys across India and beyond — filter, shortlist and compare side by side.
           </p>
-
-          {/* Gives the headline a base to sit on, so it reads as a composed
-              block rather than type dropped onto a photograph. */}
-          {/* <div className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-[13px] font-semibold text-white/80 drop-shadow-[0_1px_10px_rgba(0,0,0,0.5)]">
-            <span className="inline-flex items-center gap-2"><ShieldCheck size={15} className="text-white/60" /> Fares inclusive of stay &amp; meals</span>
-            <span className="hidden h-4 w-px bg-white/25 sm:block" />
-            <span className="inline-flex items-center gap-2"><Ticket size={15} className="text-white/60" /> Rail, road &amp; air itineraries</span>
-            <span className="hidden h-4 w-px bg-white/25 sm:block" />
-            <span className="inline-flex items-center gap-2"><HandHelping size={15} className="text-white/60" /> Easy Service</span>
-          </div> */}
         </div>
       </section>
 
-      <PackageSearchBar
-        fields={searchFields}
-        quick={quickToggles}
-        onSearch={() => document.getElementById("results")?.scrollIntoView({ block: "start" })}
-      />
+
 
       <div className="bg-[linear-gradient(180deg,#f4eff1_0%,#ffffff_460px)]">
-      <div id="results" className="relative mx-auto max-w-[1600px] scroll-mt-4 px-4 pt-6 md:px-8 xl:px-12">
-        {/* {aiPick && (
-          <div className="mt-6">
-            <AiPickBanner pkg={aiPick} />
-          </div>
-        )} */}
+        <div id="results" className="relative mx-auto max-w-[1600px] scroll-mt-4 px-4 pt-6 md:px-8 xl:px-12">
 
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-5">
-          <div className="text-[13px] font-semibold text-muted-foreground">
-            {filtered.length} {filtered.length === 1 ? "package" : "packages"} match your filters
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="no-scrollbar flex max-w-full gap-2 overflow-x-auto">
-              {appliedChips.map((c) => (
-                <button
-                  key={c.label}
-                  onClick={c.onRemove}
-                  type="button"
-                  className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand/10 px-3 py-1 text-[12px] font-semibold text-brand transition hover:bg-brand/20"
-                >
-                  {c.label} <X size={11} />
-                </button>
-              ))}
-            </div>
-
-            {/* Same data, two densities: photos to browse, rows to compare. */}
-            <div className="flex shrink-0 items-center gap-1 rounded-full border border-white/70 bg-white/70 p-1 shadow-sm backdrop-blur-xl">
-              {([
-                { k: "gallery", icon: LayoutGrid, label: "Gallery" },
-                { k: "list", icon: Rows3, label: "List" },
-              ] as const).map((v) => (
-                <button
-                  key={v.k}
-                  onClick={() => setView(v.k)}
-                  type="button"
-                  aria-pressed={view === v.k}
-                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12.5px] font-bold transition ${
-                    view === v.k ? "bg-brand text-white shadow" : "text-ink hover:bg-brand/10"
-                  }`}
-                >
-                  <v.icon size={14} /> {v.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Panel and results start on the same line; the panel then sticks so
-            the filters stay reachable all the way down the list. */}
-        <div className="mt-5 flex flex-col items-start gap-6 lg:flex-row lg:gap-8">
-          <aside className="no-scrollbar w-full shrink-0 lg:sticky lg:top-[92px] lg:max-h-[calc(100vh-110px)] lg:w-[22%] lg:min-w-[248px] lg:overflow-y-auto lg:pb-4">
-            <FilterPanel
-              sections={filterSections}
-              priceMin={PRICE_MIN}
-              priceMax={PRICE_MAX}
-              price={maxPrice}
-              onPriceChange={setMaxPrice}
-              activeFilterCount={activeFilterCount}
-              onClear={clearFilters}
-            />
-          </aside>
-
-          <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6">
-            {view === "list" &&
-              filtered.map((pkg) => (
-                <div key={pkg.id} className="reveal">
-                  <PackageListRow
-                    pkg={pkg}
-                    comparing={compareIds.includes(pkg.id)}
-                    onCompare={() => toggleCompare(pkg.id)}
-                  />
-                </div>
-              ))}
-
-            {view === "gallery" &&
-              rows.map((row, i) => (
-              <div
-                key={i}
-                className="card-row flex flex-col gap-5 sm:flex-row lg:gap-6"
-                style={
-                  {
-                    "--cell-grow": 1 + HOVER_GROW,
-                    "--cell-shrink": row.length > 1 ? 1 - HOVER_GROW / (row.length - 1) : 1,
-                  } as CSSProperties
-                }
+          {/* "Packages Originated from" banner */}
+          {(initialFromPlace !== undefined || originQuery !== "") && (
+            <div className="mb-5 flex items-center gap-3 rounded-2xl border border-brand/20 bg-white/80 px-5 py-3.5 shadow-sm backdrop-blur-sm">
+              <span className="shrink-0 text-[14px] font-semibold text-ink/60">Packages Originated from</span>
+              <input
+                type="text"
+                value={originQuery}
+                onChange={(e) => setOriginQuery(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") { setOriginPlace(originQuery); setPage(1); } }}
+                placeholder="Enter place name…"
+                className="min-w-0 flex-1 rounded-xl border border-brand/25 bg-transparent px-3 py-1.5 text-[14px] font-semibold text-ink outline-none transition placeholder:text-ink/35 focus:border-brand focus:ring-2 focus:ring-brand/20"
+              />
+              <button
+                type="button"
+                onClick={() => { setOriginPlace(originQuery); setPage(1); }}
+                className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-brand px-4 py-2 text-[14px] font-bold text-white transition hover:brightness-95"
               >
-                {row.map((pkg) => (
-                  <div key={pkg.id} className="card-cell min-w-0">
-                    <div className="reveal">
-                      <EditorialPackageCard
-                        pkg={pkg}
-                        comparing={compareIds.includes(pkg.id)}
-                        onCompare={() => toggleCompare(pkg.id)}
-                      />
-                    </div>
+                <Search size={15} /> Search
+              </button>
+              {originPlace && (
+                <button
+                  type="button"
+                  onClick={() => { setOriginQuery(""); setOriginPlace(""); setPage(1); }}
+                  className="shrink-0 text-muted-foreground transition hover:text-ink"
+                  aria-label="Clear origin filter"
+                >
+                  <X size={16} />
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Toolbar row */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-3">
+            <div className="text-[16px] font-medium text-[#323232]">
+              {filtered.length} {filtered.length === 1 ? "package" : "packages"} match your filters
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="no-scrollbar flex max-w-full gap-2 overflow-x-auto">
+                {appliedChips.map((c) => (
+                  <button
+                    key={c.label}
+                    onClick={c.onRemove}
+                    type="button"
+                    className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand/10 px-3 py-1 text-[12px] font-semibold text-brand transition hover:bg-brand/20"
+                  >
+                    {c.label} <X size={11} />
+                  </button>
+                ))}
+              </div>
+
+              {/* Gallery / List toggle */}
+              <div className="flex shrink-0 items-center gap-1 rounded-full border border-white/70 bg-white/70 p-1 shadow-sm backdrop-blur-xl">
+                {(
+                  [
+                    { k: "gallery", icon: LayoutGrid, label: "Gallery" },
+                    { k: "list", icon: Rows3, label: "List" },
+                  ] as const
+                ).map((v) => (
+                  <button
+                    key={v.k}
+                    onClick={() => setView(v.k)}
+                    type="button"
+                    aria-pressed={view === v.k}
+                    className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[14px] font-bold transition ${view === v.k ? "bg-brand text-white shadow" : "text-ink hover:bg-brand/10"
+                      }`}
+                  >
+                    <v.icon size={14} /> {v.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Panel + results */}
+          <div className="mt-5 flex flex-col items-start gap-6 lg:flex-row lg:gap-8">
+            {/* Collapsible filter sidebar */}
+            <aside
+              className={`no-scrollbar shrink-0 transition-all duration-300 ease-out lg:sticky lg:top-[92px] lg:max-h-[calc(100vh-110px)] lg:overflow-y-auto lg:pb-4 ${filterCollapsed ? "lg:w-[48px]" : "w-full lg:w-[22%] lg:min-w-[248px]"
+                }`}
+            >
+              {/* Collapse toggle button (desktop only) */}
+              <div className="mb-3 hidden items-center justify-end lg:flex">
+                <button
+                  type="button"
+                  onClick={() => setFilterCollapsed((c) => !c)}
+                  title={filterCollapsed ? "Expand filters" : "Collapse filters"}
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand text-white shadow-md transition hover:brightness-110"
+                >
+                  {filterCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+                </button>
+              </div>
+              {!filterCollapsed && (
+                <FilterPanel
+                  sections={filterSections}
+                  priceMin={PRICE_MIN}
+                  priceMax={PRICE_MAX}
+                  price={maxPrice}
+                  onPriceChange={setMaxPrice}
+                  activeFilterCount={activeFilterCount}
+                  onClear={clearFilters}
+                />
+              )}
+              {filterCollapsed && (
+                <div className="hidden flex-col items-center gap-3 lg:flex">
+                  {filterSections.slice(0, 5).map((s) => (
+                    <button
+                      key={s.key}
+                      title={s.title}
+                      onClick={() => setFilterCollapsed(false)}
+                      type="button"
+                      className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-white shadow-sm transition hover:brightness-110"
+                    >
+                      <s.icon size={16} />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </aside>
+
+            <div className="flex min-w-0 flex-1 flex-col gap-5 lg:gap-6">
+              {view === "list" &&
+                pagedFiltered.map((pkg) => (
+                  <div key={pkg.id} className="reveal">
+                    <PackageListRow
+                      pkg={pkg}
+                      comparing={compareIds.includes(pkg.id)}
+                      onCompare={() => toggleCompare(pkg.id)}
+                    />
                   </div>
                 ))}
-                {/* Keep a short final row aligned with the columns above it. */}
-                {Array.from({ length: cols - row.length }).map((_, k) => (
-                  <div key={`spacer-${k}`} className="hidden basis-0 grow sm:block" />
+
+              {view === "gallery" &&
+                rows.map((row, i) => (
+                  <div
+                    key={i}
+                    className="card-row flex flex-col gap-5 sm:flex-row lg:gap-6"
+                    style={
+                      {
+                        "--cell-grow": 1 + HOVER_GROW,
+                        "--cell-shrink": row.length > 1 ? 1 - HOVER_GROW / (row.length - 1) : 1,
+                      } as CSSProperties
+                    }
+                  >
+                    {row.map((pkg) => (
+                      <div key={pkg.id} className="card-cell min-w-0">
+                        <div className="reveal">
+                          <EditorialPackageCard
+                            pkg={pkg}
+                            comparing={compareIds.includes(pkg.id)}
+                            onCompare={() => toggleCompare(pkg.id)}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    {Array.from({ length: cols - row.length }).map((_, k) => (
+                      <div key={`spacer-${k}`} className="hidden basis-0 grow sm:block" />
+                    ))}
+                  </div>
                 ))}
+
+              {filtered.length === 0 && (
+                <div className="rounded-2xl border border-dashed p-10 text-center text-[14px] text-muted-foreground">
+                  No packages match these filters yet. Try clearing a few.
                 </div>
-              ))}
-            {filtered.length === 0 && (
-              <div className="rounded-2xl border border-dashed p-10 text-center text-[14px] text-muted-foreground">
-                No packages match these filters yet. Try clearing a few.
-              </div>
-            )}
+              )}
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="mt-4 flex items-center justify-center gap-1.5 pb-4">
+                  {/* Prev */}
+                  <button
+                    type="button"
+                    disabled={page === 1}
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-white text-ink shadow-sm transition hover:bg-brand/10 disabled:cursor-not-allowed disabled:opacity-40"
+                    aria-label="Previous page"
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+
+                  {getPaginationRange().map((item, idx) =>
+                    item === "…" ? (
+                      <span key={`ell-${idx}`} className="flex h-9 w-9 items-center justify-center text-[14px] text-muted-foreground">
+                        …
+                      </span>
+                    ) : (
+                      <button
+                        key={item}
+                        type="button"
+                        onClick={() => setPage(item as number)}
+                        aria-current={page === item ? "page" : undefined}
+                        className={`inline-flex h-9 w-9 items-center justify-center rounded-full text-[14px] font-bold transition ${page === item
+                          ? "bg-brand text-white shadow-md shadow-brand/30"
+                          : "border border-border bg-white text-ink hover:bg-brand/10"
+                          }`}
+                      >
+                        {item}
+                      </button>
+                    ),
+                  )}
+
+                  {/* Next */}
+                  <button
+                    type="button"
+                    disabled={page === totalPages}
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-white text-ink shadow-sm transition hover:bg-brand/10 disabled:cursor-not-allowed disabled:opacity-40"
+                    aria-label="Next page"
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+
+                  <span className="ml-3 text-[12px] text-muted-foreground">
+                    Page {page} of {totalPages}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
       </div>
 
       {compareIds.length > 0 && !showCompare && (
@@ -498,4 +506,3 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
     </div>
   );
 }
-

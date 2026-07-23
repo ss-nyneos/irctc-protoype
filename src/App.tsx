@@ -34,7 +34,7 @@ function CurrentPage() {
 
   switch (view.name) {
     case "world":
-      return <WorldPage key={view.category ?? "all"} initialCategory={view.category} />;
+      return <WorldPage key={`${view.category ?? "all"}-${view.fromPlace ?? ""}`} initialCategory={view.category} initialFromPlace={view.fromPlace} />;
     case "customise":
       return <CustomisePage />;
     case "madeforyou":
