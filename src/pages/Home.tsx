@@ -24,12 +24,12 @@ export default function Home() {
     <main>
       <CustomScrollbar />
       <Hero />
-      <TripGenieStrip />
       <Services />
 
       <Offers />
       {/* <Stats /> */}
       <Trending />
+      <TripGenieStrip />
       <Experiences />
       <Interstitial />
       <Destinations />

@@ -10,7 +10,7 @@ export default function TripGenieStrip() {
   }
 
   return (
-    <section className="relative bg-paper py-[clamp(2rem,4.5vw,3.2rem)]">
+    <section className="relative bg-paper pt-0 pb-[clamp(2rem,4.5vw,3.2rem)]">
       <div className="wrap relative flex flex-col items-center justify-center gap-[clamp(1rem,2.4vw,1.8rem)] text-center min-[681px]:flex-row min-[681px]:gap-[clamp(1.4rem,3vw,2.6rem)]">
         <p className="font-sans text-[clamp(1.9rem,1.1rem+2.6vw,42px)] font-semibold leading-tight tracking-[-0.02em] text-ink-black">
           Can’t decide where to go <span className="text-blue">next?</span>

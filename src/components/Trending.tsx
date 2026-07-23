@@ -51,7 +51,7 @@ export default function Trending() {
 
   return (
     <section
-      className="overflow-hidden bg-paper py-[var(--section-y)]
+      className="overflow-hidden bg-paper pt-[var(--section-y)] pb-0
                  [--card-w:clamp(150px,42vw,190px)] min-[701px]:[--card-w:clamp(190px,15.5vw,238px)]"
       id="packages"
     >

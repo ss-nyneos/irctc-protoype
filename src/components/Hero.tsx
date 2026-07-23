@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Search, Pin, Calendar, Users } from './Icons.tsx'
 import { usePrefs } from '../context/Prefs.tsx'
 import heroVideo from '../assets/hero-india.mp4'
-import heroVideoDark from '../assets/darkModeHero.mp4'
+import rainVideo from '../assets/rain.mp4'
 
 export default function Hero() {
   const [where, setWhere] = useState('')
@@ -12,18 +12,29 @@ export default function Hero() {
   const isDark = theme === 'dark'
   const videoRef = useRef<HTMLVideoElement>(null)
 
-  /* Changing <video src> alone doesn't reliably re-decode — the element can sit
-     on the previous clip's last frame. load() forces the swap without
-     remounting the node (see the note on the element below). */
   useEffect(() => {
     const v = videoRef.current
     if (!v) return
     v.load()
+    if (isDark) {
+      v.currentTime = 5
+    }
     v.play().catch(() => {
       /* autoplay can be blocked; the poster still shows */
     })
   }, [isDark])
 
+  const handleLoadedMetadata = () => {
+    if (isDark && videoRef.current) {
+      videoRef.current.currentTime = 5
+    }
+  }
+
+  const handleTimeUpdate = () => {
+    if (isDark && videoRef.current && videoRef.current.currentTime < 5) {
+      videoRef.current.currentTime = 5
+    }
+  }
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -40,13 +51,16 @@ export default function Hero() {
       <video
         ref={videoRef}
         className="hero__img"
-        src={isDark ? heroVideoDark : heroVideo}
+        style={isDark ? { transform: 'scale(1.2)' } : undefined}
+        src={isDark ? rainVideo : heroVideo}
         poster="/img/taj-dawn.jpg"
         autoPlay
         muted
         loop
         playsInline
         preload="auto"
+        onLoadedMetadata={handleLoadedMetadata}
+        onTimeUpdate={handleTimeUpdate}
       />
       <div className="hero__inner wrap">
         {/* three solid bands, stacked in flag order: saffron, white, green */}
