@@ -343,7 +343,7 @@ export function WorldPage({ initialCategory }: { initialCategory?: string }) {
           {/* heading-xl carries the spec: Helvetica 700, 42px, -4% tracking. */}
           <h1
             ref={headingRef}
-            className="heading-xl max-w-3xl text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]"
+            className="heading-xl max-w-3xl !text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]"
           >
             Explore &amp; Compare Packages
           </h1>

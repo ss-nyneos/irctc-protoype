@@ -19,6 +19,13 @@ function resolveSrc(img: string) {
   return img.startsWith("photo-") ? buildImageUrl(img, 1200) : img;
 }
 
+function TripName({ title }: { title: string }) {
+  const cased = title
+    .toLowerCase()
+    .replace(/[a-z]+/g, (w) => w.charAt(0).toUpperCase() + w.slice(1));
+  return <>{cased}</>;
+}
+
 function useDiaryTrips(): DiaryTrip[] {
   return useMemo(
     () =>
@@ -131,7 +138,7 @@ export function TravelPhotoDiary() {
                 <div>
                   <p className="text-[16px] font-medium text-muted-foreground">Trip</p>
                   <p className="mt-3 font-display text-[22px] font-bold tracking-[-0.04em] text-[#323232]">
-                    {n} {trip.title}
+                    {n} <TripName title={trip.title} />
                   </p>
                   {/* <p className="mt-2 text-[17px] text-muted-foreground">
                     {trip.region} · {trip.category}
@@ -156,8 +163,8 @@ export function TravelPhotoDiary() {
                   <p className="text-[15px] font-medium text-muted-foreground">
                     {n} / {total} · Diary
                   </p>
-                  <h3 className="mt-4 font-display text-[42px] font-bold leading-none tracking-[-0.04em] text-[#323232]">
-                    {trip.title}
+                  <h3 className="mt-4 font-display text-[34px] font-bold leading-none tracking-[-0.04em] text-[#323232]">
+                    <TripName title={trip.title} />
                   </h3>
                   <p className="mt-2 text-[17px] text-muted-foreground">
                     {trip.region} · {trip.category}
