@@ -107,16 +107,16 @@
   color: var(--black);
 }
 
-/* Section headings: 42px, bold, black */
+/* Section headings: 42px, bold 700, var(--black) / #2475EE */
 .h2 {
-  font-family: var(--sans); /* Helvetica */
+  font-family: Helvetica, Arial, var(--sans);
   font-size: 42px;
   font-weight: 700;
-  line-height: 1; /* 100% */
-  letter-spacing: 0;
+  line-height: 100%;
+  letter-spacing: -0.04em;
   color: var(--black);
 }
-/* last word of every heading is highlighted blue */
+/* last word of every heading is highlighted blue (#2475EE) */
 .h2 span {
   color: var(--blue);
 }

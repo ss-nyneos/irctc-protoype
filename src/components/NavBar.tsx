@@ -137,7 +137,7 @@ export default function NavBar() {
   }
 
   return (
-    <header className={`nav${hidden ? ' nav--hidden' : ''}`} ref={rootRef}>
+    <header className={`nav pt-6${hidden ? ' nav--hidden' : ''}`} ref={rootRef}>
       <div className="nav__shell">
         <div className="nav__pill">
           <Link to="/home" onClick={goToPage} className="nav__brand" aria-label="IRCTC Tourism home">

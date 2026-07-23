@@ -11,7 +11,6 @@ import Trains from '../components/Trains.tsx'
 import Pilgrimage from '../components/Pilgrimage.tsx'
 import MonthlyTrips from '../components/MonthlyTrips.tsx'
 import Faq from '../components/Faq.tsx'
-import AppPromo from '../components/AppPromo.tsx'
 import ExploreCta from '../components/ExploreCta.tsx'
 import { LuxuryTrainsSection } from "@/components/home/LuxuryTrainsSection";
 import { VandeBharatScrollMorph } from "@/components/home/VandeBharatScrollMorph";
@@ -43,9 +42,7 @@ export default function Home() {
       <Pilgrimage />
       <MonthlyTrips />
       <Faq />
-      {/* AppPromo is the last section before the footer */}
       <ExploreCta />
-      <AppPromo />
     </main>
   )
 }

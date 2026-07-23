@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom'
 import { useRouter } from '@/router/RouterContext'
 import { Pin } from './Icons.tsx'
 import skyline from '../assets/explore/skyline.svg'
@@ -37,7 +36,6 @@ const pill =
   '[&_svg]:flex-none [&_svg]:text-[1.25rem] [&_svg]:text-[#f2751f]'
 
 export default function ExploreCta() {
-  const navigate = useNavigate()
   const { go } = useRouter()
 
   return (
@@ -59,7 +57,6 @@ export default function ExploreCta() {
           type="button"
           onClick={() => {
             go({ name: 'customise' })
-            navigate('/customise')
           }}
           className="mt-[clamp(1.6rem,3vw,2.4rem)] inline-block rounded-[14px] bg-blue px-[2.4rem]
                      py-[1.05rem] text-[1.05rem] font-bold text-white

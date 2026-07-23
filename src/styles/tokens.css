@@ -111,7 +111,10 @@
    Dark theme — set on <html data-theme="dark"> by the
    accessibility menu. Surfaces invert; blue lifts for contrast.
    ============================================================ */
-[data-theme='dark'] .design-1-root {
+[data-theme='dark'],
+[data-theme='dark'] .design-1-root,
+html.dark,
+html.dark .design-1-root {
   /* Night-navy, not neutral black — a faint blue undertone reads as evening
      sky and lets the warm accents (arches, city lights) glow against it. */
   --paper: #0a0d18;

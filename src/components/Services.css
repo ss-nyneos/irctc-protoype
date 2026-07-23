@@ -2,8 +2,6 @@
   position: relative;
   background: var(--paper);
   text-align: center;
-  /* lifted top edge as it slides up over the pinned hero */
-  box-shadow: 0 -24px 50px -24px rgba(10, 15, 30, 0.28);
   --p-ink: #4a3418;
   --p-icon: #1a1a1a;
   --p-gold: #c1852c;
@@ -260,7 +258,6 @@
    ============================================================ */
 [data-theme='dark'] .palace {
   --p-sub: #b89b6c;
-  box-shadow: 0 -24px 60px -24px rgba(0, 0, 0, 0.6);
 }
 /* `.svc` is its own stacking context (will-change on .reveal), so the frame's
    `screen` blend needs a backdrop to dissolve into. Painting the tile with the

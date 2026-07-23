@@ -5,7 +5,7 @@
   /* Top offset of the pill + the pill's own height (46px badge + 7px padding
      and 1px border either side). Pages whose first row of content sits at the
      very top of a hero pad by this so the pill doesn't cover it. */
-  --nav-pad-y: 14px;
+  --nav-pad-y: 24px;
   --nav-h: calc(var(--nav-pad-y) + 62px);
 }
 
@@ -20,8 +20,11 @@
   transform: translateY(0);
   transition: transform 0.35s var(--ease);
 }
-.nav--hidden {
-  transform: translateY(-130%);
+.nav--hidden,
+body.hide-nav-pinned .nav {
+  transform: translateY(-150%) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 @media (prefers-reduced-motion: reduce) {
   .nav {
