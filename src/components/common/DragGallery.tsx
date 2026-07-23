@@ -57,6 +57,10 @@ const DEFAULT_IMAGES = [
 
 const scaleFor = (w: number) => (w < 640 ? 0.7 : w < 1000 ? 0.88 : 1);
 
+/** Extra multiplier on top of the responsive scale, so callers can shrink the
+ *  whole masonry (e.g. the /world hero) without touching the profile gallery. */
+const DEFAULT_SIZE_SCALE = 1;
+
 export type GalleryProfile = {
   name: string;
   memberSince: number;
@@ -168,14 +172,77 @@ function PersonalCard({
   );
 }
 
+/** A photo in the masonry. Either a bare URL, or a URL with a caption title. */
+export type GalleryImage = string | { src: string; title?: string };
+
+type NormalizedImage = { src: string; title?: string };
+
+const normalizeImage = (img: GalleryImage): NormalizedImage =>
+  typeof img === "string" ? { src: img } : img;
+
+/** A single masonry photo with optional dim overlay and title caption. */
+function PhotoCard({ img, height, dim }: { img: NormalizedImage; height: number; dim?: boolean }) {
+  return (
+    <div
+      className="group relative overflow-hidden rounded-lg bg-muted shadow-[0_12px_28px_-16px_rgba(15,32,74,0.35)]"
+      style={{ height }}
+    >
+      <img
+        src={img.src}
+        alt={img.title ?? ""}
+        loading="lazy"
+        draggable={false}
+        onError={(e) => {
+          e.currentTarget.style.opacity = "0";
+        }}
+        className="pointer-events-none h-full w-full select-none object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
+      />
+      {dim && <span className="pointer-events-none absolute inset-0 rounded-lg bg-black/50" />}
+      <span className="pointer-events-none absolute inset-0 rounded-lg ring-1 ring-inset ring-black/5" />
+      {img.title && (
+        <>
+          <span className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 rounded-b-lg bg-gradient-to-t from-black/70 to-transparent" />
+          <p className="pointer-events-none absolute inset-x-0 bottom-0 p-3.5 text-left font-display text-[15px] font-bold leading-tight tracking-tight text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.6)]">
+            {img.title}
+          </p>
+        </>
+      )}
+    </div>
+  );
+}
+
 interface UnitProps {
-  images: string[];
+  images: NormalizedImage[];
   colW: number;
   heights: number[];
   profile?: GalleryProfile | null;
+  /** Darken photos with a black/50 overlay. */
+  dim?: boolean;
+  
+  columns?: number;
 }
 
-function Unit({ images, colW, heights, profile }: UnitProps) {
+function Unit({ images, colW, heights, profile, dim, columns }: UnitProps) {
+  
+  if (columns) {
+    const perCol = heights.length;
+    return (
+      <div className="flex gap-4 p-2">
+        {Array.from({ length: columns }, (_, c) => (
+          <div key={c} className="flex flex-col gap-4" style={{ width: colW }}>
+            {heights.map((_, r) => {
+              const img = images[(c * perCol + r) % images.length];
+              // Rotate the height set per column so shapes vary (bento) while every
+              // column keeps the same total height — needed for seamless tiling.
+              const h = heights[(r + c) % perCol];
+              return <PhotoCard key={r} img={img} height={h} dim={dim} />;
+            })}
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   let k = 0;
   return (
     <div className="flex gap-4 p-2">
@@ -194,26 +261,8 @@ function Unit({ images, colW, heights, profile }: UnitProps) {
                 />
               );
             }
-            const imgSrc = images[slot % images.length];
-            return (
-              <div
-                key={r}
-                className="group relative overflow-hidden rounded-2xl bg-muted shadow-[0_12px_28px_-16px_rgba(15,32,74,0.35)]"
-                style={{ height: heights[hi] }}
-              >
-                <img
-                  src={imgSrc}
-                  alt=""
-                  loading="lazy"
-                  draggable={false}
-                  onError={(e) => {
-                    e.currentTarget.style.opacity = "0";
-                  }}
-                  className="pointer-events-none h-full w-full select-none object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
-                />
-                <span className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-black/5" />
-              </div>
-            );
+            const img = images[slot % images.length];
+            return <PhotoCard key={r} img={img} height={heights[hi]} dim={dim} />;
           })}
         </div>
       ))}
@@ -222,11 +271,21 @@ function Unit({ images, colW, heights, profile }: UnitProps) {
 }
 
 interface DragGalleryProps {
-  images?: string[];
+  images?: GalleryImage[];
   label?: string;
   className?: string;
   /** When set, 3 personalised cards mix into the masonry. Pass `null` to disable. */
   profile?: GalleryProfile | null;
+  /** Darken all photos with a black/50 overlay. */
+  dim?: boolean;
+  /** Shrink (or grow) the whole masonry. 1 = default; 0.85 = a bit smaller. */
+  sizeScale?: number;
+  /** Lay each unit out as this many equal-height columns (column-major, every
+   *  image used once) so a unit spans the viewport and photos don't repeat on
+   *  one screen. Leave unset for the default 4-column masonry. */
+  columns?: number;
+  /** Where the label pill sits: bottom (default) or vertically centred. */
+  labelPosition?: "bottom" | "center";
 }
 
 export function DragGallery({
@@ -234,6 +293,10 @@ export function DragGallery({
   label = "Drag to explore your travel diary",
   className = "h-[78vh] w-full min-h-[520px]",
   profile = DEFAULT_PROFILE,
+  dim = false,
+  sizeScale = DEFAULT_SIZE_SCALE,
+  columns,
+  labelPosition = "bottom",
 }: DragGalleryProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const boardRef = useRef<HTMLDivElement>(null);
@@ -272,11 +335,18 @@ export function DragGallery({
     const layout = () => {
       const wrap = wrapRef.current;
       if (!wrap) return;
-      const scale = scaleFor(window.innerWidth);
+      const scale = scaleFor(window.innerWidth) * sizeScale;
       const colW = Math.round(BASE_COL_W * scale);
-      const heights = BASE_HEIGHTS.map((h) => Math.round(h * scale));
-      const unitW = 4 * colW + 3 * GAP + GAP;
-      const unitH = heights.reduce((a, b) => a + b, 0) + 2 * GAP + GAP;
+
+      // Columns mode: `columns` equal-height columns, each holding perCol rows so
+      // every image is placed once. The unit is then `columns` wide.
+      const cols4 = columns ?? 4;
+      const perCol = columns ? Math.ceil(images.length / columns) : BASE_HEIGHTS.length;
+      const heights = Array.from({ length: perCol }, (_, i) =>
+        Math.round(BASE_HEIGHTS[i % BASE_HEIGHTS.length] * scale),
+      );
+      const unitW = cols4 * colW + (cols4 - 1) * GAP + GAP;
+      const unitH = heights.reduce((a, b) => a + b, 0) + (perCol - 1) * GAP + GAP;
       s.current.unitW = unitW;
       s.current.unitH = unitH;
       const cols = Math.ceil(wrap.clientWidth / unitW) + 2;
@@ -289,7 +359,7 @@ export function DragGallery({
     layout();
     window.addEventListener("resize", layout);
     return () => window.removeEventListener("resize", layout);
-  }, [draw]);
+  }, [draw, sizeScale, columns, images.length]);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -345,6 +415,7 @@ export function DragGallery({
     setPillHidden(false);
   };
 
+  const normalizedImages = images.map(normalizeImage);
   const cells = Array.from({ length: grid.cols * grid.rows }, (_, i) => i);
 
   return (
@@ -362,15 +433,15 @@ export function DragGallery({
         style={{ display: "grid", gridTemplateColumns: `repeat(${grid.cols}, auto)` }}
       >
         {cells.map((i) => (
-          <Unit key={i} images={images} colW={grid.colW} heights={grid.heights} profile={profile} />
+          <Unit key={i} images={normalizedImages} colW={grid.colW} heights={grid.heights} profile={profile} dim={dim} columns={columns} />
         ))}
       </div>
 
       <div
         ref={pillRef}
-        className={`pointer-events-none absolute bottom-8 left-1/2 z-10 -translate-x-1/2 rounded-full bg-white/90 px-5 py-2.5 text-[13px] font-semibold tracking-wide text-ink shadow-[0_12px_40px_-12px_rgba(0,0,0,0.45)] backdrop-blur-md transition-[opacity,transform] duration-300 ${
-          pillHidden ? "translate-y-2 opacity-0" : "translate-y-0 opacity-100"
-        }`}
+        className={`pointer-events-none absolute z-10 -translate-x-1/2 rounded-full bg-white/90 px-5 py-2.5 text-[13px] font-semibold tracking-wide text-ink shadow-[0_12px_40px_-12px_rgba(0,0,0,0.45)] backdrop-blur-md transition-[opacity,transform] duration-300 ${
+          labelPosition === "center" ? "left-1/2 top-1/2 -translate-y-1/2" : "left-1/2 bottom-8"
+        } ${pillHidden ? "opacity-0" : labelPosition === "center" ? "opacity-80" : "opacity-100"}`}
       >
         {label}
       </div>

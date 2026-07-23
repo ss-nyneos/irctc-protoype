@@ -28,6 +28,22 @@ import { PackageListRow } from "@/components/package/PackageListRow";
 import { FilterPanel, type FilterSection } from "@/components/package/FilterPanel";
 import { CompareModal } from "@/components/package/CompareModal";
 import { CompareTray, COMPARE_MAX } from "@/components/package/CompareTray";
+import { DragGallery } from "@/components/common/DragGallery";
+
+const heroGalleryImages = [
+  { src: "/WorldPage/Maharajas Express.jpg", title: "Maharaja Express" },
+  { src: "/WorldPage/bharat_tourism.jpg", title: "Bharat Tourism" },
+  { src: "/WorldPage/domestic_air.jpg", title: "Domestic Air Package" },
+  { src: "/WorldPage/ferry.jpg", title: "Ferry Travel" },
+  { src: "/WorldPage/helly.jpg", title: "Helly Yatra" },
+  { src: "/WorldPage/trek.jpg", title: "Trek " },
+  { src: "/WorldPage/fight2.jpg", title: "International Packages" },
+  { src: "/WorldPage/flight.jpg", title: "International Packages" },
+  { src: "/WorldPage/flight3.jpg", title: "Domestic Packages" },
+  { src: "/WorldPage/train.jpg", title: "Maharaja Express" },
+  { src: "/WorldPage/train23.jpg", title: "Golden Chariot Train" },
+  { src: "/WorldPage/train234.jpg", title: "Buddhist Circuit Train" },
+].map((img) => ({ ...img, src: encodeURI(img.src) }));
 
 const categories = ["All", "Domestic", "Pilgrimage", "Heritage", "Hills", "Beach", "Wildlife", "International", "Luxury Train", "Bharat Gaurav"];
 const sortOptions = ["Recommended", "Price: Low to High", "Price: High to Low", "Top rated"] as const;
@@ -245,21 +261,30 @@ export function WorldPage({ initialCategory, initialFromPlace }: { initialCatego
 
   return (
     <div ref={ref} className="min-h-screen" style={{ paddingBottom: "calc(6rem + var(--dock-offset, 0px))" }}>
-      {/* ── Hero: 60vh gradient (no photo) ── */}
-      <section className="relative isolate flex min-h-[60vh] w-full flex-col overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #0b2562 0%, #0d3080 35%, #1554b0 65%, #0f3d92 100%)" }}
-      >
-        {/* Subtle pattern overlay */}
-        <div className="absolute inset-0 opacity-[0.07]"
-          style={{ backgroundImage: "radial-gradient(circle at 20% 30%, rgba(255,255,255,0.5) 1px, transparent 1px), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.5) 1px, transparent 1px)", backgroundSize: "40px 40px" }}
-        />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-[#0B2E6B]" />
+      {/* ── Hero: draggable photo gallery with a dark scrim and text overlay ── */}
+      <section className="relative isolate flex min-h-[72vh] w-full flex-col overflow-hidden">
+        {/* Draggable gallery fills the hero */}
+        <div className="absolute inset-0">
+          <DragGallery
+            profile={null}
+            label="Drag to explore"
+            labelPosition="center"
+            className="h-full w-full"
+            images={heroGalleryImages}
+            columns={6}
+            dim
+            sizeScale={0.9}
+          />
+        </div>
+
+        {/* Light scrim keeps the heading legible over the photos (no bottom fade) */}
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(8,24,64,0.30)_0%,rgba(8,24,64,0.12)_50%,rgba(8,24,64,0.20)_100%)]" />
 
         <div className="pointer-events-none relative z-10 flex flex-1 flex-col items-center justify-end px-4 pb-[6vh] pt-12 text-center">
-          <h1 className="heading-xl max-w-3xl !text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)]">
+          <h1 className="heading-xl max-w-3xl !text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.75)]">
             Explore &amp; Compare Packages
           </h1>
-          <p className="mt-4 max-w-2xl text-balance text-[16px] font-medium leading-relaxed text-white/85 drop-shadow-[0_1px_12px_rgba(0,0,0,0.5)]">
+          <p className="mt-4 max-w-2xl text-balance text-[16px] font-medium leading-relaxed text-white/90 drop-shadow-[0_1px_12px_rgba(0,0,0,0.7)]">
             Hand-picked journeys across India and beyond — filter, shortlist and compare side by side.
           </p>
         </div>
