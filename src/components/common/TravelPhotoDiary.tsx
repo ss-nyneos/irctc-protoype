@@ -121,7 +121,7 @@ export function TravelPhotoDiary() {
   return (
     <section>
       <h2 className="heading-xl reveal">
-        Top 3 Trips for <span className="accent">You</span>
+        Top 3 Trips For <span className="accent">You</span>
       </h2>
 
       <div className="mt-12 space-y-16 md:space-y-20">

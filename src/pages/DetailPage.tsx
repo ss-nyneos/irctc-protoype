@@ -471,7 +471,7 @@ export function DetailPage({ id }: { id: string }) {
 
       {/* ── Related packages ──────────────────────────────── */}
       <div className="mx-auto max-w-7xl px-4 md:px-6">
-        <h2 className="reveal font-display text-[22px] font-bold text-ink">You might also like</h2>
+        <h2 className="reveal font-display text-[22px] font-bold text-ink">You Might Also Like</h2>
 
         <div
           className="card-row mt-4 flex flex-col gap-4 sm:flex-row"
