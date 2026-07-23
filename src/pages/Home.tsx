@@ -29,7 +29,7 @@ export default function Home() {
       <Services />
 
       <Offers />
-      <Stats />
+      {/* <Stats /> */}
       <Trending />
       <Experiences />
       <Interstitial />

@@ -139,12 +139,12 @@ export function CustomScrollbar() {
             image's top edge, so it reads as a stub. This extends it forward by
             roughly the train's own length. It lives inside the thumb so the
             flip transform carries it — the beam always leads the nose. */}
-        {theme === "dark" && (
+        {/* {theme === "dark" && (
           <div
             aria-hidden
             className="pointer-events-none absolute bottom-full left-1/2 h-[140px] w-12 -translate-x-1/2"
             style={{
-              
+
               clipPath: "polygon(38% 100%, 62% 100%, 100% 0%, 0% 0%)",
               background:
                 "linear-gradient(to top, rgba(255,246,232,0.55), rgba(255,240,215,0.18) 45%, rgba(255,238,210,0) 100%)",
@@ -152,12 +152,13 @@ export function CustomScrollbar() {
               mixBlendMode: "screen",
             }}
           />
-        )}
+        )} */}
 
         <img
-          src={theme === "dark" ? "/darkTrain-scroll.png" : "/scroll.png"}
+          src={theme === "dark" ? "/darkTrain.png" : "/scroll.png"}
           alt="Train scroll indicator"
-          className="w-full h-full object-contain drop-shadow-md"
+          className={`w-full h-full object-contain drop-shadow-md transition-transform ${theme === "dark" ? "scale-[3.4]" : "scale-100"
+            }`}
           draggable="false"
         />
       </div>

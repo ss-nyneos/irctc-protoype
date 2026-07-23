@@ -114,6 +114,18 @@ export default function NavBar() {
     if (menu || mobile) setHidden(false)
   }, [menu, mobile])
 
+  // Automatically close open panels (including Accessibility Controls) when user scrolls
+  useEffect(() => {
+    if (!menu) return
+
+    const onScrollClose = () => {
+      setMenu(null)
+    }
+
+    window.addEventListener('scroll', onScrollClose, { passive: true })
+    return () => window.removeEventListener('scroll', onScrollClose)
+  }, [menu])
+
   const toggle = (k: Exclude<MenuKind, null>) => setMenu((m) => (m === k ? null : k))
 
   /* leaving for another page: close the menu and start at the top,

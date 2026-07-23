@@ -12,6 +12,7 @@ import goldenChariotImg from '../assets/trains/golden-chariot.jpg'
 import palaceImg from '../assets/trains/palace-on-wheels.jpg'
 import kashiImg from '../assets/places/kashi_vishwanath.png'
 import venkateshwaraImg from '../assets/places/venkateshwara_temple.png'
+import harmandirImg from '../assets/Harmandir.webp'
 
 export interface NavItem {
   label: string
@@ -412,7 +413,7 @@ export const trains: Train[] = [
 
 export const pilgrimage: Pilgrimage[] = [
   { id: 'kashi', name: 'Kashi Vishwanath', place: 'Varanasi', img: kashiImg, accent: '#c9932e' }, // dusk-gold spire
-  { id: 'golden-temple', name: 'Harmandir Sahib', place: 'Amritsar', img: '/img/harmandir-sahib.webp', accent: '#d9a441' }, // golden temple + reflection
+  { id: 'golden-temple', name: 'Harmandir Sahib', place: 'Amritsar', img: harmandirImg, accent: '#d9a441' }, // golden temple + reflection
   { id: 'meenakshi', name: 'Meenakshi Amman', place: 'Madurai', img: '/img/meenakshi-amman.webp', accent: '#d9527a' }, // painted pink/coral gopuram
   { id: 'tirupati', name: 'Sri Venkateswara', place: 'Tirupati', img: venkateshwaraImg, accent: '#3f7a4f' }, // forested hillside behind the white gopuram
 ]

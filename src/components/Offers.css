@@ -1,12 +1,11 @@
 /* ============================================================
-   Special Offers
+   Special Offers (Static 3 Cards with Staggered Transitions)
    ============================================================ */
 .offers {
   --navy: #1b3a6b;
   --navy-2: #2a5aa0;
   --gold: #e8b93c;
   background: var(--paper);
-  /* shared section rhythm — same token as .section, .luxe, Trending */
   padding-block: var(--section-y);
 }
 
@@ -28,66 +27,71 @@
 .offers__title span {
   color: var(--blue);
 }
-/* ---- auto-rotating rail ------------------------------------------------
-   The cards drift horizontally in a seamless loop, the same idea as the
-   Trending Packages rail: the full set is rendered twice and the track is
-   translated by exactly -50%, which lands the duplicate where the original
-   began. Note there is NO `gap` — the spacing lives on each card's
-   margin-right instead, so every card occupies an identical width+margin
-   unit and -50% is exactly one full set. A flex `gap` would leave one extra
-   gap unaccounted for and the loop would jump each cycle. */
-.offers__rail {
-  overflow: hidden;
-  /* room for the cards' hover shadow so it isn't clipped */
-  padding-block: 6px;
+
+/* ---- Static 3-card Grid ---- */
+.offers__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(14px, 1.8vw, 24px);
+  width: 100%;
 }
-.offers__track {
-  display: flex;
-  width: max-content;
-  animation: offersSlide 46s linear infinite;
-  will-change: transform;
-}
-.offers__rail:hover .offers__track,
-.offers__rail:focus-within .offers__track {
-  animation-play-state: paused;
-}
-/* dissolves the wrapper so the duplicated cards are flex items of the track,
-   while still letting the whole pass be aria-hidden */
-.offers__dup {
-  display: contents;
-}
-@keyframes offersSlide {
-  to {
-    transform: translateX(-50%);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .offers__track {
-    animation: none;
-  }
-  .offers__rail {
-    overflow-x: auto;
+
+@media (max-width: 900px) {
+  .offers__grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
+@media (max-width: 600px) {
+  .offers__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Card Fade-in Swap Animation ---- */
+.offer-anim-fade {
+  animation: offerFadeSwap 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes offerFadeSwap {
+  0% {
+    opacity: 0.2;
+    transform: translateY(6px) scale(0.975);
+    filter: blur(3px);
+  }
+  60% {
+    opacity: 0.9;
+    filter: blur(0.5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* ---- Individual Card Base ---- */
 .offer {
   position: relative;
-  flex: none;
-  width: clamp(280px, 27vw, 400px);
-  margin-right: clamp(14px, 1.5vw, 24px);
+  width: 100%;
   border-radius: 18px;
   overflow: hidden;
-  height: clamp(248px, 21.5vw, 322px);
+  height: clamp(280px, 24vw, 340px);
   background: var(--card);
+  box-shadow: 0 6px 24px -8px rgba(10, 20, 40, 0.12);
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
 }
-/* Only the white mosaic cards get an edge: they sit on white, so without one
-   they have no boundary at all. The ferry card is navy and defines its own. */
+.offer:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px -6px rgba(10, 20, 40, 0.18);
+}
+
 .offer--tile {
   border: 1.5px solid var(--line-strong);
 }
 
 /* ============================================================
-   Ferry card
+   Ferry / Special Offer Card (Navy)
    ============================================================ */
 .offer--ferry {
   background: var(--navy);
@@ -173,18 +177,35 @@
   flex-direction: column;
   background: #fff;
 }
+.offer__single-frame {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.offer__single-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.8s var(--ease);
+}
+.offer--tile:hover .offer__single-img {
+  transform: scale(1.06);
+}
 .mosaic {
   position: relative;
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  /* no gap: the 3px gutter showed the white ground below as seams */
   gap: 0;
   background: #fff;
   overflow: hidden;
 }
 .mosaic__cell {
+  position: relative;
   overflow: hidden;
 }
 .mosaic__cell img {
@@ -195,20 +216,6 @@
 }
 .offer--tile:hover .mosaic__cell img {
   transform: scale(1.06);
-}
-/* The photos meet ALONG the blue diagonal instead of being separated by it.
-   Previously each cell was clipped inside its own grid column, so the wedge
-   one cell gave up was not filled by its neighbour and the white ground showed
-   through. Now the right-hand cell is clipped to the diagonal and the cells
-   OVERLAP, so there is always photo on both sides of the line:
-
-     row 1 — the seam sits right of centre, so the left cell reaches across it
-     row 2 — the seam has crossed left of centre, so the right cell reaches back
-
-   The seam runs 56% → 50% → 44% of the mosaic width, top to bottom: one
-   straight, continuous line through both rows, which the slash then covers. */
-.mosaic__cell {
-  position: relative;
 }
 .mosaic__cell--1 {
   margin-right: -12%;
@@ -221,7 +228,6 @@
   z-index: 1;
   clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
 }
-/* the blue diagonal accent running through the mosaic */
 .mosaic__slash {
   position: absolute;
   top: -10%;
@@ -250,24 +256,11 @@
   color: var(--ink-soft);
 }
 
-@media (max-width: 620px) {
-  .offer {
-    width: clamp(240px, 76vw, 300px);
-    height: clamp(280px, 74vw, 340px);
-  }
-}
-
 /* ============================================================
-   Dark theme — the mosaic tiles hardcode a white card + caption for
-   the light page (and .offers pins --navy locally, so the heading
-   stays dark navy). Both need an explicit black card and light type
-   here, or they glare white against the night page.
+   Dark theme
    ============================================================ */
 [data-theme='dark'] .offer--tile,
 [data-theme='dark'] .offer--tile .offer__caption,
-/* the mosaic's own white ground shows through the 3px gaps and the angled
-   seams between the four frames — it has to go black too, or the card keeps
-   white diagonal lines running through it */
 [data-theme='dark'] .offer--tile .mosaic {
   background: #000;
 }

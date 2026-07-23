@@ -15,11 +15,11 @@ const scrim =
   'bg-[linear-gradient(180deg,rgba(0,0,0,0.3)_0%,rgba(0,0,0,0)_32%,rgba(0,0,0,0.45)_62%,rgba(0,0,0,0.88)_100%)] ' +
   'group-hover:bg-[linear-gradient(180deg,rgba(0,0,0,0.5)_0%,rgba(0,0,0,0.22)_30%,rgba(0,0,0,0.62)_58%,rgba(0,0,0,0.94)_100%)]'
 
-/* frosted price panel — appears on hover */
+/* transparent glass price panel matching Treasures of India — appears on hover */
 const price =
   'pointer-events-none absolute top-[5%] right-[5%] z-[2] flex flex-col items-center gap-[0.38rem] ' +
-  'rounded-[14px] border border-white/20 bg-black/40 px-3 pt-[0.6rem] pb-[0.58rem] ' +
-  'backdrop-blur-[16px] backdrop-saturate-[1.3] ' +
+  'rounded-[16px] border border-white/45 bg-[rgba(8,14,28,0.35)] px-3.5 pt-[0.65rem] pb-[0.62rem] ' +
+  'shadow-[inset_0_1.5px_0_rgba(255,255,255,0.45),0_12px_34px_-14px_rgba(0,0,0,0.6)] ' +
   '-translate-y-2.5 opacity-0 transition-[opacity,transform] duration-[400ms] ease-brand delay-[50ms] ' +
   'group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100'
 

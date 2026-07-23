@@ -1,289 +1,409 @@
-import { useState, type FormEvent } from 'react'
-import Modal from './Modal.tsx'
+import { useState, useRef, useEffect, type FormEvent } from 'react'
+import {
+  X,
+  Send,
+  Sparkles,
+  CheckCircle2,
+  Search,
+  ChevronRight,
+  Home as HomeIcon,
+  MessageSquare,
+  HelpCircle,
+  Train,
+  Compass,
+  Mountain,
+  FileText,
+  ArrowRight,
+  RotateCcw,
+} from 'lucide-react'
 import { useUI } from '../context/UI.tsx'
-import { usePrefs } from '../context/Prefs.tsx'
 import { packages, type Package } from '../data/content.ts'
-import { Arrow, Star } from './Icons.tsx'
 
-/* ------------------------------------------------------------------
-   Disha is a transparent, rules-based recommender: it scores the real
-   package catalogue against the traveller's words and chips. No model
-   call — every result is explainable, which is why we show "why this".
-   ------------------------------------------------------------------ */
-
-interface Trait {
+interface Message {
   id: string
-  label: string
-  words: string[]
-  matches: (p: Package) => boolean
-  reason: string
+  role: 'ai' | 'user'
+  text: string
+  packages?: Package[]
 }
-
-const TRAITS: Trait[] = [
-  {
-    id: 'Mountains',
-    label: 'Mountains',
-    words: ['mountain', 'hill', 'snow', 'cold', 'cool', 'himalaya', 'trek', 'altitude'],
-    matches: (p) => ['Hill Escape', 'High Altitude', 'Hill Railway'].includes(p.tag),
-    reason: 'high country and cool air',
-  },
-  {
-    id: 'beaches',
-    label: 'Beaches',
-    words: ['beach', 'sea', 'coast', 'sand', 'sun', 'swim'],
-    matches: (p) => ['Beaches', 'Islands'].includes(p.tag),
-    reason: 'sand and coastline',
-  },
-  {
-    id: 'islands',
-    label: 'Islands',
-    words: ['island', 'coral', 'scuba', 'snorkel', 'diving'],
-    matches: (p) => p.tag === 'Islands',
-    reason: 'island and reef time',
-  },
-  {
-    id: 'backwaters',
-    label: 'Backwaters',
-    words: ['backwater', 'houseboat', 'green', 'lush', 'kerala', 'boat'],
-    matches: (p) => p.tag === 'Backwaters',
-    reason: 'green water and slow boats',
-  },
-  {
-    id: 'heritage',
-    label: 'Heritage',
-    words: ['heritage', 'fort', 'palace', 'history', 'historic', 'culture', 'monument', 'taj'],
-    matches: (p) => ['Heritage', 'Classic India'].includes(p.tag),
-    reason: 'forts, palaces and monuments',
-  },
-  {
-    id: 'rail',
-    label: 'Iconic rail',
-    words: ['train', 'rail', 'railway', 'toy train'],
-    matches: (p) => p.tag === 'Hill Railway',
-    reason: 'a legendary railway line',
-  },
-  {
-    id: 'family',
-    label: 'Family trip',
-    words: ['family', 'kids', 'children', 'parents'],
-    matches: (p) => p.days <= 6,
-    reason: 'an easy pace for a family',
-  },
-  {
-    id: 'short',
-    label: 'Short break',
-    words: ['short', 'weekend', 'quick', 'few days'],
-    matches: (p) => p.days <= 5,
-    reason: 'short enough for a quick break',
-  },
-]
-
-interface Scored {
-  pkg: Package
-  score: number
-  reasons: string[]
-}
-
-const parseBudget = (q: string): number | null => {
-  const cleaned = q.toLowerCase().replace(/,/g, '')
-  const m =
-    cleaned.match(/(?:under|below|less than|upto|up to|within|budget of|max)\s*₹?\s*(\d+)\s*(k|thousand|lakh)?/) ||
-    cleaned.match(/₹\s*(\d+)\s*(k|thousand|lakh)?/)
-  if (!m) return null
-  let n = parseInt(m[1], 10)
-  if (m[2] === 'k' || m[2] === 'thousand') n *= 1000
-  if (m[2] === 'lakh') n *= 100000
-  return n > 0 ? n : null
-}
-
-function recommend(query: string, chosen: string[]): Scored[] {
-  const q = query.toLowerCase()
-  const budget = parseBudget(q)
-
-  const active = TRAITS.filter(
-    (tr) => chosen.includes(tr.id) || tr.words.some((w) => q.includes(w)),
-  )
-
-  const scored: Scored[] = packages.map((pkg) => {
-    let score = 0
-    const reasons: string[] = []
-
-    for (const tr of active) {
-      if (tr.matches(pkg)) {
-        score += 5
-        reasons.push(tr.reason)
-      }
-    }
-
-    // direct mentions of a place always win
-    const place = pkg.place.toLowerCase()
-    if (q && (q.includes(place) || place.split(' ').some((w) => w.length > 4 && q.includes(w)))) {
-      score += 8
-      reasons.unshift(`you named ${pkg.place}`)
-    }
-
-    if (budget !== null) {
-      if (pkg.price <= budget) {
-        score += 4
-        reasons.push(`fits under ₹${budget.toLocaleString('en-IN')}`)
-      } else {
-        score -= 6
-      }
-    }
-
-    if (chosen.includes('budget')) {
-      score += pkg.price <= 25000 ? 4 : -2
-      if (pkg.price <= 25000) reasons.push('gentle on the wallet')
-    }
-    if (chosen.includes('luxury')) {
-      score += pkg.price >= 30000 ? 4 : -1
-      if (pkg.price >= 30000) reasons.push('a more indulgent trip')
-    }
-
-    return { pkg, score, reasons: [...new Set(reasons)] }
-  })
-
-  return scored.sort((a, b) => b.score - a.score || a.pkg.price - b.pkg.price).slice(0, 3)
-}
-
-const CHIPS = [
-  ...TRAITS.map((t) => ({ id: t.id, label: t.label })),
-  { id: 'budget', label: 'Budget-friendly' },
-  { id: 'luxury', label: 'Something special' },
-]
 
 const inr = (n: number) => '₹' + n.toLocaleString('en-IN')
 
-const stack = 'flex flex-col gap-[1.1rem]'
-const chipBase =
-  'rounded-full border px-4 py-[0.55rem] text-[0.9rem] font-semibold transition-all duration-200 ease-brand'
-const chipOn = 'border-blue bg-blue text-white'
-const chipOff = 'border-line bg-card text-ink-soft hover:border-blue hover:text-ink-black'
+/* Quick Topics for Home Tab */
+const QUICK_TOPICS = [
+  {
+    Icon: Mountain,
+    text: 'Cool hill station getaway under ₹30,000',
+    prompt: 'Show me hill station and mountain packages under ₹30,000',
+  },
+  {
+    Icon: Train,
+    text: 'Book Vande Bharat & Luxury Trains',
+    prompt: 'What luxury trains and Vande Bharat tours are available?',
+  },
+  {
+    Icon: Compass,
+    text: 'Pilgrimage Circuits & Darshan Packages',
+    prompt: 'Show me sacred pilgrimage circuits like Char Dham and Jyotirlinga',
+  },
+  {
+    Icon: FileText,
+    text: 'PNR, Seat Availability & Refund Guidelines',
+    prompt: 'How do I check PNR status or request a ticket refund?',
+  },
+]
+
+/* FAQ Help Topics */
+const HELP_TOPICS = [
+  {
+    question: 'How do I book a tour package on IRCTC Tourism?',
+    answer:
+      'Select any package from the Trending or Destinations section, pick your preferred departure date, number of travellers, and click "Book Now". You can log in with your IRCTC credentials to complete the booking.',
+  },
+  {
+    question: 'What is the cancellation and refund policy?',
+    answer:
+      'Cancellations made 15+ days prior to departure receive a 90% refund. Cancellations within 7-14 days receive a 50% refund. Cancellations under 4 days are non-refundable as per rail charter rules.',
+  },
+  {
+    question: 'Is Senior Citizen discount available on luxury trains?',
+    answer:
+      'Senior Citizen concessions apply to select domestic rail packages. Enable "Senior Citizen Mode" in our Accessibility menu to highlight senior-friendly itineraries.',
+  },
+  {
+    question: 'What is included in Bharat Gaurav tourist trains?',
+    answer:
+      'Bharat Gaurav packages include 3AC/2AC train travel, off-board hotel accommodation, pure veg meals, sightseeing transfers in AC buses, and dedicated tour escorts.',
+  },
+]
 
 export default function AskDisha() {
   const { close } = useUI()
-  const { t } = usePrefs()
-  const [query, setQuery] = useState('')
-  const [chosen, setChosen] = useState<string[]>([])
-  const [results, setResults] = useState<Scored[] | null>(null)
+  const [activeTab, setActiveTab] = useState<'home' | 'messages' | 'help'>('home')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [inputMessage, setInputMessage] = useState('')
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: 'welcome',
+      role: 'ai',
+      text: 'Namaste! I am Disha 2.0, your IRCTC AI travel assistant. Tell me what kind of journey you are dreaming of!',
+    },
+  ])
+  const [isTyping, setIsTyping] = useState(false)
+  const chatBottomRef = useRef<HTMLDivElement>(null)
 
-  const toggleChip = (id: string) =>
-    setChosen((c) => (c.includes(id) ? c.filter((x) => x !== id) : [...c, id]))
+  useEffect(() => {
+    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages, isTyping])
 
-  const onSubmit = (e: FormEvent) => {
+  const handleSendMessage = (queryText: string) => {
+    if (!queryText.trim()) return
+
+    const userMsg: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      text: queryText,
+    }
+
+    setMessages((prev) => [...prev, userMsg])
+    setInputMessage('')
+    setIsTyping(true)
+    setActiveTab('messages')
+
+    setTimeout(() => {
+      const q = queryText.toLowerCase()
+      let matchedPkgs = packages.filter(
+        (p) =>
+          p.place.toLowerCase().includes(q) ||
+          p.title.toLowerCase().includes(q) ||
+          p.tag.toLowerCase().includes(q) ||
+          (q.includes('hill') && ['Hill Escape', 'High Altitude'].includes(p.tag)) ||
+          (q.includes('beach') && ['Beaches', 'Islands'].includes(p.tag)) ||
+          (q.includes('pilgrim') && ['Pilgrimage', 'Heritage'].includes(p.tag))
+      )
+
+      if (matchedPkgs.length === 0) {
+        matchedPkgs = packages.slice(0, 2)
+      } else {
+        matchedPkgs = matchedPkgs.slice(0, 2)
+      }
+
+      const aiMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'ai',
+        text: `Here are the top IRCTC journeys matching "${queryText}":`,
+        packages: matchedPkgs,
+      }
+
+      setMessages((prev) => [...prev, aiMsg])
+      setIsTyping(false)
+    }, 700)
+  }
+
+  const handleFormSubmit = (e: FormEvent) => {
     e.preventDefault()
-    setResults(recommend(query, chosen))
+    handleSendMessage(inputMessage)
   }
 
-  const reset = () => {
-    setResults(null)
-    setQuery('')
-    setChosen([])
-  }
-
-  const anyMatch = results?.some((r) => r.score > 0)
+  const filteredTopics = QUICK_TOPICS.filter((t) =>
+    t.text.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   return (
-    <Modal title={t('disha.title')} eyebrow="AI trip recommender" onClose={close} wide>
-      {!results ? (
-        <form className={stack} onSubmit={onSubmit}>
-          <p className="-mt-[0.4rem] leading-[1.55] text-ink-soft">{t('disha.sub')}</p>
-
-          <textarea
-            className="w-full resize-y rounded-md border-[1.5px] border-line bg-paper px-[1.1rem] py-4
-                       font-sans text-base leading-normal text-ink transition-[border-color,box-shadow]
-                       duration-250 ease-brand placeholder:text-ink-faint
-                       focus:border-blue focus:shadow-[0_0_0_3px_rgba(36,117,238,0.16)] focus:outline-none"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={t('disha.placeholder')}
-            rows={3}
-          />
-
-          <div className="flex flex-wrap gap-2">
-            {CHIPS.map((c) => (
-              <button
-                type="button"
-                key={c.id}
-                className={`${chipBase} ${chosen.includes(c.id) ? chipOn : chipOff}`}
-                onClick={() => toggleChip(c.id)}
-                aria-pressed={chosen.includes(c.id)}
-              >
-                {c.label}
-              </button>
-            ))}
+    <div className="fixed right-4 bottom-4 z-[250] flex h-[580px] max-h-[88vh] w-[calc(100vw-32px)] sm:w-[390px] flex-col overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-2xl transition-all duration-300 dark:border-slate-800 dark:bg-slate-900 dark:text-white">
+      {/* Header Bar */}
+      <div className="flex items-center justify-between border-b border-slate-100 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+        <div className="flex items-center gap-3">
+          <div className="relative flex size-10 items-center justify-center rounded-xl bg-blue/10 text-blue dark:bg-blue/20 dark:text-blue-400">
+            <Sparkles className="size-5" />
+            <span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900" />
           </div>
-
-          <button
-            type="submit"
-            className="inline-flex items-center justify-center gap-[0.55rem] rounded-full bg-blue
-                       px-[1.4rem] py-4 text-base font-bold text-white
-                       transition-[background,transform] duration-250 ease-brand
-                       hover:-translate-y-px hover:bg-blue-deep"
-          >
-            <Star />
-            {t('disha.go')}
-          </button>
-        </form>
-      ) : (
-        <div className={stack}>
-          <div className="flex items-baseline justify-between gap-4">
-            <h3 className="text-[1.15rem] font-bold text-ink-black">
-              {anyMatch ? t('disha.results') : t('disha.none')}
-            </h3>
-            <button
-              className="text-[0.9rem] font-bold text-blue hover:underline"
-              onClick={reset}
-            >
-              {t('disha.again')}
-            </button>
+          <div>
+            <div className="text-[15px] font-bold text-slate-900 dark:text-white">
+              Ask Disha 2.0
+            </div>
+            <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500 dark:text-slate-400">
+              <span className="size-1.5 rounded-full bg-emerald-500" />
+              IRCTC AI Travel Partner
+            </div>
           </div>
-
-          <ul className="flex flex-col gap-[0.7rem]">
-            {results.map(({ pkg, reasons }) => (
-              <li
-                key={pkg.id}
-                className="flex flex-wrap items-center gap-4 rounded-md border border-line bg-card
-                           p-[0.7rem] transition-[border-color,box-shadow] duration-250 ease-brand
-                           hover:border-transparent hover:shadow-md min-[561px]:flex-nowrap"
-              >
-                <img
-                  src={pkg.img}
-                  alt={pkg.place}
-                  className="size-16 flex-none rounded-sm object-cover min-[561px]:size-[84px]"
-                />
-                <div className="min-w-0 flex-1">
-                  <span className="text-[0.78rem] font-bold tracking-[0.04em] uppercase text-blue-ink">
-                    {pkg.place}
-                  </span>
-                  <h4 className="mt-[0.1rem] text-[1.12rem] leading-[1.15] font-bold text-ink-black">
-                    {pkg.title}
-                  </h4>
-                  <p className="mt-[0.2rem] text-[0.86rem] text-ink-soft">
-                    {pkg.nights}N · {pkg.days}D — {pkg.route}
-                  </p>
-                  {reasons.length > 0 && (
-                    <p className="mt-[0.35rem] text-[0.84rem] leading-[1.45] text-ink-soft [&_strong]:text-blue-ink">
-                      <strong>{t('disha.why')}:</strong> {reasons.slice(0, 3).join(', ')}
-                    </p>
-                  )}
-                </div>
-                <div className="flex flex-none flex-col items-end gap-2">
-                  <span className="font-bold tabular-nums text-ink-black">{inr(pkg.price)}</span>
-                  <a
-                    href="#packages"
-                    onClick={close}
-                    className="grid size-[38px] place-items-center rounded-full bg-blue text-[1.05rem]
-                               text-white transition-transform duration-300 ease-brand hover:translate-x-[3px]"
-                  >
-                    <Arrow />
-                  </a>
-                </div>
-              </li>
-            ))}
-          </ul>
         </div>
-      )}
-    </Modal>
+        <button
+          onClick={close}
+          className="rounded-full p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-white"
+          aria-label="Close Ask Disha"
+        >
+          <X className="size-5" />
+        </button>
+      </div>
+
+      {/* Content Body based on activeTab */}
+      <div className="flex flex-1 flex-col overflow-y-auto bg-slate-50/50 dark:bg-slate-900/50">
+        {activeTab === 'home' && (
+          <div className="space-y-4 p-4">
+            <div className="pt-1">
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+                Namaste! 👋
+              </h2>
+              <h3 className="mt-0.5 text-lg font-bold text-slate-700 dark:text-slate-300">
+                How can Disha help you today?
+              </h3>
+            </div>
+
+            {/* Action Card: Send Us a Message */}
+            <div
+              onClick={() => setActiveTab('messages')}
+              className="group cursor-pointer rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:border-blue/50 hover:shadow-md dark:border-slate-800 dark:bg-slate-800/80"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-[14px] font-bold text-slate-900 dark:text-white">
+                    Send us a message
+                  </div>
+                  <div className="mt-0.5 text-[12px] text-slate-500 dark:text-slate-400">
+                    Typically replies in under a few seconds
+                  </div>
+                </div>
+                <div className="flex size-9 items-center justify-center rounded-full bg-blue text-white transition-transform group-hover:scale-105">
+                  <Send className="size-4" />
+                </div>
+              </div>
+            </div>
+
+            {/* Status Banner */}
+            <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-3.5">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="size-5 flex-shrink-0 text-emerald-600 dark:text-emerald-400" />
+                <div>
+                  <div className="text-[13px] font-bold text-slate-900 dark:text-white">
+                    Status: All Systems Operational
+                  </div>
+                  <div className="mt-0.5 text-[11px] text-slate-600 dark:text-slate-300">
+                    Real-time train schedules & AI tour finder active
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Search & Assistance Topics */}
+            <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-800/80">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search for help, destinations..."
+                  className="w-full rounded-xl bg-slate-100 py-2 pl-9 pr-3 text-[13px] text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue/40 dark:bg-slate-900 dark:text-white"
+                />
+              </div>
+
+              <div className="space-y-1 pt-1">
+                {filteredTopics.map((item) => (
+                  <button
+                    key={item.text}
+                    onClick={() => handleSendMessage(item.prompt)}
+                    className="flex w-full items-center justify-between rounded-xl p-2.5 text-left text-[13px] font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700/50"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <item.Icon className="size-4 flex-shrink-0 text-blue" />
+                      <span className="line-clamp-1">{item.text}</span>
+                    </span>
+                    <ChevronRight className="size-4 flex-shrink-0 text-slate-400" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'messages' && (
+          <div className="flex flex-1 flex-col justify-between p-4">
+            <div className="space-y-3 overflow-y-auto">
+              {messages.map((m) => (
+                <div
+                  key={m.id}
+                  className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div className="max-w-[85%] space-y-2">
+                    <div
+                      className={`rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed ${
+                        m.role === 'user'
+                          ? 'bg-blue text-white'
+                          : 'border border-slate-200 bg-white text-slate-800 shadow-sm dark:border-slate-800 dark:bg-slate-800 dark:text-slate-100'
+                      }`}
+                    >
+                      {m.text}
+                    </div>
+
+                    {m.packages && m.packages.length > 0 && (
+                      <div className="space-y-2 pt-1">
+                        {m.packages.map((pkg) => (
+                          <div
+                            key={pkg.id}
+                            className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-2 shadow-sm dark:border-slate-800 dark:bg-slate-800"
+                          >
+                            <img
+                              src={pkg.img}
+                              alt={pkg.place}
+                              className="size-14 rounded-lg object-cover"
+                            />
+                            <div className="min-w-0 flex-1">
+                              <div className="text-[12px] font-bold text-slate-900 dark:text-white">
+                                {pkg.title}
+                              </div>
+                              <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                                {pkg.nights}N / {pkg.days}D · {inr(pkg.price)}
+                              </div>
+                            </div>
+                            <a
+                              href="#packages"
+                              onClick={close}
+                              className="flex size-7 items-center justify-center rounded-full bg-blue text-white transition-transform hover:scale-105"
+                            >
+                              <ArrowRight className="size-3.5" />
+                            </a>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+
+              {isTyping && (
+                <div className="flex justify-start">
+                  <div className="flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-3.5 py-2.5 shadow-sm dark:border-slate-800 dark:bg-slate-800">
+                    <span className="size-2 animate-bounce rounded-full bg-blue" />
+                    <span className="size-2 animate-bounce rounded-full bg-blue [animation-delay:150ms]" />
+                    <span className="size-2 animate-bounce rounded-full bg-blue [animation-delay:300ms]" />
+                  </div>
+                </div>
+              )}
+              <div ref={chatBottomRef} />
+            </div>
+
+            {/* Input Bar */}
+            <form onSubmit={handleFormSubmit} className="mt-3 flex items-center gap-2">
+              <input
+                type="text"
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                placeholder="Ask about tours, trains, prices..."
+                className="flex-1 rounded-full border border-slate-200 bg-white px-4 py-2 text-[13px] text-slate-900 focus:border-blue focus:outline-none dark:border-slate-800 dark:bg-slate-800 dark:text-white"
+              />
+              <button
+                type="submit"
+                disabled={!inputMessage.trim()}
+                className="flex size-9 items-center justify-center rounded-full bg-blue text-white disabled:opacity-40"
+              >
+                <Send className="size-4" />
+              </button>
+            </form>
+          </div>
+        )}
+
+        {activeTab === 'help' && (
+          <div className="space-y-3 p-4">
+            <div className="text-[14px] font-bold text-slate-900 dark:text-white">
+              Frequently Asked Questions
+            </div>
+            <div className="space-y-2.5">
+              {HELP_TOPICS.map((item) => (
+                <div
+                  key={item.question}
+                  className="rounded-2xl border border-slate-200 bg-white p-3.5 dark:border-slate-800 dark:bg-slate-800/80"
+                >
+                  <div className="text-[13px] font-bold text-slate-900 dark:text-white">
+                    {item.question}
+                  </div>
+                  <div className="mt-1 text-[12px] leading-relaxed text-slate-600 dark:text-slate-300">
+                    {item.answer}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Bottom Navigation Tab Bar (Matches Image 2) */}
+      <div className="flex items-center justify-around border-t border-slate-100 bg-white p-2 dark:border-slate-800 dark:bg-slate-900">
+        <button
+          onClick={() => setActiveTab('home')}
+          className={`flex flex-col items-center gap-1 rounded-xl px-5 py-1.5 text-[11px] font-bold transition-colors ${
+            activeTab === 'home'
+              ? 'bg-blue/10 text-blue dark:bg-blue/20 dark:text-blue-400'
+              : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+          }`}
+        >
+          <HomeIcon className="size-4.5" />
+          <span>Home</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('messages')}
+          className={`flex flex-col items-center gap-1 rounded-xl px-5 py-1.5 text-[11px] font-bold transition-colors ${
+            activeTab === 'messages'
+              ? 'bg-blue/10 text-blue dark:bg-blue/20 dark:text-blue-400'
+              : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+          }`}
+        >
+          <MessageSquare className="size-4.5" />
+          <span>Messages</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('help')}
+          className={`flex flex-col items-center gap-1 rounded-xl px-5 py-1.5 text-[11px] font-bold transition-colors ${
+            activeTab === 'help'
+              ? 'bg-blue/10 text-blue dark:bg-blue/20 dark:text-blue-400'
+              : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+          }`}
+        >
+          <HelpCircle className="size-4.5" />
+          <span>Help</span>
+        </button>
+      </div>
+    </div>
   )
 }

@@ -34,9 +34,8 @@ const panel =
   'shadow-[inset_0_1.5px_0_rgba(255,255,255,0.45),0_12px_34px_-14px_rgba(0,0,0,0.6)] ' +
   'transition-[opacity,transform] duration-500 ease-brand delay-150'
 
-/* Flat black wash on every receding card, so the active one reads as
-   lifted by contrast rather than by brightness alone. */
-const dim = 'pointer-events-none absolute inset-0 z-[1] bg-black/40 transition-opacity duration-500 ease-brand'
+/* Soft black wash on every receding card */
+const dim = 'pointer-events-none absolute inset-0 z-[1] bg-black/30 transition-opacity duration-500 ease-brand'
 
 const ROTATE_MS = 4000
 
@@ -76,7 +75,7 @@ export default function Destinations() {
       transform: `translateX(calc(-50% + ${shiftX}%)) scale(${scale}) rotateY(${rotate}deg)`,
       zIndex: 10 - abs,
       opacity: abs === 0 ? 1 : abs === 1 ? 1 : 0.88,
-      filter: abs === 0 ? 'none' : `brightness(${1 - abs * 0.22})`,
+      filter: abs === 0 ? 'none' : `brightness(${1 - abs * 0.08})`,
     }
   }
 
@@ -84,7 +83,7 @@ export default function Destinations() {
     <section className="section overflow-hidden bg-paper" id="destinations">
       <div className="wrap">
         <div className="mb-[clamp(2.4rem,5vw,3.6rem)] text-center [&_.h2]:mx-auto [&_.h2]:max-w-[18ch]">
-          <h2 className="h2">Treasures Of <span>India</span></h2>
+          <h2 className="h2">Treasures of <span>India</span></h2>
         </div>
 
         <div className="relative">
@@ -99,69 +98,68 @@ export default function Destinations() {
             className="relative h-[clamp(360px,46vw,500px)] [perspective:1600px] [transform-style:preserve-3d]"
           >
             {destinations.map((d, i) => {
-            const isActive = offsetOf(i) === 0
-            return (
-              <button
-                key={d.id}
-                className={`${card} ${isActive ? 'cursor-default' : 'cursor-pointer'}`}
-                style={styleFor(i)}
-                onClick={() => setActive(i)}
-                aria-label={`${d.name}, ${d.state}`}
-                aria-current={isActive}
-                tabIndex={isActive ? 0 : -1}
-              >
-                <img
-                  src={d.img}
-                  alt={`${d.name}, ${d.state}`}
-                  loading="lazy"
-                  className={`img-cover transition-transform duration-1000 ease-brand motion-reduce:animate-none ${
-                    isActive ? 'animate-ken-burns' : ''
-                  }`}
-                />
-                {/* lighter on the focused card so the photo stays the hero */}
-                <span
-                  aria-hidden="true"
-                  className={`${glass} ${isActive ? 'opacity-60' : 'opacity-100'}`}
-                />
-                {/* darkens every receding card so the active one pops by contrast */}
-                <span
-                  aria-hidden="true"
-                  className={`${dim} ${isActive ? 'opacity-0' : 'opacity-100'}`}
-                />
-                {/* gradient border in this card's own colours; full strength on
+              const isActive = offsetOf(i) === 0
+              return (
+                <button
+                  key={d.id}
+                  className={`${card} ${isActive ? 'cursor-default' : 'cursor-pointer'}`}
+                  style={styleFor(i)}
+                  onClick={() => setActive(i)}
+                  aria-label={`${d.name}, ${d.state}`}
+                  aria-current={isActive}
+                  tabIndex={isActive ? 0 : -1}
+                >
+                  <img
+                    src={d.img}
+                    alt={`${d.name}, ${d.state}`}
+                    loading="lazy"
+                    className={`img-cover transition-transform duration-1000 ease-brand motion-reduce:animate-none ${isActive ? 'animate-ken-burns' : ''
+                      }`}
+                  />
+                  {/* lighter on the focused card so the photo stays the hero */}
+                  <span
+                    aria-hidden="true"
+                    className={`${glass} ${isActive ? 'opacity-60' : 'opacity-100'}`}
+                  />
+                  {/* darkens every receding card so the active one pops by contrast */}
+                  <span
+                    aria-hidden="true"
+                    className={`${dim} ${isActive ? 'opacity-0' : 'opacity-100'}`}
+                  />
+                  {/* gradient border in this card's own colours; full strength on
                     the active card, dialled back on the receding ones */}
-                <span
-                  aria-hidden="true"
-                  style={{ ['--g1']: d.grad[0], ['--g2']: d.grad[1] } as CSSProperties}
-                  className={`${ring} ${isActive ? 'opacity-100' : 'opacity-50'}`}
-                />
-                {/* vertical label on the receding cards */}
-                <span
-                  className={`absolute bottom-[1.2rem] left-[0.7rem] z-[2] rotate-180 [writing-mode:vertical-rl]
+                  <span
+                    aria-hidden="true"
+                    style={{ ['--g1']: d.grad[0], ['--g2']: d.grad[1] } as CSSProperties}
+                    className={`${ring} ${isActive ? 'opacity-100' : 'opacity-50'}`}
+                  />
+                  {/* vertical label on the receding cards */}
+                  <span
+                    className={`absolute bottom-[1.2rem] left-[0.7rem] z-[2] rotate-180 [writing-mode:vertical-rl]
                               font-sans text-[1.2rem] font-medium tracking-[0.02em] text-on-dark
                               [text-shadow:0_2px_16px_rgba(0,0,0,0.5)] transition-opacity duration-[400ms]
                               ease-brand min-[641px]:text-[1.5rem] ${isActive ? 'opacity-0' : 'opacity-100'}`}
-                >
-                  {d.name}
-                </span>
-                {/* full detail panel on the active card */}
-                <div
-                  className={`${panel} ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-[14px] opacity-0'}`}
-                >
-                  <h3 className="border-b border-white/24 pb-[0.7rem] font-sans text-card-title leading-none font-medium text-on-dark [text-shadow:0_1px_14px_rgba(4,10,25,0.5)]">
+                  >
                     {d.name}
-                  </h3>
-                  <div className="mt-[0.7rem] flex items-center justify-between gap-4">
-                    <span className="inline-flex items-center gap-[0.35rem] text-[0.95rem] font-semibold text-on-dark [&_svg]:text-blue">
-                      <Pin />
-                      {d.state}
-                    </span>
-                    <span className="text-right text-[0.85rem] text-on-dark-soft">{d.kind}</span>
+                  </span>
+                  {/* full detail panel on the active card */}
+                  <div
+                    className={`${panel} ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-[14px] opacity-0'}`}
+                  >
+                    <h3 className="border-b border-white/24 pb-[0.7rem] font-sans text-card-title leading-none font-medium text-on-dark [text-shadow:0_1px_14px_rgba(4,10,25,0.5)]">
+                      {d.name}
+                    </h3>
+                    <div className="mt-[0.7rem] flex items-center justify-between gap-4">
+                      <span className="inline-flex items-center gap-[0.35rem] text-[0.95rem] font-semibold text-on-dark [&_svg]:text-blue">
+                        <Pin />
+                        {d.state}
+                      </span>
+                      <span className="text-right text-[0.85rem] text-on-dark-soft">{d.kind}</span>
+                    </div>
                   </div>
-                </div>
-              </button>
-            )
-          })}
+                </button>
+              )
+            })}
           </div>
         </div>
 
@@ -170,9 +168,8 @@ export default function Destinations() {
             {destinations.map((d, i) => (
               <button
                 key={d.id}
-                className={`h-2 rounded-full transition-all duration-300 ease-brand ${
-                  offsetOf(i) === 0 ? 'w-[26px] bg-blue' : 'w-2 bg-line-strong'
-                }`}
+                className={`h-2 rounded-full transition-all duration-300 ease-brand ${offsetOf(i) === 0 ? 'w-[26px] bg-blue' : 'w-2 bg-line-strong'
+                  }`}
                 onClick={() => setActive(i)}
                 aria-label={d.name}
                 aria-selected={offsetOf(i) === 0}
