@@ -49,7 +49,6 @@ export const strings = {
     'sec.faq': 'Frequently Asked',
     'sec.faqAccent': 'Questions',
     'sec.faqSub': 'Everything worth knowing before you board.',
-
     'disha.title': 'Ask Disha 2.0',
     'disha.sub': 'Tell Disha what you feel like, and she will match it to a journey.',
     'disha.placeholder': 'e.g. a cool green place for a family in June, under ₹30,000',

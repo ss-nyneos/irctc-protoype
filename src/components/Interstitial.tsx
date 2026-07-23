@@ -3,7 +3,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import { usePrefs } from '../context/Prefs.tsx'
-import dayImg from '../assets/journey-hero-day.jpg'
+import dayImg from '../assets/every_great_journey_begins_with_irctc.png'
 import nightImg from '../assets/journey-hero-night.png'
 
 gsap.registerPlugin(ScrollTrigger)
