@@ -53,14 +53,15 @@
   grid-template-columns: repeat(6, 1fr);
   /* tighter column gap than the row gap: the arches are the artwork, so the
      width freed up here goes straight into each dome */
-  gap: clamp(0.4rem, 1vw, 1rem) clamp(0.1rem, 0.35vw, 0.35rem);
+  gap: clamp(0.4rem, 1vw, 1rem) clamp(0.05rem, 0.25vw, 0.25rem);
   align-items: start;
   width: 100%;
-  max-width: var(--wrap-wide);
+  /* pushed past --wrap-wide (1440) so the six domes read markedly larger on wide
+     screens; still a fixed 6-column grid, so it never drops below six per row */
+  max-width: min(100% - 1rem, 1780px);
   margin-inline: auto;
-  /* deliberately narrower than the global --gutter so the six domes read a
-     touch larger; the section header still uses the standard gutter */
-  padding-inline: clamp(0.75rem, 2vw, 1.5rem);
+  /* minimal edge padding so nearly all the width goes into the domes */
+  padding-inline: clamp(0.25rem, 0.8vw, 0.6rem);
 }
 
 /* Named `svc`, not `arch`: base.css owns a global `.arch` motif that sets
@@ -151,14 +152,18 @@
 }
 .svc__label {
   position: absolute;
-  inset-inline: 6%;
+  /* a hair less inset than before so the larger type keeps clearance inside the
+     arch even for the longest single words (Executive, Maharajas') */
+  inset-inline: 5%;
   bottom: 7%;
   z-index: 2;
   font-family: var(--sans);
-  font-weight: 600;
-  font-size: clamp(0.62rem, 0.92vw, 0.86rem);
+  font-weight: 700;
+  /* scaled up for the larger domes; capped so the widest word never reaches the
+     arch wall, and the per-word line-break below keeps multi-word labels tidy */
+  font-size: clamp(0.82rem, 1.16vw, 1.06rem);
   letter-spacing: -0.01em;
-  line-height: 1.14;
+  line-height: 1.12;
   text-align: center;
   color: #fff;
   text-shadow: 0 1px 6px rgba(6, 12, 28, 0.75);
@@ -197,12 +202,12 @@
 }
 .svc__pop-title {
   font-weight: 700;
-  font-size: clamp(0.66rem, 0.98vw, 0.92rem);
+  font-size: clamp(0.8rem, 1.12vw, 1.02rem);
   line-height: 1.15;
   color: #fff;
 }
 .svc__pop-desc {
-  font-size: clamp(0.52rem, 0.8vw, 0.76rem);
+  font-size: clamp(0.64rem, 0.9vw, 0.84rem);
   line-height: 1.35;
   color: rgba(255, 255, 255, 0.84);
   /* the niche is narrow — keep the blurb to what actually fits */
@@ -219,7 +224,7 @@
   gap: 0.4rem;
   margin-top: 0.2rem;
   font-weight: 700;
-  font-size: clamp(0.52rem, 0.8vw, 0.76rem);
+  font-size: clamp(0.62rem, 0.88vw, 0.82rem);
   color: #f0c98a;
 }
 .svc__pop-circ {
