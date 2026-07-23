@@ -180,6 +180,20 @@ const VIBES: VibeOption[] = [
     { key: "Festivals", icon: <PartyPopper size={16} />, desc: "Local culture & festive vibes", image: imgFestival },
 ];
 
+/** Results-page hero photo, matched to whichever "Where do you want to go?"
+ *  vibe the traveller picked (JOURNEY_PLANS keys) — falls back to the closest
+ *  aesthetic match where there's no dedicated photo for that vibe. */
+const RESULTS_BACKGROUND: Record<string, string> = {
+    Beach: imgBeaches,
+    Cruise: imgBeaches,
+    Mountain: imgHills,
+    Hiking: imgHills,
+    Snow: imgHills,
+    City: imgHeritage,
+    "Ancient Places": imgHeritage,
+    Spiritual: imgPilgrimage,
+};
+
 const GROUP_TYPES: Option[] = [
     { key: "Solo", icon: <Compass size={16} strokeWidth={1.75} />, desc: "Flexible, easy-to-navigate itineraries", image: "https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&w=800&q=80" },
     { key: "Couple", icon: <Heart size={16} strokeWidth={1.75} />, desc: "Private stays & romantic experiences", image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80" },
@@ -384,35 +398,41 @@ const budgetStyleFor = (amount: number): string => {
     if (amount <= 120000) return "Comfortable";
     return "Luxury";
 };
-/** How each preference maps onto the fields the packages actually carry. */
+/** How each preference maps onto the fields the packages actually carry.
+ *  Keyed by the actual JOURNEY_PLANS vibe options ("Where do you want to go?") —
+ *  these used to be keyed by an older, since-replaced vibe taxonomy (Hills,
+ *  Beaches, Pilgrimage, ...), which meant every lookup here silently missed. */
 const VIBE_EXP: Record<string, Experience[]> = {
-    Hills: ["nature"],
-    Beaches: ["nature", "luxury"],
-    Pilgrimage: ["spiritual"],
-    Heritage: ["culture"],
-    Wildlife: ["nature", "adventure"],
-    Desert: ["culture", "adventure"],
-    Festivals: ["culture"],
+    Mountain: ["nature"],
+    Hiking: ["nature", "adventure"],
+    Snow: ["nature", "adventure"],
+    Beach: ["nature", "luxury"],
+    Cruise: ["luxury", "nature"],
+    Spiritual: ["spiritual"],
+    "Ancient Places": ["culture"],
+    City: ["culture"],
 };
 const VIBE_REGION: Record<string, string[]> = {
-    Hills: ["Uttarakhand", "Jammu & Kashmir", "North East"],
-    Beaches: ["Kerala", "Karnataka & Goa", "Andaman Islands"],
-    Pilgrimage: ["Uttarakhand", "South India"],
-    Heritage: ["Rajasthan", "Rajasthan Circuit"],
-    Wildlife: ["North East", "South India"],
-    Desert: ["Rajasthan", "Rajasthan Circuit"],
-    Festivals: ["Rajasthan", "Maharashtra & Gujarat"],
+    Mountain: ["Uttarakhand", "Jammu & Kashmir", "North East"],
+    Hiking: ["Uttarakhand", "Jammu & Kashmir", "North East"],
+    Snow: ["Jammu & Kashmir", "Uttarakhand"],
+    Beach: ["Kerala", "Karnataka & Goa", "Andaman Islands"],
+    Cruise: ["Kerala", "Karnataka & Goa", "Andaman Islands"],
+    Spiritual: ["Uttarakhand", "South India"],
+    "Ancient Places": ["Rajasthan", "Rajasthan Circuit"],
+    City: ["Rajasthan", "Maharashtra & Gujarat"],
 };
 /** Which stay styles fit each destination vibe — used to highlight (not restrict)
  *  the stay options that suit the trip already being planned. */
 const VIBE_STAY: Record<string, Accommodation[]> = {
-    Hills: ["Homestays", "Resorts"],
-    Beaches: ["Resorts", "Luxury"],
-    Pilgrimage: ["Standard", "Homestays"],
-    Heritage: ["Heritage", "Luxury"],
-    Wildlife: ["Resorts", "Homestays"],
-    Desert: ["Heritage", "Resorts"],
-    Festivals: ["Heritage", "Comfort"],
+    Mountain: ["Homestays", "Resorts"],
+    Hiking: ["Homestays", "Resorts"],
+    Snow: ["Resorts", "Luxury"],
+    Beach: ["Resorts", "Luxury"],
+    Cruise: ["Luxury", "Resorts"],
+    Spiritual: ["Standard", "Homestays"],
+    "Ancient Places": ["Heritage", "Luxury"],
+    City: ["Comfort", "Luxury"],
 };
 const GROUP_EXP: Record<GroupType, Experience[]> = {
     Solo: ["adventure", "spiritual"],
@@ -521,7 +541,7 @@ interface TripInputs {
 
 const defaultInputs: TripInputs = {
     from: "",
-    vibes: ["Hills"],
+    vibes: [],
     travellers: 2,
     groupType: "Couple",
     travelStart: "",
@@ -801,6 +821,10 @@ export function CustomisePage() {
             new Date(`${d}T00:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
         return inputs.travelEnd ? `${fmt(inputs.travelStart)} – ${fmt(inputs.travelEnd)}` : fmt(inputs.travelStart);
     }, [inputs.travelStart, inputs.travelEnd]);
+
+    // toggleArr appends rather than replaces, so vibes[0] stays the *first* thing ever
+    // picked even after later clicks — the background needs the most recent pick instead.
+    const resultsBackground = RESULTS_BACKGROUND[inputs.vibes[inputs.vibes.length - 1]] ?? imgHills;
 
     // Which transport modes don't fit the chosen route yet (e.g. Ferry with no coastal
     // start/destination) — recomputed whenever the "from" city or destination vibes change.
@@ -1324,22 +1348,81 @@ export function CustomisePage() {
                 </div>
             )}
 
-            <div className="relative z-10">
-                <div className={`relative mx-auto px-4 md:px-6 ${phase === "questions" ? "pt-3" : "pb-8 pt-10"} ${phase === "results" ? "max-w-[1600px]" : phase === "questions" ? "max-w-7xl" : "max-w-5xl"}`}>
-                    {/* Back nav only shows outside the wizard — during the questions phase it
-                        ate into the card's headroom, so the card is dropped straight in instead. */}
-                    {phase !== "questions" && (
+            {/* results hero — vibe-matched photo (~60% of the viewport) with Back floating
+                over it; the trip pass ticket is a normal sibling below, pulled up on a
+                fixed negative margin so it overlaps a predictable slice of the photo
+                regardless of the ticket's own (responsive) height. */}
+            {phase === "results" && (
+                <>
+                    <div className="relative h-[60vh] max-h-[620px] min-h-[420px] w-full overflow-hidden">
+                        <img src={resultsBackground} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
+                        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/45 to-transparent" />
+                        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-transparent to-[#FFFFFF]" />
                         <button
                             onClick={back}
                             type="button"
-                            className={`mb-4 inline-flex items-center gap-1.5 text-[14px] font-semibold transition ${phase === "results" ? "text-muted-foreground hover:text-[#323232]" : "text-[#FFFFFF]/80 hover:text-[#FFFFFF]"
-                                }`}
+                            className="absolute left-4 top-4 z-20 inline-flex items-center gap-1.5 rounded-full bg-black/30 px-3.5 py-2 text-[14px] font-semibold text-[#FFFFFF] backdrop-blur-sm transition hover:bg-black/45 md:left-6 md:top-6"
+                        >
+                            <ArrowLeft size={16} /> Back
+                        </button>
+                    </div>
+                    <div className="relative z-10 -mt-24 mx-auto max-w-[1600px] px-4 md:-mt-28 md:px-6">
+                        <TripPass
+                            from={inputs.from || "Anywhere"}
+                            to={inputs.vibes.join(", ") || "Anywhere"}
+                            caption="We've matched your preferences with our premium, verified itineraries."
+                            fields={[
+                                { label: "Vibes", value: inputs.vibes.join(", ") || "Any" },
+                                { label: "Travellers", value: String(inputs.travellers) },
+                                { label: "Group", value: inputs.groupType },
+                                { label: "Duration", value: inputs.duration || "Custom" },
+                                { label: "Travel dates", value: dateLabel || "Flexible" },
+                                { label: "Stay", value: inputs.accommodation },
+                                { label: "Transport", value: inputs.transports.join(", ") || "Any" },
+                                {
+                                    label: "Experiences",
+                                    value: inputs.experiences.join(", ") || "Open to all",
+                                },
+                                {
+                                    label: "Trip budget",
+                                    value: `₹${Number(inputs.customBudget || 20000).toLocaleString("en-IN")}`,
+                                },
+                                {
+                                    label: "Budget style",
+                                    value: inputs.cateringTypes.join(", ") || "Any",
+                                },
+                                ...(inputs.notes.trim()
+                                    ? [{ label: "Notes", value: inputs.notes.trim() }]
+                                    : []),
+                            ]}
+                            whatsNext={[
+                                `${results.length} handpicked trips for you`,
+                                "Best prices & availability",
+                                "Real photos & verified stays",
+                            ]}
+                            onAdjust={startOver}
+                        />
+                    </div>
+                </>
+            )}
+
+            <div className="relative z-10">
+                <div className={`relative mx-auto px-4 md:px-6 ${phase === "questions" ? "pt-3" : "pb-8 pt-10"} ${phase === "results" ? "max-w-[1600px] !pt-10 md:!pt-12" : phase === "questions" ? "max-w-7xl" : "max-w-5xl"}`}>
+                    {/* Back nav only shows outside the wizard — during the questions phase it
+                        ate into the card's headroom, so the card is dropped straight in instead.
+                        Results has its own floating Back over the hero photo instead. */}
+                    {phase !== "questions" && phase !== "results" && (
+                        <button
+                            onClick={back}
+                            type="button"
+                            className="mb-4 inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#FFFFFF]/80 transition hover:text-[#FFFFFF]"
                         >
                             <ArrowLeft size={16} /> Back
                         </button>
                     )}
                     {/* the page heading only shows outside the wizard — during the questions
-                        phase the cards are pushed up to take its place */}
+                        phase the cards are pushed up to take its place. On results it now
+                        follows the ticket instead of leading the page. */}
                     {phase !== "questions" && (
                         <>
                             <h1
@@ -1452,42 +1535,6 @@ export function CustomisePage() {
 
                 {phase === "results" && (
                     <div className="reveal in space-y-8">
-                        <TripPass
-                            from={inputs.from || "Anywhere"}
-                            to={inputs.vibes.join(", ") || "Anywhere"}
-                            caption="We've matched your preferences with our premium, verified itineraries."
-                            fields={[
-                                { label: "Vibes", value: inputs.vibes.join(", ") || "Any" },
-                                { label: "Travellers", value: String(inputs.travellers) },
-                                { label: "Group", value: inputs.groupType },
-                                { label: "Duration", value: inputs.duration || "Custom" },
-                                { label: "Travel dates", value: dateLabel || "Flexible" },
-                                { label: "Stay", value: inputs.accommodation },
-                                { label: "Transport", value: inputs.transports.join(", ") || "Any" },
-                                {
-                                    label: "Experiences",
-                                    value: inputs.experiences.join(", ") || "Open to all",
-                                },
-                                {
-                                    label: "Trip budget",
-                                    value: `₹${Number(inputs.customBudget || 20000).toLocaleString("en-IN")}`,
-                                },
-                                {
-                                    label: "Budget style",
-                                    value: inputs.cateringTypes.join(", ") || "Any",
-                                },
-                                ...(inputs.notes.trim()
-                                    ? [{ label: "Notes", value: inputs.notes.trim() }]
-                                    : []),
-                            ]}
-                            whatsNext={[
-                                `${results.length} handpicked trips for you`,
-                                "Best prices & availability",
-                                "Real photos & verified stays",
-                            ]}
-                            onAdjust={startOver}
-                        />
-
                         {/* Hover-to-grow rows, as on the listing grid — the hovered card
                             takes the width its neighbours give back, so each row's width
                             never moves. */}
